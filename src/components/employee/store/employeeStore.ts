@@ -70,12 +70,12 @@ export const useEmployeeStore = create<EmployeeStore>()(
         if (!store.employeeSkills[employeeId]) {
           store.setEmployeeSkills(employeeId, initialSkills);
           
-          // Initialize skill states
+          // Initialize skill states with 'unknown' as default requirement
           const initialStates: Record<string, EmployeeSkillState> = {};
           initialSkills.forEach(skill => {
             initialStates[skill.title] = {
               level: skill.level || 'beginner',
-              requirement: skill.requirement || 'preferred'
+              requirement: skill.requirement || 'unknown'
             };
           });
 
@@ -164,7 +164,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const state = get();
         return state.skillStates[employeeId]?.[skillName] || { 
           level: 'beginner', 
-          requirement: 'preferred' 
+          requirement: 'unknown' 
         };
       }
     }),

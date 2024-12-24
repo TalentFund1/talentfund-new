@@ -30,14 +30,14 @@ export const SkillCell = ({
         skillName,
         levelKey,
         initialLevel: details.level || "unspecified",
-        initialRequired: details.required || "preferred"
+        initialRequired: details.required || "unknown"
       });
       
       setSkillState(
         skillName,
         details.level || "unspecified",
         levelKey,
-        details.required || "preferred"
+        details.required || "unknown"
       );
       initRef.current = true;
     }
@@ -45,7 +45,7 @@ export const SkillCell = ({
 
   const currentState = currentStates[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
-    required: details.required || "preferred",
+    required: details.required || "unknown",
   };
 
   const handleLevelChange = (value: string) => {
