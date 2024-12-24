@@ -19,11 +19,11 @@ export const initializeEmployeeSkills = (
     const skillId = `${employeeId}-${skill.name}`;
     
     return {
-      id: skillId, // Added to match UnifiedSkill interface
+      id: skillId,
       employeeId,
       skillId,
       title: skill.name,
-      subcategory: unifiedData.subcategory,
+      subcategory: unifiedData.subcategory || 'General',
       level: skill.level,
       goalStatus: 'unknown' as SkillGoalStatus,
       lastUpdated: new Date().toISOString(),
@@ -33,7 +33,12 @@ export const initializeEmployeeSkills = (
       growth: unifiedData.growth,
       salary: unifiedData.salary,
       confidence: 'medium',
-      benchmarks: unifiedData.benchmarks
+      benchmarks: unifiedData.benchmarks || {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      }
     };
   });
 

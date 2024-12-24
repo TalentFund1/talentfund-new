@@ -17,6 +17,13 @@ export interface EmployeeSkillState {
   confidence: 'low' | 'medium' | 'high';
 }
 
+// Update for a single skill
+export interface EmployeeSkillUpdate {
+  level?: SkillLevel;
+  goalStatus?: SkillGoalStatus;
+  confidence?: 'low' | 'medium' | 'high';
+}
+
 // Complete employee skill data
 export interface EmployeeSkillData {
   employeeId: string;
@@ -37,7 +44,7 @@ export interface EmployeeSkillData {
 
 // Achievement tracking
 export interface EmployeeSkillAchievement extends EmployeeSkillData {
-  id: string; // Added to match UnifiedSkill interface
+  id: string;
 }
 
 // Complete employee skills data structure
@@ -46,6 +53,12 @@ export interface EmployeeSkillsData {
   skills: EmployeeSkillAchievement[];
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
+}
+
+// State management for employee skills
+export interface EmployeeSkillsState {
+  skills: Record<string, EmployeeSkillData>;
+  lastUpdated: string;
 }
 
 console.log('Employee skill types updated with complete interfaces');

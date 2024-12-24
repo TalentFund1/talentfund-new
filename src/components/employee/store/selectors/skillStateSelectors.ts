@@ -17,7 +17,8 @@ export const createSkillStateSelectors = (get: () => any) => ({
     const defaultState: EmployeeSkillState = {
       level: 'unspecified',
       goalStatus: 'unknown',
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
+      confidence: 'medium'
     };
 
     if (!skillState) {
