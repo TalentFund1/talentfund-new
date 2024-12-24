@@ -2,10 +2,12 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkillsStore, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 
-// Validation utilities
+// Enhanced validation utilities with priority handling
 const validateSkillLevel = (level: string | number): SkillLevel => {
+  console.log('Validating skill level:', level);
+
+  // Handle percentage-based levels
   if (typeof level === 'number') {
-    // Handle percentage-based levels
     if (level >= 90) return 'advanced';
     if (level >= 60) return 'intermediate';
     if (level > 0) return 'beginner';
@@ -14,13 +16,29 @@ const validateSkillLevel = (level: string | number): SkillLevel => {
 
   const validLevels: SkillLevel[] = ['beginner', 'intermediate', 'advanced', 'unspecified'];
   const normalizedLevel = level.toLowerCase() as SkillLevel;
-  return validLevels.includes(normalizedLevel) ? normalizedLevel : 'unspecified';
+  
+  if (validLevels.includes(normalizedLevel)) {
+    console.log('Valid skill level:', normalizedLevel);
+    return normalizedLevel;
+  }
+  
+  console.log('Invalid skill level, defaulting to unspecified');
+  return 'unspecified';
 };
 
 const validateGoalStatus = (status: string): SkillGoalStatus => {
+  console.log('Validating goal status:', status);
+  
   const validStatuses: SkillGoalStatus[] = ['required', 'preferred', 'not_interested', 'unknown', 'skill_goal'];
   const normalizedStatus = status.toLowerCase() as SkillGoalStatus;
-  return validStatuses.includes(normalizedStatus) ? normalizedStatus : 'unknown';
+  
+  if (validStatuses.includes(normalizedStatus)) {
+    console.log('Valid goal status:', normalizedStatus);
+    return normalizedStatus;
+  }
+  
+  console.log('Invalid goal status, defaulting to unknown');
+  return 'unknown';
 };
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
@@ -60,7 +78,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           };
 
           const validatedLevel = validateSkillLevel(level);
-          console.log('Validated level:', { original: level, validated: validatedLevel });
+          console.log('Validated level:', validatedLevel);
 
           return {
             employeeSkills: {
@@ -93,7 +111,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           };
 
           const validatedStatus = validateGoalStatus(status);
-          console.log('Validated status:', { original: status, validated: validatedStatus });
+          console.log('Validated status:', validatedStatus);
 
           return {
             employeeSkills: {
@@ -146,7 +164,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             lastUpdated: new Date().toISOString()
           };
 
-          // Validate all updates before applying
+          // Validate all updates
           const validatedUpdates: Record<string, EmployeeSkillState> = {};
           Object.entries(updates).forEach(([skillTitle, update]) => {
             validatedUpdates[skillTitle] = {
