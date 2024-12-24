@@ -22,6 +22,18 @@ export interface EmployeeSkillAchievement {
   lastUpdated: string;
   weight: SkillWeight;
   confidence: 'low' | 'medium' | 'high';
+  // Adding UnifiedSkill required properties
+  category: 'specialized' | 'common' | 'certification';
+  businessCategory: string;
+  growth: string;
+  salary: string;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
+  requirement?: SkillGoalStatus; // Optional for backward compatibility
 }
 
 // Collection of employee skills data

@@ -2,18 +2,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkillsStore, EmployeeSkillAchievement, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { SkillCategory, SkillRequirement } from '../../skills/types/SkillTypes';
-
-const mapGoalStatusToRequirement = (status: SkillGoalStatus): SkillRequirement => {
-  switch (status) {
-    case 'not_interested':
-      return 'not_interested';
-    case 'skill_goal':
-      return 'skill_goal';
-    default:
-      return status as SkillRequirement;
-  }
-};
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -55,6 +43,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
           const updatedSkills = [...employeeData.skills];
           const skillIndex = updatedSkills.findIndex(s => s.title === skillTitle);
+          const unifiedData = getUnifiedSkillData(skillTitle);
 
           if (skillIndex >= 0) {
             updatedSkills[skillIndex] = {
@@ -63,18 +52,21 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               lastUpdated: new Date().toISOString()
             };
           } else {
-            const skillData = getUnifiedSkillData(skillTitle);
             const newSkill: EmployeeSkillAchievement = {
               id: `${employeeId}-${skillTitle}`,
               employeeId,
               title: skillTitle,
-              subcategory: skillData.subcategory,
+              subcategory: unifiedData.subcategory,
               level,
               goalStatus: 'unknown',
               lastUpdated: new Date().toISOString(),
-              category: skillData.category,
-              weight: skillData.weight,
-              confidence: 'medium'
+              category: unifiedData.category,
+              businessCategory: unifiedData.businessCategory,
+              weight: unifiedData.weight,
+              growth: unifiedData.growth,
+              salary: unifiedData.salary,
+              confidence: 'medium',
+              benchmarks: unifiedData.benchmarks
             };
             updatedSkills.push(newSkill);
           }
