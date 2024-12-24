@@ -1,27 +1,20 @@
 import { roleSkills } from '../../../skills/data/roleSkills';
 import { getSkillProfileId } from '../../../EmployeeTable';
 import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
-import { EmployeeSkillAchievement } from '../../types/employeeSkillTypes';
-import { useEmployeeStore } from '../employeeStore';
+import { EmployeeSkillAchievement, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
 
-export const initializeSkillsForEmployee = (employeeId: string): EmployeeSkillAchievement[] => {
-  console.log('Initializing skills for employee:', employeeId);
+export const initializeEmployeeSkills = (employeeId: string, role: string): EmployeeSkillAchievement[] => {
+  console.log('Initializing skills for employee:', { employeeId, role });
   
-  const employee = useEmployeeStore.getState().getEmployeeById(employeeId);
-  if (!employee) {
-    console.warn('Employee not found:', employeeId);
-    return [];
-  }
-
-  const roleId = getSkillProfileId(employee.role);
+  const roleId = getSkillProfileId(role);
   const roleData = roleSkills[roleId];
   
   if (!roleData) {
-    console.warn('No role data found:', { roleId, role: employee.role });
+    console.warn('No role data found for:', { roleId, role });
     return [];
   }
 
-  // Combine all role skills
+  // Combine all skills from role
   const allRoleSkills = [
     ...(roleData.specialized || []),
     ...(roleData.common || []),
@@ -34,16 +27,16 @@ export const initializeSkillsForEmployee = (employeeId: string): EmployeeSkillAc
     skills: allRoleSkills.map(s => s.title)
   });
 
-  // Create initial achievements
-  const initialSkills = allRoleSkills.map(skill => {
+  // Create initial skill achievements with correct types
+  const initialSkills: EmployeeSkillAchievement[] = allRoleSkills.map(skill => {
     const unifiedData = getUnifiedSkillData(skill.title);
     return {
       id: `${employeeId}-${skill.title}`,
       employeeId,
       title: skill.title,
       subcategory: unifiedData.subcategory,
-      level: 'unspecified',
-      goalStatus: 'unknown',
+      level: 'unspecified' as SkillLevel,
+      goalStatus: 'unknown' as SkillGoalStatus,
       lastUpdated: new Date().toISOString(),
       category: unifiedData.category,
       businessCategory: unifiedData.businessCategory,
