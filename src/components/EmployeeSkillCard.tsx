@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
-import { useMemo, useCallback } from "react";
+import { useMemo } from "react";
 
 interface Skill {
   name: string;
@@ -29,9 +29,8 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     employeeId,
     skills: skills.map(s => ({ name: s.name, level: s.level }))
   });
-  
-  // Convert to useCallback to ensure stable function reference
-  const calculateLevelPercentage = useCallback((skillName: string): number => {
+
+  const getLevelPercentage = (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
     const level = skillState.level;
 
@@ -60,7 +59,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     });
 
     return percentage;
-  }, [employeeId, getSkillState]);
+  };
 
   const getProgressColor = useMemo(() => (percentage: number): string => {
     if (percentage >= 90) return 'bg-primary-accent';
@@ -71,8 +70,8 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     return 'bg-gray-500';
   }, []);
 
-  const handleSkillClick = useCallback((skillName: string) => {
-    const percentage = calculateLevelPercentage(skillName);
+  const handleSkillClick = (skillName: string) => {
+    const percentage = getLevelPercentage(skillName);
     const skillState = getSkillState(employeeId, skillName);
     
     // Prepare batch update
@@ -97,13 +96,13 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
       title: skillName,
       description: `Current level: ${percentage}% (${skillState.level})`,
     });
-  }, [employeeId, calculateLevelPercentage, getSkillState, batchUpdateSkills, toast]);
+  };
 
   // Memoize the processed skills data
   const processedSkills = useMemo(() => skills.map(skill => ({
     ...skill,
-    percentage: calculateLevelPercentage(skill.name)
-  })), [skills, calculateLevelPercentage]);
+    percentage: getLevelPercentage(skill.name)
+  })), [skills, employeeId, getSkillState]);
 
   return (
     <Card className="p-6 animate-fade-in">
