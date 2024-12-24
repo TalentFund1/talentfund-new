@@ -4,10 +4,19 @@ import { SkillBadge } from "./SkillBadge";
 import { useParams } from "react-router-dom";
 import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { UnifiedSkill } from "./types/SkillTypes";
+import { useEffect } from "react";
 
 export const SkillsSummaryTwo = () => {
   const { id } = useParams<{ id: string }>();
-  const { getEmployeeSkills } = useEmployeeSkillsStore();
+  const { getEmployeeSkills, initializeEmployeeSkills } = useEmployeeSkillsStore();
+
+  // Initialize employee skills
+  useEffect(() => {
+    if (id) {
+      console.log('SkillsSummaryTwo - Initializing skills for employee:', id);
+      initializeEmployeeSkills(id);
+    }
+  }, [id, initializeEmployeeSkills]);
 
   const employeeSkills = id ? getEmployeeSkills(id) : [];
 
@@ -20,6 +29,12 @@ export const SkillsSummaryTwo = () => {
   const specializedSkills = filterSkillsByCategory(employeeSkills, "specialized") as UnifiedSkill[];
   const commonSkills = filterSkillsByCategory(employeeSkills, "common") as UnifiedSkill[];
   const certificationSkills = filterSkillsByCategory(employeeSkills, "certification") as UnifiedSkill[];
+
+  console.log('SkillsSummaryTwo - Categorized skills:', {
+    specialized: specializedSkills.length,
+    common: commonSkills.length,
+    certifications: certificationSkills.length
+  });
 
   const SkillSection = ({ title, count, skills }: { title: string; count: number; skills: UnifiedSkill[] }) => (
     <div className="space-y-4">
