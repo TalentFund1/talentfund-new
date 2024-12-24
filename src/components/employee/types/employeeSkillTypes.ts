@@ -2,6 +2,7 @@
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 export type SkillConfidence = 'low' | 'medium' | 'high';
+export type SkillCategory = 'specialized' | 'common' | 'certification';
 
 // Core employee skill state
 export interface EmployeeSkillState {
@@ -30,7 +31,30 @@ export interface EmployeeSkillData {
   confidence: SkillConfidence;
   // Metadata (not role-dependent)
   subcategory: string;
-  category: string;
+  category: SkillCategory;
+  businessCategory: string;
+  weight: string;
+  growth: string;
+  salary: string;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
+}
+
+// Achievement type for skill comparisons
+export interface EmployeeSkillAchievement {
+  id: string;
+  employeeId: string;
+  title: string;
+  level: SkillLevel;
+  goalStatus: SkillGoalStatus;
+  lastUpdated: string;
+  confidence: SkillConfidence;
+  category: SkillCategory;
+  subcategory: string;
   businessCategory: string;
   weight: string;
   growth: string;
