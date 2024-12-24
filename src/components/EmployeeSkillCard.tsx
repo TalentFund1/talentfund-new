@@ -6,6 +6,7 @@ import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 import { useMemo } from "react";
 import { SkillLevel } from "./employee/types/employeeSkillTypes";
 import { EmployeeSkillCardProps } from "./employee/types/employeeSkillProps";
+import { benchmarkingService } from "../services/benchmarking";
 
 export const EmployeeSkillCard = ({ 
   name, 
@@ -69,13 +70,12 @@ export const EmployeeSkillCard = ({
     const percentage = getLevelPercentage(skillName);
     const skillState = getSkillState(employeeId, skillName);
     
-    // Prepare batch update
+    // Prepare batch update using the service
     const updates = {
-      [skillName]: {
-        level: skillState.level,
-        goalStatus: skillState.goalStatus,
-        lastUpdated: new Date().toISOString()
-      }
+      [skillName]: benchmarkingService.createSkillState(
+        skillState.level,
+        skillState.goalStatus
+      )
     };
 
     console.log('Preparing batch update for skill:', {
@@ -84,7 +84,6 @@ export const EmployeeSkillCard = ({
       updates
     });
 
-    // Use batch update instead of individual updates
     batchUpdateSkills(employeeId, updates);
     
     toast({
