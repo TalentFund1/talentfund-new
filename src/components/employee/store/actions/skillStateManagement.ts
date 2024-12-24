@@ -6,7 +6,8 @@ export const createSkillState = (
 ): EmployeeSkillState => ({
   level,
   goalStatus,
-  lastUpdated: new Date().toISOString()
+  lastUpdated: new Date().toISOString(),
+  confidence: 'medium' // Default confidence level
 });
 
 export const updateSkillState = (

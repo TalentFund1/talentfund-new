@@ -1,13 +1,13 @@
 import { 
-  SkillLevel, 
-  SkillGoalStatus, 
   SkillCategory, 
   SkillWeight,
-  BaseSkill,
-  SkillState,
   SkillBenchmark,
   SkillMetrics
 } from '../../skills/types/sharedSkillTypes';
+
+// Core skill types
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
+export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
 // Core employee skill state
 export interface EmployeeSkillState {
@@ -15,13 +15,6 @@ export interface EmployeeSkillState {
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
   confidence: 'low' | 'medium' | 'high';
-}
-
-// Update for a single skill
-export interface EmployeeSkillUpdate {
-  level?: SkillLevel;
-  goalStatus?: SkillGoalStatus;
-  confidence?: 'low' | 'medium' | 'high';
 }
 
 // Complete employee skill data
@@ -42,14 +35,10 @@ export interface EmployeeSkillData {
   benchmarks: SkillBenchmark;
 }
 
-// State management for employee skills
-export interface EmployeeSkillsState {
-  skills: Record<string, EmployeeSkillData>;
-  lastUpdated: string;
-}
-
 // Achievement tracking
-export interface EmployeeSkillAchievement extends EmployeeSkillData {}
+export interface EmployeeSkillAchievement extends EmployeeSkillData {
+  id: string; // Added to match UnifiedSkill interface
+}
 
 // Complete employee skills data structure
 export interface EmployeeSkillsData {
