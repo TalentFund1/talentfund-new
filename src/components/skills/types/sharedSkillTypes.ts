@@ -1,14 +1,10 @@
-/**
- * Shared skill level types used across employee and role contexts
- */
+// Basic skill-related enums and types
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
-/**
- * Base interface for any skill in the system
- */
+// Base skill interface
 export interface BaseSkill {
   id: string;
   title: string;
@@ -18,18 +14,14 @@ export interface BaseSkill {
   businessCategory: string;
 }
 
-/**
- * Interface for skill state tracking
- */
+// Skill state tracking
 export interface SkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
 }
 
-/**
- * Interface for skill benchmarking data
- */
+// Skill benchmarking data
 export interface SkillBenchmark {
   B: boolean;
   R: boolean;
@@ -37,34 +29,27 @@ export interface SkillBenchmark {
   O: boolean;
 }
 
-/**
- * Interface for skill metrics
- */
+// Skill metrics
 export interface SkillMetrics {
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
 }
 
-/**
- * Interface for comparing employee skills against role requirements
- */
+// Employee skill state
+export interface EmployeeSkillState {
+  level: SkillLevel;
+  goalStatus: SkillGoalStatus;
+  lastUpdated: string;
+}
+
+// Skill comparison interface
 export interface SkillComparison {
   skillTitle: string;
   employeeLevel: SkillLevel;
   requiredLevel: SkillLevel;
   goalStatus: SkillGoalStatus;
   matchPercentage: number;
-}
-
-/**
- * Interface for skill initialization options
- */
-export interface SkillInitializationOptions {
-  defaultLevel?: SkillLevel;
-  defaultGoalStatus?: SkillGoalStatus;
-  includeMetrics?: boolean;
-  includeBenchmarks?: boolean;
 }
 
 console.log('Shared skill types loaded and available for use');

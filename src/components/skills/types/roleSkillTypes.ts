@@ -9,6 +9,16 @@ import {
   SkillMetrics
 } from './sharedSkillTypes';
 
+export type { 
+  SkillLevel,
+  SkillGoalStatus,
+  SkillCategory,
+  SkillWeight,
+  SkillState,
+  SkillBenchmark,
+  SkillMetrics
+};
+
 export interface RoleSkillRequirement extends BaseSkill {
   minimumLevel: SkillLevel;
   requirementLevel: 'required' | 'preferred' | 'optional';

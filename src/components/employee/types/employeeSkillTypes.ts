@@ -6,8 +6,21 @@ import {
   BaseSkill,
   SkillState,
   SkillBenchmark,
-  SkillMetrics
+  SkillMetrics,
+  EmployeeSkillState
 } from '../../skills/types/sharedSkillTypes';
+
+export type { 
+  SkillLevel,
+  SkillGoalStatus,
+  SkillCategory,
+  SkillWeight,
+  BaseSkill,
+  SkillState,
+  SkillBenchmark,
+  SkillMetrics,
+  EmployeeSkillState
+};
 
 export interface EmployeeSkill extends BaseSkill {
   employeeId: string;
