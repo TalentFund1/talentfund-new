@@ -1,12 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkill, EmployeeSkillsData } from '../types/employeeSkillTypes';
+import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { SkillRequirement } from '../../skills/types/SkillTypes';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
   setEmployeeSkills: (employeeId: string, skills: EmployeeSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
+  getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
 
@@ -70,6 +72,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         });
         
         return employeeData.skills;
+      },
+
+      getSkillState: (employeeId, skillTitle) => {
+        console.log('Getting skill state:', { employeeId, skillTitle });
+        const state = get().employeeSkills[employeeId]?.states[skillTitle];
+        return state || { level: 'beginner', requirement: 'unknown' as SkillRequirement };
       },
 
       initializeEmployeeSkills: (employeeId) => {
