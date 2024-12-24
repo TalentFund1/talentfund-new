@@ -1,6 +1,4 @@
-import { SkillCategory, SkillWeight } from '../../skills/types/SkillTypes';
-
-export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown';
+export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
 export interface EmployeeSkill {
   id: string;
