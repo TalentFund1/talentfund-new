@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { SkillRequirement } from '../../skills/types/SkillTypes';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
@@ -76,12 +77,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       getSkillState: (employeeId, skillTitle) => {
         console.log('Getting skill state:', { employeeId, skillTitle });
         const state = get().employeeSkills[employeeId]?.states[skillTitle];
-        const timestamp = new Date().toISOString();
-        return state || { 
-          level: 'beginner', 
-          requirement: 'unknown', 
-          lastUpdated: timestamp 
-        };
+        return state || { level: 'beginner', requirement: 'unknown' as SkillRequirement };
       },
 
       initializeEmployeeSkills: (employeeId) => {

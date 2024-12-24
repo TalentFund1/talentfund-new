@@ -2,7 +2,6 @@ import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
-import { SkillRequirement } from "../employee/types/employeeSkillTypes";
 
 interface StaticSkillLevelCellProps {
   initialLevel: string;
@@ -24,13 +23,13 @@ export const StaticSkillLevelCell = ({
     });
     
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, 'unspecified', 'required' as SkillRequirement);
+      initializeState(skillTitle, 'unspecified', 'preferred');
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
     level: 'unspecified',
-    requirement: 'required' as SkillRequirement
+    requirement: 'preferred'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {

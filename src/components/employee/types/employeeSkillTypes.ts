@@ -1,40 +1,30 @@
-export type SkillRequirement = 'required' | 'not-interested' | 'unknown' | 'skill_goal';
+import { SkillCategory, SkillWeight, SkillRequirement } from '../../skills/types/SkillTypes';
 
-export interface EmployeeSkillState {
-  level: string;
-  requirement: SkillRequirement;
-  lastUpdated: string;
-}
-
-export interface BaseEmployeeSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: SkillRequirement;
-  category?: string;
-  weight?: string;
-}
-
-export interface EmployeeSkill extends BaseEmployeeSkill {
+export interface EmployeeSkill {
   id: string;
+  title: string;
+  level: string;
+  category: SkillCategory;
+  subcategory: string;
   businessCategory: string;
+  weight: SkillWeight;
+  requirement: SkillRequirement;
+  growth: string;
   salary: string;
+  confidence: 'low' | 'medium' | 'high';
   benchmarks: {
     B: boolean;
     R: boolean;
     M: boolean;
     O: boolean;
   };
+  dateAcquired?: string;
+  lastUpdated?: string;
 }
 
-export interface EmployeeSkills {
-  id: string;
-  skills: {
-    [skillTitle: string]: EmployeeSkillState;
-  };
-  lastUpdated: string;
+export interface EmployeeSkillState {
+  level: string;
+  requirement: SkillRequirement;
 }
 
 export interface EmployeeSkillsData {

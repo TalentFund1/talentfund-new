@@ -1,12 +1,11 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ReactNode } from "react";
 
-export interface SkillsMatrixFiltersProps {
+interface SkillsMatrixFiltersProps {
   selectedLevel: string;
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
-  addSkillButton: ReactNode;
+  addSkillButton: React.ReactNode;
 }
 
 export const SkillsMatrixFilters = ({
@@ -28,18 +27,6 @@ export const SkillsMatrixFilters = ({
             <SelectItem value="beginner">Beginner</SelectItem>
             <SelectItem value="intermediate">Intermediate</SelectItem>
             <SelectItem value="advanced">Advanced</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Select Interest" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Interests</SelectItem>
-            <SelectItem value="required">Required</SelectItem>
-            <SelectItem value="not-interested">Not Interested</SelectItem>
-            <SelectItem value="unknown">Unknown</SelectItem>
           </SelectContent>
         </Select>
       </div>
