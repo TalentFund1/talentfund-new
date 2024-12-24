@@ -4,11 +4,11 @@ import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
-import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -34,12 +34,12 @@ export const SkillsSummary = () => {
   const { id } = useParams<{ id: string }>();
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
+  const { currentStates } = useSkillsMatrixStore();
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
-  const { getSkillState, getEmployeeSkills: getStoredEmployeeSkills } = useEmployeeSkillsStore();
 
   console.log('Loading skills for employee:', id);
-  const employeeSkills = getStoredEmployeeSkills(id || "");
+  const employeeSkills = getEmployeeSkills(id || "");
   console.log('Loaded employee skills:', employeeSkills);
 
   const handleSkillsChange = (skills: string[]) => {
@@ -64,11 +64,12 @@ export const SkillsSummary = () => {
   const transformAndSortSkills = (skills: any[]): DetailedSkill[] => {
     return skills
       .map(skill => {
-        const skillState = getSkillState(id || "", skill.title);
+        const skillState = currentStates[skill.title];
+        const unifiedData = getUnifiedSkillData(skill.title);
         return {
           name: skill.title,
-          level: skillState.level || 'unspecified',
-          isSkillGoal: skillState.goalStatus === 'skill_goal'
+          level: skill.level || skillState?.level || 'unspecified',
+          isSkillGoal: skillState?.goalStatus === 'skill_goal'
         };
       })
       .sort((a, b) => {
