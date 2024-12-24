@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Check, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface RequirementSelectorProps {
@@ -18,18 +19,23 @@ export const RequirementSelector = ({
   });
 
   const getRequirementStyles = (requirement: string) => {
-    const baseStyles = "rounded-b-md px-3 py-1.5 text-xs font-medium w-full capitalize flex items-center justify-center min-h-[26px]";
+    const baseStyles = "rounded-b-md px-3 py-1.5 text-xs font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-gray-600";
     
-    switch (requirement) {
-      case 'required':
-        return cn(baseStyles, "bg-blue-100 text-blue-800 border-blue-200 border-t-0");
-      case 'preferred':
-        return cn(baseStyles, "bg-green-100 text-green-800 border-green-200 border-t-0");
-      case 'not_interested':
-        return cn(baseStyles, "bg-gray-100 text-gray-800 border-gray-200 border-t-0");
-      default:
-        return cn(baseStyles, "bg-gray-50 text-gray-600 border-gray-100 border-t-0");
+    // If required, match the border color with the skill level
+    if (requirement === 'required') {
+      const borderColor = currentLevel?.toLowerCase() === 'advanced' 
+        ? 'border-primary-accent'
+        : currentLevel?.toLowerCase() === 'intermediate'
+          ? 'border-primary-icon'
+          : currentLevel?.toLowerCase() === 'beginner'
+            ? 'border-[#008000]'
+            : 'border-gray-300';
+      
+      return cn(baseStyles, `bg-gray-50 border-x-2 border-b-2 ${borderColor}`);
     }
+    
+    // For preferred or other states
+    return cn(baseStyles, "bg-gray-50 border-x border-b border-gray-200");
   };
 
   return (
@@ -37,23 +43,37 @@ export const RequirementSelector = ({
       <SelectTrigger 
         className={cn(
           getRequirementStyles(currentRequired),
-          "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 border-x border-b"
+          "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0"
         )}
       >
         <SelectValue>
-          {currentRequired === 'not_interested' ? 'Not Interested' : 
-           currentRequired.charAt(0).toUpperCase() + currentRequired.slice(1)}
+          <span className="flex items-center gap-2 text-gray-600">
+            {currentRequired === 'required' ? (
+              <>
+                <Check className="h-3.5 w-3.5" />
+                Required
+              </>
+            ) : (
+              <>
+                <Heart className="h-3.5 w-3.5" />
+                Preferred
+              </>
+            )}
+          </span>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="required" className="cursor-pointer">
-          <span className="flex items-center gap-2 text-blue-800">Required</span>
+          <span className="flex items-center gap-2 text-gray-600">
+            <Check className="h-3.5 w-3.5" />
+            Required
+          </span>
         </SelectItem>
         <SelectItem value="preferred" className="cursor-pointer">
-          <span className="flex items-center gap-2 text-green-800">Preferred</span>
-        </SelectItem>
-        <SelectItem value="not_interested" className="cursor-pointer">
-          <span className="flex items-center gap-2 text-gray-800">Not Interested</span>
+          <span className="flex items-center gap-2 text-gray-600">
+            <Heart className="h-3.5 w-3.5" />
+            Preferred
+          </span>
         </SelectItem>
       </SelectContent>
     </Select>
