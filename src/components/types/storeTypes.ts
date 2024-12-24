@@ -1,4 +1,4 @@
-import { Employee } from '../../../types/employeeTypes';
+import { Employee } from './employeeTypes';
 
 export interface EmployeeStore {
   employees: Employee[];

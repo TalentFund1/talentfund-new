@@ -1,6 +1,6 @@
 import { SkillLevel, SkillGoalStatus } from '../types/skillStoreTypes';
 import { initializeEmployeeSkills as initializeSkills } from '../utils/skillInitializer';
-import { EmployeeStore } from '../types/employeeStoreTypes';
+import { EmployeeStore } from '../../../types/storeTypes';
 
 export const createSkillActions = (set: any, get: any) => ({
   initializeEmployeeSkills: (employeeId: string, employeeStore?: EmployeeStore) => {
