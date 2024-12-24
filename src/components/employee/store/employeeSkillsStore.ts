@@ -9,6 +9,7 @@ import {
 import { initializeEmployeeSkills } from './actions/initializeEmployeeSkills';
 import { employees } from '../EmployeeData';
 import { IEmployeeSkillsStore } from './interfaces/EmployeeSkillsStoreInterface';
+import { benchmarkingService } from '../../../services/benchmarking';
 
 export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
   persist(
@@ -27,15 +28,10 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
           }
 
           // Initialize strictly with employee's existing skills only
-          const initializedData = {
-            employeeId,
-            skills: initializeEmployeeSkills(employeeId, employee.skills.map(s => ({
-              name: s.title, // Map title to name for compatibility
-              level: s.level
-            }))),
-            states: {},
-            lastUpdated: new Date().toISOString()
-          };
+          const initializedData = benchmarkingService.initializeEmployeeSkillsData(employeeId, employee.skills.map(s => ({
+            name: s.title,
+            level: s.level
+          }))) as EmployeeSkillsData;
           
           set((state: any) => ({
             employeeSkills: {
@@ -88,11 +84,7 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
             usingDefault: true
           });
           
-          return {
-            level: 'unspecified' as SkillLevel,
-            goalStatus: 'unknown' as SkillGoalStatus,
-            lastUpdated: new Date().toISOString()
-          };
+          return benchmarkingService.getDefaultSkillState();
         }
 
         return state;
@@ -114,11 +106,7 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
                 ...employeeData,
                 states: {
                   ...employeeData.states,
-                  [skillTitle]: {
-                    ...employeeData.states[skillTitle],
-                    level,
-                    lastUpdated: new Date().toISOString()
-                  }
+                  [skillTitle]: benchmarkingService.createSkillState(level, employeeData.states[skillTitle]?.goalStatus || 'unknown')
                 }
               }
             }
@@ -142,11 +130,10 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
                 ...employeeData,
                 states: {
                   ...employeeData.states,
-                  [skillTitle]: {
-                    ...employeeData.states[skillTitle],
-                    goalStatus: status,
-                    lastUpdated: new Date().toISOString()
-                  }
+                  [skillTitle]: benchmarkingService.createSkillState(
+                    employeeData.states[skillTitle]?.level || 'unspecified',
+                    status
+                  )
                 }
               }
             }
