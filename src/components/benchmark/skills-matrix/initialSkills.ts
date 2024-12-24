@@ -1,5 +1,6 @@
 import { EmployeeSkillAchievement } from '../../employee/types/employeeSkillTypes';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
+import { employees } from '../../employee/EmployeeData';
 
 export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
   console.log('Getting skills for employee:', id);
@@ -8,11 +9,23 @@ export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
   
   if (!existingSkills.length) {
     console.log('No existing skills found, initializing from employee data:', id);
-    store.initializeEmployeeSkills(id);
+    const employee = employees.find(emp => emp.id === id);
+    
+    if (employee) {
+      console.log('Found employee data, initializing skills:', {
+        employeeId: id,
+        skillCount: employee.skills.length,
+        skills: employee.skills.map(s => s.name)
+      });
+      store.initializeEmployeeSkills(id);
+    } else {
+      console.warn('No employee data found for ID:', id);
+    }
   } else {
     console.log('Found existing skills:', {
       employeeId: id,
-      skillCount: existingSkills.length
+      skillCount: existingSkills.length,
+      skills: existingSkills.map(s => s.title)
     });
   }
   

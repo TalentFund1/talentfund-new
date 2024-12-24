@@ -4,6 +4,7 @@ import {
   SkillLevel, 
   SkillGoalStatus 
 } from '../../types/employeeSkillTypes';
+import { employees } from '../../EmployeeData';
 
 export const initializeEmployeeSkillsData = (
   employeeId: string,
