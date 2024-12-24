@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 interface Skill {
   name: string;
@@ -15,6 +16,8 @@ interface EmployeeSkillCardProps {
 }
 
 export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillCardProps) => {
+  const { toast } = useToast();
+  
   console.log('Rendering EmployeeSkillCard:', { 
     name, 
     role, 
@@ -29,11 +32,15 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
       return Math.min(Math.max(level, 0), 100);
     }
 
-    // Handle string levels
+    // Handle string levels with more granular percentages
     const levels: { [key: string]: number } = {
       'advanced': 100,
+      'expert': 90,
+      'proficient': 80,
       'intermediate': 66,
+      'developing': 50,
       'beginner': 33,
+      'novice': 25,
       'unspecified': 0
     };
 
@@ -50,10 +57,19 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
   };
 
   const getProgressColor = (percentage: number): string => {
+    if (percentage >= 90) return 'bg-primary-accent';
     if (percentage >= 80) return 'bg-green-500';
     if (percentage >= 60) return 'bg-blue-500';
     if (percentage >= 40) return 'bg-yellow-500';
+    if (percentage >= 20) return 'bg-orange-500';
     return 'bg-gray-500';
+  };
+
+  const handleSkillClick = (skillName: string, level: number) => {
+    toast({
+      title: `${skillName}`,
+      description: `Current level: ${level}%`,
+    });
   };
 
   return (
@@ -77,7 +93,11 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
           });
 
           return (
-            <div key={skill.name} className="space-y-1.5">
+            <div 
+              key={skill.name} 
+              className="space-y-1.5 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
+              onClick={() => handleSkillClick(skill.name, percentage)}
+            >
               <div className="flex justify-between mb-1">
                 <span className="text-sm font-medium">{skill.name}</span>
                 <span className="text-sm text-secondary-foreground">
