@@ -5,7 +5,7 @@ export const getEmployeeSkills = (id: string): UnifiedSkill[] => {
   console.log('Getting skills for employee:', id);
   const store = useEmployeeStore.getState();
   
-  // Get stored skills for this employee
+  // Get stored skills for this employee only
   const storedSkills = store.getEmployeeSkills(id);
   
   console.log('Retrieved skills for employee:', {
