@@ -49,6 +49,13 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
     return percentage;
   };
 
+  const getProgressColor = (percentage: number): string => {
+    if (percentage >= 80) return 'bg-green-500';
+    if (percentage >= 60) return 'bg-blue-500';
+    if (percentage >= 40) return 'bg-yellow-500';
+    return 'bg-gray-500';
+  };
+
   return (
     <Card className="p-6 animate-fade-in">
       <div className="flex items-center gap-4 mb-6">
@@ -79,7 +86,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills }: EmployeeSkillC
               </div>
               <Progress
                 value={percentage}
-                className="h-2"
+                className={`h-2 transition-all duration-300 ${getProgressColor(percentage)}`}
               />
             </div>
           );
