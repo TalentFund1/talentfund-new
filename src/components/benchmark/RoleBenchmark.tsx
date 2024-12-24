@@ -29,7 +29,7 @@ export const useRoleStore = create<RoleStore>((set) => ({
   setSelectedLevel: (level) => set({ selectedLevel: level })
 }));
 
-const RoleBenchmarkContent = () => {
+export const RoleBenchmarkContent = () => {
   const navigate = useNavigate();
   const { toggledSkills } = useToggledSkills();
   const { setBenchmarkSearchSkills } = useBenchmarkSearch();
@@ -109,11 +109,7 @@ const RoleBenchmarkContent = () => {
 
         <Separator className="my-6" />
 
-        {id && <BenchmarkAnalysis 
-          selectedRole={selectedRole}
-          roleLevel={selectedLevel}
-          employeeId={id}
-        />}
+        {id && <BenchmarkAnalysis />}
       </div>
     </div>
   );

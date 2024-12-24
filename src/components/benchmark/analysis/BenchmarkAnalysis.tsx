@@ -1,19 +1,18 @@
 import { Card } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
-import { roleSkills } from "@/components/skills/data/roleSkills";
-import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
-import { useTrack } from "@/components/skills/context/TrackContext";
-import { useSkillsMatrixStore } from "@/components/benchmark/skills-matrix/SkillsMatrixState";
-import { getEmployeeSkills } from "@/components/benchmark/skills-matrix/initialSkills";
-import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
-import { useCompetencyStateReader } from "@/components/skills/competency/CompetencyStateReader";
-import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { getSkillProfileId } from "@/components/EmployeeTable";
+import { roleSkills } from "../../skills/data/roleSkills";
+import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
+import { useTrack } from "../../skills/context/TrackContext";
+import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
+import { getEmployeeSkills } from "../skills-matrix/initialSkills";
+import { useRoleStore } from "../RoleBenchmark";
+import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { useEmployeeStore } from "../../employee/store/employeeStore";
+import { getSkillProfileId } from "../../EmployeeTable";
 import { useEffect } from "react";
 import { calculateMatchingSkills } from "./MatchingSkillsCalculator";
 import { calculateMatchPercentages } from "./MatchPercentageCalculator";
 import { ProgressBar } from "./ProgressBar";
-import { getLevelPriority, getSkillGoalPriority } from "../utils/priorityUtils";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -103,35 +102,6 @@ export const BenchmarkAnalysis = () => {
     track,
     comparisonLevel
   });
-
-  const processedSkills = allRoleSkills
-    .filter(skill => toggledSkills.has(skill.title))
-    .map(skill => {
-      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skill.title);
-      const roleSkillState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), selectedRole);
-      
-      return {
-        ...skill,
-        roleLevel: roleSkillState?.level || 'unspecified',
-        employeeLevel: currentStates[skill.title]?.level || employeeSkill?.level || 'unspecified',
-        goalStatus: currentStates[skill.title]?.goalStatus || 'unknown'
-      };
-    })
-    .sort((a, b) => {
-      const aRoleLevel = a.roleLevel;
-      const bRoleLevel = b.roleLevel;
-      
-      const roleLevelDiff = getLevelPriority(aRoleLevel) - getLevelPriority(bRoleLevel);
-      if (roleLevelDiff !== 0) return roleLevelDiff;
-
-      const employeeLevelDiff = getLevelPriority(a.employeeLevel) - getLevelPriority(b.employeeLevel);
-      if (employeeLevelDiff !== 0) return employeeLevelDiff;
-
-      const requirementDiff = getSkillGoalPriority(a.goalStatus) - getSkillGoalPriority(b.goalStatus);
-      if (requirementDiff !== 0) return requirementDiff;
-
-      return a.title.localeCompare(b.title);
-    });
 
   return (
     <div className="space-y-6">
