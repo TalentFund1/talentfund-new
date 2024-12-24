@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { DetailedSkill } from "./types/SkillTypes";
+import { DetailedSkill, UnifiedSkill, SkillRequirement } from "./types/SkillTypes";
 import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
+import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
-import { getUnifiedSkillData } from "./data/skillDatabaseService";
-import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
@@ -34,12 +34,12 @@ export const SkillsSummary = () => {
   const { id } = useParams<{ id: string }>();
   const { selectedSkills, setSelectedSkills } = useSelectedSkills();
   const { toast } = useToast();
+  const { currentStates } = useSkillsMatrixStore();
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
-  const { getSkillState, getEmployeeSkills: getStoredEmployeeSkills } = useEmployeeSkillsStore();
 
   console.log('Loading skills for employee:', id);
-  const employeeSkills = getStoredEmployeeSkills(id || "");
+  const employeeSkills = getEmployeeSkills(id || "");
   console.log('Loaded employee skills:', employeeSkills);
 
   const handleSkillsChange = (skills: string[]) => {
@@ -61,14 +61,16 @@ export const SkillsSummary = () => {
     setMatrixSearchSkills([]);
   };
 
-  const transformAndSortSkills = (skills: any[]): DetailedSkill[] => {
+  const transformAndSortSkills = (skills: UnifiedSkill[]): DetailedSkill[] => {
     return skills
       .map(skill => {
-        const skillState = getSkillState(id || "", skill.title);
+        const goalStatus = currentStates[skill.title]?.goalStatus || skill.goalStatus;
         return {
           name: skill.title,
-          level: skillState.level || 'unspecified',
-          isSkillGoal: skillState.goalStatus === 'skill_goal'
+          level: currentStates[skill.title]?.level || skill.level,
+          isSkillGoal: (goalStatus === 'required' || 
+                     goalStatus === 'skill_goal' || 
+                     (goalStatus !== 'not_interested' && skill.level === 'advanced'))
         };
       })
       .sort((a, b) => {
@@ -87,28 +89,26 @@ export const SkillsSummary = () => {
     );
   };
 
-  const categorizeSkills = (skills: any[]) => {
-    return skills.reduce((acc: any, skill) => {
-      const unifiedData = getUnifiedSkillData(skill.title);
-      const category = unifiedData.category || 'specialized';
-      
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(skill);
-      return acc;
-    }, {
-      specialized: [],
-      common: [],
-      certification: []
-    });
-  };
+  const specializedSkills: DetailedSkill[] = transformAndSortSkills(
+    filterSkillsByCategory(employeeSkills.map(skill => ({
+      ...skill,
+      goalStatus: skill.goalStatus
+    })), "specialized") as UnifiedSkill[]
+  );
 
-  const categorizedSkills = categorizeSkills(employeeSkills);
-  
-  const specializedSkills = transformAndSortSkills(categorizedSkills.specialized);
-  const commonSkills = transformAndSortSkills(categorizedSkills.common);
-  const certifications = transformAndSortSkills(categorizedSkills.certification);
+  const commonSkills: DetailedSkill[] = transformAndSortSkills(
+    filterSkillsByCategory(employeeSkills.map(skill => ({
+      ...skill,
+      goalStatus: skill.goalStatus
+    })), "common") as UnifiedSkill[]
+  );
+
+  const certifications: DetailedSkill[] = transformAndSortSkills(
+    filterSkillsByCategory(employeeSkills.map(skill => ({
+      ...skill,
+      goalStatus: skill.goalStatus
+    })), "certification") as UnifiedSkill[]
+  );
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
