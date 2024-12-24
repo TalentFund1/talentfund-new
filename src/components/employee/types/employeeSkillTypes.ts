@@ -19,12 +19,13 @@ export interface EmployeeSkill {
     O: boolean;
   };
   dateAcquired?: string;
-  lastUpdated?: string;
+  lastUpdated: string;
 }
 
 export interface EmployeeSkillState {
   level: string;
   requirement: SkillRequirement;
+  lastUpdated: string;
 }
 
 export interface EmployeeSkillsData {

@@ -9,12 +9,12 @@ import { getSkillProfileId } from "../../EmployeeTable";
 interface EmployeeSkillState {
   level: string;
   requirement: string;
+  lastUpdated: string;
 }
 
 interface EmployeeSkills {
   skills: UnifiedSkill[];
   states: Record<string, EmployeeSkillState>;
-  lastUpdated: string;
 }
 
 interface EmployeeStore {
@@ -29,28 +29,6 @@ interface EmployeeStore {
   getSkillState: (employeeId: string, skillName: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
-
-const getInitialSkillsForRole = (roleId: string): UnifiedSkill[] => {
-  const role = roleSkills[roleId as keyof typeof roleSkills];
-  if (!role) {
-    console.warn('No role found for ID:', roleId);
-    return [];
-  }
-
-  const allSkills = [
-    ...(role.specialized || []),
-    ...(role.common || []),
-    ...(role.certifications || [])
-  ];
-
-  console.log('Initializing skills for role:', {
-    roleId,
-    skillCount: allSkills.length,
-    skills: allSkills.map(s => s.title)
-  });
-
-  return allSkills;
-};
 
 export const useEmployeeStore = create<EmployeeStore>()(
   persist(
@@ -71,14 +49,26 @@ export const useEmployeeStore = create<EmployeeStore>()(
         // Only initialize if not already present
         if (!store.employeeSkills[employeeId]) {
           const roleId = getSkillProfileId(employee.role);
-          const initialSkills = getInitialSkillsForRole(roleId);
+          const roleData = roleSkills[roleId as keyof typeof roleSkills];
+          
+          if (!roleData) {
+            console.warn('No role data found for:', roleId);
+            return;
+          }
 
-          // Initialize with default states
+          const initialSkills = [
+            ...(roleData.specialized || []),
+            ...(roleData.common || []),
+            ...(roleData.certifications || [])
+          ];
+
+          // Initialize with default states and timestamp
           const initialStates: Record<string, EmployeeSkillState> = {};
           initialSkills.forEach(skill => {
             initialStates[skill.title] = {
               level: skill.level || 'beginner',
-              requirement: 'unknown'
+              requirement: 'unknown',
+              lastUpdated: new Date().toISOString()
             };
           });
 
@@ -87,8 +77,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
               ...state.employeeSkills,
               [employeeId]: {
                 skills: initialSkills,
-                states: initialStates,
-                lastUpdated: new Date().toISOString()
+                states: initialStates
               }
             }
           }));
@@ -118,8 +107,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
       },
 
       getEmployeeById: (id) => {
-        const state = get();
-        return state.employees.find(emp => emp.id === id);
+        return get().employees.find(emp => emp.id === id);
       },
 
       setEmployeeSkills: (employeeId, skills) => {
@@ -159,9 +147,12 @@ export const useEmployeeStore = create<EmployeeStore>()(
               ...state.employeeSkills[employeeId],
               states: {
                 ...state.employeeSkills[employeeId]?.states,
-                [skillName]: { level, requirement }
-              },
-              lastUpdated: new Date().toISOString()
+                [skillName]: { 
+                  level, 
+                  requirement,
+                  lastUpdated: new Date().toISOString()
+                }
+              }
             }
           }
         }));
@@ -171,7 +162,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
         const state = get();
         return state.employeeSkills[employeeId]?.states[skillName] || { 
           level: 'beginner', 
-          requirement: 'unknown' 
+          requirement: 'unknown',
+          lastUpdated: new Date().toISOString()
         };
       }
     }),

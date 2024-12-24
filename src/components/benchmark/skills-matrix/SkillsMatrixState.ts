@@ -7,11 +7,11 @@ import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 interface SkillState {
   level: string;
   requirement: string;
+  lastUpdated: string;
 }
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
-  originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
   setSkillState: (skillTitle: string, level: string, requirement: string) => void;
   resetSkills: () => void;
@@ -24,7 +24,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set) => ({
       currentStates: {},
-      originalStates: {},
       hasChanges: false,
 
       setSkillState: (skillTitle, level, requirement) => {
@@ -49,7 +48,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillTitle]: { level, requirement },
+            [skillTitle]: { 
+              level, 
+              requirement,
+              lastUpdated: new Date().toISOString()
+            },
           },
           hasChanges: true,
         }));
@@ -58,7 +61,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       resetSkills: () =>
         set(() => ({
           currentStates: {},
-          originalStates: {},
           hasChanges: false,
         })),
 
@@ -69,11 +71,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillTitle]: { level, requirement: requirement || 'unknown' },
-              },
-              originalStates: {
-                ...state.originalStates,
-                [skillTitle]: { level, requirement: requirement || 'unknown' },
+                [skillTitle]: { 
+                  level, 
+                  requirement: requirement || 'unknown',
+                  lastUpdated: new Date().toISOString()
+                },
               },
             };
           }
@@ -97,15 +99,13 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           });
         }
 
-        set((state) => ({
-          originalStates: { ...state.currentStates },
+        set(() => ({
           hasChanges: false,
         }));
       },
 
       cancelChanges: () =>
-        set((state) => ({
-          currentStates: { ...state.originalStates },
+        set(() => ({
           hasChanges: false,
         })),
     }),
@@ -114,7 +114,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       version: 2,
       partialize: (state) => ({
         currentStates: state.currentStates,
-        originalStates: state.originalStates,
       }),
     }
   )
