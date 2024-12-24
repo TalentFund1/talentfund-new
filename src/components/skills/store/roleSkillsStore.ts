@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { RoleSkillData, RoleSkillRequirement, RoleSkillsStore } from '../types/roleSkillTypes';
 import { roleSkills } from '../data/roleSkills';
 import { SkillLevel } from '../types/sharedSkillTypes';
+import { UnifiedSkill } from '../types/SkillTypes';
 
 const normalizeSkillLevel = (level: string | undefined): SkillLevel => {
   switch (level?.toLowerCase()) {
@@ -17,7 +18,7 @@ const normalizeSkillLevel = (level: string | undefined): SkillLevel => {
   }
 };
 
-const transformToRoleSkillRequirement = (skill: any): RoleSkillRequirement => {
+const transformToRoleSkillRequirement = (skill: UnifiedSkill): RoleSkillRequirement => {
   return {
     ...skill,
     minimumLevel: normalizeSkillLevel(skill.level),
