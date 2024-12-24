@@ -86,13 +86,13 @@ const EmployeeTableContent = ({
 
   const preFilteredEmployees = filterEmployees(
     employees,
-    [...selectedEmployees],
-    [...selectedDepartment],
-    [...selectedLevel],
-    [...selectedOffice],
-    [...selectedEmploymentType],
-    [...selectedSkills],
-    [...selectedManager]
+    selectedEmployees,
+    selectedDepartment,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedSkills,
+    selectedManager
   );
 
   console.log('Pre-filtered employees:', preFilteredEmployees);

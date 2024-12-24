@@ -30,7 +30,7 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
           const initializedData = {
             employeeId,
             skills: initializeEmployeeSkills(employeeId, employee.skills.map(s => ({
-              title: s.title,
+              name: s.title, // Map title to name for compatibility
               level: s.level
             }))),
             states: {},
