@@ -1,3 +1,6 @@
+import { getAllSkills } from '../skills/data/skills/allSkills';
+import { normalizeSkillTitle } from '../skills/utils/normalization';
+
 export const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
   "photo-1518770660439-4636190af475",
@@ -5,30 +8,17 @@ export const EMPLOYEE_IMAGES = [
   "photo-1486312338219-ce68d2c6f44d"
 ];
 
-// Random skills pool completely unrelated to roles
-const randomSkillsPool = [
-  { name: "Cooking", level: "advanced" },
-  { name: "Photography", level: "intermediate" },
-  { name: "Gardening", level: "beginner" },
-  { name: "Chess", level: "advanced" },
-  { name: "Painting", level: "intermediate" },
-  { name: "Piano", level: "beginner" },
-  { name: "Yoga", level: "advanced" },
-  { name: "Pottery", level: "intermediate" },
-  { name: "Skateboarding", level: "beginner" },
-  { name: "Origami", level: "intermediate" },
-  { name: "Baking", level: "advanced" },
-  { name: "Meditation", level: "beginner" },
-  { name: "Dancing", level: "intermediate" },
-  { name: "Singing", level: "beginner" },
-  { name: "Writing", level: "advanced" }
-];
-
-// Helper function to get random skills
+// Get random skills from universal database
 const getRandomSkills = () => {
-  const shuffled = [...randomSkillsPool].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, 5); // Get 5 random skills
+  const allSkills = getAllSkills();
+  const shuffled = [...allSkills].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, 5).map(skill => ({
+    name: normalizeSkillTitle(skill.title),
+    level: ['beginner', 'intermediate', 'advanced'][Math.floor(Math.random() * 3)]
+  }));
 };
+
+console.log('Initializing employee skills from universal database');
 
 export const employees = [
   {

@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 import { useMemo } from "react";
-import { SkillLevel } from "./employee/types/employeeSkillTypes";
+import { SkillLevel, SkillGoalStatus } from "./employee/types/employeeSkillTypes";
 
 interface Skill {
   name: string;
@@ -74,7 +74,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     const updates = {
       [skill.name]: {
         level: skill.level as SkillLevel,
-        goalStatus: 'unknown',
+        goalStatus: 'unknown' as SkillGoalStatus,
         lastUpdated: new Date().toISOString()
       }
     };
