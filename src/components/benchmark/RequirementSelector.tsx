@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, Check, CircleDashed } from "lucide-react";
+import { Heart, X, CircleDashed } from "lucide-react";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -13,17 +13,17 @@ export const RequirementSelector = ({
   onRequirementChange 
 }: RequirementSelectorProps) => {
   const getRequirementStyles = (requirement: string, level: string) => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-gray-600 w-full flex items-center justify-center gap-1.5';
+    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
     switch (requirement.toLowerCase()) {
       case 'required':
         return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${
           level.toLowerCase() === 'advanced' 
-            ? 'bg-gray-100 border-primary-accent' 
+            ? 'bg-primary-accent/20 border-primary-accent' 
             : level.toLowerCase() === 'intermediate'
-              ? 'bg-gray-100 border-primary-icon'
+              ? 'bg-primary-icon/20 border-primary-icon'
               : level.toLowerCase() === 'beginner'
-                ? 'bg-gray-100 border-[#008000]'
+                ? 'bg-[#008000]/20 border-[#008000]'
                 : 'bg-gray-100 border-gray-300'
         }`;
       case 'not_interested':
@@ -48,18 +48,18 @@ export const RequirementSelector = ({
           <span className="flex items-center gap-2 justify-center">
             {normalizedRequired === 'required' ? (
               <>
-                <Check className="w-3.5 h-3.5" />
-                <span>Required</span>
+                <Heart className="w-3.5 h-3.5" />
+                <span>Skill Goal</span>
               </>
             ) : normalizedRequired === 'not_interested' ? (
               <>
-                <CircleDashed className="w-3.5 h-3.5" />
+                <X className="w-3.5 h-3.5" />
                 <span>Not Interested</span>
               </>
             ) : (
               <>
-                <Heart className="w-3.5 h-3.5" />
-                <span>Preferred</span>
+                <CircleDashed className="w-3.5 h-3.5" />
+                <span>Unknown</span>
               </>
             )}
           </span>
@@ -68,17 +68,17 @@ export const RequirementSelector = ({
       <SelectContent>
         <SelectItem value="required">
           <span className="flex items-center gap-2">
-            <Check className="w-3.5 h-3.5" /> Required
+            <Heart className="w-3.5 h-3.5" /> Skill Goal
           </span>
         </SelectItem>
         <SelectItem value="not_interested">
           <span className="flex items-center gap-2">
-            <CircleDashed className="w-3.5 h-3.5" /> Not Interested
+            <X className="w-3.5 h-3.5" /> Not Interested
           </span>
         </SelectItem>
         <SelectItem value="unknown">
           <span className="flex items-center gap-2">
-            <Heart className="w-3.5 h-3.5" /> Preferred
+            <CircleDashed className="w-3.5 h-3.5" /> Unknown
           </span>
         </SelectItem>
       </SelectContent>
