@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillsStore, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
+import { EmployeeSkillsStore, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -12,12 +12,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         
         const currentSkills = get().employeeSkills[employeeId];
         if (!currentSkills) {
-          set(state => ({
+          set((state) => ({
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
                 employeeId,
-                skills: [], // Initialize with empty array
+                skills: [],
                 states: {},
                 lastUpdated: new Date().toISOString()
               }
@@ -27,14 +27,20 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         }
       },
 
-      setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
+      setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
         console.log('Setting skill level:', { employeeId, skillTitle, level });
         
-        set(state => {
+        set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
             skills: [],
             states: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          const currentState = employeeData.states[skillTitle] || {
+            level: 'unspecified' as SkillLevel,
+            requirement: 'unknown' as SkillGoalStatus,
             lastUpdated: new Date().toISOString()
           };
 
@@ -46,7 +52,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 states: {
                   ...employeeData.states,
                   [skillTitle]: {
-                    ...employeeData.states[skillTitle],
+                    ...currentState,
                     level,
                     lastUpdated: new Date().toISOString()
                   }
@@ -57,14 +63,20 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         });
       },
 
-      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => {
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => {
         console.log('Setting skill goal status:', { employeeId, skillTitle, status });
         
-        set(state => {
+        set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
             skills: [],
             states: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          const currentState = employeeData.states[skillTitle] || {
+            level: 'unspecified' as SkillLevel,
+            requirement: 'unknown' as SkillGoalStatus,
             lastUpdated: new Date().toISOString()
           };
 
@@ -76,7 +88,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 states: {
                   ...employeeData.states,
                   [skillTitle]: {
-                    ...employeeData.states[skillTitle],
+                    ...currentState,
                     requirement: status,
                     lastUpdated: new Date().toISOString()
                   }
@@ -119,7 +131,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           updateCount: Object.keys(updates).length
         });
 
-        set(state => {
+        set((state) => {
           const currentData = state.employeeSkills[employeeId] || {
             employeeId,
             skills: [],
