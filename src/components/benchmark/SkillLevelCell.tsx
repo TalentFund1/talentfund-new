@@ -90,7 +90,7 @@ export const SkillLevelCell = ({
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentGoalStatus)}
                 {currentGoalStatus === 'skill_goal' ? 'Skill Goal' : 
-                 currentGoalStatus === 'not-interested' ? 'Not Interested' : 
+                 currentGoalStatus === 'not_interested' ? 'Not Interested' : 
                  'Unknown'}
               </span>
             </SelectValue>
@@ -102,9 +102,9 @@ export const SkillLevelCell = ({
                 Skill Goal
               </span>
             </SelectItem>
-            <SelectItem value="not-interested">
+            <SelectItem value="not_interested">
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon('not-interested')}
+                {getRequirementIcon('not_interested')}
                 Not Interested
               </span>
             </SelectItem>

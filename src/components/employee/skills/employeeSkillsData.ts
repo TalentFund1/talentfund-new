@@ -39,7 +39,7 @@ const normalizeSkillLevel = (level: string): SkillLevel => {
 };
 
 const normalizeGoalStatus = (status: string): SkillGoalStatus => {
-  const validStatuses: SkillGoalStatus[] = ['required', 'preferred', 'not-interested', 'unknown', 'skill_goal'];
+  const validStatuses: SkillGoalStatus[] = ['required', 'preferred', 'not_interested', 'unknown', 'skill_goal'];
   const normalizedStatus = status.toLowerCase() as SkillGoalStatus;
   return validStatuses.includes(normalizedStatus) ? normalizedStatus : 'unknown';
 };

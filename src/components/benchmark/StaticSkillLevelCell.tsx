@@ -85,7 +85,7 @@ export const StaticSkillLevelCell = ({
                 ? 'border-[#008000]'
                 : 'border-gray-300'
         }`;
-      case 'not-interested':
+      case 'not_interested':
       case 'unknown':
       default:
         return `${baseStyles} border-gray-300`;
@@ -105,7 +105,7 @@ export const StaticSkillLevelCell = ({
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.requirement)}
             {currentState?.requirement === 'required' ? 'Skill Goal' : 
-             currentState?.requirement === 'not-interested' ? 'Not Interested' : 
+             currentState?.requirement === 'not_interested' ? 'Not Interested' : 
              'Unknown'}
           </span>
         </div>
