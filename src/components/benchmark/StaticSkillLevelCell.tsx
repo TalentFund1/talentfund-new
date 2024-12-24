@@ -29,7 +29,7 @@ export const StaticSkillLevelCell = ({
 
   const currentState = currentStates[skillTitle] || {
     level: 'unspecified',
-    requirement: 'preferred'
+    goalStatus: 'unknown'
   };
 
   const getLevelIcon = (level: string = 'unspecified') => {
@@ -45,8 +45,8 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (requirement: string = 'unknown') => {
-    switch (requirement?.toLowerCase()) {
+  const getRequirementIcon = (goalStatus: string = 'unknown') => {
+    switch (goalStatus?.toLowerCase()) {
       case 'required':
         return <Heart className="w-3.5 h-3.5" />;
       case 'not_interested':
@@ -71,10 +71,10 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementStyles = (requirement: string = 'unknown', level: string = 'unspecified') => {
+  const getRequirementStyles = (goalStatus: string = 'unknown', level: string = 'unspecified') => {
     const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
     
-    switch (requirement?.toLowerCase()) {
+    switch (goalStatus?.toLowerCase()) {
       case 'required':
         return `${baseStyles} ${
           level.toLowerCase() === 'advanced' 
@@ -101,11 +101,11 @@ export const StaticSkillLevelCell = ({
             {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
           </span>
         </div>
-        <div className={getRequirementStyles(currentState?.requirement, currentState?.level)}>
+        <div className={getRequirementStyles(currentState?.goalStatus, currentState?.level)}>
           <span className="flex items-center gap-1.5">
-            {getRequirementIcon(currentState?.requirement)}
-            {currentState?.requirement === 'required' ? 'Skill Goal' : 
-             currentState?.requirement === 'not_interested' ? 'Not Interested' : 
+            {getRequirementIcon(currentState?.goalStatus)}
+            {currentState?.goalStatus === 'required' ? 'Skill Goal' : 
+             currentState?.goalStatus === 'not_interested' ? 'Not Interested' : 
              'Unknown'}
           </span>
         </div>

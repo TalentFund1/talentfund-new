@@ -32,7 +32,7 @@ export const SkillsMatrix = () => {
     return {
       ...skill,
       level: state.level,
-      requirement: state.requirement
+      goalStatus: state.goalStatus
     } as UnifiedSkill;
   }) : [];
 
