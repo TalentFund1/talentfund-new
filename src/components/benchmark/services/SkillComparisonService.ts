@@ -1,5 +1,6 @@
 import { EmployeeSkillAchievement, SkillLevel } from '../../employee/types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../../skills/types/roleSkillTypes';
+import { SkillComparison, SkillComparisonResult } from '../../skills/types/skillComparison';
 
 export const getLevelPriority = (level: string = 'unspecified'): number => {
   const priorities: Record<string, number> = {
@@ -14,7 +15,7 @@ export const getLevelPriority = (level: string = 'unspecified'): number => {
 export const compareSkillLevels = (
   employeeSkill: EmployeeSkillAchievement,
   roleRequirement: RoleSkillRequirement
-): boolean => {
+): SkillComparison => {
   const employeePriority = getLevelPriority(employeeSkill.level);
   const requiredPriority = getLevelPriority(roleRequirement.minimumLevel);
 
@@ -26,26 +27,65 @@ export const compareSkillLevels = (
     requiredPriority
   });
 
-  return employeePriority >= requiredPriority;
+  const gapLevel = employeePriority - requiredPriority;
+  const matchPercentage = (employeePriority / Math.max(requiredPriority, 1)) * 100;
+
+  return {
+    employeeSkill,
+    roleRequirement,
+    matchPercentage,
+    gapLevel
+  };
 };
 
-export const getMatchPercentage = (
+export const getSkillComparisonResult = (
   employeeSkills: EmployeeSkillAchievement[],
   roleRequirements: RoleSkillRequirement[]
-): number => {
-  if (roleRequirements.length === 0) return 0;
+): SkillComparisonResult => {
+  if (roleRequirements.length === 0) {
+    return {
+      matches: [],
+      totalMatchPercentage: 0,
+      missingSkills: [],
+      exceedingSkills: employeeSkills
+    };
+  }
 
-  const matches = roleRequirements.filter(requirement => {
+  const matches: SkillComparison[] = [];
+  const missingSkills: RoleSkillRequirement[] = [];
+  const exceedingSkills: EmployeeSkillAchievement[] = [];
+
+  // Find matching and missing skills
+  roleRequirements.forEach(requirement => {
     const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
-    if (!employeeSkill) return false;
-    return compareSkillLevels(employeeSkill, requirement);
+    if (employeeSkill) {
+      matches.push(compareSkillLevels(employeeSkill, requirement));
+    } else {
+      missingSkills.push(requirement);
+    }
   });
 
-  console.log('Calculated match percentage:', {
-    totalRequirements: roleRequirements.length,
-    matches: matches.length,
-    percentage: (matches.length / roleRequirements.length) * 100
+  // Find exceeding skills
+  employeeSkills.forEach(skill => {
+    if (!roleRequirements.some(req => req.title === skill.title)) {
+      exceedingSkills.push(skill);
+    }
   });
 
-  return (matches.length / roleRequirements.length) * 100;
+  const totalMatchPercentage = matches.reduce((sum, match) => sum + match.matchPercentage, 0) / 
+    (roleRequirements.length || 1);
+
+  console.log('Calculated skill comparison result:', {
+    totalMatches: matches.length,
+    missingSkills: missingSkills.length,
+    exceedingSkills: exceedingSkills.length,
+    totalMatchPercentage
+  });
+
+  return {
+    matches,
+    totalMatchPercentage,
+    missingSkills,
+    exceedingSkills
+  };
 };

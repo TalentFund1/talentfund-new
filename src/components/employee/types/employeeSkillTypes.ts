@@ -3,7 +3,7 @@ export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unk
 
 export interface EmployeeSkillState {
   level: SkillLevel;
-  requirement: SkillGoalStatus;
+  goalStatus: SkillGoalStatus;
   lastUpdated: string;
 }
 
@@ -21,7 +21,6 @@ export interface EmployeeSkillAchievement {
   businessCategory: string;
   growth: string;
   salary: string;
-  requirement: SkillGoalStatus;
   benchmarks: {
     B: boolean;
     R: boolean;
