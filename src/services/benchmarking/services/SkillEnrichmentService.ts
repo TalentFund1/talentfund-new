@@ -1,4 +1,4 @@
-import { EmployeeSkillData, SkillWeight } from '../../../components/employee/types/employeeSkillTypes';
+import { EmployeeSkillData, SkillLevel, SkillWeight } from '../../../components/employee/types/employeeSkillTypes';
 import { UnifiedSkill } from '../../../components/skills/types/SkillTypes';
 import { skillStateService } from './SkillStateService';
 
@@ -9,12 +9,15 @@ class SkillEnrichmentService {
       skillTitle: skill.title
     });
 
+    // Ensure skill level is properly typed
+    const normalizedLevel = this.normalizeSkillLevel(skill.level || 'unspecified');
+
     return {
       id: `${employeeId}-${skill.title}`,
       employeeId,
       skillId: `${employeeId}-${skill.title}`,
       title: skill.title,
-      level: skill.level || 'unspecified',
+      level: normalizedLevel,
       goalStatus: skill.goalStatus || 'unknown',
       lastUpdated: new Date().toISOString(),
       confidence: 'medium',
@@ -31,6 +34,18 @@ class SkillEnrichmentService {
         O: false
       }
     };
+  }
+
+  private normalizeSkillLevel(level: string): SkillLevel {
+    const normalizedLevel = level.toLowerCase();
+    switch (normalizedLevel) {
+      case 'beginner':
+      case 'intermediate':
+      case 'advanced':
+        return normalizedLevel as SkillLevel;
+      default:
+        return 'unspecified';
+    }
   }
 
   public initializeEmployeeSkillsData(employeeId: string, skills: UnifiedSkill[]): Record<string, EmployeeSkillData> {

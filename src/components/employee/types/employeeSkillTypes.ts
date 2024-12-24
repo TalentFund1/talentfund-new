@@ -5,7 +5,7 @@ export type SkillConfidence = 'low' | 'medium' | 'high';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 
-// Core employee skill state
+// Employee-specific skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
