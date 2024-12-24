@@ -6,6 +6,7 @@ import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillProfileId } from "../../EmployeeTable";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
+import { benchmarkingService } from "../../../services/benchmarking";
 import { 
   EmployeeSkill, 
   EmployeeSkillState, 

@@ -2,20 +2,20 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
-import { EmployeeSkillAchievement, SkillLevel, SkillGoalStatus } from '../../employee/types/employeeSkillTypes';
+import { benchmarkingService } from '../../../services/benchmarking';
 
 interface SkillState {
-  level: SkillLevel;
-  goalStatus: SkillGoalStatus;
+  level: string;
+  goalStatus: string;
   lastUpdated: string;
 }
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: SkillLevel, goalStatus: SkillGoalStatus) => void;
+  setSkillState: (skillTitle: string, level: string, goalStatus: string) => void;
   resetSkills: () => void;
-  initializeState: (skillTitle: string, level: SkillLevel, goalStatus: SkillGoalStatus) => void;
+  initializeState: (skillTitle: string, level: string, goalStatus: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -104,32 +104,31 @@ export const useSkillsMatrixState = (
 
     let filteredSkills = [...skills];
 
-    // Filter by category if not "all"
     if (selectedCategory !== "all") {
       filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
     }
 
-    // Filter by level if not "all"
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        return skill.level.toLowerCase() === selectedLevel.toLowerCase();
+        const skillState = currentStates[skill.title];
+        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
       });
     }
 
-    // Filter by interest/goalStatus if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        if (!skill.goalStatus) return false;
+        const skillState = currentStates[skill.title];
+        if (!skillState?.goalStatus) return false;
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return skill.goalStatus === "required" || skill.goalStatus === "skill_goal";
+            return skillState.goalStatus === "required" || skillState.goalStatus === "skill_goal";
           case "not_interested":
-            return skill.goalStatus === "not_interested";
+            return skillState.goalStatus === "not_interested";
           case "unknown":
-            return !skill.goalStatus || skill.goalStatus === "unknown";
+            return !skillState.goalStatus || skillState.goalStatus === "unknown";
           default:
-            return skill.goalStatus === selectedInterest.toLowerCase();
+            return skillState.goalStatus === selectedInterest.toLowerCase();
         }
       });
     }

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { benchmarkingService } from '../../services/benchmarking';
 
 export interface SkillState {
   level: string;
@@ -76,7 +77,7 @@ export const useCompetencyStore = create<CompetencyState>()(
     }),
     {
       name: 'competency-matrix-storage',
-      version: 25, // Increment version to ensure clean state
+      version: 25,
       partialize: (state) => ({
         currentStates: state.currentStates,
       }),
