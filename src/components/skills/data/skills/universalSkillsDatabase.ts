@@ -17,10 +17,21 @@ export const getSkillsByCategory = (category: string) => {
 
 export const getAllSkills = () => allSkills;
 
-export const getSkillByTitle = (title: string) => {
-  return allSkills.find(skill => 
+export const getSkillByTitle = (title: string | undefined) => {
+  if (!title) {
+    console.warn('Attempted to get skill with undefined title');
+    return undefined;
+  }
+
+  const skill = allSkills.find(skill => 
     skill.title.toLowerCase() === title.toLowerCase()
   );
+
+  if (!skill) {
+    console.warn(`Skill not found: ${title}`);
+  }
+
+  return skill;
 };
 
 console.log('Universal skills database initialized with', allSkills.length, 'skills');
