@@ -17,6 +17,20 @@ const normalizeSkillLevel = (level: string | undefined): SkillLevel => {
   }
 };
 
+const transformToRoleSkillRequirement = (skill: any): RoleSkillRequirement => {
+  return {
+    ...skill,
+    minimumLevel: normalizeSkillLevel(skill.level),
+    requirementLevel: 'required',
+    benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
+    metrics: {
+      growth: skill.growth || '0%',
+      salary: skill.salary || 'market',
+      confidence: skill.confidence || 'medium'
+    }
+  };
+};
+
 export const useRoleSkillsStore = create<RoleSkillsStore>()(
   persist(
     (set, get) => ({
@@ -50,40 +64,14 @@ export const useRoleSkillsStore = create<RoleSkillsStore>()(
               roleId,
               title: roleData.title,
               track: roleData.roleTrack || "Professional",
-              specialized: roleData.specialized.map(skill => ({
-                ...skill,
-                minimumLevel: normalizeSkillLevel(skill.level),
-                requirementLevel: 'required',
-                benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
-                metrics: {
-                  growth: skill.growth || '0%',
-                  salary: skill.salary || 'market',
-                  confidence: skill.confidence || 'medium'
-                }
-              })),
-              common: roleData.common.map(skill => ({
-                ...skill,
-                minimumLevel: normalizeSkillLevel(skill.level),
-                requirementLevel: 'preferred',
-                benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
-                metrics: {
-                  growth: skill.growth || '0%',
-                  salary: skill.salary || 'market',
-                  confidence: skill.confidence || 'medium'
-                }
-              })),
-              certifications: roleData.certifications.map(skill => ({
-                ...skill,
-                minimumLevel: normalizeSkillLevel(skill.level),
-                requirementLevel: 'optional',
-                benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
-                metrics: {
-                  growth: skill.growth || '0%',
-                  salary: skill.salary || 'market',
-                  confidence: skill.confidence || 'medium'
-                }
-              })),
-              skills: [...roleData.specialized, ...roleData.common, ...roleData.certifications]
+              specialized: roleData.specialized.map(transformToRoleSkillRequirement),
+              common: roleData.common.map(transformToRoleSkillRequirement),
+              certifications: roleData.certifications.map(transformToRoleSkillRequirement),
+              skills: [
+                ...roleData.specialized.map(transformToRoleSkillRequirement),
+                ...roleData.common.map(transformToRoleSkillRequirement),
+                ...roleData.certifications.map(transformToRoleSkillRequirement)
+              ]
             };
             
             set(state => ({
