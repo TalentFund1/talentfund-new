@@ -57,15 +57,15 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     .filter(skill => toggledSkills.has(skill.title)));
 
   // Categorize skills based on their actual levels
-  const advancedIntermediateSkills = sortSkills(filteredSkills.filter(skill => 
+  const requiredSkills = sortSkills(filteredSkills.filter(skill => 
     skill.level === 'advanced' || skill.level === 'intermediate'
   ));
 
-  const beginnerSkills = sortSkills(filteredSkills.filter(skill => 
+  const preferredSkills = sortSkills(filteredSkills.filter(skill => 
     skill.level === 'beginner'
   ));
 
-  const unspecifiedSkills = sortSkills(filteredSkills.filter(skill => 
+  const missingSkills = sortSkills(filteredSkills.filter(skill => 
     !skill.level || skill.level === 'unspecified'
   ));
 
@@ -83,12 +83,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   };
 
   console.log('Skills Summary:', {
-    advanced: advancedIntermediateSkills.length,
-    beginner: beginnerSkills.length,
-    unspecified: unspecifiedSkills.length,
-    advancedSkills: advancedIntermediateSkills,
-    beginnerSkills,
-    unspecifiedSkills
+    required: requiredSkills.length,
+    preferred: preferredSkills.length,
+    missing: missingSkills.length,
+    requiredSkills,
+    preferredSkills,
+    missingSkills
   });
 
   const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
@@ -123,21 +123,21 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
       />
 
       <SkillSection 
-        title="Advanced & Intermediate Skills" 
-        skills={advancedIntermediateSkills} 
-        count={advancedIntermediateSkills.length} 
+        title="Required Skills" 
+        skills={requiredSkills} 
+        count={requiredSkills.length} 
       />
       
       <SkillSection 
-        title="Beginner Skills" 
-        skills={beginnerSkills} 
-        count={beginnerSkills.length} 
+        title="Preferred Skills" 
+        skills={preferredSkills} 
+        count={preferredSkills.length} 
       />
       
       <SkillSection 
-        title="Unspecified Skills" 
-        skills={unspecifiedSkills} 
-        count={unspecifiedSkills.length} 
+        title="Missing Skills" 
+        skills={missingSkills} 
+        count={missingSkills.length} 
       />
     </div>
   );
