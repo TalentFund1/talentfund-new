@@ -47,18 +47,10 @@ export const SkillsSummary = () => {
     setSearchSkills(skills);
     setMatrixSearchSkills(skills);
     
-    const allExistingSkills = [
-      ...specializedSkills.map(s => s.name),
-      ...commonSkills.map(s => s.name),
-      ...certifications.map(s => s.name)
-    ];
-
-    const newSkills = skills.filter(skill => !allExistingSkills.includes(skill));
-    
-    if (newSkills.length > 0) {
+    if (skills.length > 0) {
       toast({
-        title: "Skills Added",
-        description: `Added ${newSkills.length} new skill${newSkills.length > 1 ? 's' : ''} to your profile.`,
+        title: "Skills Updated",
+        description: `Updated ${skills.length} skill${skills.length > 1 ? 's' : ''} in your search.`,
       });
     }
   };
@@ -124,6 +116,13 @@ export const SkillsSummary = () => {
       [section]: !prev[section]
     }));
   };
+
+  console.log('Skills Summary - Processed skills:', {
+    specialized: specializedSkills.length,
+    common: commonSkills.length,
+    certifications: certifications.length,
+    searchActive: searchSkills.length > 0
+  });
 
   const filteredSpecializedSkills = filterSkills(specializedSkills);
   const filteredCommonSkills = filterSkills(commonSkills);
