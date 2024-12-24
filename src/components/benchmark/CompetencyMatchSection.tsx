@@ -5,9 +5,10 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { getLevelPriority } from "../skills/utils/skillComparisonUtils";
 import { getRoleSkills } from "../skills/data/roles/roleDataReader";
+import { UnifiedSkill } from "../skills/types/SkillTypes";
 
 interface CompetencyMatchSectionProps {
-  skills: any[];
+  skills: ReadonlyArray<UnifiedSkill>;
   roleLevel: string;
 }
 
@@ -16,7 +17,7 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
   const { currentStates } = useSkillsMatrixStore();
   const { selectedRole } = useRoleStore();
 
-  // Use roleDataReader to get role skills
+  // Use roleDataReader to get immutable role skills
   const roleSkills = getRoleSkills(selectedRole);
   
   const matchingSkills = skills.filter(skill => {
@@ -26,19 +27,23 @@ export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSec
     const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
-    console.log(`Analyzing skill: ${skill.title}`);
-    console.log(`Role Skill Level: ${roleSkillLevel}`);
-    console.log(`Employee/Target Skill Level: ${employeeSkillLevel}`);
+    console.log(`Analyzing skill match:`, {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel,
+      roleId: selectedRole
+    });
 
     const employeePriority = getLevelPriority(employeeSkillLevel);
     const rolePriority = getLevelPriority(roleSkillLevel);
 
-    console.log(`Employee Priority: ${employeePriority}`);
-    console.log(`Role Priority: ${rolePriority}`);
-
     const isMatch = employeePriority >= rolePriority;
     
-    console.log(`Is Match: ${isMatch}\n`);
+    console.log(`Match result for ${skill.title}:`, {
+      employeePriority,
+      rolePriority,
+      isMatch
+    });
 
     return isMatch;
   });

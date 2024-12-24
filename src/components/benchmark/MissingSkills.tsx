@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
+import { getRoleSkills } from "../skills/data/roles/roleDataReader";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -15,24 +15,27 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useCompetencyStore();
   const employeeSkills = getEmployeeSkills(employeeId);
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
   
-  if (!currentRoleSkills) {
+  // Get immutable role skills
+  const roleSkills = getRoleSkills(roleId);
+  
+  if (!roleSkills.length) {
     console.error('No role skills found for role:', roleId);
     return null;
   }
 
-  // Get all required and preferred skills for the role
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
-
   // Find missing skills by comparing with employee skills, but only for toggled skills
-  const missingSkills = allRoleSkills.filter(roleSkill => {
+  const missingSkills = roleSkills.filter(roleSkill => {
     const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
     return !hasSkill && toggledSkills.has(roleSkill.title);
+  });
+
+  console.log('Missing skills analysis:', {
+    roleId,
+    employeeId,
+    totalRoleSkills: roleSkills.length,
+    missingSkillsCount: missingSkills.length,
+    missingSkills: missingSkills.map(s => s.title)
   });
 
   const getLevelColor = (skillTitle: string) => {
