@@ -8,7 +8,7 @@ import {
   SkillGoalStatus,
   EmployeeSkillAchievement
 } from '../types/employeeSkillTypes';
-import { initializeEmployeeSkillsData } from './actions/initializeEmployeeSkills';
+import { initializeEmployeeSkills } from './actions/initializeEmployeeSkills';
 import { employees } from '../EmployeeData';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
@@ -28,7 +28,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           }
 
           // Initialize with employee's existing skills from EmployeeData
-          const initializedData = initializeEmployeeSkillsData(employeeId, employee.skills);
+          const initializedData = {
+            employeeId,
+            skills: initializeEmployeeSkills(employeeId, employee.skills),
+            states: {},
+            lastUpdated: new Date().toISOString()
+          };
           
           set((state) => ({
             employeeSkills: {
