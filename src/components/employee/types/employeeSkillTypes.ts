@@ -17,9 +17,9 @@ export interface EmployeeSkill {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  weight: 'critical' | 'technical' | 'necessary';
+  weight: SkillWeight;
   confidence: 'low' | 'medium' | 'high';
-  category: 'specialized' | 'common' | 'certification';
+  category: SkillCategory;
   businessCategory: string;
   growth: string;
   salary: string;
@@ -30,6 +30,9 @@ export interface EmployeeSkill {
     O: boolean;
   };
 }
+
+// Alias for backward compatibility
+export type EmployeeSkillAchievement = EmployeeSkill;
 
 export interface EmployeeSkillsData {
   employeeId: string;
