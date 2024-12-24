@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { SkillLevel, SkillGoalStatus } from "./employee/types/employeeSkillTypes";
 
 interface Skill {
@@ -21,8 +21,32 @@ interface EmployeeSkillCardProps {
 
 export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: EmployeeSkillCardProps) => {
   const { toast } = useToast();
-  const { getSkillState, batchUpdateSkills } = useEmployeeSkillsStore();
+  const { getSkillState, batchUpdateSkills, initializeEmployeeSkills } = useEmployeeSkillsStore();
   
+  // Initialize skills when component mounts
+  useEffect(() => {
+    console.log('EmployeeSkillCard - Initializing skills for:', employeeId);
+    initializeEmployeeSkills(employeeId);
+    
+    // Batch update all skills
+    const updates = skills.reduce((acc, skill) => ({
+      ...acc,
+      [skill.name]: {
+        level: skill.level as SkillLevel,
+        goalStatus: 'unknown' as SkillGoalStatus,
+        lastUpdated: new Date().toISOString()
+      }
+    }), {});
+
+    console.log('EmployeeSkillCard - Batch updating skills:', {
+      employeeId,
+      skillCount: skills.length,
+      updates
+    });
+
+    batchUpdateSkills(employeeId, updates);
+  }, [employeeId, skills, initializeEmployeeSkills, batchUpdateSkills]);
+
   console.log('Rendering EmployeeSkillCard:', { 
     name, 
     role, 
@@ -40,7 +64,6 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
   }), []);
 
   const getLevelPercentage = (level: string): number => {
-    // If level is already a number between 0-100, return it
     if (typeof level === 'number') {
       console.log('Level is already a percentage:', level);
       return Math.min(Math.max(level, 0), 100);
@@ -70,7 +93,6 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
   const handleSkillClick = (skill: Skill) => {
     const percentage = getLevelPercentage(skill.level);
     
-    // Prepare batch update
     const updates = {
       [skill.name]: {
         level: skill.level as SkillLevel,
@@ -85,7 +107,6 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
       updates
     });
 
-    // Use batch update instead of individual updates
     batchUpdateSkills(employeeId, updates);
     
     toast({
@@ -99,6 +120,11 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     ...skill,
     percentage: getLevelPercentage(skill.level)
   })), [skills, getLevelPercentage]);
+
+  if (!skills.length) {
+    console.log('No skills available for employee:', employeeId);
+    return null;
+  }
 
   return (
     <Card className="p-6 animate-fade-in">

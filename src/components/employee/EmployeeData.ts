@@ -11,11 +11,19 @@ export const EMPLOYEE_IMAGES = [
 // Get random skills from universal database
 const getRandomSkills = () => {
   const allSkills = getAllSkills();
+  console.log('Getting random skills from universal database:', {
+    totalSkills: allSkills.length,
+    sampleSkills: allSkills.slice(0, 3).map(s => s.title)
+  });
+  
   const shuffled = [...allSkills].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, 5).map(skill => ({
+  const selectedSkills = shuffled.slice(0, 5).map(skill => ({
     name: normalizeSkillTitle(skill.title),
     level: ['beginner', 'intermediate', 'advanced'][Math.floor(Math.random() * 3)]
   }));
+
+  console.log('Selected random skills:', selectedSkills);
+  return selectedSkills;
 };
 
 console.log('Initializing employee skills from universal database');

@@ -5,8 +5,7 @@ import {
   EmployeeSkillState, 
   EmployeeSkillsData, 
   SkillLevel, 
-  SkillGoalStatus, 
-  EmployeeSkillAchievement 
+  SkillGoalStatus 
 } from '../types/employeeSkillTypes';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
@@ -133,11 +132,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return skillState;
       },
 
-      getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
-        console.log('Getting skills for employee:', employeeId);
-        return get().employeeSkills[employeeId]?.skills || [];
-      },
-
       batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => {
         console.log('Processing batch update:', { employeeId, updateCount: Object.keys(updates).length });
 
@@ -167,7 +161,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 11,
+      version: 12,
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
