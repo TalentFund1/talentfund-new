@@ -119,7 +119,7 @@ export const useSkillsFiltering = (
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
           case 'skill_goal':
-            matchesInterest = goalStatus === 'skill_goal';
+            matchesInterest = goalStatus === 'required' || goalStatus === 'skill_goal';
             break;
           case 'not_interested':
             matchesInterest = goalStatus === 'not_interested';
@@ -140,6 +140,11 @@ export const useSkillsFiltering = (
     })
     .map(skill => {
       const unifiedData = getUnifiedSkillData(skill.title);
+      console.log('Mapping skill with weight:', {
+        title: skill.title,
+        unifiedWeight: unifiedData.weight,
+        originalWeight: skill.weight
+      });
       return {
         ...skill,
         weight: unifiedData.weight,
