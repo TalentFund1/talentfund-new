@@ -4,7 +4,7 @@ import { SkillComparison, SkillComparisonResult } from '../../components/skills/
 import { roleSkills } from '../../components/skills/data/roleSkills';
 import { getSkillProfileId, getLevel } from '../../components/EmployeeTable';
 
-export class BenchmarkingService {
+class BenchmarkingService {
   private getLevelPriority(level: string = 'unspecified'): number {
     const priorities: { [key: string]: number } = {
       'advanced': 3,
@@ -19,7 +19,7 @@ export class BenchmarkingService {
     employeeSkill: EmployeeSkillAchievement,
     roleRequirement: RoleSkillRequirement
   ): SkillComparison {
-    console.log('Comparing skill levels:', {
+    console.log('BenchmarkingService: Comparing skill levels:', {
       skill: employeeSkill.title,
       employeeLevel: employeeSkill.level,
       requiredLevel: roleRequirement.minimumLevel
@@ -44,14 +44,14 @@ export class BenchmarkingService {
     currentStates: any,
     toggledSkills: Set<string>
   ): number {
-    console.log('Calculating benchmark for:', {
+    console.log('BenchmarkingService: Calculating benchmark for:', {
       roleId,
       level,
       toggledSkillsCount: toggledSkills.size
     });
 
     if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
-      console.warn('Invalid role ID:', roleId);
+      console.warn('BenchmarkingService: Invalid role ID:', roleId);
       return 0;
     }
 
@@ -63,7 +63,7 @@ export class BenchmarkingService {
     ].filter(skill => toggledSkills.has(skill.title));
 
     if (allRoleSkills.length === 0) {
-      console.log('No toggled skills found for role');
+      console.log('BenchmarkingService: No toggled skills found for role');
       return 0;
     }
 
@@ -74,7 +74,7 @@ export class BenchmarkingService {
       const employeeSkillLevel = currentStates[roleSkill.title]?.level || employeeSkill.level || 'unspecified';
       const roleSkillLevel = roleSkill.level || 'unspecified';
 
-      console.log('Comparing skill levels:', {
+      console.log('BenchmarkingService: Comparing skill levels:', {
         skill: roleSkill.title,
         employeeLevel: employeeSkillLevel,
         roleLevel: roleSkillLevel
@@ -88,7 +88,7 @@ export class BenchmarkingService {
 
     const percentage = (matchingSkills.length / allRoleSkills.length) * 100;
 
-    console.log('Benchmark calculation result:', {
+    console.log('BenchmarkingService: Benchmark calculation result:', {
       matchingSkills: matchingSkills.length,
       totalSkills: allRoleSkills.length,
       percentage
@@ -101,7 +101,7 @@ export class BenchmarkingService {
     employeeSkills: EmployeeSkillAchievement[],
     roleRequirements: RoleSkillRequirement[]
   ): SkillComparisonResult {
-    console.log('Calculating skill comparison:', {
+    console.log('BenchmarkingService: Calculating skill comparison:', {
       employeeSkillCount: employeeSkills.length,
       roleRequirementCount: roleRequirements.length
     });
@@ -128,7 +128,7 @@ export class BenchmarkingService {
     const totalMatchPercentage = matches.reduce((acc, match) => acc + match.matchPercentage, 0) / 
       (roleRequirements.length || 1);
 
-    console.log('Calculated skill comparison result:', {
+    console.log('BenchmarkingService: Calculated skill comparison result:', {
       totalMatches: matches.length,
       missingSkills: missingSkills.length,
       exceedingSkills: exceedingSkills.length,
