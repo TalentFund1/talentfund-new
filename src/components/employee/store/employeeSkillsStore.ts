@@ -17,7 +17,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       employeeSkills: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
-        console.log('Initializing skills for employee:', employeeId);
+        console.log('Checking existing skills for employee:', employeeId);
         
         const currentSkills = get().employeeSkills[employeeId];
         if (!currentSkills) {
@@ -27,7 +27,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             return;
           }
 
-          // Initialize with employee's existing skills from EmployeeData
+          // Initialize only with employee's existing skills
           const initializedData = {
             employeeId,
             skills: initializeEmployeeSkills(employeeId, employee.skills),
@@ -42,9 +42,15 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           }));
           
-          console.log('Initialized skills for employee:', {
+          console.log('Initialized employee skills:', {
             employeeId,
-            skillCount: initializedData.skills.length
+            skillCount: initializedData.skills.length,
+            skills: initializedData.skills.map(s => s.title)
+          });
+        } else {
+          console.log('Skills already initialized for employee:', {
+            employeeId,
+            skillCount: currentSkills.skills.length
           });
         }
       },
@@ -71,12 +77,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           };
         }
 
-        console.log('Retrieved skill state:', {
-          employeeId,
-          skillTitle,
-          state
-        });
-        
         return state;
       },
 
@@ -165,7 +165,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 13,
+      version: 14, // Increment version to ensure clean state
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })

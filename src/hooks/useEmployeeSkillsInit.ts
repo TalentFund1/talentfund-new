@@ -17,14 +17,17 @@ export const useEmployeeSkillsInit = (employeeId: string) => {
       // Only initialize with employee's existing skills
       const employee = employees.find(emp => emp.id === employeeId);
       if (employee) {
-        console.log('Initializing skills from employee data:', {
+        console.log('Found employee data for initialization:', {
           employeeId,
-          skillCount: employee.skills.length
+          skillCount: employee.skills.length,
+          skills: employee.skills.map(s => s.name)
         });
         initializeEmployeeSkills(employeeId);
+      } else {
+        console.warn('No employee data found for initialization:', employeeId);
       }
     } catch (error) {
-      console.error('Failed to initialize skills:', error);
+      console.error('Failed to initialize employee skills:', error);
     }
   }, [employeeId, initializeEmployeeSkills]);
 };

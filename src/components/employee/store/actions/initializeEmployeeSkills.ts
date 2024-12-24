@@ -2,7 +2,11 @@ import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { EmployeeSkillAchievement, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
 
 export const initializeEmployeeSkills = (employeeId: string, initialSkills: Array<{ name: string, level: SkillLevel }> = []): EmployeeSkillAchievement[] => {
-  console.log('Initializing skills for employee:', { employeeId, initialSkillCount: initialSkills.length });
+  console.log('Initializing skills strictly from employee data:', { 
+    employeeId, 
+    initialSkillCount: initialSkills.length,
+    skills: initialSkills.map(s => s.name)
+  });
   
   const processedSkills: EmployeeSkillAchievement[] = initialSkills.map(skill => {
     const unifiedData = getUnifiedSkillData(skill.name);
@@ -24,7 +28,7 @@ export const initializeEmployeeSkills = (employeeId: string, initialSkills: Arra
     };
   });
 
-  console.log('Created initial skills:', {
+  console.log('Processed employee skills:', {
     employeeId,
     skillCount: processedSkills.length,
     skills: processedSkills.map(s => s.title)
