@@ -86,24 +86,24 @@ const EmployeeTableContent = ({
 
   const preFilteredEmployees = filterEmployees(
     employees,
-    selectedEmployees,
-    selectedDepartment,
-    selectedLevel,
-    selectedOffice,
-    selectedEmploymentType,
-    selectedSkills,
-    selectedManager
+    [...selectedEmployees],
+    [...selectedDepartment],
+    [...selectedLevel],
+    [...selectedOffice],
+    [...selectedEmploymentType],
+    [...selectedSkills],
+    [...selectedManager]
   );
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
-  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
+  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, [...selectedSkills]);
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
-    selectedRole,
+    [...selectedRole],
     currentStates,
     new Set(),
     getSkillCompetencyState
@@ -143,8 +143,8 @@ const EmployeeTableContent = ({
                   isSelected={selectedRows.includes(employee.name)}
                   onSelect={handleSelectEmployee}
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                  selectedSkills={selectedSkills}
-                  selectedJobTitle={selectedRole}
+                  selectedSkills={[...selectedSkills]}
+                  selectedJobTitle={[...selectedRole]}
                 />
               ))
             )}
