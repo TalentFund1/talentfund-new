@@ -17,7 +17,6 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { matrixSearchSkills } = useSkillsMatrixSearch();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
 
   const { filterAndSortSkills } = useSkillsMatrixState(

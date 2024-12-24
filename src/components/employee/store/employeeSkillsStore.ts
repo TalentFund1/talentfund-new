@@ -78,43 +78,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         });
       },
 
-      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => {
-        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
-        
-        set((state) => {
-          const employeeData = state.employeeSkills[employeeId] || {
-            employeeId,
-            skills: [],
-            states: {},
-            lastUpdated: new Date().toISOString()
-          };
-
-          const validatedStatus = validateGoalStatus(status);
-
-          return {
-            employeeSkills: {
-              ...state.employeeSkills,
-              [employeeId]: {
-                ...employeeData,
-                states: {
-                  ...employeeData.states,
-                  [skillTitle]: {
-                    ...employeeData.states[skillTitle],
-                    requirement: validatedStatus,
-                    lastUpdated: new Date().toISOString()
-                  }
-                }
-              }
-            }
-          };
-        });
-      },
-
       getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
         const state = get();
         const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
         
         if (!skillState) {
+          console.log('No existing skill state found:', {
+            employeeId,
+            skillTitle,
+            usingDefault: true
+          });
+          
           return {
             level: 'unspecified',
             requirement: 'unknown',
@@ -122,6 +96,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           };
         }
 
+        console.log('Retrieved skill state:', {
+          employeeId,
+          skillTitle,
+          state: skillState
+        });
+        
         return skillState;
       },
 
