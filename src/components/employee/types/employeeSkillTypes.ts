@@ -9,7 +9,7 @@ export interface EmployeeSkillState {
   lastUpdated: string;
 }
 
-export interface EmployeeSkill {
+export interface EmployeeSkillAchievement {
   id: string;
   employeeId: string;
   title: string;
@@ -33,7 +33,7 @@ export interface EmployeeSkill {
 
 export interface EmployeeSkillsData {
   employeeId: string;
-  skills: EmployeeSkill[];
+  skills: EmployeeSkillAchievement[];
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
 }
@@ -41,7 +41,9 @@ export interface EmployeeSkillsData {
 export interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
   initializeEmployeeSkills: (employeeId: string) => void;
-  getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
+  getEmployeeSkills: (employeeId: string) => EmployeeSkillAchievement[];
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
+  setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => void;
 }
