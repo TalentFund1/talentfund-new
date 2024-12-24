@@ -6,7 +6,7 @@ import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getSkillProfileId } from "../../EmployeeTable";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
-import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from "../types/employeeSkillsTypes";
+import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from "../types/employeeSkillTypes";
 
 interface EmployeeStore {
   employees: Employee[];
@@ -26,26 +26,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
     (set, get) => ({
       employees: defaultEmployees,
       employeeSkills: {},
-
-      initializeEmployeeSkills: (employeeId: string) => {
-        console.log('Initializing skills for employee:', employeeId);
-        const store = get();
-        
-        if (!store.employeeSkills[employeeId]) {
-          set(state => ({
-            ...state,
-            employeeSkills: {
-              ...state.employeeSkills,
-              [employeeId]: {
-                employeeId,
-                skills: [],
-                states: {}
-              }
-            }
-          }));
-          console.log('Initialized empty skill set for employee:', employeeId);
-        }
-      },
 
       addEmployee: (employee) => {
         console.log('Adding employee to store:', employee);
@@ -82,7 +62,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
         }));
 
         set(state => ({
-          ...state,
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: {
@@ -118,7 +97,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
         });
         
         set(state => ({
-          ...state,
           employeeSkills: {
             ...state.employeeSkills,
             [employeeId]: {
@@ -162,6 +140,25 @@ export const useEmployeeStore = create<EmployeeStore>()(
         });
         
         return skillState;
+      },
+
+      initializeEmployeeSkills: (employeeId) => {
+        console.log('Initializing skills for employee:', employeeId);
+        const store = get();
+        
+        if (!store.employeeSkills[employeeId]) {
+          set(state => ({
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                employeeId,
+                skills: [],
+                states: {}
+              }
+            }
+          }));
+          console.log('Initialized empty skill set for employee:', employeeId);
+        }
       }
     }),
     {
