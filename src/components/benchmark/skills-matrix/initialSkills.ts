@@ -4,10 +4,16 @@ import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore
 export const getEmployeeSkills = (id: string): EmployeeSkillAchievement[] => {
   console.log('Getting skills for employee:', id);
   const store = useEmployeeSkillsStore.getState();
+  const existingSkills = store.getEmployeeSkills(id);
   
-  // Initialize if not already initialized
-  if (!store.getEmployeeSkills(id).length) {
+  if (!existingSkills.length) {
+    console.log('No existing skills found, initializing from employee data:', id);
     store.initializeEmployeeSkills(id);
+  } else {
+    console.log('Found existing skills:', {
+      employeeId: id,
+      skillCount: existingSkills.length
+    });
   }
   
   return store.getEmployeeSkills(id);
