@@ -34,8 +34,8 @@ export const RequirementSelector = ({
       return cn(baseStyles, `bg-gray-50 border-x-2 border-b-2 ${borderColor}`);
     }
     
-    // For preferred or other states
-    return cn(baseStyles, "bg-gray-50 border-x border-b border-gray-200");
+    // For preferred, use a darker border
+    return cn(baseStyles, "bg-gray-50 border-x-[1.5px] border-b-[1.5px] border-gray-400");
   };
 
   return (
