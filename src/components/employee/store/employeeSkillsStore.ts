@@ -37,7 +37,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             businessCategory: universalData.businessCategory,
             weight: universalData.weight,
             category: universalData.category,
-            subcategory: universalData.subcategory
+            subcategory: universalData.subcategory,
+            growth: universalData.growth,
+            salary: universalData.salary,
+            confidence: universalData.confidence,
+            benchmarks: universalData.benchmarks
           };
         });
 
@@ -59,7 +63,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return [];
         }
         
-        console.log('Retrieved skills for employee:', {
+        console.log('Loaded employee skills:', {
           employeeId,
           skillCount: employeeData.skills.length,
           skills: employeeData.skills.map(s => s.title)

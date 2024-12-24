@@ -9,6 +9,15 @@ export interface EmployeeSkill {
   businessCategory: string;
   weight: SkillWeight;
   requirement: SkillRequirement;
+  growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
   dateAcquired?: string;
   lastUpdated?: string;
 }
