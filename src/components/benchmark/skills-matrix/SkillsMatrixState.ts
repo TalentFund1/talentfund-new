@@ -1,8 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { useEmployeeStore } from '../../employee/store/employeeStore';
-import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 import { SkillRequirement } from '../../employee/types/employeeSkillTypes';
 
 interface SkillState {
@@ -29,24 +26,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       hasChanges: false,
 
       setSkillState: (skillTitle, level, requirement) => {
-        console.log('Setting skill state in matrix:', { skillTitle, level, requirement });
-        
-        // Get current employee ID from URL
-        const employeeId = window.location.pathname.split('/').pop();
-        
-        if (employeeId) {
-          // Sync with employee store
-          const employeeStore = useEmployeeStore.getState();
-          employeeStore.setSkillState(employeeId, skillTitle, level, requirement);
-          
-          console.log('Synced skill state with employee store:', {
-            employeeId,
-            skillTitle,
-            level,
-            requirement
-          });
-        }
-
+        console.log('Setting skill state:', { skillTitle, level, requirement });
         set((state) => ({
           currentStates: {
             ...state.currentStates,
@@ -81,28 +61,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           return state;
         }),
 
-      saveChanges: () => {
-        const employeeId = window.location.pathname.split('/').pop();
-        if (employeeId) {
-          const employeeStore = useEmployeeStore.getState();
-          const { currentStates } = useSkillsMatrixStore.getState();
-          
-          // Sync all changes to employee store
-          Object.entries(currentStates).forEach(([skillTitle, state]) => {
-            employeeStore.setSkillState(employeeId, skillTitle, state.level, state.requirement);
-          });
-          
-          console.log('Saved all changes to employee store:', {
-            employeeId,
-            skillCount: Object.keys(currentStates).length
-          });
-        }
-
+      saveChanges: () =>
         set((state) => ({
           originalStates: { ...state.currentStates },
           hasChanges: false,
-        }));
-      },
+        })),
 
       cancelChanges: () =>
         set((state) => ({
@@ -120,3 +83,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }
   )
 );
+
+// Add the missing export
+export const useSkillsMatrixState = useSkillsMatrixStore;

@@ -6,8 +6,27 @@ export interface EmployeeSkillState {
   lastUpdated: string;
 }
 
+export interface EmployeeSkill {
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: SkillRequirement;
+  category?: string;
+  weight?: string;
+}
+
 export interface EmployeeSkills {
   id: string;
+  title: string;
+  subcategory: string;
+  level: string;
+  growth: string;
+  confidence: string;
+  requirement?: SkillRequirement;
+  category?: string;
+  weight?: string;
   skills: {
     [skillTitle: string]: EmployeeSkillState;
   };
@@ -17,15 +36,6 @@ export interface EmployeeSkills {
 export interface EmployeeSkillsData {
   skills: EmployeeSkills[];
   states: Record<string, EmployeeSkillState>;
-}
-
-export interface EmployeeSkill {
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: SkillRequirement;
 }
 
 export interface EmployeeSkillUpdate {
