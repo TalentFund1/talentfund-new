@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -18,35 +19,38 @@ export const CategoryCards = ({
   const { toggledSkills } = useToggledSkills();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get counts for each category based on toggled skills
-  const specializedCount = currentRoleSkills.specialized?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
-  
-  const commonCount = currentRoleSkills.common?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
-  
-  const certificationCount = currentRoleSkills.certifications?.filter(skill => 
-    toggledSkills.has(skill.title)
-  ).length || 0;
+  const getSkillCountByCategory = (category: string) => {
+    const skillsArray = Array.from(toggledSkills);
+    
+    console.log('Calculating skill count for category:', {
+      category,
+      totalSkills: skillsArray.length,
+      toggledSkills: Array.from(toggledSkills)
+    });
 
-  const totalCount = specializedCount + commonCount + certificationCount;
-
-  console.log('Category counts calculated:', {
-    total: totalCount,
-    specialized: specializedCount,
-    common: commonCount,
-    certification: certificationCount,
-    toggledSkills: Array.from(toggledSkills)
-  });
+    return skillsArray.filter(skillTitle => {
+      if (!skillTitle) {
+        console.warn('Found undefined skill title in toggled skills');
+        return false;
+      }
+      const skillData = getUnifiedSkillData(skillTitle);
+      return category === 'all' || skillData.category === category;
+    }).length;
+  };
 
   const categories = [
-    { id: "all", name: "All Categories", count: totalCount },
-    { id: "specialized", name: "Specialized Skills", count: specializedCount },
-    { id: "common", name: "Common Skills", count: commonCount },
-    { id: "certification", name: "Certification", count: certificationCount }
+    { id: "all", name: "All Categories", count: Array.from(toggledSkills).length },
+    { id: "specialized", name: "Specialized Skills", count: getSkillCountByCategory("specialized") },
+    { id: "common", name: "Common Skills", count: getSkillCountByCategory("common") },
+    { id: "certification", name: "Certification", count: getSkillCountByCategory("certification") }
   ];
+
+  console.log('CategoryCards - Category counts:', {
+    categories: categories.map(cat => ({
+      name: cat.name,
+      count: cat.count
+    }))
+  });
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
