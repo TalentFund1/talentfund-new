@@ -27,14 +27,11 @@ export const SkillsMatrix = () => {
   );
 
   // Get employee skills and convert them to UnifiedSkill format
-  const employeeSkills = id ? getEmployeeSkills(id).map(skill => {
-    const state = getSkillState(id, skill.title);
-    return {
-      ...skill,
-      level: state.level,
-      goalStatus: state.goalStatus
-    } as UnifiedSkill;
-  }) : [];
+  const employeeSkills = id ? getEmployeeSkills(id).map(skill => ({
+    ...skill,
+    level: getSkillState(id, skill.title).level,
+    goalStatus: getSkillState(id, skill.title).goalStatus
+  } as UnifiedSkill)) : [];
 
   console.log('SkillsMatrix - Loading employee skills:', {
     employeeId: id,

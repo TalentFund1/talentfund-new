@@ -62,7 +62,7 @@ export const EmployeeSkillCard = ({
   const processedSkills = useMemo(() => skills.map(skill => ({
     ...skill,
     percentage: getLevelPercentage(skill.name)
-  })), [skills, employeeId, getSkillState]);
+  })), [skills, employeeId]);
 
   return (
     <Card className="p-6 animate-fade-in">
