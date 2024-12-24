@@ -26,6 +26,7 @@ export interface EmployeeSkillUpdate {
 
 // Complete employee skill data
 export interface EmployeeSkillData {
+  id: string;
   employeeId: string;
   skillId: string;
   title: string;
@@ -43,9 +44,7 @@ export interface EmployeeSkillData {
 }
 
 // Achievement tracking
-export interface EmployeeSkillAchievement extends EmployeeSkillData {
-  id: string;
-}
+export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
 // Complete employee skills data structure
 export interface EmployeeSkillsData {
