@@ -6,18 +6,9 @@ export interface EmployeeSkill {
   level: string;
   category: SkillCategory;
   subcategory: string;
-  businessCategory: string;  // Made required to match UnifiedSkill
-  weight: SkillWeight;      // Made required to match UnifiedSkill
-  requirement?: SkillRequirement;
-  growth: string;
-  salary: string;
-  confidence: 'low' | 'medium' | 'high';
-  benchmarks: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
+  businessCategory: string;
+  weight: SkillWeight;
+  requirement: SkillRequirement;
   dateAcquired?: string;
   lastUpdated?: string;
 }
@@ -30,4 +21,11 @@ export interface EmployeeSkillState {
 export interface EmployeeSkillsData {
   skills: EmployeeSkill[];
   states: Record<string, EmployeeSkillState>;
+}
+
+export interface EmployeeSkillUpdate {
+  employeeId: string;
+  skillTitle: string;
+  level: string;
+  requirement: SkillRequirement;
 }

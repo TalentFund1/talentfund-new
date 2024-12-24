@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
+import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData, EmployeeSkillUpdate } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { SkillRequirement } from '../../skills/types/SkillTypes';
 
@@ -8,7 +8,7 @@ interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
   setEmployeeSkills: (employeeId: string, skills: EmployeeSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
-  setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: SkillRequirement) => void;
+  setSkillState: (update: EmployeeSkillUpdate) => void;
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -36,11 +36,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             ...skill,
             businessCategory: universalData.businessCategory,
             weight: universalData.weight,
-            growth: universalData.growth,
-            salary: universalData.salary,
-            confidence: universalData.confidence,
-            benchmarks: universalData.benchmarks
-          } as EmployeeSkill;
+            category: universalData.category,
+            subcategory: universalData.subcategory
+          };
         });
 
         set((state) => ({
@@ -70,7 +68,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return employeeData.skills;
       },
 
-      setSkillState: (employeeId, skillTitle, level, requirement) => {
+      setSkillState: ({ employeeId, skillTitle, level, requirement }) => {
         console.log('Setting skill state:', {
           employeeId,
           skillTitle,
