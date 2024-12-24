@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 
 interface Skill {
   name: string;
@@ -30,7 +30,8 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     skills: skills.map(s => ({ name: s.name, level: s.level }))
   });
   
-  const getLevelPercentage = useMemo(() => (skillName: string): number => {
+  // Convert to useCallback to ensure stable function reference
+  const calculateLevelPercentage = useCallback((skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
     const level = skillState.level;
 
@@ -70,8 +71,8 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     return 'bg-gray-500';
   }, []);
 
-  const handleSkillClick = (skillName: string) => {
-    const percentage = getLevelPercentage(skillName);
+  const handleSkillClick = useCallback((skillName: string) => {
+    const percentage = calculateLevelPercentage(skillName);
     const skillState = getSkillState(employeeId, skillName);
     
     // Prepare batch update
@@ -96,13 +97,13 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
       title: skillName,
       description: `Current level: ${percentage}% (${skillState.level})`,
     });
-  };
+  }, [employeeId, calculateLevelPercentage, getSkillState, batchUpdateSkills, toast]);
 
   // Memoize the processed skills data
   const processedSkills = useMemo(() => skills.map(skill => ({
     ...skill,
-    percentage: getLevelPercentage(skill.name)
-  })), [skills, getLevelPercentage]);
+    percentage: calculateLevelPercentage(skill.name)
+  })), [skills, calculateLevelPercentage]);
 
   return (
     <Card className="p-6 animate-fade-in">
