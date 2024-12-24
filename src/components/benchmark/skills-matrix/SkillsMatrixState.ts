@@ -32,11 +32,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [skillTitle]: { 
-              level, 
-              goalStatus,
-              lastUpdated: new Date().toISOString()
-            },
+            [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
           },
           hasChanges: true,
         }));
@@ -55,11 +51,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillTitle]: { 
-                  level, 
-                  goalStatus: goalStatus || 'unknown',
-                  lastUpdated: new Date().toISOString()
-                },
+                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
               },
             };
           }
@@ -120,16 +112,7 @@ export const useSkillsMatrixState = (
         const skillState = currentStates[skill.title];
         if (!skillState?.goalStatus) return false;
 
-        switch (selectedInterest.toLowerCase()) {
-          case "skill_goal":
-            return skillState.goalStatus === "required" || skillState.goalStatus === "skill_goal";
-          case "not_interested":
-            return skillState.goalStatus === "not_interested";
-          case "unknown":
-            return !skillState.goalStatus || skillState.goalStatus === "unknown";
-          default:
-            return skillState.goalStatus === selectedInterest.toLowerCase();
-        }
+        return benchmarkingService.matchesInterestFilter(skillState.goalStatus, selectedInterest);
       });
     }
 
