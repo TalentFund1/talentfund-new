@@ -2,6 +2,16 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkillsStore, EmployeeSkill, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { SkillCategory, SkillRequirement } from '../../skills/types/SkillTypes';
+
+const mapGoalStatusToRequirement = (status: SkillGoalStatus): SkillRequirement => {
+  switch (status) {
+    case 'not-interested':
+      return 'not_interested';
+    default:
+      return status as SkillRequirement;
+  }
+};
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -60,7 +70,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               level,
               goalStatus: 'unknown',
               lastUpdated: new Date().toISOString(),
-              category: skillData.category,
+              category: skillData.category as SkillCategory,
               weight: skillData.weight,
               businessCategory: skillData.businessCategory,
               growth: skillData.growth,
@@ -108,7 +118,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             updatedSkills[skillIndex] = {
               ...updatedSkills[skillIndex],
               goalStatus: status,
-              requirement: status,
+              requirement: mapGoalStatusToRequirement(status),
               lastUpdated: new Date().toISOString()
             };
           }
