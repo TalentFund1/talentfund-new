@@ -1,5 +1,3 @@
-import { SkillWeight } from '../../skills/types/SkillTypes';
-
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
@@ -17,7 +15,7 @@ export interface EmployeeSkillAchievement {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  weight: SkillWeight;
+  weight: 'critical' | 'technical' | 'necessary';
   confidence: 'low' | 'medium' | 'high';
   category: 'specialized' | 'common' | 'certification';
   businessCategory: string;
@@ -29,7 +27,6 @@ export interface EmployeeSkillAchievement {
     M: boolean;
     O: boolean;
   };
-  requirement?: SkillGoalStatus;
 }
 
 export interface EmployeeSkillsData {
@@ -41,7 +38,7 @@ export interface EmployeeSkillsData {
 
 export interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
-  initializeEmployeeSkills: (employeeId: string, employeeStore?: any) => void;
+  initializeEmployeeSkills: (employeeId: string) => void;
   setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillAchievement[];
