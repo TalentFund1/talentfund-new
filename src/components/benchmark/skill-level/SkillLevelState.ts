@@ -13,12 +13,16 @@ export const useSkillLevelState = (skillTitle: string) => {
       });
       return state;
     }
-    // Return default state if none exists
-    return {
+
+    // Return default state if none exists or if it's undefined
+    const defaultState = {
       level: 'unspecified',
       requirement: 'preferred',
       lastUpdated: new Date().toISOString()
     };
+
+    console.log(`No existing state found for ${skillTitle}, using default:`, defaultState);
+    return defaultState;
   };
 
   return {
