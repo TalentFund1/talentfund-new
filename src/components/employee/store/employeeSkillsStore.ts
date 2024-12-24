@@ -6,8 +6,10 @@ import { SkillCategory, SkillRequirement } from '../../skills/types/SkillTypes';
 
 const mapGoalStatusToRequirement = (status: SkillGoalStatus): SkillRequirement => {
   switch (status) {
-    case 'not-interested':
+    case 'not_interested':
       return 'not_interested';
+    case 'skill_goal':
+      return 'skill_goal';
     default:
       return status as SkillRequirement;
   }
