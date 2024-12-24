@@ -2,47 +2,23 @@ import { Employee } from "../types/employeeTypes";
 
 export const filterEmployees = (
   employees: Employee[],
-  searchedEmployees: string[],
-  selectedDepartment: string[],
-  selectedLevel: string[],
-  selectedOffice: string[],
-  selectedEmploymentType: string[],
-  selectedSkills: string[],
-  selectedManager: string[] = []
+  selectedEmployees: ReadonlyArray<string>,
+  selectedDepartment: ReadonlyArray<string>,
+  selectedLevel: ReadonlyArray<string>,
+  selectedOffice: ReadonlyArray<string>,
+  selectedEmploymentType: ReadonlyArray<string>,
+  selectedSkills: ReadonlyArray<string>,
+  selectedManager: ReadonlyArray<string>
 ): Employee[] => {
-  console.log('Filtering employees with criteria:', {
-    searchedEmployees,
-    selectedDepartment,
-    selectedLevel,
-    selectedOffice,
-    selectedEmploymentType,
-    selectedManager
-  });
-
   return employees.filter(employee => {
-    const matchesEmployeeSearch = searchedEmployees.length === 0 || 
-      searchedEmployees.includes(employee.name);
+    const isSelected = selectedEmployees.length === 0 || selectedEmployees.includes(employee.id);
+    const isInDepartment = selectedDepartment.length === 0 || selectedDepartment.includes(employee.department);
+    const isInLevel = selectedLevel.length === 0 || selectedLevel.includes(employee.level);
+    const isInOffice = selectedOffice.length === 0 || selectedOffice.includes(employee.office);
+    const isInEmploymentType = selectedEmploymentType.length === 0 || selectedEmploymentType.includes(employee.employmentType);
+    const isInSkills = selectedSkills.length === 0 || selectedSkills.some(skill => employee.skills.includes(skill));
+    const isInManager = selectedManager.length === 0 || selectedManager.includes(employee.manager);
 
-    const matchesDepartment = selectedDepartment.length === 0 || 
-      selectedDepartment.includes(employee.department);
-    
-    const matchesLevel = selectedLevel.length === 0 || 
-      selectedLevel.includes(employee.role.split(':')[1]?.trim());
-
-    const matchesOffice = selectedOffice.length === 0 || 
-      selectedOffice.includes(employee.location.split(',')[0].trim());
-
-    const matchesEmploymentType = selectedEmploymentType.length === 0 ||
-      selectedEmploymentType.includes(employee.category);
-
-    const matchesManager = selectedManager.length === 0 ||
-      (employee.manager && selectedManager.includes(employee.manager));
-
-    const matches = matchesEmployeeSearch && matchesDepartment && 
-           matchesLevel && matchesOffice && matchesEmploymentType && matchesManager;
-
-    console.log(`Employee ${employee.name} matches filters:`, matches);
-
-    return matches;
+    return isSelected && isInDepartment && isInLevel && isInOffice && isInEmploymentType && isInSkills && isInManager;
   });
 };

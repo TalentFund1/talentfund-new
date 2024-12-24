@@ -5,7 +5,7 @@ import { roleSkills } from "../skills/data/roleSkills";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
-  selectedRole: string[],
+  selectedRole: ReadonlyArray<string>,
   currentStates: any,
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
