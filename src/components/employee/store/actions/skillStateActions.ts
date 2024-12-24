@@ -1,4 +1,5 @@
-import { SkillLevel, SkillGoalStatus, EmployeeSkill, EmployeeSkillState } from '../types/employeeSkillTypes';
+import { SkillLevel, SkillGoalStatus, EmployeeSkill, EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 
 export const createSkillStateActions = (
   set: (fn: (state: any) => Partial<any>) => void,
@@ -23,13 +24,22 @@ export const createSkillStateActions = (
           lastUpdated: new Date().toISOString()
         };
       } else {
+        const skillData = getUnifiedSkillData(skillTitle);
         const newSkill: EmployeeSkill = {
           id: `${employeeId}-${skillTitle}`,
           employeeId,
           title: skillTitle,
+          subcategory: skillData.subcategory,
           level,
           goalStatus: 'unknown',
-          lastUpdated: new Date().toISOString()
+          lastUpdated: new Date().toISOString(),
+          category: skillData.category,
+          weight: skillData.weight,
+          businessCategory: skillData.businessCategory,
+          growth: skillData.growth,
+          salary: skillData.salary,
+          confidence: skillData.confidence,
+          benchmarks: skillData.benchmarks
         };
         updatedSkills.push(newSkill);
       }
