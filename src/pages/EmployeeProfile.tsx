@@ -18,7 +18,7 @@ import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
-import { useEmployeeSkillsStore } from "@/components/employee/store/employeeSkillsStore";
+import { useEmployeeSkillsInit } from "@/hooks/useEmployeeSkillsInit";
 
 const employeeImages = {
   "123": "photo-1488590528505-98d2b5aba04b",
@@ -31,10 +31,11 @@ const EmployeeProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const employeeStore = useEmployeeStore();
-  const getEmployeeById = employeeStore.getEmployeeById;
-  const initializeEmployeeSkills = useEmployeeSkillsStore((state) => state.initializeEmployeeSkills);
+  const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
   const employee = getEmployeeById(id || "");
+
+  // Use the new hook for initialization
+  useEmployeeSkillsInit(id || "");
 
   useEffect(() => {
     if (!employee) {
@@ -45,22 +46,8 @@ const EmployeeProfile = () => {
         variant: "destructive"
       });
       navigate('/employees');
-      return;
     }
-
-    console.log('Initializing employee skills from profile component:', id);
-    // Initialize employee skills with store, wrapped in a try-catch to handle any initialization errors
-    try {
-      initializeEmployeeSkills(id || "", employeeStore);
-    } catch (error) {
-      console.error('Failed to initialize employee skills:', error);
-      toast({
-        title: "Initialization Error",
-        description: "Failed to load employee skills. Please try refreshing the page.",
-        variant: "destructive"
-      });
-    }
-  }, [employee, id, initializeEmployeeSkills, navigate, toast, employeeStore]);
+  }, [employee, navigate, toast]);
 
   if (!employee) {
     return null;
