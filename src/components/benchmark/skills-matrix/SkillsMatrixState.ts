@@ -7,16 +7,16 @@ import { EmployeeSkillAchievement, SkillLevel, SkillGoalStatus } from '../../emp
 
 interface SkillState {
   level: SkillLevel;
-  goalStatus: SkillGoalStatus;
+  requirement: SkillGoalStatus;
   lastUpdated: string;
 }
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: SkillLevel, goalStatus: SkillGoalStatus) => void;
+  setSkillState: (skillTitle: string, level: SkillLevel, requirement: SkillGoalStatus) => void;
   resetSkills: () => void;
-  initializeState: (skillTitle: string, level: SkillLevel, goalStatus: SkillGoalStatus) => void;
+  initializeState: (skillTitle: string, level: SkillLevel, requirement: SkillGoalStatus) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -27,15 +27,15 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       currentStates: {},
       hasChanges: false,
 
-      setSkillState: (skillTitle, level, goalStatus) => {
-        console.log('Setting skill state in matrix:', { skillTitle, level, goalStatus });
+      setSkillState: (skillTitle, level, requirement) => {
+        console.log('Setting skill state in matrix:', { skillTitle, level, requirement });
         
         set((state) => ({
           currentStates: {
             ...state.currentStates,
             [skillTitle]: { 
               level, 
-              goalStatus,
+              requirement,
               lastUpdated: new Date().toISOString()
             },
           },
@@ -49,16 +49,16 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: false,
         })),
 
-      initializeState: (skillTitle, level, goalStatus) =>
+      initializeState: (skillTitle, level, requirement) =>
         set((state) => {
           if (!state.currentStates[skillTitle]) {
-            console.log('Initializing skill state:', { skillTitle, level, goalStatus });
+            console.log('Initializing skill state:', { skillTitle, level, requirement });
             return {
               currentStates: {
                 ...state.currentStates,
                 [skillTitle]: { 
                   level, 
-                  goalStatus: goalStatus || 'unknown',
+                  requirement: requirement || 'unknown',
                   lastUpdated: new Date().toISOString()
                 },
               },
@@ -117,20 +117,20 @@ export const useSkillsMatrixState = (
       });
     }
 
-    // Filter by interest/goalStatus if not "all"
+    // Filter by interest/requirement if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        if (!skill.goalStatus) return false;
+        if (!skill.requirement) return false;
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return skill.goalStatus === "required" || skill.goalStatus === "skill_goal";
+            return skill.requirement === "required" || skill.requirement === "skill_goal";
           case "not_interested":
-            return skill.goalStatus === "not_interested";
+            return skill.requirement === "not_interested";
           case "unknown":
-            return !skill.goalStatus || skill.goalStatus === "unknown";
+            return !skill.requirement || skill.requirement === "unknown";
           default:
-            return skill.goalStatus === selectedInterest.toLowerCase();
+            return skill.requirement === selectedInterest.toLowerCase();
         }
       });
     }
