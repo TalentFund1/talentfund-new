@@ -147,10 +147,10 @@ export const useSkillsFiltering = (
       });
       return {
         ...skill,
-        weight: unifiedData.weight, // Ensure weight comes from universal database
+        weight: unifiedData.weight,
         employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
         roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
+        requirement: currentStates[skill.title]?.requirement || skill.goalStatus || 'unknown'
       };
     })
     .sort((a, b) => {

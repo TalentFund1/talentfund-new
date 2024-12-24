@@ -21,6 +21,7 @@ export interface EmployeeSkillAchievement {
   businessCategory: string;
   growth: string;
   salary: string;
+  requirement: SkillGoalStatus; // Added back to maintain compatibility
   benchmarks: {
     B: boolean;
     R: boolean;
