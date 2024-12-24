@@ -30,7 +30,7 @@ export interface EmployeeSkillAchievement {
     M: boolean;
     O: boolean;
   };
-  requirement?: SkillGoalStatus; // Optional for backward compatibility
+  requirement?: SkillGoalStatus;
 }
 
 export interface EmployeeSkillsData {
