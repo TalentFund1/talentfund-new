@@ -60,18 +60,13 @@ export const useEmployeeStore = create<EmployeeStore>()(
         
         const enrichedSkills = skills.map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
-          return benchmarkingService.enrichSkillData(employeeId, skill, skillData);
-        }) as EmployeeSkillAchievement[];
+          return benchmarkingService.enrichSkillData(employeeId, skill, skillData) as EmployeeSkillAchievement;
+        });
 
         set(state => ({
           employeeSkills: {
             ...state.employeeSkills,
-            [employeeId]: {
-              employeeId,
-              skills: enrichedSkills,
-              states: state.employeeSkills[employeeId]?.states || {},
-              lastUpdated: new Date().toISOString()
-            }
+            [employeeId]: benchmarkingService.initializeEmployeeSkillsData(employeeId, enrichedSkills) as EmployeeSkillsData
           }
         }));
 
@@ -99,6 +94,8 @@ export const useEmployeeStore = create<EmployeeStore>()(
           goalStatus
         });
         
+        const skillState = benchmarkingService.createSkillState(level, goalStatus) as EmployeeSkillState;
+        
         set(state => ({
           employeeSkills: {
             ...state.employeeSkills,
@@ -107,9 +104,9 @@ export const useEmployeeStore = create<EmployeeStore>()(
               employeeId,
               states: {
                 ...state.employeeSkills[employeeId]?.states,
-                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
+                [skillTitle]: skillState
               }
-            }
+            } as EmployeeSkillsData
           }
         }));
       },
@@ -150,7 +147,6 @@ export const useEmployeeStore = create<EmployeeStore>()(
               skills: employee.skills
             });
             
-            // Convert readonly array to mutable array for the service
             const mutableSkills = [...employee.skills];
             const initializedData = benchmarkingService.initializeEmployeeSkillsData(employeeId, mutableSkills) as EmployeeSkillsData;
             

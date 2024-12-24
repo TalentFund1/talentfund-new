@@ -26,7 +26,6 @@ export const useEmployeeSkillsStore = create<IEmployeeSkillsStore>()(
             return;
           }
 
-          // Initialize strictly with employee's existing skills only
           const initializedData = benchmarkingService.initializeEmployeeSkillsData(employeeId, employee.skills.map(s => ({
             name: s.title,
             level: s.level
