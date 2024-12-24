@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
+import { SkillRequirement } from '../../skills/types/SkillTypes';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
