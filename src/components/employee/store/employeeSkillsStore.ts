@@ -7,7 +7,7 @@ interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
   setEmployeeSkills: (employeeId: string, skills: EmployeeSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
-  setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: string) => void;
+  setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: SkillRequirement) => void;
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
@@ -33,11 +33,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           const universalData = getUnifiedSkillData(skill.title);
           return {
             ...skill,
-            growth: universalData?.growth || '0%',
-            salary: universalData?.salary || 'N/A',
-            confidence: universalData?.confidence || 'medium',
-            benchmarks: universalData?.benchmarks || { B: false, R: false, M: false, O: false }
-          };
+            businessCategory: universalData.businessCategory,
+            weight: universalData.weight,
+            growth: universalData.growth,
+            salary: universalData.salary,
+            confidence: universalData.confidence,
+            benchmarks: universalData.benchmarks
+          } as EmployeeSkill;
         });
 
         set((state) => ({
@@ -91,7 +93,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       getSkillState: (employeeId, skillTitle) => {
         const state = get().employeeSkills[employeeId]?.states[skillTitle];
-        return state || { level: 'beginner', requirement: 'unknown' };
+        return state || { level: 'beginner', requirement: 'unknown' as SkillRequirement };
       },
 
       initializeEmployeeSkills: (employeeId) => {

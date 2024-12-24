@@ -6,8 +6,8 @@ export interface EmployeeSkill {
   level: string;
   category: SkillCategory;
   subcategory: string;
-  businessCategory?: string;
-  weight?: SkillWeight;
+  businessCategory: string;  // Made required to match UnifiedSkill
+  weight: SkillWeight;      // Made required to match UnifiedSkill
   requirement?: SkillRequirement;
   growth: string;
   salary: string;
