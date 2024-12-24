@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { roleSkills } from '../skills/data/roleSkills';
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 
@@ -7,18 +6,15 @@ interface CategoryCardsProps {
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
   roleId: string;
-  selectedLevel: string;
 }
 
 export const CategoryCards = ({ 
   selectedCategory, 
   onCategorySelect,
   roleId,
-  selectedLevel 
 }: CategoryCardsProps) => {
   const { toggledSkills } = useToggledSkills();
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-
+  
   const getSkillCountByCategory = (category: string) => {
     const skillsArray = Array.from(toggledSkills);
     

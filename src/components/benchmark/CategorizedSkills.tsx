@@ -1,11 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
 import { useState } from "react";
-import { useRoleStore } from "./RoleBenchmark";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 
 interface CategorizedSkillsProps {
@@ -16,8 +14,6 @@ interface CategorizedSkillsProps {
 export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { toggledSkills } = useToggledSkills();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { selectedLevel } = useRoleStore();
   
   // Get employee's actual skills
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -61,15 +57,15 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     .filter(skill => toggledSkills.has(skill.title)));
 
   // Categorize skills based on their actual levels
-  const requiredSkills = sortSkills(filteredSkills.filter(skill => 
+  const advancedIntermediateSkills = sortSkills(filteredSkills.filter(skill => 
     skill.level === 'advanced' || skill.level === 'intermediate'
   ));
 
-  const preferredSkills = sortSkills(filteredSkills.filter(skill => 
+  const beginnerSkills = sortSkills(filteredSkills.filter(skill => 
     skill.level === 'beginner'
   ));
 
-  const missingSkills = sortSkills(filteredSkills.filter(skill => 
+  const unspecifiedSkills = sortSkills(filteredSkills.filter(skill => 
     !skill.level || skill.level === 'unspecified'
   ));
 
@@ -87,13 +83,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   };
 
   console.log('Skills Summary:', {
-    level: selectedLevel,
-    required: requiredSkills.length,
-    preferred: preferredSkills.length,
-    missing: missingSkills.length,
-    requiredSkills,
-    preferredSkills,
-    missingSkills
+    advanced: advancedIntermediateSkills.length,
+    beginner: beginnerSkills.length,
+    unspecified: unspecifiedSkills.length,
+    advancedSkills: advancedIntermediateSkills,
+    beginnerSkills,
+    unspecifiedSkills
   });
 
   const SkillSection = ({ title, skills, count }: { title: string, skills: any[], count: number }) => (
@@ -125,25 +120,24 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
         roleId={roleId}
-        selectedLevel={selectedLevel}
       />
 
       <SkillSection 
         title="Advanced & Intermediate Skills" 
-        skills={requiredSkills} 
-        count={requiredSkills.length} 
+        skills={advancedIntermediateSkills} 
+        count={advancedIntermediateSkills.length} 
       />
       
       <SkillSection 
         title="Beginner Skills" 
-        skills={preferredSkills} 
-        count={preferredSkills.length} 
+        skills={beginnerSkills} 
+        count={beginnerSkills.length} 
       />
       
       <SkillSection 
         title="Unspecified Skills" 
-        skills={missingSkills} 
-        count={missingSkills.length} 
+        skills={unspecifiedSkills} 
+        count={unspecifiedSkills.length} 
       />
     </div>
   );
