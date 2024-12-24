@@ -8,6 +8,7 @@ import {
   SkillGoalStatus, 
   EmployeeSkillAchievement 
 } from '../types/employeeSkillTypes';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -34,6 +35,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         }
       },
 
+      getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
+        console.log('Getting skills for employee:', employeeId);
+        return get().employeeSkills[employeeId]?.skills || [];
+      },
+
       setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
         console.log('Setting skill level:', { employeeId, skillTitle, level });
         
@@ -51,11 +57,41 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             lastUpdated: new Date().toISOString()
           };
 
+          // Update or add the skill in the skills array
+          const skillData = getUnifiedSkillData(skillTitle);
+          const existingSkillIndex = employeeData.skills.findIndex(s => s.title === skillTitle);
+          
+          let updatedSkills = [...employeeData.skills];
+          if (existingSkillIndex >= 0) {
+            updatedSkills[existingSkillIndex] = {
+              ...updatedSkills[existingSkillIndex],
+              level: level
+            };
+          } else if (skillData) {
+            updatedSkills.push({
+              id: `${employeeId}-${skillTitle}`,
+              employeeId,
+              title: skillTitle,
+              subcategory: skillData.subcategory,
+              level: level,
+              goalStatus: currentState.goalStatus,
+              lastUpdated: new Date().toISOString(),
+              category: skillData.category,
+              weight: skillData.weight,
+              confidence: skillData.confidence,
+              businessCategory: skillData.businessCategory,
+              growth: skillData.growth,
+              salary: skillData.salary,
+              benchmarks: skillData.benchmarks
+            });
+          }
+
           return {
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
                 ...employeeData,
+                skills: updatedSkills,
                 states: {
                   ...employeeData.states,
                   [skillTitle]: {
@@ -87,11 +123,41 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             lastUpdated: new Date().toISOString()
           };
 
+          // Update or add the skill in the skills array
+          const skillData = getUnifiedSkillData(skillTitle);
+          const existingSkillIndex = employeeData.skills.findIndex(s => s.title === skillTitle);
+          
+          let updatedSkills = [...employeeData.skills];
+          if (existingSkillIndex >= 0) {
+            updatedSkills[existingSkillIndex] = {
+              ...updatedSkills[existingSkillIndex],
+              goalStatus: status
+            };
+          } else if (skillData) {
+            updatedSkills.push({
+              id: `${employeeId}-${skillTitle}`,
+              employeeId,
+              title: skillTitle,
+              subcategory: skillData.subcategory,
+              level: currentState.level,
+              goalStatus: status,
+              lastUpdated: new Date().toISOString(),
+              category: skillData.category,
+              weight: skillData.weight,
+              confidence: skillData.confidence,
+              businessCategory: skillData.businessCategory,
+              growth: skillData.growth,
+              salary: skillData.salary,
+              benchmarks: skillData.benchmarks
+            });
+          }
+
           return {
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
                 ...employeeData,
+                skills: updatedSkills,
                 states: {
                   ...employeeData.states,
                   [skillTitle]: {
@@ -133,11 +199,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return skillState;
       },
 
-      getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
-        console.log('Getting skills for employee:', employeeId);
-        return get().employeeSkills[employeeId]?.skills || [];
-      },
-
       batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => {
         console.log('Processing batch update:', { employeeId, updateCount: Object.keys(updates).length });
 
@@ -149,11 +210,26 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             lastUpdated: new Date().toISOString()
           };
 
+          // Update skills array with new states
+          const updatedSkills = currentData.skills.map(skill => {
+            const update = updates[skill.title];
+            if (update) {
+              return {
+                ...skill,
+                level: update.level,
+                goalStatus: update.goalStatus,
+                lastUpdated: update.lastUpdated
+              };
+            }
+            return skill;
+          });
+
           return {
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
                 ...currentData,
+                skills: updatedSkills,
                 states: {
                   ...currentData.states,
                   ...updates
@@ -167,7 +243,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 11,
+      version: 12,
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
