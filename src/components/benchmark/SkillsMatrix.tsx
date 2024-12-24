@@ -8,12 +8,20 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { AddEmployeeSkillDialog } from "./skills-matrix/dialog/AddEmployeeSkillDialog";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
-import { filterSkillsByCategory } from "./skills-matrix/skillCategories";
+import { useState } from "react";
 
 export const SkillsMatrix = () => {
   const { id } = useParams();
   const { toast } = useToast();
-  const { saveChanges, cancelChanges } = useSkillsMatrixStore();
+  const [selectedLevel, setSelectedLevel] = useState("all");
+  const [selectedInterest, setSelectedInterest] = useState("all");
+  
+  // Properly access the store methods using the store hook
+  const { saveChanges, cancelChanges } = useSkillsMatrixStore((state) => ({
+    saveChanges: state.saveChanges,
+    cancelChanges: state.cancelChanges
+  }));
+
   const employeeSkills = getEmployeeSkills(id || "");
 
   const handleSave = () => {
@@ -32,6 +40,13 @@ export const SkillsMatrix = () => {
     });
   };
 
+  console.log('SkillsMatrix - Rendering with:', {
+    employeeId: id,
+    skillCount: employeeSkills.length,
+    selectedLevel,
+    selectedInterest
+  });
+
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
       <SkillsMatrixHeader 
@@ -44,10 +59,14 @@ export const SkillsMatrix = () => {
       
       <SkillsMatrixFilters 
         addSkillButton={<AddEmployeeSkillDialog />}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
+        selectedInterest={selectedInterest}
+        setSelectedInterest={setSelectedInterest}
       />
 
       <SkillsMatrixTable 
-        skills={employeeSkills}
+        filteredSkills={employeeSkills}
         isRoleBenchmark={false}
       />
     </Card>
