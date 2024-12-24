@@ -13,8 +13,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         const currentSkills = get().employeeSkills[employeeId];
         
         if (!currentSkills) {
+          console.log('No existing skills found, creating new entry for employee:', employeeId);
           set(state => ({
-            ...state,
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
@@ -24,7 +24,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           }));
-          console.log('Initialized empty skill set for employee:', employeeId);
+        } else {
+          console.log('Found existing skills for employee:', {
+            employeeId,
+            skillCount: currentSkills.skills.length
+          });
         }
       },
 
@@ -47,7 +51,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               lastUpdated: new Date().toISOString()
             };
           } else {
-            // Create new skill with unified data
             const skillData = getUnifiedSkillData(skillTitle);
             const newSkill: EmployeeSkill = {
               id: `${employeeId}-${skillTitle}`,
@@ -63,6 +66,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               growth: skillData.growth,
               salary: skillData.salary,
               confidence: skillData.confidence,
+              requirement: 'unknown',
               benchmarks: skillData.benchmarks
             };
             updatedSkills.push(newSkill);
@@ -132,12 +136,19 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Getting skills for employee:', employeeId);
         const state = get();
         if (!state.employeeSkills[employeeId]) {
+          console.log('No skills found, initializing employee:', employeeId);
           state.initializeEmployeeSkills(employeeId);
         }
-        return state.employeeSkills[employeeId]?.skills || [];
+        const skills = state.employeeSkills[employeeId]?.skills || [];
+        console.log('Retrieved employee skills:', {
+          employeeId,
+          skillCount: skills.length,
+          skills: skills.map(s => ({ title: s.title, level: s.level }))
+        });
+        return skills;
       },
 
-      getSkillState: (employeeId: string, skillTitle: string) => {
+      getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
         const state = get();
         const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
         
@@ -149,8 +160,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           });
           
           return {
-            level: 'unspecified' as SkillLevel,
-            requirement: 'unknown' as SkillGoalStatus,
+            level: 'unspecified',
+            requirement: 'unknown',
             lastUpdated: new Date().toISOString()
           };
         }
