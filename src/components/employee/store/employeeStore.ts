@@ -8,7 +8,7 @@ import { getSkillProfileId } from "../../EmployeeTable";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { benchmarkingService } from "../../../services/benchmarking";
 import { 
-  EmployeeSkill, 
+  EmployeeSkillData, 
   EmployeeSkillState, 
   EmployeeSkillsData, 
   SkillLevel, 

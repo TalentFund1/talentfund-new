@@ -34,7 +34,8 @@ export const createSkillSelectors = (get: any) => {
         return {
           level: 'unspecified',
           goalStatus: 'unknown',
-          lastUpdated: new Date().toISOString()
+          lastUpdated: new Date().toISOString(),
+          confidence: 'medium'
         };
       }
 
