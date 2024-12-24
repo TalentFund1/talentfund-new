@@ -18,13 +18,21 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { getEmployeeSkills, getSkillState } = useEmployeeSkillsStore();
+  const { getEmployeeSkills, getSkillState, initializeEmployeeSkills } = useEmployeeSkillsStore();
 
   const { filterAndSortSkills } = useSkillsMatrixState(
     "all",
     selectedLevel,
     selectedInterest
   );
+
+  // Initialize employee skills if needed
+  useEffect(() => {
+    if (id) {
+      console.log('Initializing skills for employee:', id);
+      initializeEmployeeSkills(id);
+    }
+  }, [id, initializeEmployeeSkills]);
 
   // Get employee skills and convert them to UnifiedSkill format
   const employeeSkills = id ? getEmployeeSkills(id).map(skill => {
