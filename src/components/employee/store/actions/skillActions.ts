@@ -4,12 +4,17 @@ import { EmployeeStore } from '../../../types/storeTypes';
 
 export const createSkillActions = (set: any, get: any) => ({
   initializeEmployeeSkills: (employeeId: string, employeeStore?: EmployeeStore) => {
-    console.log('Checking initialization status for employee:', employeeId);
+    console.log('Starting initialization check for employee:', employeeId);
     
-    // Check if already initialized with skills
-    const currentSkills = get().employeeSkills[employeeId];
-    if (currentSkills?.skills?.length > 0) {
-      console.log('Skills already initialized for employee:', employeeId);
+    // First check - see if we already have skills
+    const currentState = get();
+    const existingSkills = currentState.employeeSkills[employeeId]?.skills;
+    
+    if (existingSkills?.length > 0) {
+      console.log('Skills already exist for employee:', {
+        employeeId,
+        skillCount: existingSkills.length
+      });
       return;
     }
 
@@ -20,7 +25,7 @@ export const createSkillActions = (set: any, get: any) => ({
       return;
     }
 
-    console.log('Initializing skills for employee:', {
+    console.log('Proceeding with initialization for employee:', {
       employeeId,
       role: employee.role
     });
@@ -29,13 +34,16 @@ export const createSkillActions = (set: any, get: any) => ({
     const initialSkills = initializeSkills(employeeId, employee.role);
 
     set(state => {
-      // Double-check we haven't initialized in the meantime
+      // Final safety check before setting state
       if (state.employeeSkills[employeeId]?.skills?.length > 0) {
-        console.log('Skills were initialized by another process:', employeeId);
+        console.log('Skills were initialized by another process:', {
+          employeeId,
+          existingSkillCount: state.employeeSkills[employeeId].skills.length
+        });
         return state;
       }
 
-      return {
+      const newState = {
         employeeSkills: {
           ...state.employeeSkills,
           [employeeId]: {
@@ -52,11 +60,14 @@ export const createSkillActions = (set: any, get: any) => ({
           }
         }
       };
-    });
 
-    console.log('Successfully initialized employee skills:', {
-      employeeId,
-      skillCount: initialSkills.length
+      console.log('Successfully initialized employee skills:', {
+        employeeId,
+        skillCount: initialSkills.length,
+        timestamp: new Date().toISOString()
+      });
+
+      return newState;
     });
   },
 
