@@ -21,7 +21,7 @@ export const LevelSelector = ({ currentLevel, onLevelChange }: LevelSelectorProp
   };
 
   const getLevelStyles = (level: string) => {
-    const baseStyles = "rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]";
+    const baseStyles = "rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]";
     
     switch (level?.toLowerCase()) {
       case 'advanced':
