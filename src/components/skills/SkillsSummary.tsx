@@ -97,7 +97,6 @@ export const SkillsSummary = () => {
     );
   };
 
-  // Remove toggledSkills filtering and show all skills
   const specializedSkills: DetailedSkill[] = transformAndSortSkills(
     filterSkillsByCategory(employeeSkills.map(skill => ({
       ...skill,
