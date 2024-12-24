@@ -27,7 +27,7 @@ export const getGoalStatusStyles = (status: string, level: string) => {
               ? 'border-[#008000]'
               : 'border-gray-300'
       }`;
-    case 'not-interested':
+    case 'not_interested':
     case 'unknown':
     default:
       return `${baseStyles} border-gray-300`;

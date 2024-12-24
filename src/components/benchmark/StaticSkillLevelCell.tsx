@@ -49,7 +49,7 @@ export const StaticSkillLevelCell = ({
     switch (requirement?.toLowerCase()) {
       case 'required':
         return <Heart className="w-3.5 h-3.5" />;
-      case 'not-interested':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5" />;

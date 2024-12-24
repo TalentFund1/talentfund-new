@@ -17,7 +17,7 @@ export const getRequirementIcon = (requirement: string) => {
   switch (requirement) {
     case 'required':
       return <Heart className="w-3.5 h-3.5" />;
-    case 'not-interested':
+    case 'not_interested':
       return <X className="w-3.5 h-3.5" />;
     case 'unknown':
       return <CircleHelp className="w-3.5 h-3.5" />;
