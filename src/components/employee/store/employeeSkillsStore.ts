@@ -1,15 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData, EmployeeSkillUpdate } from '../types/employeeSkillTypes';
+import { EmployeeSkill, EmployeeSkillsData } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { SkillRequirement } from '../../skills/types/SkillTypes';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
   setEmployeeSkills: (employeeId: string, skills: EmployeeSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
-  setSkillState: (update: EmployeeSkillUpdate) => void;
-  getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
 
@@ -19,14 +16,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       employeeSkills: {},
 
       setEmployeeSkills: (employeeId, skills) => {
-        console.log('Setting skills for employee:', { 
-          employeeId, 
+        console.log('Setting skills for employee:', {
+          employeeId,
           skillCount: skills.length,
-          skills: skills.map(s => ({
-            title: s.title,
-            level: s.level,
-            requirement: s.requirement
-          }))
+          skills: skills.map(s => s.title)
         });
 
         // Enrich skills with universal data
@@ -38,10 +31,15 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             weight: universalData.weight,
             category: universalData.category,
             subcategory: universalData.subcategory,
-            growth: universalData.growth,
-            salary: universalData.salary,
-            confidence: universalData.confidence,
-            benchmarks: universalData.benchmarks
+            growth: universalData.growth || '0%',
+            salary: universalData.salary || 'N/A',
+            confidence: universalData.confidence || 'medium',
+            benchmarks: universalData.benchmarks || {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
           };
         });
 
@@ -57,8 +55,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       },
 
       getEmployeeSkills: (employeeId) => {
+        console.log('Getting skills for employee:', employeeId);
         const employeeData = get().employeeSkills[employeeId];
-        if (!employeeData) {
+        
+        if (!employeeData?.skills) {
           console.log('No skills found for employee:', employeeId);
           return [];
         }
@@ -72,37 +72,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return employeeData.skills;
       },
 
-      setSkillState: ({ employeeId, skillTitle, level, requirement }) => {
-        console.log('Setting skill state:', {
-          employeeId,
-          skillTitle,
-          level,
-          requirement
-        });
-
-        set((state) => ({
-          employeeSkills: {
-            ...state.employeeSkills,
-            [employeeId]: {
-              skills: state.employeeSkills[employeeId]?.skills || [],
-              states: {
-                ...state.employeeSkills[employeeId]?.states,
-                [skillTitle]: { level, requirement }
-              }
-            }
-          }
-        }));
-      },
-
-      getSkillState: (employeeId, skillTitle) => {
-        const state = get().employeeSkills[employeeId]?.states[skillTitle];
-        return state || { level: 'beginner', requirement: 'unknown' as SkillRequirement };
-      },
-
       initializeEmployeeSkills: (employeeId) => {
+        console.log('Initializing skills for employee:', employeeId);
         const currentSkills = get().employeeSkills[employeeId];
+        
         if (!currentSkills) {
-          console.log('Initializing skills for employee:', employeeId);
           set((state) => ({
             employeeSkills: {
               ...state.employeeSkills,
@@ -117,10 +91,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 1,
-      partialize: (state) => ({
-        employeeSkills: state.employeeSkills
-      })
+      version: 1
     }
   )
 );
