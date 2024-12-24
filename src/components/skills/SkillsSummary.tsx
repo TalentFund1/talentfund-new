@@ -4,7 +4,6 @@ import { SkillSearchSection } from "./search/SkillSearchSection";
 import { SkillsContainer } from "./sections/SkillsContainer";
 import { useToast } from "@/components/ui/use-toast";
 import { useSelectedSkills } from "./context/SelectedSkillsContext";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
@@ -37,10 +36,10 @@ export const SkillsSummary = () => {
   const { toast } = useToast();
   const [searchSkills, setSearchSkills] = useState<string[]>([]);
   const { setMatrixSearchSkills } = useSkillsMatrixSearch();
-  const { getSkillState } = useEmployeeSkillsStore();
+  const { getSkillState, getEmployeeSkills: getStoredEmployeeSkills } = useEmployeeSkillsStore();
 
   console.log('Loading skills for employee:', id);
-  const employeeSkills = getEmployeeSkills(id || "");
+  const employeeSkills = getStoredEmployeeSkills(id || "");
   console.log('Loaded employee skills:', employeeSkills);
 
   const handleSkillsChange = (skills: string[]) => {
