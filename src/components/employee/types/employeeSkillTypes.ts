@@ -1,5 +1,3 @@
-import { SkillCategory, SkillWeight, SkillRequirement } from '../../skills/types/SkillTypes';
-
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not-interested' | 'unknown' | 'skill_goal';
 

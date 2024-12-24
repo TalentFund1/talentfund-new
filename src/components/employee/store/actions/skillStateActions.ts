@@ -29,7 +29,6 @@ export const createSkillStateActions = (
         const newSkill: EmployeeSkill = {
           ...skillData,
           id: `${employeeId}-${skillTitle}`,
-          employeeId,
           level,
           goalStatus: 'unknown',
           lastUpdated: new Date().toISOString()
