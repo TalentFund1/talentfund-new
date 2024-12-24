@@ -128,7 +128,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => {
         console.log('Batch updating skills:', {
           employeeId,
-          updateCount: Object.keys(updates).length
+          updateCount: Object.keys(updates).length,
+          updates
         });
 
         set((state) => {
@@ -139,6 +140,16 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             lastUpdated: new Date().toISOString()
           };
 
+          // Validate and normalize updates
+          const validatedUpdates: Record<string, EmployeeSkillState> = {};
+          Object.entries(updates).forEach(([skillTitle, update]) => {
+            validatedUpdates[skillTitle] = {
+              level: update.level || 'unspecified',
+              requirement: update.requirement || 'unknown',
+              lastUpdated: new Date().toISOString()
+            };
+          });
+
           return {
             employeeSkills: {
               ...state.employeeSkills,
@@ -146,7 +157,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 ...currentData,
                 states: {
                   ...currentData.states,
-                  ...updates
+                  ...validatedUpdates
                 },
                 lastUpdated: new Date().toISOString()
               }
