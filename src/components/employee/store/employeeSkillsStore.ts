@@ -17,17 +17,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       employeeSkills: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
-        console.log('Checking existing skills for employee:', employeeId);
+        console.log('Starting employee skills initialization:', employeeId);
         
         const currentSkills = get().employeeSkills[employeeId];
         if (!currentSkills) {
           const employee = employees.find(emp => emp.id === employeeId);
           if (!employee) {
-            console.warn('Employee not found:', employeeId);
+            console.warn('No employee data found:', employeeId);
             return;
           }
 
-          // Initialize only with employee's existing skills
+          // Initialize strictly with employee's existing skills only
           const initializedData = {
             employeeId,
             skills: initializeEmployeeSkills(employeeId, employee.skills),
@@ -57,7 +57,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
         console.log('Getting skills for employee:', employeeId);
-        return get().employeeSkills[employeeId]?.skills || [];
+        const skills = get().employeeSkills[employeeId]?.skills || [];
+        
+        if (skills.length > 0) {
+          console.log('Found existing skills:', {
+            employeeId,
+            skillCount: skills.length,
+            skills: skills.map(s => s.title)
+          });
+        }
+        
+        return skills;
       },
 
       getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
@@ -165,7 +175,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 14, // Increment version to ensure clean state
+      version: 15, // Increment version to ensure clean state
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
