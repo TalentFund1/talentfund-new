@@ -4,9 +4,10 @@ import {
   EmployeeSkillState, 
   EmployeeSkillData,
   EmployeeSkillsState,
-  EmployeeSkillUpdate 
-} from '../types/employeeSkillState';
-import { SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
+  EmployeeSkillUpdate,
+  SkillLevel,
+  SkillGoalStatus
+} from '../types/employeeSkillTypes';
 import { benchmarkingService } from '../../../services/benchmarking';
 
 interface EmployeeSkillsStore {
@@ -16,6 +17,15 @@ interface EmployeeSkillsStore {
   initializeEmployeeSkills: (employeeId: string) => void;
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
+  
+  // Essential methods that were missing
+  setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
+  getEmployeeSkills: (employeeId: string) => Array<{
+    title: string;
+    level: SkillLevel;
+    goalStatus: SkillGoalStatus;
+  }>;
   
   // Batch operations
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
@@ -102,6 +112,34 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
         });
+      },
+
+      setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
+        console.log('Setting skill level:', { employeeId, skillTitle, level });
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { level });
+      },
+
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => {
+        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { goalStatus: status });
+      },
+
+      getEmployeeSkills: (employeeId: string) => {
+        console.log('Getting skills for employee:', employeeId);
+        const state = get();
+        const employeeState = state.skillStates[employeeId];
+        
+        if (!employeeState) {
+          return [];
+        }
+
+        return Object.entries(employeeState.skills).map(([title, data]) => ({
+          title,
+          level: data.state.level,
+          goalStatus: data.state.goalStatus
+        }));
       },
 
       batchUpdateSkills: (
