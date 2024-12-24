@@ -1,43 +1,18 @@
-import { roleSkills } from '../../../skills/data/roleSkills';
-import { getSkillProfileId } from '../../../EmployeeTable';
 import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { EmployeeSkillAchievement, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
 
-export const initializeEmployeeSkills = (employeeId: string, role: string): EmployeeSkillAchievement[] => {
-  console.log('Initializing skills for employee:', { employeeId, role });
+export const initializeEmployeeSkills = (employeeId: string, initialSkills: Array<{ name: string, level: SkillLevel }> = []): EmployeeSkillAchievement[] => {
+  console.log('Initializing skills for employee:', { employeeId, initialSkillCount: initialSkills.length });
   
-  const roleId = getSkillProfileId(role);
-  const roleData = roleSkills[roleId];
-  
-  if (!roleData) {
-    console.warn('No role data found for:', { roleId, role });
-    return [];
-  }
-
-  // Combine all skills from role
-  const allRoleSkills = [
-    ...(roleData.specialized || []),
-    ...(roleData.common || []),
-    ...(roleData.certifications || [])
-  ];
-
-  console.log('Found role skills:', {
-    roleId,
-    skillCount: allRoleSkills.length,
-    skills: allRoleSkills.map(s => s.title)
-  });
-
-  // Create initial skill achievements with correct types
-  const initialSkills: EmployeeSkillAchievement[] = allRoleSkills.map(skill => {
-    const unifiedData = getUnifiedSkillData(skill.title);
+  const processedSkills: EmployeeSkillAchievement[] = initialSkills.map(skill => {
+    const unifiedData = getUnifiedSkillData(skill.name);
     return {
-      id: `${employeeId}-${skill.title}`,
+      id: `${employeeId}-${skill.name}`,
       employeeId,
-      title: skill.title,
+      title: skill.name,
       subcategory: unifiedData.subcategory,
-      level: 'unspecified' as SkillLevel,
+      level: skill.level,
       goalStatus: 'unknown' as SkillGoalStatus,
-      requirement: 'unknown' as SkillGoalStatus, // Add requirement field
       lastUpdated: new Date().toISOString(),
       category: unifiedData.category,
       businessCategory: unifiedData.businessCategory,
@@ -51,9 +26,9 @@ export const initializeEmployeeSkills = (employeeId: string, role: string): Empl
 
   console.log('Created initial skills:', {
     employeeId,
-    skillCount: initialSkills.length,
-    skills: initialSkills.map(s => s.title)
+    skillCount: processedSkills.length,
+    skills: processedSkills.map(s => s.title)
   });
 
-  return initialSkills;
+  return processedSkills;
 };
