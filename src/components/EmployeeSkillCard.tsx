@@ -39,15 +39,11 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
       return Math.min(Math.max(level, 0), 100);
     }
 
-    // Handle string levels with more granular percentages
+    // Handle normalized string levels with more granular percentages
     const levels: { [key: string]: number } = {
       'advanced': 100,
-      'expert': 90,
-      'proficient': 80,
       'intermediate': 66,
-      'developing': 50,
       'beginner': 33,
-      'novice': 25,
       'unspecified': 0
     };
 
@@ -75,9 +71,11 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
 
   const handleSkillClick = (skillName: string) => {
     const percentage = getLevelPercentage(skillName);
+    const skillState = getSkillState(employeeId, skillName);
+    
     toast({
       title: skillName,
-      description: `Current level: ${percentage}%`,
+      description: `Current level: ${percentage}% (${skillState.level})`,
     });
   };
 
