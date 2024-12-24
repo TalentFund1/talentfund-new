@@ -9,7 +9,30 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     (set, get) => ({
       employeeSkills: {},
       ...createSkillActions(set, get),
-      ...createSkillSelectors(get)
+      ...createSkillSelectors(get),
+
+      // Add batched update capability
+      batchUpdateSkills: (employeeId: string, updates: Record<string, any>) => {
+        console.log('Batch updating skills for employee:', {
+          employeeId,
+          updateCount: Object.keys(updates).length
+        });
+
+        set(state => {
+          const currentSkills = state.employeeSkills[employeeId] || {};
+          const updatedSkills = {
+            ...currentSkills,
+            ...updates
+          };
+
+          return {
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: updatedSkills
+            }
+          };
+        });
+      }
     }),
     {
       name: 'employee-skills-storage',
