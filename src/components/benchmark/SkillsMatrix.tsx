@@ -5,6 +5,7 @@ import { useSkillsMatrixSearch } from "../skills/context/SkillsMatrixSearchConte
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
 import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { UnifiedSkill } from "../skills/types/SkillTypes";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -17,7 +18,7 @@ export const SkillsMatrix = () => {
   const { id } = useParams<{ id: string }>();
   const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { getEmployeeSkills } = useEmployeeSkillsStore();
+  const { getEmployeeSkills, getSkillState } = useEmployeeSkillsStore();
 
   const { filterAndSortSkills } = useSkillsMatrixState(
     "all",
@@ -25,8 +26,15 @@ export const SkillsMatrix = () => {
     selectedInterest
   );
 
-  // Get employee skills directly from the employee skills store
-  const employeeSkills = getEmployeeSkills(id || "");
+  // Get employee skills and convert them to UnifiedSkill format
+  const employeeSkills = id ? getEmployeeSkills(id).map(skill => {
+    const state = getSkillState(id, skill.title);
+    return {
+      ...skill,
+      level: state.level,
+      requirement: state.requirement
+    } as UnifiedSkill;
+  }) : [];
 
   console.log('SkillsMatrix - Loading employee skills:', {
     employeeId: id,

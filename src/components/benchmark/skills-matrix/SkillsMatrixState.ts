@@ -30,22 +30,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       setSkillState: (skillTitle, level, requirement) => {
         console.log('Setting skill state in matrix:', { skillTitle, level, requirement });
         
-        // Get current employee ID from URL
-        const employeeId = window.location.pathname.split('/').pop();
-        
-        if (employeeId) {
-          // Sync with employee store
-          const employeeStore = useEmployeeStore.getState();
-          employeeStore.setSkillState(employeeId, skillTitle, level, requirement);
-          
-          console.log('Synced skill state with employee store:', {
-            employeeId,
-            skillTitle,
-            level,
-            requirement
-          });
-        }
-
         set((state) => ({
           currentStates: {
             ...state.currentStates,
@@ -84,22 +68,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         }),
 
       saveChanges: () => {
-        const employeeId = window.location.pathname.split('/').pop();
-        if (employeeId) {
-          const employeeStore = useEmployeeStore.getState();
-          const { currentStates } = useSkillsMatrixStore.getState();
-          
-          // Sync all changes to employee store
-          Object.entries(currentStates).forEach(([skillTitle, state]) => {
-            employeeStore.setSkillState(employeeId, skillTitle, state.level, state.requirement);
-          });
-          
-          console.log('Saved all changes to employee store:', {
-            employeeId,
-            skillCount: Object.keys(currentStates).length
-          });
-        }
-
         set(() => ({
           hasChanges: false,
         }));
@@ -127,10 +95,15 @@ export const useSkillsMatrixState = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
 
-  const filterAndSortSkills = (employeeId: string) => {
-    console.log('Filtering skills for employee:', employeeId);
-    const employeeSkills = getEmployeeSkills(employeeId);
-    let filteredSkills = [...employeeSkills];
+  const filterAndSortSkills = (skills: UnifiedSkill[]) => {
+    console.log('Filtering skills:', { 
+      totalSkills: skills.length,
+      selectedCategory,
+      selectedLevel,
+      selectedInterest 
+    });
+
+    let filteredSkills = [...skills];
 
     // Filter by category if not "all"
     if (selectedCategory !== "all") {
@@ -140,26 +113,24 @@ export const useSkillsMatrixState = (
     // Filter by level if not "all"
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const state = currentStates[skill.title];
-        return state?.level.toLowerCase() === selectedLevel.toLowerCase();
+        return skill.level.toLowerCase() === selectedLevel.toLowerCase();
       });
     }
 
     // Filter by interest/requirement if not "all"
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const state = currentStates[skill.title];
-        if (!state) return false;
+        if (!skill.requirement) return false;
 
         switch (selectedInterest.toLowerCase()) {
           case "skill_goal":
-            return state.requirement === "required" || state.requirement === "skill_goal";
+            return skill.requirement === "required" || skill.requirement === "skill_goal";
           case "not_interested":
-            return state.requirement === "not_interested";
+            return skill.requirement === "not_interested";
           case "unknown":
-            return !state.requirement || state.requirement === "unknown";
+            return !skill.requirement || skill.requirement === "unknown";
           default:
-            return state.requirement === selectedInterest.toLowerCase();
+            return skill.requirement === selectedInterest.toLowerCase();
         }
       });
     }
@@ -171,9 +142,3 @@ export const useSkillsMatrixState = (
     filterAndSortSkills,
   };
 };
-
-export const getEmployeeSkills = (employeeId: string): UnifiedSkill[] => {
-  console.log('Getting skills for employee:', employeeId);
-  return useEmployeeStore.getState().getEmployeeSkills(employeeId);
-};
-
