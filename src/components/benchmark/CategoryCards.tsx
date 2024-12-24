@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
+import { roleSkills } from '../skills/data/roleSkills';
 
 interface CategoryCardsProps {
   selectedCategory: string;
@@ -16,32 +17,46 @@ export const CategoryCards = ({
   const { toggledSkills } = useToggledSkills();
   
   const getSkillCountByCategory = (category: string) => {
-    const skillsArray = Array.from(toggledSkills);
+    const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
+    const allRoleSkills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+    
+    // Filter skills that are both in the role AND toggled on
+    const skillsArray = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .filter(skill => {
+        if (!skill.title) {
+          console.warn('Found undefined skill title in role skills');
+          return false;
+        }
+        const skillData = getUnifiedSkillData(skill.title);
+        return category === 'all' || skillData.category === category;
+      });
     
     console.log('Calculating skill count for category:', {
       category,
-      totalSkills: skillsArray.length,
-      toggledSkills: Array.from(toggledSkills)
+      roleId,
+      totalRoleSkills: allRoleSkills.length,
+      toggledSkillsCount: toggledSkills.size,
+      filteredCount: skillsArray.length,
+      skills: skillsArray.map(s => s.title)
     });
 
-    return skillsArray.filter(skillTitle => {
-      if (!skillTitle) {
-        console.warn('Found undefined skill title in toggled skills');
-        return false;
-      }
-      const skillData = getUnifiedSkillData(skillTitle);
-      return category === 'all' || skillData.category === category;
-    }).length;
+    return skillsArray.length;
   };
 
   const categories = [
-    { id: "all", name: "All Categories", count: Array.from(toggledSkills).length },
+    { id: "all", name: "All Categories", count: getSkillCountByCategory('all') },
     { id: "specialized", name: "Specialized Skills", count: getSkillCountByCategory("specialized") },
     { id: "common", name: "Common Skills", count: getSkillCountByCategory("common") },
     { id: "certification", name: "Certification", count: getSkillCountByCategory("certification") }
   ];
 
   console.log('CategoryCards - Category counts:', {
+    roleId,
     categories: categories.map(cat => ({
       name: cat.name,
       count: cat.count
