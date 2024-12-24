@@ -19,7 +19,7 @@ interface EmployeeSkillCardProps {
 
 export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: EmployeeSkillCardProps) => {
   const { toast } = useToast();
-  const { getSkillState } = useEmployeeSkillsStore();
+  const { getSkillState, batchUpdateSkills } = useEmployeeSkillsStore();
   
   console.log('Rendering EmployeeSkillCard:', { 
     name, 
@@ -72,6 +72,24 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
   const handleSkillClick = (skillName: string) => {
     const percentage = getLevelPercentage(skillName);
     const skillState = getSkillState(employeeId, skillName);
+    
+    // Prepare batch update
+    const updates = {
+      [skillName]: {
+        level: skillState.level,
+        requirement: skillState.requirement,
+        lastUpdated: new Date().toISOString()
+      }
+    };
+
+    console.log('Preparing batch update for skill:', {
+      employeeId,
+      skillName,
+      updates
+    });
+
+    // Use batch update instead of individual updates
+    batchUpdateSkills(employeeId, updates);
     
     toast({
       title: skillName,
