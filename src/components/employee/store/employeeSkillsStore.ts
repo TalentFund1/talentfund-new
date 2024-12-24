@@ -4,6 +4,7 @@ import { SkillLevel, SkillGoalStatus, EmployeeSkill, EmployeeSkillState } from '
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, {
+    employeeId: string;
     skills: EmployeeSkill[];
     states: Record<string, EmployeeSkillState>;
   }>;
@@ -35,6 +36,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
+                employeeId,
                 skills: [],
                 states: {}
               }
@@ -48,6 +50,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Setting skill level:', { employeeId, skillTitle, level });
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
+            employeeId,
             skills: [],
             states: {}
           };
@@ -62,6 +65,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               lastUpdated: new Date().toISOString()
             };
           } else {
+            // Create a new skill entry with minimal required data
             const newSkill: EmployeeSkill = {
               id: `${employeeId}-${skillTitle}`,
               employeeId,
@@ -90,6 +94,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
+                ...employeeData,
                 skills: updatedSkills,
                 states: {
                   ...employeeData.states,
@@ -109,6 +114,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Setting skill goal status:', { employeeId, skillTitle, status });
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
+            employeeId,
             skills: [],
             states: {}
           };
@@ -128,6 +134,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
+                ...employeeData,
                 skills: updatedSkills,
                 states: {
                   ...employeeData.states,
@@ -176,7 +183,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 3, // Incremented version to ensure clean state
+      version: 3,
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
