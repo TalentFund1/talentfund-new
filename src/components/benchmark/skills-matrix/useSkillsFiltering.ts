@@ -3,6 +3,8 @@ import { useCompetencyStateReader } from "../../skills/competency/CompetencyStat
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
+import { EmployeeSkill } from "../../employee/types/employeeSkillTypes";
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
   employeeId: string,

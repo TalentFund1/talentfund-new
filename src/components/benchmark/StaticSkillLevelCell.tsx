@@ -2,6 +2,7 @@ import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useEffect } from "react";
+import { SkillLevel, SkillGoalStatus } from "../employee/types/employeeSkillTypes";
 
 interface StaticSkillLevelCellProps {
   initialLevel: string;
@@ -14,7 +15,6 @@ export const StaticSkillLevelCell = ({
 }: StaticSkillLevelCellProps) => {
   const { currentStates, initializeState } = useSkillsMatrixStore();
 
-  // Initialize the state when the component mounts
   useEffect(() => {
     console.log('Initializing static skill cell:', {
       skillTitle,
@@ -23,7 +23,7 @@ export const StaticSkillLevelCell = ({
     });
     
     if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, 'unspecified', 'preferred');
+      initializeState(skillTitle, 'unspecified' as SkillLevel, 'unknown' as SkillGoalStatus);
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 

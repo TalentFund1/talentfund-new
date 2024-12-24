@@ -1,5 +1,11 @@
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
-import { EmployeeSkillState } from "../../employee/types/employeeSkillTypes";
+import { EmployeeSkillState, SkillLevel, SkillGoalStatus } from "../../employee/types/employeeSkillTypes";
+
+interface SkillState {
+  level: SkillLevel;
+  requirement: SkillGoalStatus;
+  lastUpdated: string;
+}
 
 export const useSkillLevelState = (skillTitle: string) => {
   const { currentStates } = useSkillsMatrixStore();
