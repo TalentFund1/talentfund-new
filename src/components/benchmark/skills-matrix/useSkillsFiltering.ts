@@ -40,7 +40,8 @@ export const useSkillsFiltering = (
   const filterSkills = () => {
     let skills = [...employeeSkills];
 
-    console.log('Starting skills filtering:', {
+    console.log('Filtering skills:', {
+      employeeId,
       totalSkills: skills.length,
       selectedCategory,
       selectedWeight,
@@ -77,13 +78,13 @@ export const useSkillsFiltering = (
       });
     }
 
-    // Apply weight filter using universal skills database
+    // Apply weight filter
     if (selectedWeight !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
         console.log('Filtering by weight:', {
           skillTitle: skill.title,
-          unifiedWeight: skillData?.weight,
+          weight: skillData?.weight,
           selectedWeight,
           matches: skillData?.weight === selectedWeight.toLowerCase()
         });
@@ -136,21 +137,12 @@ export const useSkillsFiltering = (
 
       return matchesLevel && matchesInterest && matchesSearch && matchesSkillLevel;
     })
-    .map(skill => {
-      const unifiedData = getUnifiedSkillData(skill.title);
-      console.log('Mapping skill with weight:', {
-        title: skill.title,
-        unifiedWeight: unifiedData.weight,
-        originalWeight: skill.weight
-      });
-      return {
-        ...skill,
-        weight: unifiedData.weight, // Ensure weight comes from universal database
-        employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
-        roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
-        requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
-      };
-    })
+    .map(skill => ({
+      ...skill,
+      employeeLevel: currentStates[skill.title]?.level || skill.level || 'unspecified',
+      roleLevel: getSkillCompetencyState(skill.title, comparisonLevel, selectedRole)?.level || 'unspecified',
+      requirement: currentStates[skill.title]?.requirement || skill.requirement || 'unknown'
+    }))
     .sort((a, b) => {
       const aRoleLevel = a.roleLevel;
       const bRoleLevel = b.roleLevel;

@@ -19,18 +19,12 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
       
       const roleData = {
         ...parsedSkills,
-        skills: unifiedSkills,
-        specialized: parsedSkills.specialized || [],
-        common: parsedSkills.common || [],
-        certifications: parsedSkills.certifications || []
+        skills: unifiedSkills
       };
       
-      console.log('Loaded role skills:', {
+      console.log('Loaded and unified skills:', {
         roleId,
-        skillsCount: roleData.skills.length,
-        specialized: roleData.specialized.length,
-        common: roleData.common.length,
-        certifications: roleData.certifications.length
+        skillsCount: roleData.skills.length
       });
       
       return roleData;
@@ -52,15 +46,12 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
     
     const roleData = {
       ...skills,
-      skills: unifiedSkills,
-      specialized: skills.specialized || [],
-      common: skills.common || [],
-      certifications: skills.certifications || []
+      skills: unifiedSkills
     };
     
     localStorage.setItem(getStorageKey(roleId), JSON.stringify(roleData));
     
-    console.log('Updated role skills:', roleData);
+    console.log('Updated role skills with unified data:', roleData);
     
     window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 
       detail: { roleId } 
@@ -85,8 +76,8 @@ export const initializeRoleSkills = (roleId: string): RoleSkillData => {
     description: "",
     roleTrack: getRoleDefaultTrack(roleId),
     skills: [],
-    specialized: [],
-    common: [],
-    certifications: []
+    specialized: [],  // Added missing property
+    common: [],      // Added missing property
+    certifications: [] // Added missing property
   };
 };
