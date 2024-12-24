@@ -20,13 +20,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return;
         }
 
-        // Initialize with default skill states
-        const defaultSkillStates = {
-          level: 'unspecified',
-          requirement: 'unknown',
-          lastUpdated: new Date().toISOString()
-        };
-
+        // Initialize with empty states object (will be populated by batch updates)
         set(state => {
           console.log('Creating new employee skills state:', employeeId);
           return {
@@ -35,7 +29,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               [employeeId]: {
                 employeeId,
                 skills: [],  // Skills will be populated through batch updates
-                states: defaultSkillStates,
+                states: {},  // Empty object to store individual skill states
                 lastUpdated: new Date().toISOString()
               }
             }
@@ -77,7 +71,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 7, // Incrementing version to ensure clean state
+      version: 8, // Incrementing version to ensure clean state
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
