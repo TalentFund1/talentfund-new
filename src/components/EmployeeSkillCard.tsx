@@ -8,7 +8,7 @@ import { SkillLevel } from "./employee/types/employeeSkillTypes";
 
 interface Skill {
   name: string;
-  level: SkillLevel | string;
+  level: SkillLevel;
 }
 
 interface EmployeeSkillCardProps {
