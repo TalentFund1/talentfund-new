@@ -7,9 +7,9 @@ export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): s
   return useEmployeeSkillsStore.getState().getSkillState(employeeId, skillTitle).level;
 };
 
-export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
-  console.log('Getting skill requirement:', { employeeId, skillTitle });
-  return useEmployeeSkillsStore.getState().getSkillState(employeeId, skillTitle).requirement;
+export const getEmployeeSkillGoalStatus = (employeeId: string, skillTitle: string): string => {
+  console.log('Getting skill goal status:', { employeeId, skillTitle });
+  return useEmployeeSkillsStore.getState().getSkillState(employeeId, skillTitle).goalStatus;
 };
 
 export const setEmployeeSkillLevel = (employeeId: string, skillTitle: string, level: string): void => {
@@ -19,11 +19,11 @@ export const setEmployeeSkillLevel = (employeeId: string, skillTitle: string, le
   store.setSkillLevel(employeeId, skillTitle, normalizedLevel);
 };
 
-export const setEmployeeSkillRequirement = (employeeId: string, skillTitle: string, requirement: string): void => {
-  console.log('Setting skill requirement:', { employeeId, skillTitle, requirement });
+export const setEmployeeSkillGoalStatus = (employeeId: string, skillTitle: string, goalStatus: string): void => {
+  console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
   const store = useEmployeeSkillsStore.getState();
-  const normalizedRequirement = normalizeGoalStatus(requirement);
-  store.setSkillGoalStatus(employeeId, skillTitle, normalizedRequirement);
+  const normalizedGoalStatus = normalizeGoalStatus(goalStatus);
+  store.setSkillGoalStatus(employeeId, skillTitle, normalizedGoalStatus);
 };
 
 export const initializeEmployeeSkills = (employeeId: string): void => {

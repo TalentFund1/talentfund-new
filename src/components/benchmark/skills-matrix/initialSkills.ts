@@ -13,9 +13,9 @@ export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): s
   return skillState.level;
 };
 
-export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
+export const getEmployeeSkillGoalStatus = (employeeId: string, skillTitle: string): string => {
   const store = useEmployeeSkillsStore.getState();
   const skillState = store.getSkillState(employeeId, skillTitle);
-  console.log('Getting skill requirement:', { employeeId, skillTitle, requirement: skillState.requirement });
-  return skillState.requirement;
+  console.log('Getting skill goal status:', { employeeId, skillTitle, goalStatus: skillState.goalStatus });
+  return skillState.goalStatus;
 };
