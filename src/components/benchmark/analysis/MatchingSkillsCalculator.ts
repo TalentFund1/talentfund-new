@@ -69,8 +69,7 @@ export const calculateMatchingSkills = (
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.goalStatus === 'required' || 
-           skillState.goalStatus === 'skill_goal';
+    return skillState.goalStatus === 'skill_goal';
   });
 
   return {

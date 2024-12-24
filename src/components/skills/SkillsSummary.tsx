@@ -9,7 +9,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useParams } from "react-router-dom";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { useSkillsMatrixSearch } from "./context/SkillsMatrixSearchContext";
-import { getLevelPriority } from "../utils/priorityUtils";
+import { getLevelPriority } from "../benchmark/utils/priorityUtils";
 
 export const SkillsSummary = () => {
   const [expandedSections, setExpandedSections] = useState<{
