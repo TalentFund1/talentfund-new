@@ -38,8 +38,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     'unspecified': 0
   }), []);
 
-  // Memoize the getLevelPercentage function with its dependencies
-  const getLevelPercentage = useMemo(() => (skillName: string): number => {
+  const getLevelPercentage = (skillName: string): number => {
     const skillState = getSkillState(employeeId, skillName);
     const level = skillState.level;
 
@@ -60,18 +59,18 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     });
 
     return percentage;
-  }, [employeeId, getSkillState, levelPercentages]);
+  };
 
-  const getProgressColor = useMemo(() => (percentage: number): string => {
+  const getProgressColor = (percentage: number): string => {
     if (percentage >= 90) return 'bg-primary-accent';
     if (percentage >= 80) return 'bg-green-500';
     if (percentage >= 60) return 'bg-blue-500';
     if (percentage >= 40) return 'bg-yellow-500';
     if (percentage >= 20) return 'bg-orange-500';
     return 'bg-gray-500';
-  }, []);
+  };
 
-  const handleSkillClick = useMemo(() => (skillName: string) => {
+  const handleSkillClick = (skillName: string) => {
     const percentage = getLevelPercentage(skillName);
     const skillState = getSkillState(employeeId, skillName);
     
@@ -97,13 +96,13 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
       title: skillName,
       description: `Current level: ${percentage}% (${skillState.level})`,
     });
-  }, [employeeId, getLevelPercentage, getSkillState, batchUpdateSkills, toast]);
+  };
 
   // Memoize the processed skills data
   const processedSkills = useMemo(() => skills.map(skill => ({
     ...skill,
     percentage: getLevelPercentage(skill.name)
-  })), [skills, getLevelPercentage]);
+  })), [skills, employeeId, getSkillState, levelPercentages]);
 
   return (
     <Card className="p-6 animate-fade-in">
