@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, X, CircleDashed } from "lucide-react";
+import { Heart, Check } from "lucide-react";
 
 interface RequirementSelectorProps {
   currentRequired: string;
@@ -13,17 +13,17 @@ export const RequirementSelector = ({
   onRequirementChange 
 }: RequirementSelectorProps) => {
   const getRequirementStyles = (requirement: string, level: string) => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
+    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#6B7280] w-full flex items-center justify-center gap-1.5';
     
     switch (requirement.toLowerCase()) {
       case 'required':
         return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${
           level.toLowerCase() === 'advanced' 
-            ? 'bg-primary-accent/20 border-primary-accent' 
+            ? 'bg-gray-100 border-primary-accent' 
             : level.toLowerCase() === 'intermediate'
-              ? 'bg-primary-icon/20 border-primary-icon'
+              ? 'bg-gray-100 border-primary-icon'
               : level.toLowerCase() === 'beginner'
-                ? 'bg-[#008000]/20 border-[#008000]'
+                ? 'bg-gray-100 border-[#008000]'
                 : 'bg-gray-100 border-gray-300'
         }`;
       case 'not_interested':
@@ -33,33 +33,25 @@ export const RequirementSelector = ({
     }
   };
 
-  // Normalize the requirement value for consistent comparison
-  const normalizedRequired = currentRequired.toLowerCase();
-
   return (
     <Select 
-      value={normalizedRequired}
+      value={currentRequired}
       onValueChange={onRequirementChange}
     >
       <SelectTrigger 
-        className={`${getRequirementStyles(normalizedRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+        className={`${getRequirementStyles(currentRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
       >
         <SelectValue>
           <span className="flex items-center gap-2 justify-center">
-            {normalizedRequired === 'required' ? (
+            {currentRequired === 'required' ? (
               <>
-                <Heart className="w-3.5 h-3.5" />
-                <span>Skill Goal</span>
-              </>
-            ) : normalizedRequired === 'not_interested' ? (
-              <>
-                <X className="w-3.5 h-3.5" />
-                <span>Not Interested</span>
+                <Check className="w-3.5 h-3.5" />
+                <span>Required</span>
               </>
             ) : (
               <>
-                <CircleDashed className="w-3.5 h-3.5" />
-                <span>Unknown</span>
+                <Heart className="w-3.5 h-3.5" />
+                <span>Preferred</span>
               </>
             )}
           </span>
@@ -68,17 +60,12 @@ export const RequirementSelector = ({
       <SelectContent>
         <SelectItem value="required">
           <span className="flex items-center gap-2">
-            <Heart className="w-3.5 h-3.5" /> Skill Goal
+            <Check className="w-3.5 h-3.5" /> Required
           </span>
         </SelectItem>
         <SelectItem value="not_interested">
           <span className="flex items-center gap-2">
-            <X className="w-3.5 h-3.5" /> Not Interested
-          </span>
-        </SelectItem>
-        <SelectItem value="unknown">
-          <span className="flex items-center gap-2">
-            <CircleDashed className="w-3.5 h-3.5" /> Unknown
+            <Heart className="w-3.5 h-3.5" /> Preferred
           </span>
         </SelectItem>
       </SelectContent>
