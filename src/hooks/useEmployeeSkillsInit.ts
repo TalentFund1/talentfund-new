@@ -12,25 +12,13 @@ export const useEmployeeSkillsInit = (employeeId: string) => {
       return;
     }
 
-    const initializationKey = `skills_initialized_${employeeId}`;
-    
-    // Check if we've already initialized for this session
-    if (sessionStorage.getItem(initializationKey)) {
-      console.log('Skills already initialized this session for employee:', employeeId);
-      return;
-    }
-
-    console.log('Initializing skills for employee:', employeeId);
+    console.log('Starting employee skills initialization check:', employeeId);
     
     try {
-      initializeEmployeeSkills(employeeId, employeeStore);
-      // Mark as initialized for this session
-      sessionStorage.setItem(initializationKey, 'true');
+      initializeEmployeeSkills(employeeId);
       console.log('Successfully initialized skills for employee:', employeeId);
     } catch (error) {
       console.error('Failed to initialize skills:', error);
-      // Remove the initialization mark if it failed
-      sessionStorage.removeItem(initializationKey);
     }
-  }, [employeeId, initializeEmployeeSkills, employeeStore]);
+  }, [employeeId, initializeEmployeeSkills]);
 };

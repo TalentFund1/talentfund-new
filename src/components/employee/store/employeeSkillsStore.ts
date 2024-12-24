@@ -11,7 +11,32 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       ...createSkillActions(set, get),
       ...createSkillSelectors(get),
 
-      // Add batched update capability
+      initializeEmployeeSkills: (employeeId: string) => {
+        console.log('Starting safe initialization for employee:', employeeId);
+        
+        const currentState = get().employeeSkills[employeeId];
+        if (currentState) {
+          console.log('Skills already initialized for employee:', employeeId);
+          return;
+        }
+
+        set(state => {
+          console.log('Creating new employee skills state:', employeeId);
+          return {
+            employeeSkills: {
+              ...state.employeeSkills,
+              [employeeId]: {
+                employeeId,
+                skills: [],
+                states: {},
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          };
+        });
+      },
+
+      // Batch update capability remains unchanged
       batchUpdateSkills: (employeeId: string, updates: Record<string, any>) => {
         console.log('Batch updating skills for employee:', {
           employeeId,
@@ -46,7 +71,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 5,
+      version: 6, // Incrementing version to ensure clean state
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
