@@ -3,6 +3,9 @@ import { persist } from 'zustand/middleware';
 import { EmployeeSkillsStore } from './types/skillStoreTypes';
 import { createSkillActions } from './actions/skillActions';
 import { createSkillSelectors } from './selectors/skillSelectors';
+import { useEmployeeStore } from './employeeStore';
+import { getSkillProfileId } from '../../EmployeeTable';
+import { roleSkills } from '../../skills/data/roleSkills';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -20,16 +23,58 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return;
         }
 
-        // Initialize with empty states object (will be populated by batch updates)
+        // Get employee role to initialize correct skills
+        const employee = useEmployeeStore.getState().getEmployeeById(employeeId);
+        if (!employee) {
+          console.warn('No employee found for initialization:', employeeId);
+          return;
+        }
+
+        const roleId = getSkillProfileId(employee.role);
+        const roleData = roleSkills[roleId];
+        
+        if (!roleData) {
+          console.warn('No role data found for:', { roleId, role: employee.role });
+          return;
+        }
+
+        // Combine all skills from role
+        const allRoleSkills = [
+          ...(roleData.specialized || []),
+          ...(roleData.common || []),
+          ...(roleData.certifications || [])
+        ];
+
+        console.log('Initializing skills from role:', {
+          employeeId,
+          role: employee.role,
+          skillCount: allRoleSkills.length
+        });
+
+        // Initialize with role-specific skills and empty states
         set(state => {
-          console.log('Creating new employee skills state:', employeeId);
+          const initialStates = {};
+          allRoleSkills.forEach(skill => {
+            initialStates[skill.title] = {
+              level: 'unspecified',
+              requirement: 'unknown',
+              lastUpdated: new Date().toISOString()
+            };
+          });
+
+          console.log('Creating new employee skills state:', {
+            employeeId,
+            skillCount: allRoleSkills.length,
+            stateCount: Object.keys(initialStates).length
+          });
+
           return {
             employeeSkills: {
               ...state.employeeSkills,
               [employeeId]: {
                 employeeId,
-                skills: [],  // Skills will be populated through batch updates
-                states: {},  // Empty object to store individual skill states
+                skills: allRoleSkills,
+                states: initialStates,
                 lastUpdated: new Date().toISOString()
               }
             }
@@ -71,7 +116,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 8, // Incrementing version to ensure clean state
+      version: 9, // Incrementing version to ensure clean state
       partialize: (state) => ({
         employeeSkills: state.employeeSkills
       })
