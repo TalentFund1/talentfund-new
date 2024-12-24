@@ -1,6 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 import { Link } from "react-router-dom";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
@@ -35,8 +33,6 @@ const calculateTenure = (startDate: string, termDate: string | null): string => 
 
 export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
-  const employeeSkills = getEmployeeSkills(id);
-  const totalSkills = employeeSkills.length;
   const roleId = getSkillProfileId(employee.role);
   const { getTrackForRole } = useTrack();
   const roleTrack = getTrackForRole(roleId);
@@ -51,8 +47,8 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
 
   return (
     <>
-      <Separator className="my-6" />
-      <div className="grid grid-cols-4 gap-x-8 gap-y-6">
+      <Separator className="my-4 sm:my-6" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Department</span>
           <p className="font-medium text-gray-900">{employee.department}</p>
@@ -87,10 +83,6 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
           <p className="font-medium text-gray-900">{tenure}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Skill Count</span>
-          <p className="font-medium text-gray-900">{totalSkills}</p>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Role ID</span>

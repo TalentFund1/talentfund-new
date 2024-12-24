@@ -34,7 +34,6 @@ const EmployeeProfile = () => {
   const getEmployeeById = useEmployeeStore((state) => state.getEmployeeById);
   const employee = getEmployeeById(id || "");
 
-  // Use the new hook for initialization
   useEmployeeSkillsInit(id || "");
 
   useEffect(() => {
@@ -95,17 +94,17 @@ const EmployeeProfile = () => {
     <ToggledSkillsProvider>
       <div className="flex min-h-screen bg-background">
         <Sidebar />
-        <div className="flex-1 p-6 ml-16 transition-all duration-300">
-          <div className="max-w-7xl mx-auto space-y-6">
-            <div className="flex justify-between items-center mb-4">
+        <div className="flex-1 p-2 sm:p-4 md:p-6 ml-16 transition-all duration-300 overflow-x-hidden">
+          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
               <Button 
                 variant="outline" 
-                className="flex items-center gap-2 bg-white border-border hover:bg-background"
+                className="flex items-center gap-2 bg-white border-border hover:bg-background w-full sm:w-auto"
                 onClick={() => navigate('/employees')}
               >
                 <ChevronLeft className="h-4 w-4" /> Back
               </Button>
-              <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5">
+              <div className="flex items-center gap-2 bg-white rounded-lg border border-border px-3 py-1.5 w-full sm:w-auto justify-center">
                 <ChevronLeft 
                   className="h-4 w-4 text-foreground cursor-pointer hover:text-primary-accent" 
                   onClick={() => handleNavigation('prev')}
@@ -119,33 +118,33 @@ const EmployeeProfile = () => {
             </div>
 
             <TrackProvider>
-              <Card className="p-8 bg-white">
+              <Card className="p-4 sm:p-6 md:p-8 bg-white">
                 <EmployeeHeader id={id || ""} employee={employeeData} />
                 <EmployeeDetails employee={employeeData} id={id || ""} />
               </Card>
             </TrackProvider>
 
             <TrackProvider>
-              <Tabs defaultValue="experience" className="w-full space-y-6">
-                <TabsList className="w-full flex h-12 items-center justify-start space-x-6 border-b bg-transparent p-0">
+              <Tabs defaultValue="experience" className="w-full space-y-4 sm:space-y-6">
+                <TabsList className="w-full flex h-12 items-center justify-start space-x-4 sm:space-x-6 border-b bg-transparent p-0 overflow-x-auto">
                   <TabsTrigger 
                     value="experience" 
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                    className="border-b-2 border-transparent px-2 sm:px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium whitespace-nowrap"
                   >
                     Skills Summary
                   </TabsTrigger>
                   <TabsTrigger 
                     value="benchmark"
-                    className="border-b-2 border-transparent px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium"
+                    className="border-b-2 border-transparent px-2 sm:px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium whitespace-nowrap"
                   >
                     Role Benchmark
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="experience" className="space-y-6">
+                <TabsContent value="experience" className="space-y-4 sm:space-y-6">
                   <SelectedSkillsProvider>
                     <SkillsMatrixSearchProvider>
-                      <Card className="p-8 bg-white">
+                      <Card className="p-4 sm:p-6 md:p-8 bg-white">
                         <SkillsSummary />
                       </Card>
                       <SkillsMatrix />
@@ -153,10 +152,10 @@ const EmployeeProfile = () => {
                   </SelectedSkillsProvider>
                 </TabsContent>
 
-                <TabsContent value="benchmark" className="space-y-6">
+                <TabsContent value="benchmark" className="space-y-4 sm:space-y-6">
                   <BenchmarkSearchProvider>
                     <SelectedSkillsProvider>
-                      <Card className="p-8 bg-white">
+                      <Card className="p-4 sm:p-6 md:p-8 bg-white">
                         <RoleBenchmark />
                       </Card>
                       <BenchmarkSkillsMatrix />
