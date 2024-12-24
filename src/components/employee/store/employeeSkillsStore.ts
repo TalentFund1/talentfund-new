@@ -2,13 +2,13 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EmployeeSkill, EmployeeSkillState, EmployeeSkillsData } from '../types/employeeSkillTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { SkillRequirement } from '../../skills/types/SkillTypes';
 
 interface EmployeeSkillsStore {
   employeeSkills: Record<string, EmployeeSkillsData>;
   setEmployeeSkills: (employeeId: string, skills: EmployeeSkill[]) => void;
   getEmployeeSkills: (employeeId: string) => EmployeeSkill[];
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
+  setSkillState: (employeeId: string, skillTitle: string, level: string, requirement: string) => void;
   initializeEmployeeSkills: (employeeId: string) => void;
 }
 
@@ -24,7 +24,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           skills: skills.map(s => s.title)
         });
 
-        // Enrich skills with universal data
+        // Enrich skills with universal data without role dependencies
         const enrichedSkills = skills.map(skill => {
           const universalData = getUnifiedSkillData(skill.title);
           return {
@@ -36,12 +36,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             growth: universalData.growth || '0%',
             salary: universalData.salary || 'N/A',
             confidence: universalData.confidence || 'medium',
-            benchmarks: universalData.benchmarks || {
-              B: false,
-              R: false,
-              M: false,
-              O: false
-            },
             lastUpdated: new Date().toISOString()
           };
         });
@@ -79,10 +73,36 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Getting skill state:', { employeeId, skillTitle });
         const state = get().employeeSkills[employeeId]?.states[skillTitle];
         return state || { 
-          level: 'beginner', 
-          requirement: 'unknown' as SkillRequirement,
+          level: 'beginner',
+          requirement: 'unknown',
           lastUpdated: new Date().toISOString()
         };
+      },
+
+      setSkillState: (employeeId, skillTitle, level, requirement) => {
+        console.log('Setting skill state:', {
+          employeeId,
+          skillTitle,
+          level,
+          requirement
+        });
+
+        set((state) => ({
+          employeeSkills: {
+            ...state.employeeSkills,
+            [employeeId]: {
+              ...state.employeeSkills[employeeId],
+              states: {
+                ...state.employeeSkills[employeeId]?.states,
+                [skillTitle]: {
+                  level,
+                  requirement,
+                  lastUpdated: new Date().toISOString()
+                }
+              }
+            }
+          }
+        }));
       },
 
       initializeEmployeeSkills: (employeeId) => {

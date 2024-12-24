@@ -1,5 +1,7 @@
 import { SkillCategory, SkillWeight } from '../../skills/types/SkillTypes';
 
+export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+
 export interface EmployeeSkill {
   id: string;
   title: string;
@@ -16,7 +18,7 @@ export interface EmployeeSkill {
 
 export interface EmployeeSkillState {
   level: string;
-  requirement: 'required' | 'preferred' | 'not_interested' | 'unknown';
+  requirement: SkillRequirement;
   lastUpdated: string;
 }
 

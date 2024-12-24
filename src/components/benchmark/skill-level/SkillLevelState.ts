@@ -10,15 +10,18 @@ export const useSkillLevelState = (skillTitle: string) => {
       console.log(`Getting matrix skill state for ${skillTitle}:`, {
         level: state.level,
         requirement: state.requirement,
-        isSkillGoal: state.requirement === 'required'
+        isSkillGoal: state.requirement === 'skill_goal'
       });
-      return state;
+      return {
+        ...state,
+        lastUpdated: new Date().toISOString()
+      };
     }
 
-    // Return default state if none exists or if it's undefined
+    // Return default state if none exists
     const defaultState: EmployeeSkillState = {
       level: 'unspecified',
-      requirement: 'preferred',
+      requirement: 'unknown',
       lastUpdated: new Date().toISOString()
     };
 
