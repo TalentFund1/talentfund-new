@@ -1,5 +1,5 @@
 import { roleSkills } from '../roleSkills';
-import { RoleSkillData } from '../../types/SkillTypes';
+import { RoleSkillData, UnifiedSkill } from '../../types/SkillTypes';
 
 export const getRoleData = (roleId: string): Readonly<RoleSkillData> | undefined => {
   console.log('Getting role data for:', roleId);
@@ -14,7 +14,7 @@ export const getRoleData = (roleId: string): Readonly<RoleSkillData> | undefined
   return Object.freeze({ ...roleData });
 };
 
-export const getRoleSkills = (roleId: string) => {
+export const getRoleSkills = (roleId: string): ReadonlyArray<UnifiedSkill> => {
   const roleData = getRoleData(roleId);
   if (!roleData) return [];
 
@@ -35,9 +35,9 @@ export const getRoleSkills = (roleId: string) => {
   ]);
 };
 
-export const getRoleRequiredSkills = (roleId: string) => {
+export const getRoleRequiredSkills = (roleId: string): ReadonlyArray<UnifiedSkill> => {
   const skills = getRoleSkills(roleId);
   return Object.freeze(
-    skills.filter(skill => skill.requirement === 'required')
+    skills.filter(skill => skill.goalStatus === 'required')
   );
 };
