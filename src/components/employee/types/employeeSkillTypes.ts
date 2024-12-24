@@ -4,14 +4,12 @@ import { EmployeeStore } from '../../types/storeTypes';
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
-// Employee-specific skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
   requirement: SkillGoalStatus;
   lastUpdated: string;
 }
 
-// Pure employee skill achievement record
 export interface EmployeeSkillAchievement {
   id: string;
   employeeId: string;
@@ -22,7 +20,6 @@ export interface EmployeeSkillAchievement {
   lastUpdated: string;
   weight: SkillWeight;
   confidence: 'low' | 'medium' | 'high';
-  // Adding UnifiedSkill required properties
   category: 'specialized' | 'common' | 'certification';
   businessCategory: string;
   growth: string;
@@ -36,7 +33,6 @@ export interface EmployeeSkillAchievement {
   requirement?: SkillGoalStatus; // Optional for backward compatibility
 }
 
-// Collection of employee skills data
 export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkillAchievement[];

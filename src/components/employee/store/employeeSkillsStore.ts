@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillsStore } from './types/skillStoreTypes';
+import { EmployeeSkillsStore } from '../types/employeeSkillTypes';
 import { createSkillActions } from './actions/skillActions';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { useEmployeeStore } from './employeeStore';
