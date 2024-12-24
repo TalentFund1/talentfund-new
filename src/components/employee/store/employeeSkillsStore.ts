@@ -9,32 +9,13 @@ import {
   EmployeeSkillAchievement 
 } from '../types/employeeSkillTypes';
 
-const validateSkillLevel = (level: string | number | SkillLevel): SkillLevel => {
-  if (typeof level === 'number') {
-    if (level >= 90) return 'advanced';
-    if (level >= 60) return 'intermediate';
-    if (level > 0) return 'beginner';
-    return 'unspecified';
-  }
-
-  const validLevels: SkillLevel[] = ['beginner', 'intermediate', 'advanced', 'unspecified'];
-  const normalizedLevel = level.toLowerCase() as SkillLevel;
-  return validLevels.includes(normalizedLevel) ? normalizedLevel : 'unspecified';
-};
-
-const validateGoalStatus = (status: string | SkillGoalStatus): SkillGoalStatus => {
-  const validStatuses: SkillGoalStatus[] = ['required', 'preferred', 'not_interested', 'unknown', 'skill_goal'];
-  const normalizedStatus = status.toLowerCase() as SkillGoalStatus;
-  return validStatuses.includes(normalizedStatus) ? normalizedStatus : 'unknown';
-};
-
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       employeeSkills: {},
 
       initializeEmployeeSkills: (employeeId: string) => {
-        console.log('Initializing empty skills container for employee:', employeeId);
+        console.log('Initializing skills for employee:', employeeId);
         
         const currentSkills = get().employeeSkills[employeeId];
         if (!currentSkills) {
@@ -43,13 +24,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               ...state.employeeSkills,
               [employeeId]: {
                 employeeId,
-                skills: [] as EmployeeSkillAchievement[],
+                skills: [],
                 states: {},
                 lastUpdated: new Date().toISOString()
               }
             }
           }));
-          console.log('Created empty skills container for employee:', employeeId);
+          console.log('Initialized empty skill set for employee:', employeeId);
         }
       },
 
@@ -59,12 +40,16 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
-            skills: [] as EmployeeSkillAchievement[],
+            skills: [],
             states: {},
             lastUpdated: new Date().toISOString()
           };
 
-          const validatedLevel = validateSkillLevel(level);
+          const currentState = employeeData.states[skillTitle] || {
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString()
+          };
 
           return {
             employeeSkills: {
@@ -74,8 +59,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 states: {
                   ...employeeData.states,
                   [skillTitle]: {
-                    ...employeeData.states[skillTitle],
-                    level: validatedLevel,
+                    ...currentState,
+                    level,
                     lastUpdated: new Date().toISOString()
                   }
                 }
@@ -91,12 +76,16 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         set((state) => {
           const employeeData = state.employeeSkills[employeeId] || {
             employeeId,
-            skills: [] as EmployeeSkillAchievement[],
+            skills: [],
             states: {},
             lastUpdated: new Date().toISOString()
           };
 
-          const validatedStatus = validateGoalStatus(status);
+          const currentState = employeeData.states[skillTitle] || {
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString()
+          };
 
           return {
             employeeSkills: {
@@ -106,8 +95,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 states: {
                   ...employeeData.states,
                   [skillTitle]: {
-                    ...employeeData.states[skillTitle],
-                    requirement: validatedStatus,
+                    ...currentState,
+                    goalStatus: status,
                     lastUpdated: new Date().toISOString()
                   }
                 }
@@ -130,7 +119,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           
           return {
             level: 'unspecified',
-            requirement: 'unknown',
+            goalStatus: 'unknown',
             lastUpdated: new Date().toISOString()
           };
         }
@@ -155,19 +144,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         set((state) => {
           const currentData = state.employeeSkills[employeeId] || {
             employeeId,
-            skills: [] as EmployeeSkillAchievement[],
+            skills: [],
             states: {},
             lastUpdated: new Date().toISOString()
           };
-
-          const validatedUpdates: Record<string, EmployeeSkillState> = {};
-          Object.entries(updates).forEach(([skillTitle, update]) => {
-            validatedUpdates[skillTitle] = {
-              level: validateSkillLevel(update.level),
-              requirement: validateGoalStatus(update.requirement),
-              lastUpdated: new Date().toISOString()
-            };
-          });
 
           return {
             employeeSkills: {
@@ -176,7 +156,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 ...currentData,
                 states: {
                   ...currentData.states,
-                  ...validatedUpdates
+                  ...updates
                 },
                 lastUpdated: new Date().toISOString()
               }

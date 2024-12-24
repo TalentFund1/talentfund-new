@@ -78,7 +78,7 @@ export const EmployeeSkillCard = ({ name, role, avatar, skills, employeeId }: Em
     const updates = {
       [skillName]: {
         level: skillState.level,
-        requirement: skillState.requirement,
+        goalStatus: skillState.goalStatus,
         lastUpdated: new Date().toISOString()
       }
     };
