@@ -88,8 +88,8 @@ const EmployeeProfile = () => {
     <ToggledSkillsProvider>
       <div className="flex min-h-screen bg-background">
         <Sidebar />
-        <div className="flex-1 overflow-x-hidden">
-          <div className="p-3 sm:p-4 lg:p-6 ml-16 transition-all duration-300">
+        <div className="flex-1 overflow-x-hidden bg-background">
+          <div className="container mx-auto p-3 sm:p-4 lg:p-6 ml-16 transition-all duration-300">
             <div className="max-w-7xl mx-auto space-y-3 sm:space-y-4 lg:space-y-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 sm:mb-4">
                 <Button 
