@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useTrack } from "../skills/context/TrackContext";
-import { useBenchmarkSearch } from "../skills/context/BenchmarkSearchContext";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useRoleStore } from "./RoleBenchmark";
@@ -11,6 +10,9 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
+import { calculateMatchingSkills } from "./analysis/MatchingSkillsCalculator";
+import { calculateMatchPercentages } from "./analysis/MatchPercentageCalculator";
+import { ProgressBar } from "./analysis/ProgressBar";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +28,6 @@ export const BenchmarkAnalysis = () => {
   const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
   const employeeLevel = employee?.role.split(":")[1]?.trim().toLowerCase() || "p4";
 
-  // Set initial role and level based on employee's assigned role
   useEffect(() => {
     if (employeeRoleId) {
       console.log('Setting initial role and level in BenchmarkAnalysis:', {
@@ -67,71 +68,36 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
-  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
-    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined;
-  });
+  const {
+    matchingSkills,
+    competencyMatchingSkills,
+    skillGoalMatchingSkills,
+    totalToggledSkills
+  } = calculateMatchingSkills(
+    toggledRoleSkills,
+    employeeSkills,
+    comparisonLevel,
+    selectedRole,
+    track
+  );
 
-  const competencyMatchingSkills = matchingSkills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
-    if (!roleSkillState) return false;
-
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
-
-    console.log('Comparing competency levels:', {
-      skill: skill.title,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      track
-    });
-
-    // For Professional track, require exact level matches
-    if (track === "Professional") {
-      return employeeSkillLevel.toLowerCase() === roleSkillLevel.toLowerCase();
-    }
-
-    // For Managerial track, allow higher levels to match
-    const getLevelPriority = (level: string = 'unspecified') => {
-      const priorities: { [key: string]: number } = {
-        'advanced': 3,
-        'intermediate': 2,
-        'beginner': 1,
-        'unspecified': 0
-      };
-      return priorities[level.toLowerCase()] ?? 0;
-    };
-
-    const employeePriority = getLevelPriority(employeeSkillLevel);
-    const rolePriority = getLevelPriority(roleSkillLevel);
-
-    return employeePriority >= rolePriority;
-  });
-
-  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
-    if (!skillState) return false;
-    return skillState.requirement === 'required' || skillState.requirement === 'skill_goal';
-  });
-
-  const totalToggledSkills = toggledRoleSkills.length;
-  const matchingSkillsCount = matchingSkills.length;
-  const competencyMatchCount = competencyMatchingSkills.length;
-  const skillGoalMatchCount = skillGoalMatchingSkills.length;
-
-  const skillMatchPercentage = totalToggledSkills > 0 ? (matchingSkillsCount / totalToggledSkills) * 100 : 0;
-  const competencyMatchPercentage = totalToggledSkills > 0 ? (competencyMatchCount / totalToggledSkills) * 100 : 0;
-  const skillGoalMatchPercentage = totalToggledSkills > 0 ? (skillGoalMatchCount / totalToggledSkills) * 100 : 0;
-
-  const averagePercentage = Math.round(
-    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
+  const {
+    skillMatchPercentage,
+    competencyMatchPercentage,
+    skillGoalMatchPercentage,
+    averagePercentage
+  } = calculateMatchPercentages(
+    matchingSkills.length,
+    competencyMatchingSkills.length,
+    skillGoalMatchingSkills.length,
+    totalToggledSkills
   );
 
   console.log('Benchmark Analysis Calculation:', {
     totalToggled: totalToggledSkills,
-    skillMatch: { count: matchingSkillsCount, percentage: skillMatchPercentage },
-    competencyMatch: { count: competencyMatchCount, percentage: competencyMatchPercentage },
-    skillGoalMatch: { count: skillGoalMatchCount, percentage: skillGoalMatchPercentage },
+    skillMatch: { count: matchingSkills.length, percentage: skillMatchPercentage },
+    competencyMatch: { count: competencyMatchingSkills.length, percentage: competencyMatchPercentage },
+    skillGoalMatch: { count: skillGoalMatchingSkills.length, percentage: skillGoalMatchPercentage },
     averagePercentage,
     track,
     comparisonLevel
@@ -152,22 +118,24 @@ export const BenchmarkAnalysis = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 w-full">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Skill Match</span>
-                <span className="text-sm text-foreground">
-                  {matchingSkills.length} out of {totalToggledSkills}
-                </span>
-              </div>
-              <div className="h-2 w-full bg-[#F7F9FF] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1F2144] rounded-full" 
-                  style={{ width: `${skillMatchPercentage}%` }} 
-                />
-              </div>
-            </div>
-          </div>
+          <ProgressBar
+            percentage={skillMatchPercentage}
+            matchCount={matchingSkills.length}
+            total={totalToggledSkills}
+            label="Skill Match"
+          />
+          <ProgressBar
+            percentage={competencyMatchPercentage}
+            matchCount={competencyMatchingSkills.length}
+            total={totalToggledSkills}
+            label="Competency Match"
+          />
+          <ProgressBar
+            percentage={skillGoalMatchPercentage}
+            matchCount={skillGoalMatchingSkills.length}
+            total={totalToggledSkills}
+            label="Skill Goal Match"
+          />
         </div>
       </Card>
     </div>
