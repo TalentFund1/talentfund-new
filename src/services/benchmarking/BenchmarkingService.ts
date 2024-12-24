@@ -2,7 +2,7 @@ import { EmployeeSkillAchievement } from '../../components/employee/types/employ
 import { RoleSkillRequirement } from '../../components/skills/types/roleSkillTypes';
 import { SkillComparison, SkillComparisonResult } from '../../components/skills/types/skillComparison';
 import { roleSkills } from '../../components/skills/data/roleSkills';
-import { getSkillProfileId, getLevel } from '../../components/EmployeeTable';
+import { getSkillProfileId } from '../../components/EmployeeTable';
 
 class BenchmarkingService {
   private getLevelPriority(level: string = 'unspecified'): number {
@@ -141,6 +141,102 @@ class BenchmarkingService {
       missingSkills,
       exceedingSkills
     };
+  }
+
+  public updateCompetencyState(
+    currentStates: any,
+    skillName: string,
+    level: string,
+    levelKey: string,
+    required: string,
+    defaultState: any
+  ) {
+    console.log('BenchmarkingService: Updating competency state:', {
+      skillName,
+      level,
+      levelKey,
+      required
+    });
+
+    return {
+      ...currentStates,
+      [skillName]: {
+        ...(currentStates[skillName] || {}),
+        [levelKey]: { level, required }
+      }
+    };
+  }
+
+  public createSkillState(level: string, goalStatus: string) {
+    console.log('BenchmarkingService: Creating skill state:', { level, goalStatus });
+    return {
+      level,
+      goalStatus,
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  public getDefaultSkillState() {
+    return {
+      level: 'unspecified',
+      goalStatus: 'unknown',
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  public enrichSkillData(employeeId: string, skill: any, skillData: any) {
+    console.log('BenchmarkingService: Enriching skill data:', {
+      employeeId,
+      skillTitle: skill.title
+    });
+
+    return {
+      ...skill,
+      id: `${employeeId}-${skill.title}`,
+      employeeId,
+      subcategory: skillData.subcategory || 'General',
+      category: skillData.category,
+      businessCategory: skillData.businessCategory,
+      weight: skillData.weight,
+      growth: skillData.growth,
+      salary: skillData.salary,
+      confidence: 'medium',
+      benchmarks: skillData.benchmarks || {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      }
+    };
+  }
+
+  public initializeEmployeeSkillsData(employeeId: string, skills: any[]) {
+    console.log('BenchmarkingService: Initializing employee skills data:', {
+      employeeId,
+      skillCount: skills.length
+    });
+
+    return {
+      employeeId,
+      skills,
+      states: {},
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  public matchesInterestFilter(goalStatus: string, selectedInterest: string): boolean {
+    console.log('BenchmarkingService: Checking interest filter match:', {
+      goalStatus,
+      selectedInterest
+    });
+
+    if (selectedInterest === 'interested') {
+      return goalStatus === 'required' || goalStatus === 'skill_goal';
+    }
+    if (selectedInterest === 'not_interested') {
+      return goalStatus === 'not_interested';
+    }
+    return true;
   }
 }
 
