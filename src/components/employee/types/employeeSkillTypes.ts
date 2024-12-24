@@ -1,4 +1,4 @@
-export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+export type SkillRequirement = 'required' | 'not_interested' | 'unknown' | 'skill_goal';
 
 export interface EmployeeSkillState {
   level: string;
@@ -6,7 +6,7 @@ export interface EmployeeSkillState {
   lastUpdated: string;
 }
 
-export interface EmployeeSkill {
+export interface BaseEmployeeSkill {
   title: string;
   subcategory: string;
   level: string;
@@ -17,16 +17,20 @@ export interface EmployeeSkill {
   weight?: string;
 }
 
+export interface EmployeeSkill extends BaseEmployeeSkill {
+  id?: string;
+  businessCategory?: string;
+  salary?: string;
+  benchmarks?: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
+}
+
 export interface EmployeeSkills {
   id: string;
-  title: string;
-  subcategory: string;
-  level: string;
-  growth: string;
-  confidence: string;
-  requirement?: SkillRequirement;
-  category?: string;
-  weight?: string;
   skills: {
     [skillTitle: string]: EmployeeSkillState;
   };
@@ -34,7 +38,7 @@ export interface EmployeeSkills {
 }
 
 export interface EmployeeSkillsData {
-  skills: EmployeeSkills[];
+  skills: EmployeeSkill[];
   states: Record<string, EmployeeSkillState>;
 }
 

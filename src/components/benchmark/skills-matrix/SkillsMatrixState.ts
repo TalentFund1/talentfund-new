@@ -12,7 +12,6 @@ interface SkillsMatrixState {
   originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
   setSkillState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
-  resetSkills: () => void;
   initializeState: (skillTitle: string, level: string, requirement: SkillRequirement) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
@@ -35,13 +34,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
           hasChanges: true,
         }));
       },
-
-      resetSkills: () =>
-        set(() => ({
-          currentStates: {},
-          originalStates: {},
-          hasChanges: false,
-        })),
 
       initializeState: (skillTitle, level, requirement) =>
         set((state) => {
@@ -84,5 +76,4 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   )
 );
 
-// Add the missing export
 export const useSkillsMatrixState = useSkillsMatrixStore;

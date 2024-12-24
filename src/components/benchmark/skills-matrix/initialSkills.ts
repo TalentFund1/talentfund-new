@@ -1,19 +1,26 @@
 import { EmployeeSkill, EmployeeSkillState } from '../../employee/types/employeeSkillTypes';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
+import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 
 export const getEmployeeSkills = (id: string): EmployeeSkill[] => {
   console.log('Getting skills for employee:', id);
   const skills = useEmployeeSkillsStore.getState().getEmployeeSkills(id);
-  return skills.map(skill => ({
-    title: skill.title || '',
-    subcategory: skill.subcategory || '',
-    level: skill.level || 'unspecified',
-    growth: skill.growth || '0%',
-    confidence: skill.confidence || 'medium',
-    requirement: skill.requirement,
-    category: skill.category,
-    weight: skill.weight
-  }));
+  
+  return skills.map(skill => {
+    const unifiedData = getUnifiedSkillData(skill.title);
+    return {
+      ...skill,
+      id: `${id}-${skill.title}`,
+      businessCategory: unifiedData.businessCategory,
+      salary: unifiedData.salary,
+      benchmarks: unifiedData.benchmarks,
+      level: skill.level || 'unspecified',
+      growth: skill.growth || '0%',
+      confidence: skill.confidence || 'medium',
+      category: skill.category || unifiedData.category,
+      weight: skill.weight || unifiedData.weight
+    };
+  });
 };
 
 export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): string => {
@@ -23,7 +30,7 @@ export const getEmployeeSkillLevel = (employeeId: string, skillTitle: string): s
   return skillState.level;
 };
 
-export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): string => {
+export const getEmployeeSkillRequirement = (employeeId: string, skillTitle: string): SkillRequirement => {
   const store = useEmployeeSkillsStore.getState();
   const skillState = store.getSkillState(employeeId, skillTitle);
   console.log('Getting skill requirement:', { employeeId, skillTitle, requirement: skillState.requirement });
