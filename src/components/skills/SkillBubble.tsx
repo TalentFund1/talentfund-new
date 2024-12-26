@@ -29,7 +29,7 @@ export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = fal
 
   // Use the current state level if available, otherwise fall back to the prop
   const currentLevel = skillState?.level || level;
-  const isSkillGoal = skillState?.goalStatus === 'required' || skillState?.goalStatus === 'skill_goal';
+  const isSkillGoal = skillState?.goalStatus === 'skill_goal';
 
   return (
     <Badge 

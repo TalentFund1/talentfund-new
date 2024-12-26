@@ -41,8 +41,7 @@ export const SkillBadge = ({
     if (isSkillGoal) return true;
     
     if (skillState) {
-      return skillState.goalStatus === 'required' || 
-             skillState.goalStatus === 'skill_goal';
+      return skillState.goalStatus === 'skill_goal';
     }
     
     const currentLevel = (skillState?.level || level || '').toLowerCase();

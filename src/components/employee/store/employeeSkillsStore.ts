@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
 import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
-import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
+import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData, SkillGoalStatus } from '../types/employeeSkillTypes';
 
 interface EmployeeSkillsStore {
   skillStates: Record<string, EmployeeSkillsState>;
@@ -39,7 +39,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             skillId: `${employeeId}-${skillTitle}`,
             title: skillTitle,
             level: 'unspecified',
-            goalStatus: 'unknown',
+            goalStatus: 'unknown' as SkillGoalStatus,
             lastUpdated: new Date().toISOString(),
             confidence: 'medium',
             subcategory: 'General',
@@ -56,9 +56,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          // Normalize legacy goal status values
-          let normalizedGoalStatus = updates.goalStatus;
-          if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
+          // Normalize legacy goal status values to 'skill_goal'
+          let normalizedGoalStatus = updates.goalStatus as SkillGoalStatus;
+          if (updates.goalStatus === 'required' || updates.goalStatus === 'preferred') {
             normalizedGoalStatus = 'skill_goal';
           }
 
@@ -115,7 +115,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               skillId: `${employeeId}-${skillTitle}`,
               title: skillTitle,
               level: 'unspecified',
-              goalStatus: 'unknown',
+              goalStatus: 'unknown' as SkillGoalStatus,
               lastUpdated: new Date().toISOString(),
               confidence: 'medium',
               subcategory: 'General',
@@ -132,9 +132,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             };
 
-            // Normalize legacy goal status values
-            let normalizedGoalStatus = skillUpdates.goalStatus;
-            if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
+            // Normalize legacy goal status values to 'skill_goal'
+            let normalizedGoalStatus = skillUpdates.goalStatus as SkillGoalStatus;
+            if (skillUpdates.goalStatus === 'required' || skillUpdates.goalStatus === 'preferred') {
               normalizedGoalStatus = 'skill_goal';
             }
 
