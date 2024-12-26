@@ -174,17 +174,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         }
       }),
       storage: {
-        getItem: (name) => {
+        getItem: (name: string) => {
           const str = localStorage.getItem(name);
           console.log('Loading persisted state:', { name, value: str ? JSON.parse(str) : null });
-          return str ? Promise.resolve(str) : Promise.resolve(null);
+          return Promise.resolve(str);
         },
-        setItem: (name, value) => {
+        setItem: (name: string, value: string) => {
           console.log('Persisting state:', { name, value: JSON.parse(value) });
           localStorage.setItem(name, value);
           return Promise.resolve();
         },
-        removeItem: (name) => {
+        removeItem: (name: string) => {
           localStorage.removeItem(name);
           return Promise.resolve();
         }
