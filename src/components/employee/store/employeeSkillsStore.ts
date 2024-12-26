@@ -5,13 +5,8 @@ import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
-// Define the structure of persisted state separately
-interface PersistedState {
+interface EmployeeSkillsStore {
   skillStates: Record<string, EmployeeSkillsState>;
-}
-
-// Complete store interface including all methods
-interface EmployeeSkillsStore extends PersistedState {
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
@@ -61,7 +56,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          return {
+          const updatedState = {
             ...state,
             skillStates: {
               ...state.skillStates,
@@ -79,6 +74,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           };
+
+          console.log('Updated skill state:', updatedState.skillStates[employeeId].skills[skillTitle]);
+          return updatedState;
         });
       },
 
@@ -125,9 +123,15 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               ...skillUpdates,
               lastUpdated: new Date().toISOString()
             };
+
+            console.log('Updated skill in batch:', {
+              skillTitle,
+              updates: skillUpdates,
+              result: updatedSkills[skillTitle]
+            });
           });
 
-          return {
+          const updatedState = {
             ...state,
             skillStates: {
               ...state.skillStates,
@@ -137,6 +141,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           };
+
+          console.log('Batch update complete:', updatedState.skillStates[employeeId]);
+          return updatedState;
         });
       }
     }),
