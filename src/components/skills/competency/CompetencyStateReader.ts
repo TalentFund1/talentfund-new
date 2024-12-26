@@ -1,5 +1,4 @@
 import { SkillCompetencyState } from './state/types';
-import { useCompetencyStore } from './CompetencyState';
 
 export interface CompetencyStateReader {
   getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string) => SkillCompetencyState;
@@ -7,16 +6,17 @@ export interface CompetencyStateReader {
 }
 
 export const useCompetencyStateReader = (): CompetencyStateReader => {
-  const store = useCompetencyStore();
-
   return {
     getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string) => {
       console.log('Getting skill competency state:', { skillName, levelKey, roleId });
-      return store.getSkillCompetencyState(skillName, levelKey, roleId);
+      return {
+        level: 'unspecified',
+        required: 'preferred'
+      };
     },
     getAllSkillStatesForLevel: (levelKey: string, roleId: string) => {
       console.log('Getting all skill states for level:', { levelKey, roleId });
-      return store.getAllSkillStatesForLevel(levelKey, roleId);
+      return {};
     }
   };
 };
