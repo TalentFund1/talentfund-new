@@ -53,10 +53,10 @@ export const BenchmarkMatrixFilters = ({
       <div className="flex gap-4 mb-4">
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder="All Skill Type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="all">All Skill Type</SelectItem>
             <SelectItem value="specialized">Specialized Skills</SelectItem>
             <SelectItem value="common">Common Skills</SelectItem>
             <SelectItem value="certification">Certification</SelectItem>
@@ -77,10 +77,10 @@ export const BenchmarkMatrixFilters = ({
 
         <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Interests" />
+            <SelectValue placeholder="All Skill Interest" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Interests</SelectItem>
+            <SelectItem value="all">All Skill Interest</SelectItem>
             <SelectItem value="required">Skill Goal</SelectItem>
             <SelectItem value="not-interested">Not Interested</SelectItem>
             <SelectItem value="unknown">Unknown</SelectItem>
