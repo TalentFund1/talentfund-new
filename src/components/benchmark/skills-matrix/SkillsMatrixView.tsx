@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
 import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
@@ -10,6 +11,9 @@ interface SkillsMatrixViewProps {
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
   filteredSkills: any[];
+  hasChanges: boolean;
+  onSave: () => void;
+  onCancel: () => void;
   isRoleBenchmark: boolean;
 }
 
@@ -19,13 +23,18 @@ export const SkillsMatrixView = ({
   selectedInterest,
   setSelectedInterest,
   filteredSkills,
+  hasChanges,
+  onSave,
+  onCancel,
   isRoleBenchmark
 }: SkillsMatrixViewProps) => {
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
-      </div>
+      <SkillsMatrixHeader 
+        hasChanges={hasChanges}
+        onSave={onSave}
+        onCancel={onCancel}
+      />
       
       <Separator className="mb-6" />
       
