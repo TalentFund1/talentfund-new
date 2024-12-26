@@ -20,12 +20,7 @@ export const SkillLevelCell = ({
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
   const { id } = useParams<{ id: string }>();
-  const { 
-    setSkillLevel, 
-    setSkillGoalStatus, 
-    getEmployeeSkills,
-    getSkillState 
-  } = useEmployeeSkillsStore();
+  const { setSkillLevel, setSkillGoalStatus, getEmployeeSkills } = useEmployeeSkillsStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentSkill = employeeSkills.find(skill => skill.title === skillTitle);
@@ -33,47 +28,17 @@ export const SkillLevelCell = ({
   const currentLevel = currentSkill?.level || initialLevel?.toLowerCase() as SkillLevel || 'unspecified';
   const currentGoalStatus = currentSkill?.goalStatus || 'unknown';
 
-  console.log('SkillLevelCell - Current state:', {
-    skillTitle,
-    currentLevel,
-    currentGoalStatus,
-    employeeId: id
-  });
-
-  const handleLevelChange = (value: string) => {
-    if (!id) return;
-
-    console.log('SkillLevelCell - Level change:', {
-      employeeId: id,
-      skillTitle,
-      newLevel: value,
-      previousLevel: currentLevel
-    });
-
-    setSkillLevel(id, skillTitle, value as SkillLevel);
-    onLevelChange?.(value, currentGoalStatus);
-  };
-
-  const handleGoalStatusChange = (value: string) => {
-    if (!id) return;
-
-    console.log('SkillLevelCell - Goal status change:', {
-      employeeId: id,
-      skillTitle,
-      newStatus: value,
-      previousStatus: currentGoalStatus
-    });
-
-    setSkillGoalStatus(id, skillTitle, value as SkillGoalStatus);
-    onLevelChange?.(currentLevel, value);
-  };
-
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
           value={currentLevel} 
-          onValueChange={handleLevelChange}
+          onValueChange={(value) => {
+            if (id) {
+              setSkillLevel(id, skillTitle, value as SkillLevel);
+              onLevelChange?.(value, currentGoalStatus);
+            }
+          }}
         >
           <SelectTrigger className={getLevelStyles(currentLevel)}>
             <SelectValue>
@@ -113,7 +78,12 @@ export const SkillLevelCell = ({
 
         <Select 
           value={currentGoalStatus}
-          onValueChange={handleGoalStatusChange}
+          onValueChange={(value) => {
+            if (id) {
+              setSkillGoalStatus(id, skillTitle, value as SkillGoalStatus);
+              onLevelChange?.(currentLevel, value);
+            }
+          }}
         >
           <SelectTrigger className={getGoalStatusStyles(currentGoalStatus, currentLevel)}>
             <SelectValue>
