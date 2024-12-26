@@ -84,11 +84,23 @@ export const SkillsMatrix = () => {
 
   const handleSave = () => {
     console.log('Saving skill changes');
-    setHasChanges(false);
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
+    if (id) {
+      const currentSkills = getEmployeeSkills(id);
+      const updatedStates: Record<string, any> = {};
+      
+      currentSkills.forEach(skill => {
+        updatedStates[skill.title] = getSkillState(id, skill.title);
+      });
+      
+      // Update original states to match current states
+      setOriginalSkillStates(updatedStates);
+      setHasChanges(false);
+      
+      toast({
+        title: "Changes saved",
+        description: "Your changes have been saved successfully.",
+      });
+    }
   };
 
   const handleCancel = () => {
