@@ -61,33 +61,22 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          const updatedSkillStates = {
-            ...state.skillStates,
-            [employeeId]: {
-              ...currentState,
-              skills: {
-                ...currentState.skills,
-                [skillTitle]: {
-                  ...currentSkill,
-                  ...updates,
-                  lastUpdated: new Date().toISOString()
-                }
-              },
-              lastUpdated: new Date().toISOString()
-            }
-          };
-
-          console.log('Updated skill state:', updatedSkillStates);
           return {
-            ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                ...currentState,
+                skills: {
+                  ...currentState.skills,
+                  [skillTitle]: {
+                    ...currentSkill,
+                    ...updates,
+                    lastUpdated: new Date().toISOString()
+                  }
+                },
+                lastUpdated: new Date().toISOString()
+              }
+            }
           };
         });
       },
@@ -137,25 +126,14 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             };
           });
 
-          const updatedSkillStates = {
-            ...state.skillStates,
-            [employeeId]: {
-              skills: updatedSkills,
-              lastUpdated: new Date().toISOString()
-            }
-          };
-
-          console.log('Batch update complete:', updatedSkillStates);
           return {
-            ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                skills: updatedSkills,
+                lastUpdated: new Date().toISOString()
+              }
+            }
           };
         });
       }
@@ -180,7 +158,14 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         },
       },
       partialize: (state) => ({
-        skillStates: state.skillStates
+        skillStates: state.skillStates,
+        getSkillState: state.getSkillState,
+        getEmployeeSkills: state.getEmployeeSkills,
+        setSkillLevel: state.setSkillLevel,
+        setSkillGoalStatus: state.setSkillGoalStatus,
+        initializeEmployeeSkills: state.initializeEmployeeSkills,
+        updateSkillState: state.updateSkillState,
+        batchUpdateSkills: state.batchUpdateSkills
       })
     }
   )

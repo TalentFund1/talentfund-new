@@ -10,25 +10,28 @@ export const calculateBenchmarkPercentage = (
   toggledSkills: Set<string>,
   competencyReader: ReturnType<typeof useCompetencyStateReader>
 ): number => {
+  // Ensure employeeSkills is an array
+  const skillsArray = Array.isArray(employeeSkills) ? employeeSkills : [];
+
   console.log('Calculating benchmark percentage:', {
     employeeId,
     roleId,
     baseRole,
-    skillCount: employeeSkills.length,
+    skillCount: skillsArray.length,
     toggledSkillsCount: toggledSkills.size
   });
 
-  if (!employeeSkills || employeeSkills.length === 0) {
-    console.log('No employee skills found for benchmark calculation');
+  if (skillsArray.length === 0) {
+    console.log('No employee skills found');
     return 0;
   }
 
-  const matchingSkills = employeeSkills.filter(skill => 
+  const matchingSkills = skillsArray.filter(skill => 
     toggledSkills.has(skill.title)
   );
 
   if (matchingSkills.length === 0) {
-    console.log('No matching skills found for benchmark calculation');
+    console.log('No matching skills found');
     return 0;
   }
 
