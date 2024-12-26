@@ -1,18 +1,17 @@
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
+import { Table, TableHeader, TableBody, TableHead, TableRow } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
 import { roleSkills } from './data/roleSkills';
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getBaseRole } from "../EmployeeTable";
-import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { TrackProvider } from "./context/TrackContext";
 import { normalizeSkillTitle } from './utils/normalization';
-import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { calculateAverageBenchmark } from './utils/benchmarkCalculations';
+import { SkillProfileTableRow } from './table/SkillProfileTableRow';
 
 interface SkillProfileTableProps {
   selectedFunction?: string;
@@ -27,42 +26,14 @@ const SkillProfileTableContent = ({
 }: SkillProfileTableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const { toggledSkills } = useToggledSkills();
-  const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employees = useEmployeeStore((state) => state.employees);
-  const employeeSkillsStore = useEmployeeSkillsStore();
 
   const getEmployeeCount = (roleName: string) => {
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };
 
-  const calculateAverageBenchmark = (roleId: string, roleName: string) => {
-    const matchingEmployees = employees.filter(emp => getBaseRole(emp.role) === roleName);
-    if (matchingEmployees.length === 0) return 0;
-
-    const benchmarks = matchingEmployees.map(emp => 
-      calculateBenchmarkPercentage(
-        emp.id,
-        roleId,
-        "",
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      )
-    );
-
-    const sum = benchmarks.reduce((acc, val) => acc + val, 0);
-    return Math.round(sum / benchmarks.length);
-  };
-
-  const getBenchmarkColor = (benchmark: number) => {
-    if (benchmark >= 90) return 'bg-green-100 text-green-800';
-    if (benchmark >= 70) return 'bg-orange-100 text-orange-800';
-    return 'bg-red-100 text-red-800';
-  };
-
   const rows: SkillProfileRow[] = Object.entries(roleSkills).map(([id, role]) => {
-    // Get all skills for the role and normalize their titles
     const allRoleSkills = [
       ...role.specialized,
       ...role.common,
@@ -72,12 +43,10 @@ const SkillProfileTableContent = ({
       normalizedTitle: normalizeSkillTitle(skill.title)
     }));
     
-    // Create a Set of normalized titles from toggledSkills
     const normalizedToggledSkills = new Set(
       Array.from(toggledSkills).map(skillTitle => normalizeSkillTitle(skillTitle))
     );
 
-    // Count unique toggled skills by comparing normalized titles
     const toggledSkillsCount = allRoleSkills.filter(skill => 
       normalizedToggledSkills.has(skill.normalizedTitle)
     ).length;
@@ -86,24 +55,17 @@ const SkillProfileTableContent = ({
       roleId: id,
       roleTitle: role.title,
       totalSkills: allRoleSkills.length,
-      toggledCount: toggledSkillsCount,
-      normalizedToggled: Array.from(normalizedToggledSkills),
-      roleSkills: allRoleSkills.map(s => s.normalizedTitle)
+      toggledCount: toggledSkillsCount
     });
 
-    // Get employee count for this role
     const employeeCount = getEmployeeCount(role.title);
-
-    console.log('Calculating employee count for role:', {
-      roleId: id,
-      roleTitle: role.title,
-      employeeCount,
-      employees: employees.map(e => ({
-        name: e.name,
-        role: e.role,
-        baseRole: getBaseRole(e.role)
-      }))
-    });
+    const averageBenchmark = calculateAverageBenchmark(
+      id,
+      role.title,
+      employees.filter(emp => getBaseRole(emp.role) === role.title),
+      getSkillCompetencyState,
+      toggledSkills
+    );
 
     return {
       id,
@@ -111,7 +73,7 @@ const SkillProfileTableContent = ({
       function: "Engineering",
       skillCount: String(toggledSkillsCount),
       employees: String(employeeCount),
-      matches: `${calculateAverageBenchmark(id, role.title)}%`,
+      matches: `${averageBenchmark}%`,
       lastUpdated: "10/20/24"
     };
   });
@@ -122,17 +84,16 @@ const SkillProfileTableContent = ({
   };
 
   const handleSelectRow = (id: string) => {
-    setSelectedRows(prev => {
-      const newSelection = prev.includes(id) 
-        ? prev.filter(rowId => rowId !== id)
-        : [...prev, id];
-      return newSelection;
-    });
+    setSelectedRows(prev => 
+      prev.includes(id) ? prev.filter(rowId => rowId !== id) : [...prev, id]
+    );
   };
 
   const filteredRows = rows.filter(row => {
-    const matchesFunction = !selectedFunction || row.function.toLowerCase() === selectedFunction.toLowerCase();
-    const matchesJobTitle = !selectedJobTitle || row.name.toLowerCase() === selectedJobTitle.toLowerCase();
+    const matchesFunction = !selectedFunction || 
+      row.function.toLowerCase() === selectedFunction.toLowerCase();
+    const matchesJobTitle = !selectedJobTitle || 
+      row.name.toLowerCase() === selectedJobTitle.toLowerCase();
     
     const roleData = roleSkills[row.id as keyof typeof roleSkills];
     const allProfileSkills = [
@@ -172,7 +133,9 @@ const SkillProfileTableContent = ({
             <TableHead className="w-[15%] text-center h-12">Skill Count</TableHead>
             <TableHead className="w-[15%] text-center h-12">Employees</TableHead>
             <TableHead className="w-[15%] text-center h-12">Benchmark</TableHead>
-            <TableHead className="w-[10%] text-right whitespace-nowrap h-12">Last Updated</TableHead>
+            <TableHead className="w-[10%] text-right whitespace-nowrap h-12">
+              Last Updated
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -184,35 +147,12 @@ const SkillProfileTableContent = ({
             </TableRow>
           ) : (
             filteredRows.map((row) => (
-              <TableRow key={row.id} className="h-16 hover:bg-muted/50 transition-colors">
-                <TableCell className="align-middle">
-                  <input 
-                    type="checkbox" 
-                    className="rounded border-gray-300"
-                    checked={selectedRows.includes(row.id)}
-                    onChange={() => handleSelectRow(row.id)}
-                  />
-                </TableCell>
-                <TableCell className="align-middle font-medium">
-                  <Link 
-                    to={`/skills/${row.id}`} 
-                    className="text-primary hover:text-primary-accent transition-colors no-underline"
-                  >
-                    {row.name}
-                  </Link>
-                </TableCell>
-                <TableCell className="align-middle">{row.function}</TableCell>
-                <TableCell className="text-center align-middle">{row.skillCount}</TableCell>
-                <TableCell className="text-center align-middle">{row.employees}</TableCell>
-                <TableCell className="text-center align-middle">
-                  <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${
-                    getBenchmarkColor(parseInt(row.matches))
-                  }`}>
-                    {row.matches}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right align-middle text-muted-foreground">{row.lastUpdated}</TableCell>
-              </TableRow>
+              <SkillProfileTableRow
+                key={row.id}
+                row={row}
+                isSelected={selectedRows.includes(row.id)}
+                onSelect={handleSelectRow}
+              />
             ))
           )}
         </TableBody>
