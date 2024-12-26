@@ -2,8 +2,6 @@ import { Card } from "@/components/ui/card";
 import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
-import { useToast } from "@/components/ui/use-toast";
-import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
 
 interface SkillsMatrixViewProps {
@@ -29,8 +27,6 @@ export const SkillsMatrixView = ({
   onSave,
   onCancel
 }: SkillsMatrixViewProps) => {
-  const { toast } = useToast();
-
   console.log('SkillsMatrixView - Rendering with:', {
     hasChanges,
     filteredSkillsCount: filteredSkills.length,

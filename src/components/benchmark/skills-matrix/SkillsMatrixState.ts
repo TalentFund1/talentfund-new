@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 import { benchmarkingService } from '../../../services/benchmarking';
 
 interface SkillState {
@@ -96,52 +94,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       version: 2,
       partialize: (state) => ({
         currentStates: state.currentStates,
+        originalStates: state.originalStates,
       }),
     }
   )
 );
-
-export const useSkillsMatrixState = (
-  selectedCategory: string,
-  selectedLevel: string,
-  selectedInterest: string
-) => {
-  const { currentStates } = useSkillsMatrixStore();
-
-  const filterAndSortSkills = (skills: UnifiedSkill[]) => {
-    console.log('Filtering skills:', { 
-      totalSkills: skills.length,
-      selectedCategory,
-      selectedLevel,
-      selectedInterest 
-    });
-
-    let filteredSkills = [...skills];
-
-    if (selectedCategory !== "all") {
-      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
-    }
-
-    if (selectedLevel !== "all") {
-      filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = currentStates[skill.title];
-        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
-      });
-    }
-
-    if (selectedInterest !== "all") {
-      filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = currentStates[skill.title];
-        if (!skillState?.goalStatus) return false;
-
-        return benchmarkingService.matchesInterestFilter(skillState.goalStatus, selectedInterest);
-      });
-    }
-
-    return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
-  };
-
-  return {
-    filterAndSortSkills,
-  };
-};
