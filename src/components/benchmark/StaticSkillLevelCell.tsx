@@ -47,7 +47,7 @@ export const StaticSkillLevelCell = ({
 
   const getRequirementIcon = (goalStatus: string = 'unknown') => {
     switch (goalStatus?.toLowerCase()) {
-      case 'required':
+      case 'skill_goal':
         return <Heart className="w-3.5 h-3.5" />;
       case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
@@ -74,22 +74,15 @@ export const StaticSkillLevelCell = ({
   const getRequirementStyles = (goalStatus: string = 'unknown', level: string = 'unspecified') => {
     const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
     
-    switch (goalStatus?.toLowerCase()) {
-      case 'required':
-        return `${baseStyles} ${
-          level.toLowerCase() === 'advanced' 
-            ? 'border-primary-accent' 
-            : level.toLowerCase() === 'intermediate'
-              ? 'border-primary-icon'
-              : level.toLowerCase() === 'beginner'
-                ? 'border-[#008000]'
-                : 'border-gray-300'
-        }`;
-      case 'not_interested':
-      case 'unknown':
-      default:
-        return `${baseStyles} border-gray-300`;
-    }
+    const borderColor = level.toLowerCase() === 'advanced' 
+      ? 'border-primary-accent' 
+      : level.toLowerCase() === 'intermediate'
+        ? 'border-primary-icon'
+        : level.toLowerCase() === 'beginner'
+          ? 'border-[#008000]'
+          : 'border-gray-300';
+    
+    return `${baseStyles} ${borderColor}`;
   };
 
   return (
@@ -104,7 +97,7 @@ export const StaticSkillLevelCell = ({
         <div className={getRequirementStyles(currentState?.goalStatus, currentState?.level)}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(currentState?.goalStatus)}
-            {currentState?.goalStatus === 'required' ? 'Skill Goal' : 
+            {currentState?.goalStatus === 'skill_goal' ? 'Skill Goal' : 
              currentState?.goalStatus === 'not_interested' ? 'Not Interested' : 
              'Unknown'}
           </span>
