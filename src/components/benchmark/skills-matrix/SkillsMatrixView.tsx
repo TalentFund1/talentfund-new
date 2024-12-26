@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { SkillsMatrixHeader } from "./SkillsMatrixHeader";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
@@ -51,6 +52,8 @@ export const SkillsMatrixView = ({
         onSave={handleSave}
         onCancel={handleCancel}
       />
+      
+      <Separator className="mb-6" />
       
       <SkillsMatrixFilters 
         selectedLevel={selectedLevel}
