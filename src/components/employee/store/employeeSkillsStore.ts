@@ -17,11 +17,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 4,
-      partialize: (state) => ({
+      version: 5,
+      partialize: (state: EmployeeSkillsStore) => ({
         skillStates: state.skillStates
-      }) as EmployeeSkillsStoreState,
-      merge: (persistedState: Partial<EmployeeSkillsStoreState>, currentState: EmployeeSkillsStore) => {
+      }),
+      merge: (persistedState: any, currentState: EmployeeSkillsStore) => {
         console.log('Merging states:', { 
           hasPersistedState: !!persistedState,
           currentStateKeys: Object.keys(currentState)
@@ -29,7 +29,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         
         return {
           ...currentState,
-          skillStates: persistedState.skillStates || {}
+          skillStates: persistedState?.skillStates || {}
         };
       }
     }

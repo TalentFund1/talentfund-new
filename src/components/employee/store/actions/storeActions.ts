@@ -5,13 +5,13 @@ import { EmployeeSkillUpdate, EmployeeSkillData } from '../../types/employeeSkil
 import { benchmarkingService } from '../../../../services/benchmarking';
 
 export const createStoreActions = (
-  set: StateCreator<EmployeeSkillsStore>['setState'],
+  set: any,
   get: () => EmployeeSkillsStore
 ) => ({
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => {
     console.log('Updating skill state:', { employeeId, skillTitle, updates });
     
-    set((state) => {
+    set((state: EmployeeSkillsStore) => {
       const currentState = state.skillStates[employeeId] || { 
         skills: {},
         lastUpdated: new Date().toISOString()
@@ -78,7 +78,7 @@ export const createStoreActions = (
       updateCount: Object.keys(updates).length 
     });
 
-    set((state) => {
+    set((state: EmployeeSkillsStore) => {
       const currentState = state.skillStates[employeeId] || {
         skills: {},
         lastUpdated: new Date().toISOString()
@@ -94,7 +94,28 @@ export const createStoreActions = (
 
       Object.entries(updates).forEach(([skillTitle, skillUpdates]) => {
         if (employee.skills.some(s => s.title === skillTitle)) {
-          const currentSkill = currentState.skills[skillTitle] || benchmarkingService.createDefaultSkillData(employeeId, skillTitle);
+          const currentSkill = currentState.skills[skillTitle] || {
+            id: `${employeeId}-${skillTitle}`,
+            employeeId,
+            skillId: `${employeeId}-${skillTitle}`,
+            title: skillTitle,
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString(),
+            confidence: 'medium',
+            subcategory: 'General',
+            category: 'specialized',
+            businessCategory: 'Technical Skills',
+            weight: 'technical',
+            growth: '0%',
+            salary: 'market',
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
+          };
           
           updatedSkills[skillTitle] = {
             ...currentSkill,
