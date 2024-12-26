@@ -69,9 +69,17 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
-  // Create a properly nested structure for currentStates
+  // Create a properly nested structure for currentStates with the correct type
   const nestedCurrentStates: Record<string, Record<string, SkillState>> = {
-    [selectedRole]: currentStates
+    [selectedRole]: Object.fromEntries(
+      Object.entries(currentStates).map(([key, value]) => [
+        key,
+        {
+          level: value.level || 'unspecified',
+          required: value.required || 'unknown'
+        }
+      ])
+    )
   };
 
   const {
