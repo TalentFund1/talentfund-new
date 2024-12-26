@@ -155,17 +155,23 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 2,
+      version: 3, // Increment version to ensure clean state
       partialize: (state) => ({
         skillStates: state.skillStates
       }),
       storage: {
         getItem: (name) => {
           const str = localStorage.getItem(name);
-          if (!str) return null;
+          if (!str) {
+            console.log('No stored state found:', { name });
+            return null;
+          }
           try {
             const parsed = JSON.parse(str);
-            console.log('Loading persisted state:', { name, value: parsed });
+            console.log('Successfully loaded stored state:', { 
+              name, 
+              skillStatesCount: Object.keys(parsed?.state?.skillStates || {}).length 
+            });
             return parsed;
           } catch (error) {
             console.error('Error parsing stored state:', error);
@@ -175,13 +181,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         setItem: (name, value) => {
           try {
             const serialized = JSON.stringify(value);
-            console.log('Persisting state:', { name, value });
+            console.log('Persisting state:', { 
+              name, 
+              skillStatesCount: Object.keys(value?.state?.skillStates || {}).length 
+            });
             localStorage.setItem(name, serialized);
           } catch (error) {
             console.error('Error storing state:', error);
           }
         },
         removeItem: (name) => {
+          console.log('Removing stored state:', { name });
           localStorage.removeItem(name);
         }
       }
