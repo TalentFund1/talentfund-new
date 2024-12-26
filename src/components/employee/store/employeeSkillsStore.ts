@@ -73,7 +73,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 lastUpdated: new Date().toISOString()
               }
             }
-          } as const;
+          } satisfies Partial<EmployeeSkillsStore>;
 
           console.log('Updated skill state:', updatedState);
           return updatedState;
@@ -133,7 +133,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 lastUpdated: new Date().toISOString()
               }
             }
-          } as const;
+          } satisfies Partial<EmployeeSkillsStore>;
 
           console.log('Batch update complete:', updatedState);
           return updatedState;
