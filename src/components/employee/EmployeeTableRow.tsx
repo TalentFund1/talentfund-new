@@ -29,7 +29,7 @@ export const EmployeeTableRow = ({
 }: EmployeeTableRowProps) => {
   const { getSkillState } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const competencyReader = useCompetencyStateReader();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
 
   const targetRoleId = selectedJobTitle.length > 0 
@@ -42,9 +42,9 @@ export const EmployeeTableRow = ({
     employee.id,
     targetRoleId,
     employeeLevel,
-    getEmployeeSkills(employee.id),
+    getSkillState,
     toggledSkills,
-    competencyReader.getSkillCompetencyState
+    getSkillCompetencyState
   );
 
   const getSkillMatch = () => {

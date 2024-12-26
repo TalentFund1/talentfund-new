@@ -19,7 +19,7 @@ export const SkillProfileEmployees = () => {
   const employees = useEmployeeStore((state) => state.employees);
   const { getSkillState } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const competencyReader = useCompetencyStateReader();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkillsStore = useEmployeeSkillsStore();
 
   // Get exact role matches (same role ID, any level)
@@ -44,7 +44,7 @@ export const SkillProfileEmployees = () => {
         getBaseRole(emp.role),
         employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
-        competencyReader.getSkillCompetencyState
+        getSkillCompetencyState
       )
     }))
     .sort((a, b) => b.benchmark - a.benchmark);
@@ -61,7 +61,7 @@ export const SkillProfileEmployees = () => {
         getBaseRole(emp.role),
         employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
-        competencyReader.getSkillCompetencyState
+        getSkillCompetencyState
       );
 
       return benchmark > 70;
@@ -74,7 +74,7 @@ export const SkillProfileEmployees = () => {
         getBaseRole(emp.role),
         employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
-        competencyReader.getSkillCompetencyState
+        getSkillCompetencyState
       )
     }))
     .sort((a, b) => b.benchmark - a.benchmark)

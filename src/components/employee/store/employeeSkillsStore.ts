@@ -1,82 +1,187 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EmployeeSkillData, EmployeeSkillsState } from '../types/employeeSkillTypes';
+import { createSkillStateActions } from './actions/skillStateActions';
+import { createInitializationActions } from './actions/skillInitialization';
+import { createSkillSelectors } from './selectors/skillSelectors';
+import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
-interface EmployeeSkillsStore {
+// Define the structure of persisted state separately
+interface PersistedState {
   skillStates: Record<string, EmployeeSkillsState>;
+}
+
+// Complete store interface including all methods
+interface EmployeeSkillsStore extends PersistedState {
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
-  getEmployeeSkills: (employeeId: string) => EmployeeSkillsState;
+  getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
-  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: boolean) => void;
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => void;
   initializeEmployeeSkills: (employeeId: string) => void;
-  resetSkillStates: () => void;
+  updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
+  batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
 }
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       skillStates: {},
-      
-      getSkillState: (employeeId, skillTitle) => {
-        const employeeSkills = get().skillStates[employeeId];
-        return employeeSkills?.[skillTitle] || { level: '', goalStatus: false };
-      },
+      ...createSkillStateActions(set, get),
+      ...createInitializationActions(set, get),
+      ...createSkillSelectors(get),
 
-      getEmployeeSkills: (employeeId) => {
-        return get().skillStates[employeeId] || {};
-      },
-
-      setSkillLevel: (employeeId, skillTitle, level) => {
-        set((state) => ({
-          skillStates: {
-            ...state.skillStates,
-            [employeeId]: {
-              ...state.skillStates[employeeId],
-              [skillTitle]: {
-                ...state.skillStates[employeeId]?.[skillTitle],
-                level
-              }
-            }
-          }
-        }));
-      },
-
-      setSkillGoalStatus: (employeeId, skillTitle, status) => {
-        set((state) => ({
-          skillStates: {
-            ...state.skillStates,
-            [employeeId]: {
-              ...state.skillStates[employeeId],
-              [skillTitle]: {
-                ...state.skillStates[employeeId]?.[skillTitle],
-                goalStatus: status
-              }
-            }
-          }
-        }));
-      },
-
-      initializeEmployeeSkills: (employeeId) => {
+      updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => {
+        console.log('Updating skill state:', { employeeId, skillTitle, updates });
+        
         set((state) => {
-          if (!state.skillStates[employeeId]) {
-            return {
-              skillStates: {
-                ...state.skillStates,
-                [employeeId]: {}
-              }
-            };
-          }
-          return state;
+          const currentState = state.skillStates[employeeId] || { 
+            skills: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          const currentSkill = currentState.skills[skillTitle] || {
+            id: `${employeeId}-${skillTitle}`,
+            employeeId,
+            skillId: `${employeeId}-${skillTitle}`,
+            title: skillTitle,
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString(),
+            confidence: 'medium',
+            subcategory: 'General',
+            category: 'specialized',
+            businessCategory: 'Technical Skills',
+            weight: 'technical',
+            growth: '0%',
+            salary: 'market',
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
+          };
+
+          const updatedSkillStates = {
+            ...state.skillStates,
+            [employeeId]: {
+              ...currentState,
+              skills: {
+                ...currentState.skills,
+                [skillTitle]: {
+                  ...currentSkill,
+                  ...updates,
+                  lastUpdated: new Date().toISOString()
+                }
+              },
+              lastUpdated: new Date().toISOString()
+            }
+          };
+
+          console.log('Updated skill state:', updatedSkillStates);
+          return {
+            ...state,
+            skillStates: updatedSkillStates,
+            getSkillState: state.getSkillState,
+            getEmployeeSkills: state.getEmployeeSkills,
+            setSkillLevel: state.setSkillLevel,
+            setSkillGoalStatus: state.setSkillGoalStatus,
+            initializeEmployeeSkills: state.initializeEmployeeSkills,
+            updateSkillState: state.updateSkillState,
+            batchUpdateSkills: state.batchUpdateSkills
+          };
         });
       },
 
-      resetSkillStates: () => {
-        set({ skillStates: {} });
+      batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => {
+        console.log('Processing batch update:', { 
+          employeeId, 
+          updateCount: Object.keys(updates).length 
+        });
+
+        set((state) => {
+          const currentState = state.skillStates[employeeId] || {
+            skills: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          const updatedSkills = { ...currentState.skills };
+
+          Object.entries(updates).forEach(([skillTitle, skillUpdates]) => {
+            const currentSkill = currentState.skills[skillTitle] || {
+              id: `${employeeId}-${skillTitle}`,
+              employeeId,
+              skillId: `${employeeId}-${skillTitle}`,
+              title: skillTitle,
+              level: 'unspecified',
+              goalStatus: 'unknown',
+              lastUpdated: new Date().toISOString(),
+              confidence: 'medium',
+              subcategory: 'General',
+              category: 'specialized',
+              businessCategory: 'Technical Skills',
+              weight: 'technical',
+              growth: '0%',
+              salary: 'market',
+              benchmarks: {
+                B: false,
+                R: false,
+                M: false,
+                O: false
+              }
+            };
+
+            updatedSkills[skillTitle] = {
+              ...currentSkill,
+              ...skillUpdates,
+              lastUpdated: new Date().toISOString()
+            };
+          });
+
+          const updatedSkillStates = {
+            ...state.skillStates,
+            [employeeId]: {
+              skills: updatedSkills,
+              lastUpdated: new Date().toISOString()
+            }
+          };
+
+          console.log('Batch update complete:', updatedSkillStates);
+          return {
+            ...state,
+            skillStates: updatedSkillStates,
+            getSkillState: state.getSkillState,
+            getEmployeeSkills: state.getEmployeeSkills,
+            setSkillLevel: state.setSkillLevel,
+            setSkillGoalStatus: state.setSkillGoalStatus,
+            initializeEmployeeSkills: state.initializeEmployeeSkills,
+            updateSkillState: state.updateSkillState,
+            batchUpdateSkills: state.batchUpdateSkills
+          };
+        });
       }
     }),
     {
       name: 'employee-skills-storage',
-      version: 1
+      version: 2,
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          console.log('Loading from storage:', { name, value: str });
+          return str ? Promise.resolve(JSON.parse(str)) : Promise.resolve(null);
+        },
+        setItem: (name, value) => {
+          console.log('Saving to storage:', { name, value });
+          localStorage.setItem(name, JSON.stringify(value));
+          return Promise.resolve();
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+          return Promise.resolve();
+        },
+      },
+      partialize: (state) => ({
+        skillStates: state.skillStates
+      })
     }
   )
 );
