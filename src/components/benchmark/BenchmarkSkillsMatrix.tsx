@@ -40,6 +40,7 @@ const BenchmarkSkillsMatrixContent = () => {
     true
   );
 
+  const totalFilteredSkills = filteredSkills.length;
   const paginatedSkills = filteredSkills.slice(0, visibleItems);
   
   console.log('BenchmarkSkillsMatrix - Current state:', {
@@ -47,7 +48,8 @@ const BenchmarkSkillsMatrixContent = () => {
     employeeId: id,
     selectedCategory,
     selectedWeight,
-    filteredSkillsCount: filteredSkills.length,
+    totalFilteredSkills,
+    visibleSkills: paginatedSkills.length,
     toggledSkillsCount: toggledSkills.size
   });
 
@@ -58,6 +60,7 @@ const BenchmarkSkillsMatrixContent = () => {
         employeeId={id || ""}
         roleLevel={comparisonLevel}
         filteredSkills={paginatedSkills}
+        totalSkills={totalFilteredSkills}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedLevel={selectedLevel}

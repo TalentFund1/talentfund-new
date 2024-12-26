@@ -7,6 +7,7 @@ interface BenchmarkSkillsMatrixViewProps {
   employeeId: string;
   roleLevel: string;
   filteredSkills: any[];
+  totalSkills: number;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedLevel: string;
@@ -29,6 +30,7 @@ export const BenchmarkSkillsMatrixView = ({
   employeeId,
   roleLevel,
   filteredSkills,
+  totalSkills,
   searchTerm,
   setSearchTerm,
   selectedLevel,
@@ -52,7 +54,8 @@ export const BenchmarkSkillsMatrixView = ({
     employeeId,
     selectedCategory,
     selectedWeight,
-    filteredSkillsCount: filteredSkills.length
+    filteredSkillsCount: filteredSkills.length,
+    totalSkills
   });
 
   return (
@@ -62,6 +65,7 @@ export const BenchmarkSkillsMatrixView = ({
         employeeId={employeeId}
         roleLevel={roleLevel}
         filteredSkills={filteredSkills}
+        totalSkills={totalSkills}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedLevel={selectedLevel}
