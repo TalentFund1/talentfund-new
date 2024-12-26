@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
@@ -21,7 +21,6 @@ const BenchmarkSkillsMatrixContent = () => {
   const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
-  const { visibleItems } = useBenchmarkSkillsMatrixState();
 
   const track = getTrackForRole(selectedRole);
   const comparisonLevel = track === "Managerial" ? "m3" : roleLevel.toLowerCase();
@@ -39,8 +38,6 @@ const BenchmarkSkillsMatrixContent = () => {
     selectedWeight,
     true
   );
-
-  const paginatedSkills = filteredSkills.slice(0, visibleItems);
   
   console.log('BenchmarkSkillsMatrix - Current state:', {
     roleId: selectedRole,
@@ -57,7 +54,7 @@ const BenchmarkSkillsMatrixContent = () => {
         roleId={selectedRole}
         employeeId={id || ""}
         roleLevel={comparisonLevel}
-        filteredSkills={paginatedSkills}
+        filteredSkills={filteredSkills}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedLevel={selectedLevel}
@@ -72,7 +69,6 @@ const BenchmarkSkillsMatrixContent = () => {
         setSelectedCategory={setSelectedCategory}
         selectedWeight={selectedWeight}
         setSelectedWeight={setSelectedWeight}
-        visibleItems={visibleItems}
       />
     </div>
   );

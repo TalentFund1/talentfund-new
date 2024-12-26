@@ -21,7 +21,6 @@ interface BenchmarkSkillsMatrixViewProps {
   setSelectedCategory: (category: string) => void;
   selectedWeight: string;
   setSelectedWeight: (weight: string) => void;
-  visibleItems: number;
 }
 
 export const BenchmarkSkillsMatrixView = ({
@@ -43,10 +42,7 @@ export const BenchmarkSkillsMatrixView = ({
   setSelectedCategory,
   selectedWeight,
   setSelectedWeight,
-  visibleItems
 }: BenchmarkSkillsMatrixViewProps) => {
-  const observerTarget = useRef<HTMLDivElement>(null);
-
   console.log('BenchmarkSkillsMatrixView - Rendering with:', {
     roleId,
     employeeId,
@@ -76,8 +72,6 @@ export const BenchmarkSkillsMatrixView = ({
         setSelectedCategory={setSelectedCategory}
         selectedWeight={selectedWeight}
         setSelectedWeight={setSelectedWeight}
-        visibleItems={visibleItems}
-        observerTarget={observerTarget}
       />
     </Card>
   );

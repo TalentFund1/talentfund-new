@@ -8,17 +8,13 @@ import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { benchmarkingService } from "../../services/benchmarking";
 
-const ITEMS_PER_PAGE = 10;
-
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [hasChanges, setHasChanges] = useState(false);
   const [employeeSkillsData, setEmployeeSkillsData] = useState<UnifiedSkill[]>([]);
   
   const { id } = useParams<{ id: string }>();
-  const observerTarget = useRef<HTMLDivElement>(null);
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { getEmployeeSkills, getSkillState, initializeEmployeeSkills } = useEmployeeSkillsStore();
 
@@ -81,27 +77,9 @@ export const SkillsMatrix = () => {
   console.log('SkillsMatrix - Filtered skills:', {
     totalSkills: employeeSkillsData.length,
     filteredSkills: filteredSkills.length,
-    visibleItems,
     selectedLevel,
     selectedInterest
   });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && visibleItems < filteredSkills.length) {
-          setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, filteredSkills.length));
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => observer.disconnect();
-  }, [visibleItems, filteredSkills.length]);
 
   useEffect(() => {
     setHasChanges(storeHasChanges);
@@ -114,9 +92,7 @@ export const SkillsMatrix = () => {
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
-        filteredSkills={filteredSkills.slice(0, visibleItems)}
-        visibleItems={visibleItems}
-        observerTarget={observerTarget}
+        filteredSkills={filteredSkills}
         hasChanges={hasChanges}
         isRoleBenchmark={false}
       />
