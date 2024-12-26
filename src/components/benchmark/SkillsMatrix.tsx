@@ -7,16 +7,19 @@ import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { benchmarkingService } from "../../services/benchmarking";
+import { useToast } from "@/hooks/use-toast";
 
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [hasChanges, setHasChanges] = useState(false);
   const [employeeSkillsData, setEmployeeSkillsData] = useState<UnifiedSkill[]>([]);
+  const [originalSkillStates, setOriginalSkillStates] = useState<Record<string, any>>({});
   
   const { id } = useParams<{ id: string }>();
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { getEmployeeSkills, getSkillState, initializeEmployeeSkills } = useEmployeeSkillsStore();
+  const { getEmployeeSkills, getSkillState, initializeEmployeeSkills, batchUpdateSkills } = useEmployeeSkillsStore();
+  const { toast } = useToast();
 
   // Initialize employee skills if needed
   useEffect(() => {
@@ -28,9 +31,16 @@ export const SkillsMatrix = () => {
       const skills = getEmployeeSkills(id);
       console.log('SkillsMatrix - Loaded employee skills:', skills);
       
+      // Store original skill states
+      const originalStates: Record<string, any> = {};
+      skills.forEach(skill => {
+        originalStates[skill.title] = getSkillState(id, skill.title);
+      });
+      setOriginalSkillStates(originalStates);
+      
       // Transform skills to UnifiedSkill format with proper type checking
       const transformedSkills = skills
-        .filter(skill => skill && skill.title) // Filter out invalid skills
+        .filter(skill => skill && skill.title)
         .map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
@@ -47,7 +57,7 @@ export const SkillsMatrix = () => {
             id: skillData.id || `${id}-${skill.title}`,
             title: skill.title,
             subcategory: skillData.subcategory || 'General',
-            level: skillState.level || skill.level || 'unspecified', // Preserve original level if available
+            level: skillState.level || skill.level || 'unspecified',
             growth: skillData.growth || '0%',
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
@@ -74,12 +84,27 @@ export const SkillsMatrix = () => {
     return true;
   });
 
-  console.log('SkillsMatrix - Filtered skills:', {
-    totalSkills: employeeSkillsData.length,
-    filteredSkills: filteredSkills.length,
-    selectedLevel,
-    selectedInterest
-  });
+  const handleSave = () => {
+    console.log('Saving skill changes');
+    setHasChanges(false);
+    toast({
+      title: "Changes saved",
+      description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const handleCancel = () => {
+    console.log('Canceling skill changes');
+    if (id && originalSkillStates) {
+      // Restore original states
+      batchUpdateSkills(id, originalSkillStates);
+      setHasChanges(false);
+      toast({
+        title: "Changes cancelled",
+        description: "Your changes have been discarded.",
+      });
+    }
+  };
 
   useEffect(() => {
     setHasChanges(storeHasChanges);
@@ -94,6 +119,8 @@ export const SkillsMatrix = () => {
         setSelectedInterest={setSelectedInterest}
         filteredSkills={filteredSkills}
         hasChanges={hasChanges}
+        onSave={handleSave}
+        onCancel={handleCancel}
         isRoleBenchmark={false}
       />
     </div>

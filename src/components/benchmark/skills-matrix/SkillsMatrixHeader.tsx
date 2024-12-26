@@ -1,15 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export interface SkillsMatrixHeaderProps {
+interface SkillsMatrixHeaderProps {
   hasChanges: boolean;
   onSave: () => void;
   onCancel: () => void;
 }
 
-export const SkillsMatrixHeader = ({ hasChanges, onSave, onCancel }: SkillsMatrixHeaderProps) => {
+export const SkillsMatrixHeader = ({ 
+  hasChanges,
+  onSave,
+  onCancel 
+}: SkillsMatrixHeaderProps) => {
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-4">
         <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
         <Select defaultValue="modify">
