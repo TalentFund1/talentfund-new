@@ -152,10 +152,20 @@ export const SkillsMatrix = () => {
       const currentState = getSkillState(id, skill.title);
       const originalState = originalSkillStates[skill.title];
 
-      return originalState && (
+      const hasChanged = originalState && (
         currentState.level !== originalState.level ||
         currentState.goalStatus !== originalState.goalStatus
       );
+
+      if (hasChanged) {
+        console.log('Detected change in skill:', {
+          skillTitle: skill.title,
+          original: originalState,
+          current: currentState
+        });
+      }
+
+      return hasChanged;
     });
 
     console.log('Checking for changes:', {
