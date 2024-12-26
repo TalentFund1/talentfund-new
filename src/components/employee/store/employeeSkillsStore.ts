@@ -25,6 +25,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       skillStates: {},
+
       ...createSkillStateActions(set, get),
       ...createInitializationActions(set, get),
       ...createSkillSelectors(get),
@@ -61,22 +62,26 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          return {
-            skillStates: {
-              ...state.skillStates,
-              [employeeId]: {
-                ...currentState,
-                skills: {
-                  ...currentState.skills,
-                  [skillTitle]: {
-                    ...currentSkill,
-                    ...updates,
-                    lastUpdated: new Date().toISOString()
-                  }
-                },
-                lastUpdated: new Date().toISOString()
-              }
+          const updatedSkillStates = {
+            ...state.skillStates,
+            [employeeId]: {
+              ...currentState,
+              skills: {
+                ...currentState.skills,
+                [skillTitle]: {
+                  ...currentSkill,
+                  ...updates,
+                  lastUpdated: new Date().toISOString()
+                }
+              },
+              lastUpdated: new Date().toISOString()
             }
+          };
+
+          console.log('Updated skill state:', updatedSkillStates);
+          return {
+            ...state,
+            skillStates: updatedSkillStates
           };
         });
       },
@@ -126,14 +131,18 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             };
           });
 
-          return {
-            skillStates: {
-              ...state.skillStates,
-              [employeeId]: {
-                skills: updatedSkills,
-                lastUpdated: new Date().toISOString()
-              }
+          const updatedSkillStates = {
+            ...state.skillStates,
+            [employeeId]: {
+              skills: updatedSkills,
+              lastUpdated: new Date().toISOString()
             }
+          };
+
+          console.log('Batch update complete:', updatedSkillStates);
+          return {
+            ...state,
+            skillStates: updatedSkillStates
           };
         });
       }
@@ -158,14 +167,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         },
       },
       partialize: (state) => ({
-        skillStates: state.skillStates,
-        getSkillState: state.getSkillState,
-        getEmployeeSkills: state.getEmployeeSkills,
-        setSkillLevel: state.setSkillLevel,
-        setSkillGoalStatus: state.setSkillGoalStatus,
-        initializeEmployeeSkills: state.initializeEmployeeSkills,
-        updateSkillState: state.updateSkillState,
-        batchUpdateSkills: state.batchUpdateSkills
+        skillStates: state.skillStates
       })
     }
   )

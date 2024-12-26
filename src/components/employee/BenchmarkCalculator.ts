@@ -1,42 +1,42 @@
 import { SkillLevel } from "./types/employeeSkillTypes";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   baseRole: string,
-  employeeSkills: any,
+  getSkillCompetencyState: any,
   toggledSkills: Set<string>,
-  competencyReader: ReturnType<typeof useCompetencyStateReader>
+  getSkillState: any
 ): number => {
-  // Ensure employeeSkills is an array
-  const skillsArray = Array.isArray(employeeSkills) ? employeeSkills : [];
+  const employeeStore = useEmployeeSkillsStore.getState();
+  const employeeSkills = employeeStore.getEmployeeSkills(employeeId);
 
   console.log('Calculating benchmark percentage:', {
     employeeId,
     roleId,
     baseRole,
-    skillCount: skillsArray.length,
+    skillCount: employeeSkills.length,
     toggledSkillsCount: toggledSkills.size
   });
 
-  if (skillsArray.length === 0) {
-    console.log('No employee skills found');
+  if (!employeeSkills || employeeSkills.length === 0) {
+    console.log('No employee skills found for benchmark calculation');
     return 0;
   }
 
-  const matchingSkills = skillsArray.filter(skill => 
+  const matchingSkills = employeeSkills.filter(skill => 
     toggledSkills.has(skill.title)
   );
 
   if (matchingSkills.length === 0) {
-    console.log('No matching skills found');
+    console.log('No matching skills found for benchmark calculation');
     return 0;
   }
 
   const totalMatches = matchingSkills.reduce((acc, skill) => {
     const employeeLevel = skill.level;
-    const requiredLevel = competencyReader.getSkillCompetencyState(skill.title, baseRole, roleId)?.level || 'beginner';
+    const requiredLevel = getSkillCompetencyState(skill.title, baseRole, roleId)?.level || 'beginner';
 
     const levelValues: Record<SkillLevel, number> = {
       'unspecified': 0,
@@ -47,14 +47,6 @@ export const calculateBenchmarkPercentage = (
 
     const employeeLevelValue = levelValues[employeeLevel as SkillLevel] || 0;
     const requiredLevelValue = levelValues[requiredLevel as SkillLevel] || 0;
-
-    console.log('Comparing skill levels:', {
-      skill: skill.title,
-      employeeLevel,
-      requiredLevel,
-      employeeLevelValue,
-      requiredLevelValue
-    });
 
     return acc + (employeeLevelValue >= requiredLevelValue ? 1 : 0);
   }, 0);

@@ -15,7 +15,7 @@ import { getSkillProfileId } from "../EmployeeTable";
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
   const { toggledSkills } = useToggledSkills();
-  const competencyReader = useCompetencyStateReader();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
   const employees = useEmployeeStore((state) => state.employees);
   const employeeSkillsStore = useEmployeeSkillsStore();
 
@@ -43,7 +43,7 @@ const EmployeeOverviewContent = () => {
         "",
         employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
-        competencyReader
+        getSkillCompetencyState
       )
     }))
     .sort((a, b) => b.benchmark - a.benchmark);
@@ -63,7 +63,7 @@ const EmployeeOverviewContent = () => {
         "",
         employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
-        competencyReader
+        getSkillCompetencyState
       );
 
       return benchmark > 70;
@@ -76,7 +76,7 @@ const EmployeeOverviewContent = () => {
         "",
         employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
-        competencyReader
+        getSkillCompetencyState
       )
     }))
     .sort((a, b) => b.benchmark - a.benchmark)
