@@ -9,7 +9,7 @@ export const getLevelIcon = (level: string) => {
     case 'beginner':
       return <Target className="w-3.5 h-3.5 text-[#008000]" />;
     default:
-      return <CircleDashed className="w-3.5 h-3.5 text-gray-400" />;
+      return <CircleHelp className="w-3.5 h-3.5 text-gray-400" />;
   }
 };
 
