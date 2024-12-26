@@ -26,7 +26,7 @@ export const useSkillsFiltering = (
     employeeId,
     selectedRole,
     comparisonLevel,
-    totalSkills: employeeSkills.length,
+    totalEmployeeSkills: employeeSkills.length,
     selectedCategory,
     selectedWeight,
     selectedLevel,
@@ -44,27 +44,26 @@ export const useSkillsFiltering = (
       return [];
     }
 
-    // Combine all skills for the role and filter for toggled skills only
-    let skills = [
+    // Get all role skills
+    const allRoleSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
+    ];
 
-    console.log('Role-specific toggled skills loaded:', {
-      roleId: selectedRole,
-      totalSkills: skills.length,
-      toggledSkills: Array.from(toggledSkills)
-    });
+    // Create a set of role skill titles for efficient lookup
+    const roleSkillTitles = new Set(allRoleSkills.map(skill => skill.title));
 
-    // Remove duplicates using a Map with skill titles as keys
-    const uniqueSkills = new Map();
-    skills.forEach(skill => {
-      if (!uniqueSkills.has(skill.title)) {
-        uniqueSkills.set(skill.title, skill);
-      }
+    // Filter employee skills to only include those that exist in role skills
+    let skills = employeeSkills.filter(empSkill => 
+      roleSkillTitles.has(empSkill.title) && toggledSkills.has(empSkill.title)
+    );
+
+    console.log('Filtered employee skills against role skills:', {
+      totalEmployeeSkills: employeeSkills.length,
+      matchingRoleSkills: skills.length,
+      roleId: selectedRole
     });
-    skills = Array.from(uniqueSkills.values());
 
     // Apply category filter
     if (selectedCategory !== 'all') {
