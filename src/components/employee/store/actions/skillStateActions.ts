@@ -52,3 +52,5 @@ export const createSkillStateActions = (set: any, get: any) => ({
     });
   }
 });
+
+console.log('Skill state actions updated with new status system');

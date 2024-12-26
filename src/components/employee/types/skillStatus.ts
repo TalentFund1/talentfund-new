@@ -1,16 +1,19 @@
-export type SkillGoalStatus = 'required' | 'preferred' | 'unknown' | 'skill_goal' | 'not_interested';
+export type SkillGoalStatus = 'required' | 'preferred' | 'unknown';
 
 export const normalizeSkillStatus = (status: string): SkillGoalStatus => {
-  // Map legacy values to new system
-  if (status === 'skill_goal') return 'required';
-  if (status === 'not_interested') return 'preferred';
+  console.log('Normalizing skill status:', { originalStatus: status });
   
+  // Map legacy values to new system
   switch (status.toLowerCase()) {
+    case 'skill_goal':
     case 'required':
       return 'required';
+    case 'not_interested':
     case 'preferred':
       return 'preferred';
     default:
       return 'unknown';
   }
 };
+
+console.log('Skill status normalization updated with simplified mapping');
