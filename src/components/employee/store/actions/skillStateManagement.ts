@@ -14,11 +14,13 @@ export const updateSkillState = (
   currentState: EmployeeSkillState,
   updates: Partial<EmployeeSkillState>
 ): EmployeeSkillState => {
-  // Normalize any incoming legacy status values
-  if (updates.goalStatus === 'skill_goal') {
-    updates.goalStatus = 'required';
-  } else if (updates.goalStatus === 'not_interested') {
-    updates.goalStatus = 'preferred';
+  // Map legacy values to new format
+  if (updates.goalStatus) {
+    if (updates.goalStatus === 'skill_goal' as any) {
+      updates.goalStatus = 'required';
+    } else if (updates.goalStatus === 'not_interested' as any) {
+      updates.goalStatus = 'preferred';
+    }
   }
 
   return {

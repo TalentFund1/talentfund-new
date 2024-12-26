@@ -9,7 +9,7 @@ export const createSkillStateActions = (set: any, get: any) => ({
 
   setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
     console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
-    // Map legacy statuses to new system
+    // Map legacy values to new format
     let normalizedStatus = goalStatus;
     if (goalStatus === 'skill_goal') {
       normalizedStatus = 'required';
