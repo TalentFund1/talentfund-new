@@ -1,137 +1,81 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createSkillStateActions } from './actions/skillStateActions';
-import { createInitializationActions } from './actions/skillInitialization';
-import { createSkillSelectors } from './selectors/skillSelectors';
-import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
+import { EmployeeSkillState, SkillLevel, EmployeeSkillGoalStatus } from '../../skills/types/skillStateTypes';
 
 interface EmployeeSkillsStore {
-  skillStates: Record<string, EmployeeSkillsState>;
-  getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
-  getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
-  setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
-  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => void;
+  skillStates: Record<string, Record<string, EmployeeSkillState>>;
+  getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
+  setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: EmployeeSkillGoalStatus) => void;
   initializeEmployeeSkills: (employeeId: string) => void;
-  updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
-  batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
 }
+
+const defaultSkillState: EmployeeSkillState = {
+  level: 'unspecified',
+  goalStatus: 'unknown',
+  lastUpdated: new Date().toISOString(),
+  confidence: 'medium'
+};
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       skillStates: {},
 
-      ...createSkillStateActions(set, get),
-      ...createInitializationActions(set, get),
-      ...createSkillSelectors(get),
-
-      updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => {
-        console.log('Updating skill state:', { employeeId, skillTitle, updates });
-        
-        set((state) => {
-          const currentState = state.skillStates[employeeId] || { 
-            skills: {},
-            lastUpdated: new Date().toISOString()
-          };
-
-          const currentSkill = currentState.skills[skillTitle] || {
-            id: `${employeeId}-${skillTitle}`,
-            employeeId,
-            skillId: `${employeeId}-${skillTitle}`,
-            title: skillTitle,
-            level: 'unspecified',
-            goalStatus: 'unknown',
-            lastUpdated: new Date().toISOString(),
-            confidence: 'medium',
-            subcategory: 'General',
-            category: 'specialized',
-            businessCategory: 'Technical Skills',
-            weight: 'technical',
-            growth: '0%',
-            salary: 'market',
-            benchmarks: {
-              B: false,
-              R: false,
-              M: false,
-              O: false
-            }
-          };
-
-          return {
-            skillStates: {
-              ...state.skillStates,
-              [employeeId]: {
-                ...currentState,
-                skills: {
-                  ...currentState.skills,
-                  [skillTitle]: {
-                    ...currentSkill,
-                    ...updates,
-                    lastUpdated: new Date().toISOString()
-                  }
-                },
-                lastUpdated: new Date().toISOString()
-              }
-            }
-          };
-        });
+      getSkillState: (employeeId, skillTitle) => {
+        console.log('Getting employee skill state:', { employeeId, skillTitle });
+        const state = get().skillStates[employeeId]?.[skillTitle];
+        if (!state) {
+          return { ...defaultSkillState };
+        }
+        return state;
       },
 
-      batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => {
-        console.log('Processing batch update:', { 
-          employeeId, 
-          updateCount: Object.keys(updates).length 
-        });
-
-        set((state) => {
-          const currentState = state.skillStates[employeeId] || {
-            skills: {},
-            lastUpdated: new Date().toISOString()
-          };
-
-          const updatedSkills = { ...currentState.skills };
-
-          Object.entries(updates).forEach(([skillTitle, skillUpdates]) => {
-            const currentSkill = currentState.skills[skillTitle] || {
-              id: `${employeeId}-${skillTitle}`,
-              employeeId,
-              skillId: `${employeeId}-${skillTitle}`,
-              title: skillTitle,
-              level: 'unspecified',
-              goalStatus: 'unknown',
-              lastUpdated: new Date().toISOString(),
-              confidence: 'medium',
-              subcategory: 'General',
-              category: 'specialized',
-              businessCategory: 'Technical Skills',
-              weight: 'technical',
-              growth: '0%',
-              salary: 'market',
-              benchmarks: {
-                B: false,
-                R: false,
-                M: false,
-                O: false
-              }
-            };
-
-            updatedSkills[skillTitle] = {
-              ...currentSkill,
-              ...skillUpdates,
-              lastUpdated: new Date().toISOString()
-            };
-          });
-
-          return {
-            skillStates: {
-              ...state.skillStates,
-              [employeeId]: {
-                skills: updatedSkills,
+      setSkillLevel: (employeeId, skillTitle, level) => {
+        console.log('Setting employee skill level:', { employeeId, skillTitle, level });
+        set(state => ({
+          skillStates: {
+            ...state.skillStates,
+            [employeeId]: {
+              ...state.skillStates[employeeId],
+              [skillTitle]: {
+                ...state.skillStates[employeeId]?.[skillTitle] || defaultSkillState,
+                level,
                 lastUpdated: new Date().toISOString()
               }
             }
-          };
-        });
+          }
+        }));
+      },
+
+      setSkillGoalStatus: (employeeId, skillTitle, goalStatus) => {
+        console.log('Setting employee skill goal status:', { employeeId, skillTitle, goalStatus });
+        set(state => ({
+          skillStates: {
+            ...state.skillStates,
+            [employeeId]: {
+              ...state.skillStates[employeeId],
+              [skillTitle]: {
+                ...state.skillStates[employeeId]?.[skillTitle] || defaultSkillState,
+                goalStatus,
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          }
+        }));
+      },
+
+      initializeEmployeeSkills: (employeeId) => {
+        console.log('Initializing employee skills:', employeeId);
+        const currentState = get().skillStates[employeeId];
+        if (!currentState) {
+          set(state => ({
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {}
+            }
+          }));
+        }
       }
     }),
     {
