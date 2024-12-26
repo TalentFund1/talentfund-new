@@ -17,7 +17,7 @@ import { ProgressBar } from "./analysis/ProgressBar";
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
   const { toggledSkills } = useToggledSkills();
-  const { currentStates } = useSkillsMatrixStore();
+  const { getSkillState } = useSkillsMatrixStore();
   const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
@@ -78,7 +78,9 @@ export const BenchmarkAnalysis = () => {
     employeeSkills,
     comparisonLevel,
     selectedRole,
-    track
+    track,
+    getSkillState,
+    id || ""
   );
 
   const {

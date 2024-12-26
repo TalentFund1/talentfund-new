@@ -1,7 +1,7 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { benchmarkingService } from "../../../services/benchmarking";
+import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -15,9 +15,10 @@ export const calculateMatchingSkills = (
   employeeSkills: UnifiedSkill[],
   comparisonLevel: string,
   selectedRole: string,
-  track: string
+  track: string,
+  getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillData,
+  employeeId: string
 ): MatchingSkillsResult => {
-  const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
   console.log('Calculating matching skills:', {
@@ -37,7 +38,8 @@ export const calculateMatchingSkills = (
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const skillState = getSkillState(skill.title, employeeId);
+    const employeeSkillLevel = skillState?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     console.log('Comparing competency levels:', {
@@ -56,7 +58,7 @@ export const calculateMatchingSkills = (
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const skillState = currentStates[skill.title];
+    const skillState = getSkillState(skill.title, employeeId);
     if (!skillState) return false;
     return skillState.goalStatus === 'required' || skillState.goalStatus === 'skill_goal';
   });

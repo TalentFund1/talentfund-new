@@ -1,73 +1,30 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+import { filterSkillsByCategory } from './skillCategories';
 import { benchmarkingService } from '../../../services/benchmarking';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
-
-interface SkillState {
-  level: string;
-  goalStatus: string;
-  lastUpdated: string;
-}
+import { EmployeeSkillData } from '../../employee/types/employeeSkillTypes';
 
 interface SkillsMatrixState {
-  hasChanges: boolean;
-  getSkillState: (skillTitle: string, employeeId: string) => SkillState;
-  resetSkills: () => void;
-  saveChanges: () => void;
-  cancelChanges: () => void;
+  getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillData;
 }
 
-export const useSkillsMatrixStore = create<SkillsMatrixState>()(
-  persist(
-    (set) => ({
-      hasChanges: false,
+export const useSkillsMatrixStore = create<SkillsMatrixState>()((set, get) => ({
+  getSkillState: (skillTitle: string, employeeId: string) => {
+    const employeeStore = useEmployeeSkillsStore.getState();
+    const skillState = employeeStore.getSkillState(employeeId, skillTitle);
+    
+    console.log('Matrix getting skill state from employee store:', {
+      employeeId,
+      skillTitle,
+      level: skillState.level,
+      goalStatus: skillState.goalStatus
+    });
 
-      getSkillState: (skillTitle: string, employeeId: string) => {
-        const employeeStore = useEmployeeSkillsStore.getState();
-        const skillState = employeeStore.getSkillState(employeeId, skillTitle);
-        
-        console.log('Matrix getting skill state from employee store:', {
-          employeeId,
-          skillTitle,
-          level: skillState.level,
-          goalStatus: skillState.goalStatus
-        });
-
-        return {
-          level: skillState.level,
-          goalStatus: skillState.goalStatus,
-          lastUpdated: skillState.lastUpdated
-        };
-      },
-
-      resetSkills: () =>
-        set(() => ({
-          hasChanges: false,
-        })),
-
-      saveChanges: () => {
-        set(() => ({
-          hasChanges: false,
-        }));
-      },
-
-      cancelChanges: () => {
-        set(() => ({
-          hasChanges: false,
-        }));
-      },
-    }),
-    {
-      name: 'skills-matrix-storage',
-      version: 2,
-      partialize: (state) => ({
-        hasChanges: state.hasChanges,
-      }),
-    }
-  )
-);
+    return skillState;
+  }
+}));
 
 export const useSkillsMatrixState = (
   selectedCategory: string,
@@ -75,7 +32,6 @@ export const useSkillsMatrixState = (
   selectedInterest: string
 ) => {
   const { getSkillState } = useSkillsMatrixStore();
-  const employeeStore = useEmployeeSkillsStore.getState();
 
   const filterAndSortSkills = (skills: UnifiedSkill[]) => {
     console.log('Filtering skills:', { 
