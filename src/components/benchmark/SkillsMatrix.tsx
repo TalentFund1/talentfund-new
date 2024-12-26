@@ -12,6 +12,8 @@ import { useToast } from "@/hooks/use-toast";
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedWeight, setSelectedWeight] = useState("all");
   const [hasChanges, setHasChanges] = useState(false);
   const [employeeSkillsData, setEmployeeSkillsData] = useState<UnifiedSkill[]>([]);
   const [originalSkillStates, setOriginalSkillStates] = useState<Record<string, any>>({});
@@ -80,7 +82,11 @@ export const SkillsMatrix = () => {
     if (selectedInterest !== "all") {
       const skillState = getSkillState(id || "", skill.title);
       if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
+      if (selectedInterest === "not_interested" && skillState.goalStatus !== "not_interested") return false;
+      if (selectedInterest === "unknown" && skillState.goalStatus !== "unknown") return false;
     }
+    if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
+    if (selectedWeight !== "all" && skill.weight !== selectedWeight) return false;
     return true;
   });
 
@@ -117,6 +123,10 @@ export const SkillsMatrix = () => {
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedWeight={selectedWeight}
+        setSelectedWeight={setSelectedWeight}
         filteredSkills={filteredSkills}
         hasChanges={hasChanges}
         onSave={handleSave}

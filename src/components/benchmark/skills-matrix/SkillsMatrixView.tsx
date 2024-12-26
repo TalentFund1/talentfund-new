@@ -10,6 +10,10 @@ interface SkillsMatrixViewProps {
   setSelectedLevel: (level: string) => void;
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+  selectedWeight: string;
+  setSelectedWeight: (weight: string) => void;
   filteredSkills: any[];
   hasChanges: boolean;
   onSave: () => void;
@@ -22,6 +26,10 @@ export const SkillsMatrixView = ({
   setSelectedLevel,
   selectedInterest,
   setSelectedInterest,
+  selectedCategory,
+  setSelectedCategory,
+  selectedWeight,
+  setSelectedWeight,
   filteredSkills,
   hasChanges,
   onSave,
@@ -43,6 +51,10 @@ export const SkillsMatrixView = ({
         setSelectedLevel={setSelectedLevel}
         selectedInterest={selectedInterest}
         setSelectedInterest={setSelectedInterest}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedWeight={selectedWeight}
+        setSelectedWeight={setSelectedWeight}
         addSkillButton={<AddEmployeeSkillDialog />}
       />
 
