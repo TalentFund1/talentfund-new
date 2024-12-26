@@ -1,17 +1,15 @@
 import { SkillLevel } from "./types/employeeSkillTypes";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   baseRole: string,
-  getSkillCompetencyState: any,
+  employeeSkills: any,
   toggledSkills: Set<string>,
-  getSkillState: any
+  competencyReader: ReturnType<typeof useCompetencyStateReader>
 ): number => {
-  const employeeStore = useEmployeeSkillsStore.getState();
-  const employeeSkills = employeeStore.getEmployeeSkills(employeeId);
-
   console.log('Calculating benchmark percentage:', {
     employeeId,
     roleId,
@@ -36,7 +34,7 @@ export const calculateBenchmarkPercentage = (
 
   const totalMatches = matchingSkills.reduce((acc, skill) => {
     const employeeLevel = skill.level;
-    const requiredLevel = getSkillCompetencyState(skill.title, baseRole, roleId)?.level || 'beginner';
+    const requiredLevel = competencyReader.getSkillCompetencyState(skill.title, baseRole, roleId)?.level || 'beginner';
 
     const levelValues: Record<SkillLevel, number> = {
       'unspecified': 0,
