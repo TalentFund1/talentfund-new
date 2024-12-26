@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
-import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
+import { AddEmployeeSkillDialog } from "../../../components/employee/AddEmployeeDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
