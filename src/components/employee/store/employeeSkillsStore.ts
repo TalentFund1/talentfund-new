@@ -56,6 +56,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
+          // Create new state with deep cloning to ensure proper updates
           const updatedState = {
             ...state,
             skillStates: {
@@ -75,7 +76,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Updated skill state:', updatedState.skillStates[employeeId].skills[skillTitle]);
+          console.log('Updated skill state:', {
+            employeeId,
+            skillTitle,
+            before: currentSkill,
+            after: updatedState.skillStates[employeeId].skills[skillTitle]
+          });
+
           return updatedState;
         });
       },
@@ -83,7 +90,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => {
         console.log('Processing batch update:', { 
           employeeId, 
-          updateCount: Object.keys(updates).length 
+          updateCount: Object.keys(updates).length,
+          updates 
         });
 
         set((state) => {
@@ -126,8 +134,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
             console.log('Updated skill in batch:', {
               skillTitle,
-              updates: skillUpdates,
-              result: updatedSkills[skillTitle]
+              before: currentSkill,
+              after: updatedSkills[skillTitle]
             });
           });
 
@@ -142,7 +150,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Batch update complete:', updatedState.skillStates[employeeId]);
+          console.log('Batch update complete:', {
+            employeeId,
+            skillCount: Object.keys(updatedSkills).length,
+            skills: updatedState.skillStates[employeeId]
+          });
+
           return updatedState;
         });
       }
@@ -152,6 +165,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       version: 2,
       partialize: (state) => ({
         skillStates: state.skillStates
+      }),
+      merge: (persistedState: any, currentState: EmployeeSkillsStore) => ({
+        ...currentState,
+        skillStates: {
+          ...currentState.skillStates,
+          ...persistedState.skillStates
+        }
       })
     }
   )
