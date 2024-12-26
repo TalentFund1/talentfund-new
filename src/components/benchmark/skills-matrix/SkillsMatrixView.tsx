@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
+import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
@@ -41,6 +42,7 @@ export const SkillsMatrixView = ({
             setSelectedLevel={setSelectedLevel}
             selectedInterest={selectedInterest}
             setSelectedInterest={setSelectedInterest}
+            addSkillButton={<AddEmployeeSkillDialog />}
           />
           
           {hasChanges && !isRoleBenchmark && (
