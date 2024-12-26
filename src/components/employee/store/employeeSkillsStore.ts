@@ -5,8 +5,12 @@ import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
-interface EmployeeSkillsStore {
+// Define the structure of persisted state separately from the store interface
+interface PersistedState {
   skillStates: Record<string, EmployeeSkillsState>;
+}
+
+interface EmployeeSkillsStore extends PersistedState {
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
@@ -57,7 +61,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          const updatedState = {
+          const updatedState: PersistedState = {
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -73,7 +77,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 lastUpdated: new Date().toISOString()
               }
             }
-          } satisfies Partial<EmployeeSkillsStore>;
+          };
 
           console.log('Updated skill state:', updatedState);
           return updatedState;
@@ -125,7 +129,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             };
           });
 
-          const updatedState = {
+          const updatedState: PersistedState = {
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -133,7 +137,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 lastUpdated: new Date().toISOString()
               }
             }
-          } satisfies Partial<EmployeeSkillsStore>;
+          };
 
           console.log('Batch update complete:', updatedState);
           return updatedState;
