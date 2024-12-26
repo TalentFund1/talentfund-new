@@ -1,5 +1,4 @@
 import { SkillLevel } from "./types/employeeSkillTypes";
-import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 
 export const calculateBenchmarkPercentage = (
@@ -48,6 +47,14 @@ export const calculateBenchmarkPercentage = (
 
     const employeeLevelValue = levelValues[employeeLevel as SkillLevel] || 0;
     const requiredLevelValue = levelValues[requiredLevel as SkillLevel] || 0;
+
+    console.log('Comparing skill levels:', {
+      skill: skill.title,
+      employeeLevel,
+      requiredLevel,
+      employeeLevelValue,
+      requiredLevelValue
+    });
 
     return acc + (employeeLevelValue >= requiredLevelValue ? 1 : 0);
   }, 0);
