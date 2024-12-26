@@ -72,8 +72,8 @@ export const BenchmarkMatrixFilters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Skill Interests</SelectItem>
-            <SelectItem value="required">Skill Goal</SelectItem>
-            <SelectItem value="not-interested">Not Interested</SelectItem>
+            <SelectItem value="skill_goal">Skill Goal</SelectItem>
+            <SelectItem value="not_interested">Not Interested</SelectItem>
             <SelectItem value="unknown">Unknown</SelectItem>
           </SelectContent>
         </Select>
