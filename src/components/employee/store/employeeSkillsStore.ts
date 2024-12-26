@@ -61,7 +61,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          const updatedState: PersistedState = {
+          return {
+            ...state,
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -78,9 +79,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           };
-
-          console.log('Updated skill state:', updatedState);
-          return updatedState;
         });
       },
 
@@ -129,7 +127,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             };
           });
 
-          const updatedState: PersistedState = {
+          return {
+            ...state,
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -138,9 +137,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           };
-
-          console.log('Batch update complete:', updatedState);
-          return updatedState;
         });
       }
     }),
