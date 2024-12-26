@@ -78,7 +78,9 @@ export const BenchmarkAnalysis = () => {
     employeeSkills,
     comparisonLevel,
     selectedRole,
-    track
+    track,
+    currentStates,
+    getSkillCompetencyState
   );
 
   const {

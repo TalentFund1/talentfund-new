@@ -21,7 +21,7 @@ export const processEmployeeSkills = (skills: string, role: string) => {
     return {
       ...unifiedData,
       level: 'unspecified',
-      requirement: 'unknown',
+      required: 'unknown',
       lastUpdated: new Date().toISOString()
     };
   });
@@ -31,7 +31,7 @@ export const processEmployeeSkills = (skills: string, role: string) => {
     console.log('Initialized skill:', {
       skill: skill.title,
       level: 'unspecified',
-      requirement: 'unknown'
+      required: 'unknown'
     });
   });
   
