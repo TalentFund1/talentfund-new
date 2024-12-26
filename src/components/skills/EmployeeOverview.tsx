@@ -1,8 +1,6 @@
+import { useState, useEffect, useRef } from "react";
+import { useParams } from 'react-router-dom';
 import { Card } from "@/components/ui/card";
-import { useParams } from "react-router-dom";
-import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId } from "../EmployeeTable";
-import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
@@ -10,10 +8,10 @@ import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 import { TrackProvider } from "./context/TrackContext";
 import { EmployeeList } from "./overview/EmployeeList";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
-  const { getSkillState } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employees = useEmployeeStore((state) => state.employees);
@@ -48,30 +46,12 @@ const EmployeeOverviewContent = () => {
     }))
     .sort((a, b) => b.benchmark - a.benchmark);
 
-  console.log('EmployeeOverview - Exact matches:', {
-    roleId,
-    matchCount: exactMatchEmployees.length,
-    matches: exactMatchEmployees.map(e => ({
-      name: e.name,
-      role: e.role,
-      roleId: getSkillProfileId(e.role),
-      benchmark: e.benchmark
-    }))
-  });
-
   // Get partial matches (different roles but high skill match)
   const partialMatchEmployees = employees
     .filter(emp => {
       const employeeRoleId = getSkillProfileId(emp.role);
       
-      // Skip if this employee has an exact role match
       if (employeeRoleId === roleId) {
-        console.log('Skipping partial match - exact match found:', {
-          employee: emp.name,
-          employeeRole: emp.role,
-          employeeRoleId,
-          targetRoleId: roleId
-        });
         return false;
       }
 
@@ -83,14 +63,6 @@ const EmployeeOverviewContent = () => {
         toggledSkills,
         getSkillCompetencyState
       );
-
-      console.log('Checking partial match:', {
-        employee: emp.name,
-        employeeRole: emp.role,
-        employeeRoleId,
-        targetRoleId: roleId,
-        benchmark
-      });
 
       return benchmark > 70;
     })
@@ -107,17 +79,6 @@ const EmployeeOverviewContent = () => {
     }))
     .sort((a, b) => b.benchmark - a.benchmark)
     .slice(0, 3);
-
-  console.log('EmployeeOverview - Partial matches:', {
-    roleId,
-    matchCount: partialMatchEmployees.length,
-    matches: partialMatchEmployees.map(e => ({
-      name: e.name,
-      role: e.role,
-      roleId: getSkillProfileId(e.role),
-      benchmark: e.benchmark
-    }))
-  });
 
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
