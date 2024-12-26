@@ -3,16 +3,10 @@ import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
 import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
-import { normalizeGoalStatus } from '../utils/skillStatusNormalizer';
-import { 
-  EmployeeSkillData, 
-  EmployeeSkillUpdate, 
-  EmployeeSkillState,
-  EmployeeSkillsData
-} from '../types/employeeSkillTypes';
+import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
 interface EmployeeSkillsStore {
-  skillStates: Record<string, EmployeeSkillsData>;
+  skillStates: Record<string, EmployeeSkillsState>;
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
@@ -35,27 +29,43 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         
         set((state) => {
           const currentState = state.skillStates[employeeId] || { 
-            employeeId,
-            skills: [],
-            states: {},
+            skills: {},
             lastUpdated: new Date().toISOString()
           };
 
-          const currentSkill = currentState.states[skillTitle] || {
+          const currentSkill = currentState.skills[skillTitle] || {
+            id: `${employeeId}-${skillTitle}`,
+            employeeId,
+            skillId: `${employeeId}-${skillTitle}`,
+            title: skillTitle,
             level: 'unspecified',
             goalStatus: 'unknown',
             lastUpdated: new Date().toISOString(),
-            confidence: 'medium'
+            confidence: 'medium',
+            subcategory: 'General',
+            category: 'specialized',
+            businessCategory: 'Technical Skills',
+            weight: 'technical',
+            growth: '0%',
+            salary: 'market',
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
           };
 
-          const normalizedUpdates = {
-            ...updates,
-            goalStatus: updates.goalStatus ? normalizeGoalStatus(updates.goalStatus) : currentSkill.goalStatus
-          };
+          // Normalize legacy goal status values
+          let normalizedGoalStatus = updates.goalStatus;
+          if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
+            normalizedGoalStatus = 'skill_goal';
+          }
 
           const updatedSkill = {
             ...currentSkill,
-            ...normalizedUpdates,
+            ...updates,
+            goalStatus: normalizedGoalStatus || currentSkill.goalStatus,
             lastUpdated: new Date().toISOString()
           };
 
@@ -72,8 +82,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               ...state.skillStates,
               [employeeId]: {
                 ...currentState,
-                states: {
-                  ...currentState.states,
+                skills: {
+                  ...currentState.skills,
                   [skillTitle]: updatedSkill
                 },
                 lastUpdated: new Date().toISOString()
@@ -92,30 +102,46 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
         set((state) => {
           const currentState = state.skillStates[employeeId] || {
-            employeeId,
-            skills: [],
-            states: {},
+            skills: {},
             lastUpdated: new Date().toISOString()
           };
 
-          const updatedStates = { ...currentState.states };
+          const updatedSkills = { ...currentState.skills };
 
           Object.entries(updates).forEach(([skillTitle, skillUpdates]) => {
-            const currentSkill = currentState.states[skillTitle] || {
+            const currentSkill = currentState.skills[skillTitle] || {
+              id: `${employeeId}-${skillTitle}`,
+              employeeId,
+              skillId: `${employeeId}-${skillTitle}`,
+              title: skillTitle,
               level: 'unspecified',
               goalStatus: 'unknown',
               lastUpdated: new Date().toISOString(),
-              confidence: 'medium'
+              confidence: 'medium',
+              subcategory: 'General',
+              category: 'specialized',
+              businessCategory: 'Technical Skills',
+              weight: 'technical',
+              growth: '0%',
+              salary: 'market',
+              benchmarks: {
+                B: false,
+                R: false,
+                M: false,
+                O: false
+              }
             };
 
-            const normalizedUpdates = {
-              ...skillUpdates,
-              goalStatus: skillUpdates.goalStatus ? normalizeGoalStatus(skillUpdates.goalStatus) : currentSkill.goalStatus
-            };
+            // Normalize legacy goal status values
+            let normalizedGoalStatus = skillUpdates.goalStatus;
+            if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
+              normalizedGoalStatus = 'skill_goal';
+            }
 
-            updatedStates[skillTitle] = {
+            updatedSkills[skillTitle] = {
               ...currentSkill,
-              ...normalizedUpdates,
+              ...skillUpdates,
+              goalStatus: normalizedGoalStatus || currentSkill.goalStatus,
               lastUpdated: new Date().toISOString()
             };
           });
@@ -125,8 +151,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
-                ...currentState,
-                states: updatedStates,
+                skills: updatedSkills,
                 lastUpdated: new Date().toISOString()
               }
             }
@@ -134,7 +159,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
           console.log('Batch update complete:', {
             employeeId,
-            skillCount: Object.keys(updatedStates).length,
+            skillCount: Object.keys(updatedSkills).length,
             state: newState.skillStates[employeeId]
           });
 
@@ -147,7 +172,33 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       version: 5,
       partialize: (state) => ({
         skillStates: state.skillStates
-      })
+      }),
+      storage: {
+        getItem: async (name: string) => {
+          const str = localStorage.getItem(name);
+          if (!str) return null;
+          try {
+            const parsed = JSON.parse(str);
+            console.log('Loading persisted state:', { name, value: parsed });
+            return parsed;
+          } catch (error) {
+            console.error('Error parsing stored state:', error);
+            return null;
+          }
+        },
+        setItem: async (name: string, value: unknown) => {
+          try {
+            const serialized = JSON.stringify(value);
+            console.log('Persisting state:', { name, value });
+            localStorage.setItem(name, serialized);
+          } catch (error) {
+            console.error('Error storing state:', error);
+          }
+        },
+        removeItem: async (name: string) => {
+          localStorage.removeItem(name);
+        }
+      }
     }
   )
 );

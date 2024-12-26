@@ -1,4 +1,3 @@
-import { normalizeGoalStatus } from '../../utils/skillStatusNormalizer';
 import { EmployeeSkillData } from '../../types/employeeSkillTypes';
 
 export const createSkillStateActions = (set: any, get: any) => ({
@@ -8,10 +7,12 @@ export const createSkillStateActions = (set: any, get: any) => ({
     store.updateSkillState(employeeId, skillTitle, { level });
   },
 
-  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => {
-    console.log('Setting skill goal status:', { employeeId, skillTitle, status });
-    const normalizedStatus = normalizeGoalStatus(status as any);
-    console.log('Normalized status:', { original: status, normalized: normalizedStatus });
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
+    console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
+    // Normalize legacy values
+    const normalizedStatus = goalStatus === 'required' || goalStatus === 'preferred' 
+      ? 'skill_goal' 
+      : goalStatus;
     
     const store = get();
     store.updateSkillState(employeeId, skillTitle, { goalStatus: normalizedStatus });
