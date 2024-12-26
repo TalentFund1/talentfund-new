@@ -17,29 +17,29 @@ export const SkillBubble = ({
   isSkillGoal 
 }: SkillBubbleProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skill.name];
+  const skillState = currentStates[skill.title];
 
-  const getCurrentLevel = () => {
+  const getCurrentLevel = (): string => {
     if (!skillState) return level || 'unspecified';
     return typeof skillState.level === 'string' ? 
       skillState.level : 
-      skillState.level?.level || 'unspecified';
+      'unspecified';
   };
 
-  const shouldShowGoal = () => {
+  const shouldShowGoal = (): boolean => {
     if (isSkillGoal) return true;
     
     if (skillState) {
       const goalStatus = typeof skillState.goalStatus === 'string' ? 
         skillState.goalStatus : 
-        skillState.goalStatus?.goalStatus || 'unknown';
+        'unknown';
       return goalStatus === 'required' || goalStatus === 'skill_goal';
     }
     
     return false;
   };
 
-  const getLevelColor = (level: string) => {
+  const getLevelColor = (level: string): string => {
     switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
@@ -59,7 +59,7 @@ export const SkillBubble = ({
       variant="outline" 
       className="rounded-full px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
     >
-      {skill.name}
+      {skill.title}
       {(showLevel || skillState) && (
         <div className="flex items-center gap-1.5">
           <div className={`h-2 w-2 rounded-full ${getLevelColor(currentLevel)}`} />
