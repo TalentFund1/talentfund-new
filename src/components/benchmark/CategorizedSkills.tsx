@@ -70,26 +70,17 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   // Categorize skills based on their competency requirements for current level
   const requiredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: state.level },
-      { title: skill.title, minimumLevel: 'intermediate' }
-    );
-    return state.required === 'required' && comparison.matchPercentage >= 100;
+    return state.required === 'required';
   });
 
   const preferredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: state.level },
-      { title: skill.title, minimumLevel: 'beginner' }
-    );
-    return state.required === 'preferred' || 
-           (state.required === 'required' && comparison.matchPercentage < 100);
+    return state.required === 'preferred';
   });
 
   const missingSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.level === 'unspecified' || !state.level;
+    return state.level === 'unspecified';
   });
 
   const getLevelColor = (level: string) => {
@@ -148,12 +139,6 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
 
   return (
     <div className="space-y-4">
-      <CategoryCards
-        selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-        roleId={roleId}
-      />
-
       <SkillSection 
         title="Required Skills" 
         skills={requiredSkills} 
