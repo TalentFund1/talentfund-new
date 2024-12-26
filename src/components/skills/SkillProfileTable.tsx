@@ -30,7 +30,8 @@ const SkillProfileTableContent = ({
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employees = useEmployeeStore((state) => state.employees);
-  
+  const employeeSkillsStore = useEmployeeSkillsStore();
+
   const getEmployeeCount = (roleName: string) => {
     return employees.filter(emp => getBaseRole(emp.role) === roleName).length;
   };

@@ -9,13 +9,15 @@ import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { ToggledSkillsProvider } from "./context/ToggledSkillsContext";
 import { TrackProvider } from "./context/TrackContext";
 import { EmployeeList } from "./overview/EmployeeList";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();
-  const { currentStates } = useSkillsMatrixStore();
+  const { getSkillState } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employees = useEmployeeStore((state) => state.employees);
+  const employeeSkillsStore = useEmployeeSkillsStore();
 
   // Get exact role matches (same role ID)
   const exactMatchEmployees = employees
@@ -39,7 +41,7 @@ const EmployeeOverviewContent = () => {
         emp.id,
         roleId || "",
         "",
-        currentStates,
+        employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
         getSkillCompetencyState
       )
@@ -77,7 +79,7 @@ const EmployeeOverviewContent = () => {
         emp.id,
         roleId || "",
         "",
-        currentStates,
+        employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
         getSkillCompetencyState
       );
@@ -98,7 +100,7 @@ const EmployeeOverviewContent = () => {
         emp.id,
         roleId || "",
         "",
-        currentStates,
+        employeeSkillsStore.getEmployeeSkills(emp.id),
         toggledSkills,
         getSkillCompetencyState
       )

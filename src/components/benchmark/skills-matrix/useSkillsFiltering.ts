@@ -1,6 +1,5 @@
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
-import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
@@ -99,14 +98,14 @@ export const useSkillsFiltering = (
       let matchesSearch = true;
       let matchesSkillLevel = true;
 
-      const currentSkillState = getSkillState(skill.title, employeeId);
-      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
+      const skillState = getSkillState(skill.title, employeeId);
+      const skillLevel = (skillState?.level || skill.level || 'unspecified').toLowerCase();
       
       if (selectedSkillLevel !== 'all') {
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      const goalStatus = (currentSkillState?.goalStatus || skill.goalStatus || 'unknown').toLowerCase();
+      const goalStatus = (skillState?.goalStatus || skill.goalStatus || 'unknown').toLowerCase();
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
@@ -133,6 +132,7 @@ export const useSkillsFiltering = (
     .map(skill => {
       const unifiedData = getUnifiedSkillData(skill.title);
       const competencyState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+      const skillState = getSkillState(skill.title, employeeId);
       
       return {
         ...skill,
@@ -140,9 +140,9 @@ export const useSkillsFiltering = (
         weight: unifiedData.weight,
         category: unifiedData.category,
         subcategory: unifiedData.subcategory,
-        employeeLevel: currentSkillState?.level || skill.level || 'unspecified',
+        employeeLevel: skillState?.level || skill.level || 'unspecified',
         roleLevel: competencyState?.level || 'unspecified',
-        goalStatus: currentSkillState?.goalStatus || skill.goalStatus || 'unknown'
+        goalStatus: skillState?.goalStatus || skill.goalStatus || 'unknown'
       };
     })
     .sort((a, b) => a.title.localeCompare(b.title));

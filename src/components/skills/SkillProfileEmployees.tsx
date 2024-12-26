@@ -17,9 +17,10 @@ export const SkillProfileEmployees = () => {
   const { id: roleId } = useParams();
   const navigate = useNavigate();
   const employees = useEmployeeStore((state) => state.employees);
-  const { currentStates } = useSkillsMatrixStore();
+  const { getSkillState } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  const employeeSkillsStore = useEmployeeSkillsStore();
 
   // Get current role data
   const currentRole = roleSkills[roleId as keyof typeof roleSkills];
@@ -56,7 +57,7 @@ export const SkillProfileEmployees = () => {
         emp.id,
         roleId || "",
         getBaseRole(emp.role),
-        currentStates,
+        employeeSkillsStore.currentStates,
         toggledSkills,
         getSkillCompetencyState
       )
@@ -73,7 +74,7 @@ export const SkillProfileEmployees = () => {
         emp.id,
         roleId || "",
         getBaseRole(emp.role),
-        currentStates,
+        employeeSkillsStore.currentStates,
         toggledSkills,
         getSkillCompetencyState
       );
@@ -86,7 +87,7 @@ export const SkillProfileEmployees = () => {
         emp.id,
         roleId || "",
         getBaseRole(emp.role),
-        currentStates,
+        employeeSkillsStore.currentStates,
         toggledSkills,
         getSkillCompetencyState
       )
