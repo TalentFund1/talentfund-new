@@ -12,19 +12,66 @@ export const createInitializationActions = (set: any, get: any) => ({
       return;
     }
 
-    console.log('Found employee data for initialization:', {
-      employeeId,
-      skillCount: employee.skills.length,
-      skills: employee.skills.map(s => s.title)
-    });
-
-    const store = get();
-    employee.skills.forEach(skill => {
-      const skillData = getUnifiedSkillData(skill.title);
-      store.updateSkillState(employeeId, skill.title, {
-        level: skill.level,
-        goalStatus: 'unknown'
+    // Get current state from store
+    const currentState = get().skillStates[employeeId];
+    
+    if (!currentState) {
+      console.log('No existing state found, initializing from employee data:', {
+        employeeId,
+        skillCount: employee.skills.length,
+        skills: employee.skills.map(s => s.title)
       });
-    });
+
+      // Initialize each skill with default state
+      const updates: Record<string, EmployeeSkillData> = {};
+      
+      employee.skills.forEach(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        updates[skill.title] = {
+          id: `${employeeId}-${skill.title}`,
+          employeeId,
+          skillId: `${employeeId}-${skill.title}`,
+          title: skill.title,
+          level: skill.level || 'unspecified',
+          goalStatus: 'unknown',
+          lastUpdated: new Date().toISOString(),
+          confidence: 'medium',
+          subcategory: skillData.subcategory || 'General',
+          category: skillData.category || 'specialized',
+          businessCategory: skillData.businessCategory || 'Technical Skills',
+          weight: skillData.weight || 'technical',
+          growth: skillData.growth || '0%',
+          salary: skillData.salary || 'market',
+          benchmarks: {
+            B: false,
+            R: false,
+            M: false,
+            O: false
+          }
+        };
+      });
+
+      set(state => ({
+        skillStates: {
+          ...state.skillStates,
+          [employeeId]: {
+            skills: updates,
+            lastUpdated: new Date().toISOString()
+          }
+        }
+      }));
+
+      console.log('Initialized employee skills:', {
+        employeeId,
+        skillCount: Object.keys(updates).length,
+        skills: Object.keys(updates)
+      });
+    } else {
+      console.log('Found existing skill state:', {
+        employeeId,
+        skillCount: Object.keys(currentState.skills).length,
+        skills: Object.keys(currentState.skills)
+      });
+    }
   }
 });

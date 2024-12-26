@@ -5,12 +5,6 @@ import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
-// Define the structure of persisted state separately
-interface PersistedState {
-  skillStates: Record<string, EmployeeSkillsState>;
-}
-
-// Complete store interface including all methods
 interface EmployeeSkillsStore extends PersistedState {
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
@@ -19,6 +13,11 @@ interface EmployeeSkillsStore extends PersistedState {
   initializeEmployeeSkills: (employeeId: string) => void;
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
+}
+
+// Define the structure of persisted state separately
+interface PersistedState {
+  skillStates: Record<string, EmployeeSkillsState>;
 }
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
@@ -78,7 +77,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Updated skill state:', updatedSkillStates);
+          console.log('Updated skill state:', updatedSkillStates[employeeId].skills[skillTitle]);
           return {
             ...state,
             skillStates: updatedSkillStates
@@ -139,7 +138,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Batch update complete:', updatedSkillStates);
+          console.log('Batch update complete:', updatedSkillStates[employeeId]);
           return {
             ...state,
             skillStates: updatedSkillStates
@@ -154,7 +153,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         getItem: (name) => {
           const str = localStorage.getItem(name);
           console.log('Loading from storage:', { name, value: str });
-          return str ? Promise.resolve(JSON.parse(str)) : Promise.resolve(null);
+          if (str) {
+            const parsed = JSON.parse(str);
+            console.log('Parsed storage data:', parsed);
+            return Promise.resolve(parsed);
+          }
+          return Promise.resolve(null);
         },
         setItem: (name, value) => {
           console.log('Saving to storage:', { name, value });
@@ -168,7 +172,21 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       },
       partialize: (state) => ({
         skillStates: state.skillStates
-      })
+      }),
+      merge: (persistedState: any, currentState: EmployeeSkillsStore) => {
+        console.log('Merging states:', { 
+          persisted: persistedState,
+          current: currentState
+        });
+        
+        return {
+          ...currentState,
+          skillStates: {
+            ...currentState.skillStates,
+            ...persistedState.skillStates
+          }
+        };
+      }
     }
   )
 );
