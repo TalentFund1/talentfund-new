@@ -5,7 +5,9 @@ export const normalizeGoalStatus = (status: LegacyGoalStatus | undefined): Skill
   
   switch (status.toLowerCase()) {
     case 'required':
+      return 'required';
     case 'preferred':
+      return 'preferred';
     case 'skill_goal':
       return 'skill_goal';
     case 'not_interested':
@@ -15,4 +17,4 @@ export const normalizeGoalStatus = (status: LegacyGoalStatus | undefined): Skill
   }
 };
 
-console.log('Skill status normalizer utility created');
+console.log('Skill status normalizer utility updated');
