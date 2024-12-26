@@ -27,8 +27,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   console.log('CategorizedSkills - Employee skills:', {
     employeeId,
     skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => ({ title: s.title, level: s.level })),
-    selectedLevel
+    skills: employeeSkills.map(s => ({ title: s.title, level: s.level }))
   });
 
   // Get current role skills
@@ -72,14 +71,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   // Categorize matching skills based on their competency requirements
   const requiredSkills = matchingSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return (state.level === 'advanced' || state.level === 'intermediate') && 
-           state.required === 'required';
+    return state.required === 'required';
   });
 
   const preferredSkills = matchingSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.required === 'preferred' || 
-           (state.level === 'beginner' && state.required === 'required');
+    return state.required === 'preferred';
   });
 
   const getLevelColor = (level: string) => {
@@ -144,23 +141,29 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
         roleId={roleId}
       />
 
-      <SkillSection 
-        title="Required Skills" 
-        skills={requiredSkills} 
-        count={requiredSkills.length} 
-      />
+      {requiredSkills.length > 0 && (
+        <SkillSection 
+          title="Required Skills" 
+          skills={requiredSkills} 
+          count={requiredSkills.length} 
+        />
+      )}
       
-      <SkillSection 
-        title="Preferred Skills" 
-        skills={preferredSkills} 
-        count={preferredSkills.length} 
-      />
+      {preferredSkills.length > 0 && (
+        <SkillSection 
+          title="Preferred Skills" 
+          skills={preferredSkills} 
+          count={preferredSkills.length} 
+        />
+      )}
       
-      <SkillSection 
-        title="Missing Skills" 
-        skills={missingSkills} 
-        count={missingSkills.length} 
-      />
+      {missingSkills.length > 0 && (
+        <SkillSection 
+          title="Missing Skills" 
+          skills={missingSkills} 
+          count={missingSkills.length} 
+        />
+      )}
     </div>
   );
 };

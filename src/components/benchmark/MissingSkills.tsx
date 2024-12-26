@@ -4,6 +4,7 @@ import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStore } from "../skills/competency/CompetencyState";
 import { getRoleSkills } from "../skills/data/roles/roleDataReader";
+import { roleSkills } from "../skills/data/roleSkills";
 
 interface MissingSkillsProps {
   roleId: string;
@@ -16,24 +17,33 @@ export const MissingSkills = ({ roleId, employeeId, selectedLevel }: MissingSkil
   const { currentStates } = useCompetencyStore();
   const employeeSkills = getEmployeeSkills(employeeId);
   
-  // Get immutable role skills
-  const roleSkills = getRoleSkills(roleId);
-  
-  if (!roleSkills.length) {
+  // Get current role skills
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  if (!currentRoleSkills) {
     console.error('No role skills found for role:', roleId);
     return null;
   }
 
-  // Find missing skills by comparing with employee skills, but only for toggled skills
-  const missingSkills = roleSkills.filter(roleSkill => {
-    const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-    return !hasSkill && toggledSkills.has(roleSkill.title);
-  });
+  // Get all role skills
+  const allRoleSkills = [
+    ...currentRoleSkills.specialized,
+    ...currentRoleSkills.common,
+    ...currentRoleSkills.certifications
+  ];
+
+  // Create a set of employee skill titles for efficient lookup
+  const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
+
+  // Find missing skills (skills in role requirements but not in employee skills)
+  const missingSkills = allRoleSkills.filter(skill => 
+    !employeeSkillTitles.has(skill.title) && 
+    toggledSkills.has(skill.title)
+  );
 
   console.log('Missing skills analysis:', {
     roleId,
     employeeId,
-    totalRoleSkills: roleSkills.length,
+    totalRoleSkills: allRoleSkills.length,
     missingSkillsCount: missingSkills.length,
     missingSkills: missingSkills.map(s => s.title)
   });
