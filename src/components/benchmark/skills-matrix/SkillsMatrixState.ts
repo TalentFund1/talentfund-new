@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 import { benchmarkingService } from '../../../services/benchmarking';
+import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
 
 interface SkillState {
   level: string;
@@ -11,11 +12,9 @@ interface SkillState {
 }
 
 interface SkillsMatrixState {
-  currentStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (skillTitle: string, level: string, goalStatus: string) => void;
+  getSkillState: (skillTitle: string, employeeId: string) => SkillState;
   resetSkills: () => void;
-  initializeState: (skillTitle: string, level: string, goalStatus: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -23,40 +22,30 @@ interface SkillsMatrixState {
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set) => ({
-      currentStates: {},
       hasChanges: false,
 
-      setSkillState: (skillTitle, level, goalStatus) => {
-        console.log('Setting skill state in matrix:', { skillTitle, level, goalStatus });
+      getSkillState: (skillTitle: string, employeeId: string) => {
+        const employeeStore = useEmployeeSkillsStore.getState();
+        const skillState = employeeStore.getSkillState(employeeId, skillTitle);
         
-        set((state) => ({
-          currentStates: {
-            ...state.currentStates,
-            [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
-          },
-          hasChanges: true,
-        }));
+        console.log('Matrix getting skill state from employee store:', {
+          employeeId,
+          skillTitle,
+          level: skillState.level,
+          goalStatus: skillState.goalStatus
+        });
+
+        return {
+          level: skillState.level,
+          goalStatus: skillState.goalStatus,
+          lastUpdated: skillState.lastUpdated
+        };
       },
 
       resetSkills: () =>
         set(() => ({
-          currentStates: {},
           hasChanges: false,
         })),
-
-      initializeState: (skillTitle, level, goalStatus) =>
-        set((state) => {
-          if (!state.currentStates[skillTitle]) {
-            console.log('Initializing skill state:', { skillTitle, level, goalStatus });
-            return {
-              currentStates: {
-                ...state.currentStates,
-                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
-              },
-            };
-          }
-          return state;
-        }),
 
       saveChanges: () => {
         set(() => ({
@@ -73,7 +62,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
       name: 'skills-matrix-storage',
       version: 2,
       partialize: (state) => ({
-        currentStates: state.currentStates,
+        hasChanges: state.hasChanges,
       }),
     }
   )
@@ -84,7 +73,8 @@ export const useSkillsMatrixState = (
   selectedLevel: string,
   selectedInterest: string
 ) => {
-  const { currentStates } = useSkillsMatrixStore();
+  const { getSkillState } = useSkillsMatrixStore();
+  const employeeStore = useEmployeeSkillsStore.getState();
 
   const filterAndSortSkills = (skills: UnifiedSkill[]) => {
     console.log('Filtering skills:', { 
@@ -102,14 +92,14 @@ export const useSkillsMatrixState = (
 
     if (selectedLevel !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = currentStates[skill.title];
+        const skillState = getSkillState(skill.title, skill.employeeId || '');
         return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
       });
     }
 
     if (selectedInterest !== "all") {
       filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = currentStates[skill.title];
+        const skillState = getSkillState(skill.title, skill.employeeId || '');
         if (!skillState?.goalStatus) return false;
 
         return benchmarkingService.matchesInterestFilter(skillState.goalStatus, selectedInterest);
