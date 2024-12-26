@@ -9,6 +9,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { roleSkills } from '../skills/data/roleSkills';
 import { useRoleStore } from "./RoleBenchmark";
 import { useTrack } from "../skills/context/TrackContext";
+import { benchmarkingService } from "../../services/benchmarking";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -69,14 +70,21 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   // Categorize skills based on their competency requirements for current level
   const requiredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return (state.level === 'advanced' || state.level === 'intermediate') && 
-           state.required === 'required';
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: state.level },
+      { title: skill.title, minimumLevel: 'intermediate' }
+    );
+    return state.required === 'required' && comparison.matchPercentage >= 100;
   });
 
   const preferredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: state.level },
+      { title: skill.title, minimumLevel: 'beginner' }
+    );
     return state.required === 'preferred' || 
-           (state.level === 'beginner' && state.required === 'required');
+           (state.required === 'required' && comparison.matchPercentage < 100);
   });
 
   const missingSkills = filteredSkills.filter(skill => {
