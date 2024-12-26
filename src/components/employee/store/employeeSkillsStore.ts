@@ -2,9 +2,23 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
 import { createSkillStateStorage } from './storage/skillStateStorage';
-import { EmployeeSkillData, EmployeeSkillUpdate } from '../types/employeeSkillTypes';
+import { EmployeeSkillData, EmployeeSkillUpdate, EmployeeSkillState } from '../types/employeeSkillTypes';
 
-export const useEmployeeSkillsStore = create()(
+interface EmployeeSkillsStore {
+  skillStates: Record<string, {
+    skills: Record<string, EmployeeSkillData>;
+    lastUpdated: string;
+  }>;
+  getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
+  getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
+  setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => void;
+  updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
+  batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => void;
+  initializeEmployeeSkills: (employeeId: string) => void;
+}
+
+export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       skillStates: {},
@@ -52,15 +66,42 @@ export const useEmployeeSkillsStore = create()(
         }
 
         return Object.values(employeeState.skills);
+      },
+
+      batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => {
+        console.log('Batch updating skills:', { employeeId, updateCount: Object.keys(updates).length });
+        
+        set(state => {
+          const currentState = state.skillStates[employeeId] || {
+            skills: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          const updatedSkills = { ...currentState.skills };
+          
+          Object.entries(updates).forEach(([skillTitle, skillState]) => {
+            updatedSkills[skillTitle] = {
+              ...currentState.skills[skillTitle],
+              ...skillState,
+              lastUpdated: new Date().toISOString()
+            };
+          });
+
+          return {
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                skills: updatedSkills,
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          };
+        });
       }
     }),
     {
       name: 'employee-skills-storage',
       version: 4,
-      partialize: (state) => ({
-        skillStates: state.skillStates,
-        lastUpdated: new Date().toISOString()
-      }),
       storage: createSkillStateStorage()
     }
   )
