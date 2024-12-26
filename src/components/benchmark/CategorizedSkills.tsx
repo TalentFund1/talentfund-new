@@ -65,12 +65,14 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   // Categorize skills based on their competency requirements for current level
   const requiredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.required === 'required';
+    return (state.level === 'advanced' || state.level === 'intermediate') && 
+           state.required === 'required';
   });
 
   const preferredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.required === 'preferred';
+    return state.required === 'preferred' || 
+           (state.level === 'beginner' && state.required === 'required');
   });
 
   // Update missing skills logic to include all skills that are in role requirements but not in employee skills
