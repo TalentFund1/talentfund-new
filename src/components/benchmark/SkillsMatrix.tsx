@@ -7,6 +7,7 @@ import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { benchmarkingService } from "../../services/benchmarking";
+import { Separator } from "@/components/ui/separator";
 
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
@@ -87,6 +88,10 @@ export const SkillsMatrix = () => {
 
   return (
     <div className="space-y-6">
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+        <Separator className="bg-border" />
+      </div>
       <SkillsMatrixView
         selectedLevel={selectedLevel}
         setSelectedLevel={setSelectedLevel}
