@@ -160,7 +160,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         skillStates: state.skillStates
       }),
       storage: {
-        getItem: async (name: string) => {
+        getItem: (name) => {
           const str = localStorage.getItem(name);
           if (!str) return null;
           try {
@@ -172,7 +172,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             return null;
           }
         },
-        setItem: async (name: string, value: unknown) => {
+        setItem: (name, value) => {
           try {
             const serialized = JSON.stringify(value);
             console.log('Persisting state:', { name, value });
@@ -181,7 +181,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             console.error('Error storing state:', error);
           }
         },
-        removeItem: async (name: string) => {
+        removeItem: (name) => {
           localStorage.removeItem(name);
         }
       }
