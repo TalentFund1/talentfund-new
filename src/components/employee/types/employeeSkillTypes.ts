@@ -1,6 +1,6 @@
 // Core skill types for employees
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+export type SkillGoalStatus = 'skill_goal' | 'not_interested' | 'unknown';
 
 // Employee skill state
 export interface EmployeeSkillState {

@@ -56,9 +56,16 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
+          // Normalize legacy goal status values
+          let normalizedGoalStatus = updates.goalStatus;
+          if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
+            normalizedGoalStatus = 'skill_goal';
+          }
+
           const updatedSkill = {
             ...currentSkill,
             ...updates,
+            goalStatus: normalizedGoalStatus || currentSkill.goalStatus,
             lastUpdated: new Date().toISOString()
           };
 
@@ -125,9 +132,16 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             };
 
+            // Normalize legacy goal status values
+            let normalizedGoalStatus = skillUpdates.goalStatus;
+            if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
+              normalizedGoalStatus = 'skill_goal';
+            }
+
             updatedSkills[skillTitle] = {
               ...currentSkill,
               ...skillUpdates,
+              goalStatus: normalizedGoalStatus || currentSkill.goalStatus,
               lastUpdated: new Date().toISOString()
             };
           });
@@ -155,7 +169,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 2,
+      version: 5,
       partialize: (state) => ({
         skillStates: state.skillStates
       }),
