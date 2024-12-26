@@ -12,6 +12,7 @@ interface SkillState {
 
 interface SkillsMatrixState {
   currentStates: { [key: string]: SkillState };
+  originalStates: { [key: string]: SkillState };
   hasChanges: boolean;
   setSkillState: (skillTitle: string, level: string, goalStatus: string) => void;
   resetSkills: () => void;
@@ -22,25 +23,36 @@ interface SkillsMatrixState {
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       currentStates: {},
+      originalStates: {},
       hasChanges: false,
 
       setSkillState: (skillTitle, level, goalStatus) => {
         console.log('Setting skill state in matrix:', { skillTitle, level, goalStatus });
         
-        set((state) => ({
-          currentStates: {
-            ...state.currentStates,
-            [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
-          },
-          hasChanges: true,
-        }));
+        set((state) => {
+          // Store original state if this is the first change
+          const originalState = state.originalStates[skillTitle] || state.currentStates[skillTitle];
+          
+          return {
+            originalStates: {
+              ...state.originalStates,
+              [skillTitle]: originalState || benchmarkingService.createSkillState(level, goalStatus)
+            },
+            currentStates: {
+              ...state.currentStates,
+              [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
+            },
+            hasChanges: true,
+          };
+        });
       },
 
       resetSkills: () =>
         set(() => ({
           currentStates: {},
+          originalStates: {},
           hasChanges: false,
         })),
 
@@ -48,26 +60,36 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         set((state) => {
           if (!state.currentStates[skillTitle]) {
             console.log('Initializing skill state:', { skillTitle, level, goalStatus });
+            const newState = benchmarkingService.createSkillState(level, goalStatus);
             return {
               currentStates: {
                 ...state.currentStates,
-                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
+                [skillTitle]: newState
               },
+              originalStates: {
+                ...state.originalStates,
+                [skillTitle]: newState
+              }
             };
           }
           return state;
         }),
 
       saveChanges: () => {
-        set(() => ({
+        console.log('Saving changes in matrix store');
+        set((state) => ({
+          originalStates: { ...state.currentStates },
           hasChanges: false,
         }));
       },
 
-      cancelChanges: () =>
-        set(() => ({
+      cancelChanges: () => {
+        console.log('Canceling changes in matrix store');
+        set((state) => ({
+          currentStates: { ...state.originalStates },
           hasChanges: false,
-        })),
+        }));
+      },
     }),
     {
       name: 'skills-matrix-storage',
