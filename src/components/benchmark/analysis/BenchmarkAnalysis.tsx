@@ -13,46 +13,23 @@ import { useEffect } from "react";
 import { calculateMatchingSkills } from "./MatchingSkillsCalculator";
 import { calculateMatchPercentages } from "./MatchPercentageCalculator";
 import { ProgressBar } from "./ProgressBar";
-import { SkillState } from "../../skills/competency/state/types";
 
-const getSkillLevel = (state: string | SkillState): string => {
-  if (typeof state === 'string') return state;
-  if ('level' in state) return state.level;
-  return 'unspecified';
-};
+interface BenchmarkAnalysisProps {
+  selectedRole: string;
+  roleLevel: string;
+  employeeId: string;
+}
 
-const getSkillGoalStatus = (state: string | SkillState): string => {
-  if (typeof state === 'string') return state;
-  if ('goalStatus' in state) return state.goalStatus;
-  return 'unknown';
-};
-
-export const BenchmarkAnalysis = () => {
-  const { id } = useParams<{ id: string }>();
+export const BenchmarkAnalysis = ({ 
+  selectedRole,
+  roleLevel,
+  employeeId 
+}: BenchmarkAnalysisProps) => {
   const { toggledSkills } = useToggledSkills();
   const { currentStates } = useSkillsMatrixStore();
-  const employeeSkills = getEmployeeSkills(id || "");
-  const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
+  const employeeSkills = getEmployeeSkills(employeeId);
   const { getTrackForRole } = useTrack();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const employees = useEmployeeStore((state) => state.employees);
-  
-  const employee = employees.find(emp => emp.id === id);
-  const employeeRoleId = employee ? getSkillProfileId(employee.role) : "";
-  const employeeLevel = employee?.role.split(":")[1]?.trim().toLowerCase() || "p4";
-
-  useEffect(() => {
-    if (employeeRoleId) {
-      console.log('Setting initial role and level in BenchmarkAnalysis:', {
-        employeeId: id,
-        employeeRole: employee?.role,
-        roleId: employeeRoleId,
-        level: employeeLevel
-      });
-      setSelectedRole(employeeRoleId);
-      setSelectedLevel(employeeLevel);
-    }
-  }, [employeeRoleId, employeeLevel, setSelectedRole, setSelectedLevel, employee?.role, id]);
   
   const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
   if (!currentRoleSkills) {
@@ -61,9 +38,9 @@ export const BenchmarkAnalysis = () => {
   }
 
   const track = getTrackForRole(selectedRole);
-  console.log('Current track and selected level:', { track, selectedLevel });
+  console.log('Current track and selected level:', { track, roleLevel });
 
-  const comparisonLevel = selectedLevel.toLowerCase();
+  const comparisonLevel = roleLevel.toLowerCase();
   console.log('Using comparison level:', comparisonLevel);
 
   const allRoleSkills = [

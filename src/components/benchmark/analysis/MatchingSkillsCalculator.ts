@@ -5,16 +5,16 @@ import { useCompetencyStateReader } from "../../skills/competency/CompetencyStat
 import { benchmarkingService } from "../../../services/benchmarking";
 import { SkillState } from "../../skills/competency/state/types";
 
-const getSkillLevel = (state: string | SkillState): string => {
+const getSkillLevel = (state: string | SkillState | undefined): string => {
+  if (!state) return 'unspecified';
   if (typeof state === 'string') return state;
-  if ('level' in state) return state.level;
-  return 'unspecified';
+  return state.level || 'unspecified';
 };
 
-const getSkillGoalStatus = (state: string | SkillState): string => {
+const getSkillGoalStatus = (state: string | SkillState | undefined): string => {
+  if (!state) return 'unknown';
   if (typeof state === 'string') return state;
-  if ('goalStatus' in state) return state.goalStatus;
-  return 'unknown';
+  return state.goalStatus || 'unknown';
 };
 
 export const calculateMatchingSkills = (
@@ -66,7 +66,7 @@ export const calculateMatchingSkills = (
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
     
-    const goalStatus = getSkillGoalStatus(skillState.goalStatus);
+    const goalStatus = getSkillGoalStatus(skillState);
     return goalStatus === 'required' || goalStatus === 'skill_goal';
   });
 

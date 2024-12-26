@@ -22,22 +22,17 @@ export const processEmployeeSkills = (skills: string, role: string) => {
     return {
       ...unifiedData,
       level: 'unspecified',
-      goalStatus: 'unknown',
+      required: 'preferred',
       lastUpdated: new Date().toISOString()
     };
   });
   
   processedSkills.forEach(skill => {
-    const initialState: Partial<SkillState> = {
-      level: 'unspecified',
-      required: 'preferred',
-      goalStatus: 'unknown'
-    };
-    skillsMatrixStore.setSkillState(skill.title, initialState);
+    skillsMatrixStore.setSkillState(skill.title, 'unspecified', 'p4', 'preferred');
     console.log('Initialized skill:', {
       skill: skill.title,
       level: 'unspecified',
-      goalStatus: 'unknown'
+      required: 'preferred'
     });
   });
   
