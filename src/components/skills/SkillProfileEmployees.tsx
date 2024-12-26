@@ -11,6 +11,7 @@ import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { EMPLOYEE_IMAGES } from "../employee/EmployeeData";
 import { useNavigate } from "react-router-dom";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 export const SkillProfileEmployees = () => {
   const { id: roleId } = useParams();

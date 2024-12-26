@@ -12,6 +12,7 @@ import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixSta
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { TrackProvider } from "./context/TrackContext";
 import { normalizeSkillTitle } from './utils/normalization';
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 interface SkillProfileTableProps {
   selectedFunction?: string;

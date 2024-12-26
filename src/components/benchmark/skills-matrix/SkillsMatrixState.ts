@@ -55,3 +55,6 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }
   )
 );
+
+// Export the hook for accessing the store
+export const useSkillsMatrixState = useSkillsMatrixStore;
