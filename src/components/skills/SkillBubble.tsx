@@ -1,19 +1,46 @@
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
+import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 
 interface SkillBubbleProps {
-  skillName: string;
+  skill: BaseSkill;
+  showLevel?: boolean;
   level?: string;
-  isRequired?: boolean;
+  isSkillGoal?: boolean;
 }
 
-export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = false }: SkillBubbleProps) => {
+export const SkillBubble = ({ 
+  skill, 
+  showLevel = false, 
+  level, 
+  isSkillGoal 
+}: SkillBubbleProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skillName];
+  const skillState = currentStates[skill.name];
+
+  const getCurrentLevel = () => {
+    if (!skillState) return level || 'unspecified';
+    return typeof skillState.level === 'string' ? 
+      skillState.level : 
+      skillState.level.level;
+  };
+
+  const shouldShowGoal = () => {
+    if (isSkillGoal) return true;
+    
+    if (skillState) {
+      const goalStatus = typeof skillState.goalStatus === 'string' ? 
+        skillState.goalStatus : 
+        skillState.goalStatus.goalStatus;
+      return goalStatus === 'required' || goalStatus === 'skill_goal';
+    }
+    
+    return false;
+  };
 
   const getLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
+    switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
       case "intermediate":
@@ -25,22 +52,20 @@ export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = fal
     }
   };
 
-  // Use the current state level if available, otherwise fall back to the prop
-  const currentLevel = skillState?.level || level;
-  const isSkillGoal = skillState?.goalStatus === 'required' || skillState?.goalStatus === 'skill_goal';
-
   return (
     <Badge 
       variant="outline" 
-      className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+      className="rounded-full px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
     >
-      {skillName}
-      <div className="flex items-center gap-1.5">
-        <div className={`h-2 w-2 rounded-full ${getLevelColor(currentLevel)}`} />
-        {isSkillGoal && (
-          <Heart className="w-3 h-3 text-[#1f2144]" />
-        )}
-      </div>
+      {skill.name}
+      {(showLevel || skillState) && (
+        <div className="flex items-center gap-1.5">
+          <div className={`h-2 w-2 rounded-full ${getLevelColor(getCurrentLevel())}`} />
+          {shouldShowGoal() && (
+            <Heart className="w-3 h-3 text-[#1f2144]" />
+          )}
+        </div>
+      )}
     </Badge>
   );
 };
