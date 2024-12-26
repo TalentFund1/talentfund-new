@@ -11,10 +11,12 @@ export const createSkillStateActions = (set: any, get: any) => ({
     console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
     // Map legacy values to new format
     let normalizedStatus = goalStatus;
-    if (goalStatus === 'skill_goal') {
+    if (goalStatus === 'skill_goal' || goalStatus === 'required') {
       normalizedStatus = 'required';
     } else if (goalStatus === 'not_interested') {
       normalizedStatus = 'preferred';
+    } else if (!['required', 'preferred', 'unknown'].includes(goalStatus)) {
+      normalizedStatus = 'unknown';
     }
     
     const store = get();

@@ -2,24 +2,38 @@ import { EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../../types/emp
 
 export const createSkillState = (
   level: SkillLevel = 'unspecified',
-  goalStatus: SkillGoalStatus = 'unknown'
-): EmployeeSkillState => ({
-  level,
-  goalStatus,
-  lastUpdated: new Date().toISOString(),
-  confidence: 'medium'
-});
+  goalStatus: string = 'unknown'
+): EmployeeSkillState => {
+  // Normalize goal status
+  let normalizedStatus: SkillGoalStatus = 'unknown';
+  if (goalStatus === 'skill_goal' || goalStatus === 'required') {
+    normalizedStatus = 'required';
+  } else if (goalStatus === 'not_interested') {
+    normalizedStatus = 'preferred';
+  } else if (['required', 'preferred', 'unknown'].includes(goalStatus)) {
+    normalizedStatus = goalStatus as SkillGoalStatus;
+  }
+
+  return {
+    level,
+    goalStatus: normalizedStatus,
+    lastUpdated: new Date().toISOString(),
+    confidence: 'medium'
+  };
+};
 
 export const updateSkillState = (
   currentState: EmployeeSkillState,
   updates: Partial<EmployeeSkillState>
 ): EmployeeSkillState => {
-  // Map legacy values to new format
+  // Normalize goal status if it's being updated
   if (updates.goalStatus) {
-    if (updates.goalStatus === 'skill_goal' as any) {
+    if (updates.goalStatus === 'skill_goal') {
       updates.goalStatus = 'required';
-    } else if (updates.goalStatus === 'not_interested' as any) {
+    } else if (updates.goalStatus === 'not_interested') {
       updates.goalStatus = 'preferred';
+    } else if (!['required', 'preferred', 'unknown'].includes(updates.goalStatus)) {
+      updates.goalStatus = 'unknown';
     }
   }
 
