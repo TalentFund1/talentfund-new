@@ -80,14 +80,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           console.log('Updated skill state:', updatedSkillStates);
           return {
             ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
+            skillStates: updatedSkillStates
           };
         });
       },
@@ -148,14 +141,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           console.log('Batch update complete:', updatedSkillStates);
           return {
             ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
+            skillStates: updatedSkillStates
           };
         });
       }
