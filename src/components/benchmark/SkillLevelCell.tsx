@@ -20,73 +20,31 @@ export const SkillLevelCell = ({
   isRoleBenchmark = false
 }: SkillLevelCellProps) => {
   const { id } = useParams<{ id: string }>();
-  const { 
-    setSkillLevel, 
-    setSkillGoalStatus, 
-    getEmployeeSkills, 
-    getSkillState,
-    updateSkillState 
-  } = useEmployeeSkillsStore();
+  const { setSkillLevel, setSkillGoalStatus, getEmployeeSkills } = useEmployeeSkillsStore();
 
   const employeeSkills = getEmployeeSkills(id || "");
   const currentSkill = employeeSkills.find(skill => skill.title === skillTitle);
-  const skillState = getSkillState(id || "", skillTitle);
 
-  console.log('SkillLevelCell - Current state:', {
-    employeeId: id,
-    skillTitle,
-    currentLevel: skillState.level,
-    currentGoalStatus: skillState.goalStatus
-  });
-
-  const handleLevelChange = (value: string) => {
-    if (!id) return;
-
-    console.log('SkillLevelCell - Updating level:', {
-      employeeId: id,
-      skillTitle,
-      newLevel: value,
-      currentGoalStatus: skillState.goalStatus
-    });
-
-    updateSkillState(id, skillTitle, {
-      level: value as SkillLevel,
-      lastUpdated: new Date().toISOString()
-    });
-
-    onLevelChange?.(value, skillState.goalStatus);
-  };
-
-  const handleGoalStatusChange = (value: string) => {
-    if (!id) return;
-
-    console.log('SkillLevelCell - Updating goal status:', {
-      employeeId: id,
-      skillTitle,
-      currentLevel: skillState.level,
-      newGoalStatus: value
-    });
-
-    updateSkillState(id, skillTitle, {
-      goalStatus: value as SkillGoalStatus,
-      lastUpdated: new Date().toISOString()
-    });
-
-    onLevelChange?.(skillState.level, value);
-  };
+  const currentLevel = currentSkill?.level || initialLevel?.toLowerCase() as SkillLevel || 'unspecified';
+  const currentGoalStatus = currentSkill?.goalStatus || 'unknown';
 
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
         <Select 
-          value={skillState.level} 
-          onValueChange={handleLevelChange}
+          value={currentLevel} 
+          onValueChange={(value) => {
+            if (id) {
+              setSkillLevel(id, skillTitle, value as SkillLevel);
+              onLevelChange?.(value, currentGoalStatus);
+            }
+          }}
         >
-          <SelectTrigger className={getLevelStyles(skillState.level)}>
+          <SelectTrigger className={getLevelStyles(currentLevel)}>
             <SelectValue>
               <span className="flex items-center gap-2">
-                {getLevelIcon(skillState.level)}
-                {skillState.level.charAt(0).toUpperCase() + skillState.level.slice(1)}
+                {getLevelIcon(currentLevel)}
+                {currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -119,15 +77,20 @@ export const SkillLevelCell = ({
         </Select>
 
         <Select 
-          value={skillState.goalStatus}
-          onValueChange={handleGoalStatusChange}
+          value={currentGoalStatus}
+          onValueChange={(value) => {
+            if (id) {
+              setSkillGoalStatus(id, skillTitle, value as SkillGoalStatus);
+              onLevelChange?.(currentLevel, value);
+            }
+          }}
         >
-          <SelectTrigger className={getGoalStatusStyles(skillState.goalStatus, skillState.level)}>
+          <SelectTrigger className={getGoalStatusStyles(currentGoalStatus, currentLevel)}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
-                {getRequirementIcon(skillState.goalStatus)}
-                {skillState.goalStatus === 'skill_goal' ? 'Skill Goal' : 
-                 skillState.goalStatus === 'not_interested' ? 'Not Interested' : 
+                {getRequirementIcon(currentGoalStatus)}
+                {currentGoalStatus === 'skill_goal' ? 'Skill Goal' : 
+                 currentGoalStatus === 'not_interested' ? 'Not Interested' : 
                  'Unknown'}
               </span>
             </SelectValue>
