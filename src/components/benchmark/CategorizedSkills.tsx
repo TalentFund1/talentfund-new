@@ -32,8 +32,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     employeeId,
     selectedLevel,
     track,
-    skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => ({ title: s.title, level: s.level }))
+    skillCount: employeeSkills.length
   });
 
   // Get current role skills
@@ -70,17 +69,51 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   // Categorize skills based on their competency requirements for current level
   const requiredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.required === 'required';
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: state.level },
+      { title: skill.title, minimumLevel: state.level }
+    );
+    
+    console.log('Checking required skill:', {
+      skill: skill.title,
+      state,
+      comparison,
+      isRequired: state.required === 'required' && comparison.matchPercentage >= 100
+    });
+    
+    return state.required === 'required' && comparison.matchPercentage >= 100;
   });
 
   const preferredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.required === 'preferred';
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: state.level },
+      { title: skill.title, minimumLevel: state.level }
+    );
+    
+    console.log('Checking preferred skill:', {
+      skill: skill.title,
+      state,
+      comparison,
+      isPreferred: state.required === 'preferred' || 
+                   (state.required === 'required' && comparison.matchPercentage < 100)
+    });
+    
+    return state.required === 'preferred' || 
+           (state.required === 'required' && comparison.matchPercentage < 100);
   });
 
   const missingSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.level === 'unspecified';
+    const isUnspecified = state.level === 'unspecified' || !state.level;
+    
+    console.log('Checking missing skill:', {
+      skill: skill.title,
+      state,
+      isMissing: isUnspecified
+    });
+    
+    return isUnspecified;
   });
 
   const getLevelColor = (level: string) => {
@@ -139,6 +172,12 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
 
   return (
     <div className="space-y-4">
+      <CategoryCards
+        selectedCategory={selectedCategory}
+        onCategorySelect={setSelectedCategory}
+        roleId={roleId}
+      />
+      
       <SkillSection 
         title="Required Skills" 
         skills={requiredSkills} 
