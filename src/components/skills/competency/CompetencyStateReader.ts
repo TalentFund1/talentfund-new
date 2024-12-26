@@ -9,11 +9,13 @@ import { roleSkills } from "../data/roleSkills";
 interface SkillCompetencyState {
   level: string;
   required: string;
+  goalStatus?: string;
 }
 
 const defaultState: SkillCompetencyState = {
   level: 'unspecified',
-  required: 'preferred'
+  required: 'preferred',
+  goalStatus: 'unknown'
 };
 
 export const useCompetencyStateReader = () => {
@@ -46,7 +48,6 @@ export const useCompetencyStateReader = () => {
   };
 
   const validateRoleId = (roleId: string): boolean => {
-    // Updated validation to check against roleSkills
     if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
       console.error('Invalid role ID or role skills not found:', roleId);
       return false;
@@ -90,30 +91,32 @@ export const useCompetencyStateReader = () => {
       hasToggledSkill: toggledSkills.has(skillName)
     });
 
-    // First try to get saved state from CompetencyStore
     const savedState = findSavedState(skillName, levelKey, roleId);
     if (savedState) {
       console.log('Using saved state from CompetencyStore:', savedState);
-      return savedState;
+      return {
+        ...savedState,
+        goalStatus: savedState.goalStatus || 'unknown'
+      };
     }
 
-    // Get role requirement
     const skillRequirement = getSkillRequirement(roleId, skillName);
     if (skillRequirement) {
       console.log('Using role requirement:', skillRequirement);
       return {
         level: skillRequirement.minimumLevel,
-        required: skillRequirement.requirementLevel
+        required: skillRequirement.requirementLevel,
+        goalStatus: 'unknown'
       };
     }
 
-    // If no saved state or role requirement, determine default state
     const defaultLevel = getDefaultLevelForTrack(normalizedLevel, track);
     const defaultRequired = determineRequirement(normalizedLevel, track);
 
     const newDefaultState: SkillCompetencyState = {
       level: defaultLevel,
-      required: defaultRequired
+      required: defaultRequired,
+      goalStatus: 'unknown'
     };
     
     console.log('Generated default state based on track and level:', {
