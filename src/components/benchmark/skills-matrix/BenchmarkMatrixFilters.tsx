@@ -39,24 +39,15 @@ export const BenchmarkMatrixFilters = ({
   selectedWeight,
   setSelectedWeight,
 }: BenchmarkMatrixFiltersProps) => {
-  console.log('BenchmarkMatrixFilters - Current selections:', {
-    selectedCategory,
-    selectedWeight,
-    selectedLevel,
-    selectedInterest,
-    selectedSkillLevel,
-    searchTerm
-  });
-
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-4">
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Type" />
+            <SelectValue placeholder="All Skill Types" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Skill Type</SelectItem>
+            <SelectItem value="all">All Skill Types</SelectItem>
             <SelectItem value="specialized">Specialized Skills</SelectItem>
             <SelectItem value="common">Common Skills</SelectItem>
             <SelectItem value="certification">Certification</SelectItem>
@@ -65,10 +56,10 @@ export const BenchmarkMatrixFilters = ({
 
         <Select value={selectedWeight} onValueChange={setSelectedWeight}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Weight" />
+            <SelectValue placeholder="All Skill Weights" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Skill Weight</SelectItem>
+            <SelectItem value="all">All Skill Weights</SelectItem>
             <SelectItem value="critical">Critical</SelectItem>
             <SelectItem value="technical">Technical</SelectItem>
             <SelectItem value="necessary">Necessary</SelectItem>
@@ -77,10 +68,10 @@ export const BenchmarkMatrixFilters = ({
 
         <Select value={selectedInterest} onValueChange={setSelectedInterest}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Interest" />
+            <SelectValue placeholder="All Skill Interests" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Skill Interest</SelectItem>
+            <SelectItem value="all">All Skill Interests</SelectItem>
             <SelectItem value="required">Skill Goal</SelectItem>
             <SelectItem value="not-interested">Not Interested</SelectItem>
             <SelectItem value="unknown">Unknown</SelectItem>
