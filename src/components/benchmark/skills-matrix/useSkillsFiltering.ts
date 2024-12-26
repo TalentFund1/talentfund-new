@@ -110,16 +110,16 @@ export const useSkillsFiltering = (
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {
           case 'skill_goal':
-            matchesInterest = goalStatus === 'required' || goalStatus === 'skill_goal';
+            matchesInterest = goalStatus === 'skill_goal';
             break;
           case 'not_interested':
             matchesInterest = goalStatus === 'not_interested';
             break;
           case 'unknown':
-            matchesInterest = !goalStatus || goalStatus === 'unknown';
+            matchesInterest = goalStatus === 'unknown';
             break;
           default:
-            matchesInterest = goalStatus === selectedInterest.toLowerCase();
+            matchesInterest = true;
         }
       }
 
