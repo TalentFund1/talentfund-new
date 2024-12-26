@@ -54,7 +54,8 @@ export const useSkillsFiltering = (
     // Create a set of role skill titles for efficient lookup
     const roleSkillTitles = new Set(allRoleSkills.map(skill => skill.title));
 
-    // Filter employee skills to only include those that exist in role skills
+    // Start with employee skills and filter to only include those that exist in role skills
+    // and are toggled
     let skills = employeeSkills.filter(empSkill => 
       roleSkillTitles.has(empSkill.title) && toggledSkills.has(empSkill.title)
     );
@@ -62,7 +63,9 @@ export const useSkillsFiltering = (
     console.log('Filtered employee skills against role skills:', {
       totalEmployeeSkills: employeeSkills.length,
       matchingRoleSkills: skills.length,
-      roleId: selectedRole
+      roleId: selectedRole,
+      employeeSkills: employeeSkills.map(s => s.title),
+      filteredSkills: skills.map(s => s.title)
     });
 
     // Apply category filter
