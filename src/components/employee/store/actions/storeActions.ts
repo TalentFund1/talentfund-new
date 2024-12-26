@@ -2,7 +2,6 @@ import { StateCreator } from 'zustand';
 import { EmployeeSkillsStore, EmployeeSkillsStoreState } from '../types/storeTypes';
 import { employees } from '../../EmployeeData';
 import { EmployeeSkillUpdate, EmployeeSkillData } from '../../types/employeeSkillTypes';
-import { benchmarkingService } from '../../../../services/benchmarking';
 
 export const createStoreActions = (
   set: any,
@@ -18,13 +17,8 @@ export const createStoreActions = (
       };
 
       const employee = employees.find(emp => emp.id === employeeId);
-      const hasSkill = employee?.skills.some(s => s.title === skillTitle);
-
-      if (!hasSkill) {
-        console.log('Skill not found in employee profile:', skillTitle);
-        return state;
-      }
-
+      
+      // Create or update the skill
       const currentSkill = currentState.skills[skillTitle] || {
         id: `${employeeId}-${skillTitle}`,
         employeeId,
