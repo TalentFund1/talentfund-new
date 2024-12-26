@@ -4,6 +4,7 @@ import { useTrack } from "../context/TrackContext";
 import { getLevelPriority, normalizeLevel } from "./utils/levelUtils";
 import { determineRequirement } from "./utils/requirementUtils";
 import { useRoleSkillsStore } from "../store/roleSkillsStore";
+import { roleSkills } from "../data/roleSkills";
 
 interface SkillCompetencyState {
   level: string;
@@ -45,7 +46,8 @@ export const useCompetencyStateReader = () => {
   };
 
   const validateRoleId = (roleId: string): boolean => {
-    if (!roleId || !getRoleSkills(roleId)) {
+    // Updated validation to check against roleSkills
+    if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
       console.error('Invalid role ID or role skills not found:', roleId);
       return false;
     }

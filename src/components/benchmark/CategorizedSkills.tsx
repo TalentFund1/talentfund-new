@@ -8,6 +8,7 @@ import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useRoleStore } from "./RoleBenchmark";
+import { benchmarkingService } from "../../services/benchmarking";
 
 interface CategorizedSkillsProps {
   roleId: string;
