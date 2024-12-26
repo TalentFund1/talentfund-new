@@ -1,4 +1,4 @@
-import { Table, TableHeader, TableBody, TableHead, TableRow } from "@/components/ui/table";
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import type { SkillProfileRow } from "./types";
