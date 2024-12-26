@@ -39,45 +39,47 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     ...currentRoleSkills.certifications
   ];
 
-  // Filter skills by category and toggled state
-  const filteredSkills = allRoleSkills
-    .filter(skill => toggledSkills.has(skill.title))
-    .map(skill => {
-      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-      return {
-        ...skill,
-        level: competencyState.level,
-        required: competencyState.required
-      };
-    });
+  // Create sets for efficient lookup
+  const employeeSkillTitles = new Set(employeeSkills.map(skill => skill.title));
+  const roleSkillTitles = new Set(allRoleSkills.map(skill => skill.title));
 
-  console.log('Filtered skills with competency states:', {
+  // Filter skills that exist in both employee skills and toggled skills
+  const matchingSkills = allRoleSkills.filter(skill => 
+    employeeSkillTitles.has(skill.title) && 
+    toggledSkills.has(skill.title)
+  );
+
+  console.log('Matching skills:', {
     roleId,
-    level: selectedLevel,
-    totalSkills: filteredSkills.length,
-    skills: filteredSkills.map(s => ({
-      title: s.title,
-      level: s.level,
-      required: s.required
-    }))
+    employeeId,
+    matchingCount: matchingSkills.length,
+    skills: matchingSkills.map(s => s.title)
   });
 
-  // Categorize skills based on their competency requirements for current level
-  const requiredSkills = filteredSkills.filter(skill => {
+  // Find missing skills (skills in role requirements but not in employee skills)
+  const missingSkills = allRoleSkills.filter(skill => 
+    !employeeSkillTitles.has(skill.title) && 
+    toggledSkills.has(skill.title)
+  );
+
+  console.log('Missing skills:', {
+    roleId,
+    employeeId,
+    missingCount: missingSkills.length,
+    skills: missingSkills.map(s => s.title)
+  });
+
+  // Categorize matching skills based on their competency requirements
+  const requiredSkills = matchingSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
     return (state.level === 'advanced' || state.level === 'intermediate') && 
            state.required === 'required';
   });
 
-  const preferredSkills = filteredSkills.filter(skill => {
+  const preferredSkills = matchingSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
     return state.required === 'preferred' || 
            (state.level === 'beginner' && state.required === 'required');
-  });
-
-  const missingSkills = filteredSkills.filter(skill => {
-    const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.level === 'unspecified' || !state.level;
   });
 
   const getLevelColor = (level: string) => {

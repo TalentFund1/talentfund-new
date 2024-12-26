@@ -54,7 +54,7 @@ export const useSkillsFiltering = (
     // Create a set of role skill titles for efficient lookup
     const roleSkillTitles = new Set(allRoleSkills.map(skill => skill.title));
 
-    // Filter employee skills to only include those that exist in role skills
+    // Start with employee skills and filter to only those that exist in role skills
     let skills = employeeSkills.filter(empSkill => 
       roleSkillTitles.has(empSkill.title) && toggledSkills.has(empSkill.title)
     );
