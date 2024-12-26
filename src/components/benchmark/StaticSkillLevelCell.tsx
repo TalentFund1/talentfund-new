@@ -25,14 +25,14 @@ export const StaticSkillLevelCell = ({
     
     if (!currentStates[skillTitle]) {
       initializeState(skillTitle, {
-        level: 'unspecified' as SkillLevel,
+        level: initialLevel as SkillLevel,
         goalStatus: 'unknown' as SkillGoalStatus
       });
     }
   }, [skillTitle, initialLevel, currentStates, initializeState]);
 
   const currentState = currentStates[skillTitle] || {
-    level: 'unspecified',
+    level: initialLevel,
     goalStatus: 'unknown'
   };
 
@@ -96,8 +96,18 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const levelValue = typeof currentState.level === 'string' ? currentState.level : currentState.level.level;
-  const goalStatusValue = typeof currentState.goalStatus === 'string' ? currentState.goalStatus : currentState.goalStatus.goalStatus;
+  // Extract level and goalStatus safely
+  const levelValue = typeof currentState === 'string' ? 
+    currentState : 
+    typeof currentState.level === 'string' ? 
+      currentState.level : 
+      currentState.level.level;
+
+  const goalStatusValue = typeof currentState === 'string' ? 
+    'unknown' : 
+    typeof currentState.goalStatus === 'string' ? 
+      currentState.goalStatus : 
+      currentState.goalStatus.goalStatus;
 
   return (
     <TableCell className="border-r border-blue-200 p-0">

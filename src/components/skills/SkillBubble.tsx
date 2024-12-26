@@ -23,7 +23,7 @@ export const SkillBubble = ({
     if (!skillState) return level || 'unspecified';
     return typeof skillState.level === 'string' ? 
       skillState.level : 
-      skillState.level.level;
+      skillState.level?.level || 'unspecified';
   };
 
   const shouldShowGoal = () => {
@@ -32,7 +32,7 @@ export const SkillBubble = ({
     if (skillState) {
       const goalStatus = typeof skillState.goalStatus === 'string' ? 
         skillState.goalStatus : 
-        skillState.goalStatus.goalStatus;
+        skillState.goalStatus?.goalStatus || 'unknown';
       return goalStatus === 'required' || goalStatus === 'skill_goal';
     }
     
@@ -52,6 +52,8 @@ export const SkillBubble = ({
     }
   };
 
+  const currentLevel = getCurrentLevel();
+
   return (
     <Badge 
       variant="outline" 
@@ -60,7 +62,7 @@ export const SkillBubble = ({
       {skill.name}
       {(showLevel || skillState) && (
         <div className="flex items-center gap-1.5">
-          <div className={`h-2 w-2 rounded-full ${getLevelColor(getCurrentLevel())}`} />
+          <div className={`h-2 w-2 rounded-full ${getLevelColor(currentLevel)}`} />
           {shouldShowGoal() && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
