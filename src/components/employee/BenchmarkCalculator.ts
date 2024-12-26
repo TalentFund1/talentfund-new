@@ -1,81 +1,62 @@
-import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { roleSkills } from "../skills/data/roleSkills";
+import { SkillLevel } from "./types/employeeSkillTypes";
+import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
-  level: string,
-  getSkillState: (skillTitle: string, employeeId: string) => any,
+  baseRole: string,
+  getSkillCompetencyState: any,
   toggledSkills: Set<string>,
-  getSkillCompetencyState: any
+  getSkillState: any
 ): number => {
-  console.log('Calculating benchmark for:', {
+  const employeeStore = useEmployeeSkillsStore.getState();
+  const employeeSkills = employeeStore.getEmployeeSkills(employeeId);
+
+  console.log('Calculating benchmark percentage:', {
     employeeId,
     roleId,
-    level,
+    baseRole,
+    skillCount: employeeSkills.length,
     toggledSkillsCount: toggledSkills.size
   });
 
-  if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
-    console.warn('Invalid role ID:', roleId);
+  if (!employeeSkills || employeeSkills.length === 0) {
+    console.log('No employee skills found for benchmark calculation');
     return 0;
   }
 
-  const employeeSkills = getEmployeeSkills(employeeId);
-  const roleData = roleSkills[roleId as keyof typeof roleSkills];
+  const matchingSkills = employeeSkills.filter(skill => 
+    toggledSkills.has(skill.title)
+  );
 
-  // Get all skills for the role
-  const allRoleSkills = [
-    ...roleData.specialized,
-    ...roleData.common,
-    ...roleData.certifications
-  ].filter(skill => toggledSkills.has(skill.title));
-
-  if (allRoleSkills.length === 0) {
-    console.log('No toggled skills found for role');
+  if (matchingSkills.length === 0) {
+    console.log('No matching skills found for benchmark calculation');
     return 0;
   }
 
-  // Count matching skills with correct competency level
-  const matchingSkills = allRoleSkills.filter(roleSkill => {
-    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    if (!employeeSkill) return false;
+  const totalMatches = matchingSkills.reduce((acc, skill) => {
+    const employeeLevel = skill.level;
+    const requiredLevel = getSkillCompetencyState(skill.title, baseRole, roleId)?.level || 'beginner';
 
-    const roleSkillState = getSkillCompetencyState(roleSkill.title, level.toLowerCase(), roleId);
-    if (!roleSkillState) return false;
-
-    const employeeSkillState = getSkillState(roleSkill.title, employeeId);
-    const employeeSkillLevel = employeeSkillState?.level || employeeSkill.level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
-
-    console.log('Comparing skill levels:', {
-      skill: roleSkill.title,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel
-    });
-
-    // For all tracks, allow higher levels to match
-    const getLevelPriority = (level: string = 'unspecified') => {
-      const priorities: { [key: string]: number } = {
-        'advanced': 3,
-        'intermediate': 2,
-        'beginner': 1,
-        'unspecified': 0
-      };
-      return priorities[level.toLowerCase()] ?? 0;
+    const levelValues: Record<SkillLevel, number> = {
+      'unspecified': 0,
+      'beginner': 1,
+      'intermediate': 2,
+      'advanced': 3
     };
 
-    const employeePriority = getLevelPriority(employeeSkillLevel);
-    const rolePriority = getLevelPriority(roleSkillLevel);
+    const employeeLevelValue = levelValues[employeeLevel as SkillLevel] || 0;
+    const requiredLevelValue = levelValues[requiredLevel as SkillLevel] || 0;
 
-    return employeePriority >= rolePriority;
-  });
+    return acc + (employeeLevelValue >= requiredLevelValue ? 1 : 0);
+  }, 0);
 
-  const percentage = (matchingSkills.length / allRoleSkills.length) * 100;
+  const percentage = (totalMatches / matchingSkills.length) * 100;
 
   console.log('Benchmark calculation result:', {
-    matchingSkills: matchingSkills.length,
-    totalSkills: allRoleSkills.length,
+    employeeId,
+    totalMatches,
+    matchingSkillsCount: matchingSkills.length,
     percentage
   });
 
