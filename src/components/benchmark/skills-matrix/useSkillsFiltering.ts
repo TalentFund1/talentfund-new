@@ -20,6 +20,8 @@ export const useSkillsFiltering = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  
+  // Get employee's actual skills first
   const employeeSkills = getEmployeeSkills(employeeId);
 
   console.log('Starting skills filtering with:', {
@@ -54,18 +56,32 @@ export const useSkillsFiltering = (
     // Create a set of role skill titles for efficient lookup
     const roleSkillTitles = new Set(allRoleSkills.map(skill => skill.title));
 
-    // Start with employee skills and filter to only include those that exist in role skills
-    // and are toggled
-    let skills = employeeSkills.filter(empSkill => 
-      roleSkillTitles.has(empSkill.title) && toggledSkills.has(empSkill.title)
-    );
+    // Start with employee skills and filter to only include those that:
+    // 1. Exist in role skills
+    // 2. Are toggled
+    // 3. Have a non-unspecified level in employee's current states
+    let skills = employeeSkills.filter(empSkill => {
+      const isInRole = roleSkillTitles.has(empSkill.title);
+      const isToggled = toggledSkills.has(empSkill.title);
+      const skillState = currentStates[empSkill.title];
+      const hasLevel = skillState?.level && skillState.level !== 'unspecified';
+      
+      return isInRole && isToggled && hasLevel;
+    });
 
     console.log('Filtered employee skills against role skills:', {
+      employeeId,
+      roleId: selectedRole,
       totalEmployeeSkills: employeeSkills.length,
       matchingRoleSkills: skills.length,
-      roleId: selectedRole,
-      employeeSkills: employeeSkills.map(s => s.title),
-      filteredSkills: skills.map(s => s.title)
+      employeeSkills: employeeSkills.map(s => ({ 
+        title: s.title, 
+        level: currentStates[s.title]?.level 
+      })),
+      filteredSkills: skills.map(s => ({ 
+        title: s.title, 
+        level: currentStates[s.title]?.level 
+      }))
     });
 
     // Apply category filter
