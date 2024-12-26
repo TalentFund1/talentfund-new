@@ -8,17 +8,17 @@ import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
 // Updated levelOrder to sort from Advanced to Unspecified
 const levelOrder = {
-  'unspecified': 3,
-  'beginner': 2,
+  'advanced': 0,
   'intermediate': 1,
-  'advanced': 0
+  'beginner': 2,
+  'unspecified': 3
 };
 
 const goalStatusOrder = {
-  'unknown': 3,
-  'not_interested': 2,
+  'skill_goal': 0,
   'required': 1,
-  'skill_goal': 0
+  'not_interested': 2,
+  'unknown': 3
 };
 
 export const useSkillsFiltering = (
@@ -147,9 +147,8 @@ export const useSkillsFiltering = (
       })
       .sort((a, b) => {
         // Sort by level (Advanced to Unspecified)
-        // Reverse the comparison to get Advanced (0) at the top
-        const levelDiff = (levelOrder[b.employeeLevel.toLowerCase()] || 3) - 
-                         (levelOrder[a.employeeLevel.toLowerCase()] || 3);
+        const levelDiff = (levelOrder[a.employeeLevel.toLowerCase()] || 3) - 
+                         (levelOrder[b.employeeLevel.toLowerCase()] || 3);
         
         if (levelDiff !== 0) return levelDiff;
         
