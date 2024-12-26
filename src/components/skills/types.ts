@@ -1,5 +1,6 @@
 export interface BaseSkill {
   name: string;
+  title?: string; // For backward compatibility
 }
 
 export interface DetailedSkill extends BaseSkill {

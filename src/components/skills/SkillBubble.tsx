@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { BaseSkill } from "./types";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { SkillLevel, SkillGoalStatus } from "../employee/types/employeeSkillTypes";
 
 interface SkillBubbleProps {
   skill: BaseSkill;
@@ -17,12 +18,12 @@ export const SkillBubble = ({
   isSkillGoal 
 }: SkillBubbleProps) => {
   const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skill.title];
+  const skillState = currentStates[skill.name];
 
-  const getCurrentLevel = (): string => {
-    if (!skillState) return level || 'unspecified';
+  const getCurrentLevel = (): SkillLevel => {
+    if (!skillState) return (level as SkillLevel) || 'unspecified';
     return typeof skillState.level === 'string' ? 
-      skillState.level : 
+      skillState.level as SkillLevel : 
       'unspecified';
   };
 
@@ -31,7 +32,7 @@ export const SkillBubble = ({
     
     if (skillState) {
       const goalStatus = typeof skillState.goalStatus === 'string' ? 
-        skillState.goalStatus : 
+        skillState.goalStatus as SkillGoalStatus : 
         'unknown';
       return goalStatus === 'required' || goalStatus === 'skill_goal';
     }
@@ -39,7 +40,7 @@ export const SkillBubble = ({
     return false;
   };
 
-  const getLevelColor = (level: string): string => {
+  const getLevelColor = (level: SkillLevel): string => {
     switch (level?.toLowerCase()) {
       case "advanced":
         return "bg-primary-accent";
@@ -59,7 +60,7 @@ export const SkillBubble = ({
       variant="outline" 
       className="rounded-full px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
     >
-      {skill.title}
+      {skill.name}
       {(showLevel || skillState) && (
         <div className="flex items-center gap-1.5">
           <div className={`h-2 w-2 rounded-full ${getLevelColor(currentLevel)}`} />
