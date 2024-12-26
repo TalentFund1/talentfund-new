@@ -8,6 +8,7 @@ import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useRoleStore } from "./RoleBenchmark";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -19,6 +20,8 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedLevel } = useRoleStore();
+  const { getTrackForRole } = useTrack();
+  const track = getTrackForRole(roleId);
   
   // Get employee's actual skills
   const employeeSkills = getEmployeeSkills(employeeId);
@@ -27,7 +30,8 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     employeeId,
     skillCount: employeeSkills.length,
     skills: employeeSkills.map(s => ({ title: s.title, level: s.level })),
-    selectedLevel
+    selectedLevel,
+    track
   });
 
   // Get current role skills
@@ -53,6 +57,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   console.log('Filtered skills with competency states:', {
     roleId,
     level: selectedLevel,
+    track,
     totalSkills: filteredSkills.length,
     skills: filteredSkills.map(s => ({
       title: s.title,
@@ -61,17 +66,53 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     }))
   });
 
-  // Categorize skills based on their competency requirements for current level
+  // Categorize skills based on track and level requirements
   const requiredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return (state.level === 'advanced' || state.level === 'intermediate') && 
-           state.required === 'required';
+    
+    if (track === "Managerial") {
+      // For managerial track, higher requirements at each level
+      switch (selectedLevel.toLowerCase()) {
+        case 'm6':
+        case 'm5':
+          return state.level === 'advanced' && state.required === 'required';
+        case 'm4':
+          return (state.level === 'advanced' || state.level === 'intermediate') && 
+                 state.required === 'required';
+        case 'm3':
+          return state.level === 'intermediate' && state.required === 'required';
+        default:
+          return false;
+      }
+    } else {
+      // Professional track requirements
+      return (state.level === 'advanced' || state.level === 'intermediate') && 
+             state.required === 'required';
+    }
   });
 
   const preferredSkills = filteredSkills.filter(skill => {
     const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-    return state.required === 'preferred' || 
-           (state.level === 'beginner' && state.required === 'required');
+    
+    if (track === "Managerial") {
+      // For managerial track
+      switch (selectedLevel.toLowerCase()) {
+        case 'm6':
+        case 'm5':
+          return state.level === 'intermediate' && state.required === 'required';
+        case 'm4':
+          return state.level === 'beginner' && state.required === 'required';
+        case 'm3':
+          return state.level === 'beginner' && 
+                 (state.required === 'required' || state.required === 'preferred');
+        default:
+          return state.required === 'preferred';
+      }
+    } else {
+      // Professional track
+      return state.required === 'preferred' || 
+             (state.level === 'beginner' && state.required === 'required');
+    }
   });
 
   const missingSkills = filteredSkills.filter(skill => {
@@ -94,6 +135,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
 
   console.log('Skills categorization for level:', {
     level: selectedLevel,
+    track,
     required: requiredSkills.length,
     preferred: preferredSkills.length,
     missing: missingSkills.length,
