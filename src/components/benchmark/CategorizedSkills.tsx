@@ -75,11 +75,9 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
            (state.level === 'beginner' && state.required === 'required');
   });
 
-  // Update missing skills logic to include all skills that are in role requirements but not in employee skills
-  const missingSkills = allRoleSkills.filter(roleSkill => {
-    const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-    const isToggled = toggledSkills.has(roleSkill.title);
-    return !hasSkill && isToggled;
+  const missingSkills = filteredSkills.filter(skill => {
+    const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+    return state.level === 'unspecified' || !state.level;
   });
 
   const getLevelColor = (level: string) => {
