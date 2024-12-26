@@ -14,6 +14,7 @@ import { EMPLOYEE_IMAGES } from "./employee/EmployeeData";
 import { useEmployeeStore } from "./employee/store/employeeStore";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
+import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 
 interface EmployeeTableProps {
   readonly selectedDepartment?: ReadonlyArray<string>;
@@ -79,10 +80,22 @@ const EmployeeTableContent = ({
   const { getSkillState } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
+  const { getEmployeeSkills } = useEmployeeSkillsStore();
+  
   const employees = useEmployeeStore((state) => {
     console.log('Current employees in store:', state.employees);
-    return state.employees;
+    return state.employees.map(emp => ({
+      ...emp,
+      skills: getEmployeeSkills(emp.id)
+    }));
   });
+
+  console.log('Employees with skills:', employees.map(emp => ({
+    id: emp.id,
+    name: emp.name,
+    skillCount: emp.skills.length,
+    skills: emp.skills.map(s => s.title)
+  })));
 
   const preFilteredEmployees = filterEmployees(
     employees,
