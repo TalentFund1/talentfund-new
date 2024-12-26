@@ -16,7 +16,7 @@ export const RequirementSelector = ({
     const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5';
     
     switch (requirement.toLowerCase()) {
-      case 'skill_goal':
+      case 'required':
         return `${baseStyles} border-x-2 border-b-2 rounded-b-md ${
           level.toLowerCase() === 'advanced' 
             ? 'bg-primary-accent/20 border-primary-accent' 
@@ -36,46 +36,22 @@ export const RequirementSelector = ({
   // Normalize the requirement value for consistent comparison
   const normalizedRequired = currentRequired.toLowerCase();
 
-  // Map legacy 'required' status to 'skill_goal'
-  const normalizeStatus = (status: string) => {
-    if (status === 'required') return 'skill_goal';
-    return status;
-  };
-
-  const denormalizeStatus = (status: string) => {
-    // Keep the display values consistent while using new status internally
-    switch (status) {
-      case 'skill_goal':
-        return 'skill_goal';
-      case 'not_interested':
-        return 'not_interested';
-      default:
-        return 'unknown';
-    }
-  };
-
-  console.log('RequirementSelector - Current status:', {
-    original: currentRequired,
-    normalized: normalizedRequired,
-    mapped: normalizeStatus(normalizedRequired)
-  });
-
   return (
     <Select 
-      value={normalizeStatus(normalizedRequired)}
-      onValueChange={(value) => onRequirementChange(denormalizeStatus(value))}
+      value={normalizedRequired}
+      onValueChange={onRequirementChange}
     >
       <SelectTrigger 
-        className={`${getRequirementStyles(normalizeStatus(normalizedRequired), currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
+        className={`${getRequirementStyles(normalizedRequired, currentLevel)} focus:ring-0 focus:ring-offset-0 focus-visible:ring-0`}
       >
         <SelectValue>
           <span className="flex items-center gap-2 justify-center">
-            {normalizeStatus(normalizedRequired) === 'skill_goal' ? (
+            {normalizedRequired === 'required' ? (
               <>
                 <Heart className="w-3.5 h-3.5" />
                 <span>Skill Goal</span>
               </>
-            ) : normalizeStatus(normalizedRequired) === 'not_interested' ? (
+            ) : normalizedRequired === 'not_interested' ? (
               <>
                 <X className="w-3.5 h-3.5" />
                 <span>Not Interested</span>
@@ -90,7 +66,7 @@ export const RequirementSelector = ({
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="skill_goal">
+        <SelectItem value="required">
           <span className="flex items-center gap-2">
             <Heart className="w-3.5 h-3.5" /> Skill Goal
           </span>

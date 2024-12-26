@@ -1,18 +1,21 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
+import { benchmarkingService } from '../../../services/benchmarking';
 
-interface BenchmarkState {
-  roleId: string;
+interface SkillState {
   level: string;
-  required: string;
+  goalStatus: string;
+  lastUpdated: string;
 }
 
 interface SkillsMatrixState {
-  benchmarkStates: { [key: string]: BenchmarkState };
+  currentStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setBenchmarkState: (skillTitle: string, roleId: string, level: string, required: string) => void;
-  resetBenchmarks: () => void;
-  initializeBenchmark: (skillTitle: string, roleId: string, level: string, required: string) => void;
+  setSkillState: (skillTitle: string, level: string, goalStatus: string) => void;
+  resetSkills: () => void;
+  initializeState: (skillTitle: string, level: string, goalStatus: string) => void;
   saveChanges: () => void;
   cancelChanges: () => void;
 }
@@ -20,35 +23,35 @@ interface SkillsMatrixState {
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set) => ({
-      benchmarkStates: {},
+      currentStates: {},
       hasChanges: false,
 
-      setBenchmarkState: (skillTitle, roleId, level, required) => {
-        console.log('Setting benchmark state:', { skillTitle, roleId, level, required });
+      setSkillState: (skillTitle, level, goalStatus) => {
+        console.log('Setting skill state in matrix:', { skillTitle, level, goalStatus });
         
         set((state) => ({
-          benchmarkStates: {
-            ...state.benchmarkStates,
-            [skillTitle]: { roleId, level, required }
+          currentStates: {
+            ...state.currentStates,
+            [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
           },
           hasChanges: true,
         }));
       },
 
-      resetBenchmarks: () =>
+      resetSkills: () =>
         set(() => ({
-          benchmarkStates: {},
+          currentStates: {},
           hasChanges: false,
         })),
 
-      initializeBenchmark: (skillTitle, roleId, level, required) =>
+      initializeState: (skillTitle, level, goalStatus) =>
         set((state) => {
-          if (!state.benchmarkStates[skillTitle]) {
-            console.log('Initializing benchmark state:', { skillTitle, roleId, level, required });
+          if (!state.currentStates[skillTitle]) {
+            console.log('Initializing skill state:', { skillTitle, level, goalStatus });
             return {
-              benchmarkStates: {
-                ...state.benchmarkStates,
-                [skillTitle]: { roleId, level, required }
+              currentStates: {
+                ...state.currentStates,
+                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
               },
             };
           }
@@ -68,10 +71,55 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }),
     {
       name: 'skills-matrix-storage',
-      version: 3,
+      version: 2,
       partialize: (state) => ({
-        benchmarkStates: state.benchmarkStates,
+        currentStates: state.currentStates,
       }),
     }
   )
 );
+
+export const useSkillsMatrixState = (
+  selectedCategory: string,
+  selectedLevel: string,
+  selectedInterest: string
+) => {
+  const { currentStates } = useSkillsMatrixStore();
+
+  const filterAndSortSkills = (skills: UnifiedSkill[]) => {
+    console.log('Filtering skills:', { 
+      totalSkills: skills.length,
+      selectedCategory,
+      selectedLevel,
+      selectedInterest 
+    });
+
+    let filteredSkills = [...skills];
+
+    if (selectedCategory !== "all") {
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
+    }
+
+    if (selectedLevel !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const skillState = currentStates[skill.title];
+        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
+      });
+    }
+
+    if (selectedInterest !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const skillState = currentStates[skill.title];
+        if (!skillState?.goalStatus) return false;
+
+        return benchmarkingService.matchesInterestFilter(skillState.goalStatus, selectedInterest);
+      });
+    }
+
+    return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
+  };
+
+  return {
+    filterAndSortSkills,
+  };
+};
