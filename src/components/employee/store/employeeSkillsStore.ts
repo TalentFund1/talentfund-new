@@ -56,8 +56,20 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          // Create new state with deep cloning to ensure proper updates
-          const updatedState = {
+          const updatedSkill = {
+            ...currentSkill,
+            ...updates,
+            lastUpdated: new Date().toISOString()
+          };
+
+          console.log('Updated skill state:', {
+            employeeId,
+            skillTitle,
+            before: currentSkill,
+            after: updatedSkill
+          });
+
+          return {
             ...state,
             skillStates: {
               ...state.skillStates,
@@ -65,25 +77,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 ...currentState,
                 skills: {
                   ...currentState.skills,
-                  [skillTitle]: {
-                    ...currentSkill,
-                    ...updates,
-                    lastUpdated: new Date().toISOString()
-                  }
+                  [skillTitle]: updatedSkill
                 },
                 lastUpdated: new Date().toISOString()
               }
             }
           };
-
-          console.log('Updated skill state:', {
-            employeeId,
-            skillTitle,
-            before: currentSkill,
-            after: updatedState.skillStates[employeeId].skills[skillTitle]
-          });
-
-          return updatedState;
         });
       },
 
@@ -131,15 +130,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               ...skillUpdates,
               lastUpdated: new Date().toISOString()
             };
-
-            console.log('Updated skill in batch:', {
-              skillTitle,
-              before: currentSkill,
-              after: updatedSkills[skillTitle]
-            });
           });
 
-          const updatedState = {
+          const newState = {
             ...state,
             skillStates: {
               ...state.skillStates,
@@ -153,10 +146,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           console.log('Batch update complete:', {
             employeeId,
             skillCount: Object.keys(updatedSkills).length,
-            skills: updatedState.skillStates[employeeId]
+            state: newState.skillStates[employeeId]
           });
 
-          return updatedState;
+          return newState;
         });
       }
     }),
@@ -166,27 +159,30 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       partialize: (state) => ({
         skillStates: state.skillStates
       }),
-      merge: (persistedState: any, currentState: EmployeeSkillsStore) => ({
-        ...currentState,
-        skillStates: {
-          ...currentState.skillStates,
-          ...persistedState.skillStates
-        }
-      }),
       storage: {
-        getItem: (name: string) => {
+        getItem: async (name: string) => {
           const str = localStorage.getItem(name);
-          console.log('Loading persisted state:', { name, value: str ? JSON.parse(str) : null });
-          return Promise.resolve(str);
+          if (!str) return null;
+          try {
+            const parsed = JSON.parse(str);
+            console.log('Loading persisted state:', { name, value: parsed });
+            return parsed;
+          } catch (error) {
+            console.error('Error parsing stored state:', error);
+            return null;
+          }
         },
-        setItem: (name: string, value: string) => {
-          console.log('Persisting state:', { name, value: JSON.parse(value) });
-          localStorage.setItem(name, value);
-          return Promise.resolve();
+        setItem: async (name: string, value: unknown) => {
+          try {
+            const serialized = JSON.stringify(value);
+            console.log('Persisting state:', { name, value });
+            localStorage.setItem(name, serialized);
+          } catch (error) {
+            console.error('Error storing state:', error);
+          }
         },
-        removeItem: (name: string) => {
+        removeItem: async (name: string) => {
           localStorage.removeItem(name);
-          return Promise.resolve();
         }
       }
     }
