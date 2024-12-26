@@ -16,7 +16,7 @@ export const SkillsMatrix = () => {
   const [employeeSkillsData, setEmployeeSkillsData] = useState<UnifiedSkill[]>([]);
   
   const { id } = useParams<{ id: string }>();
-  const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
+  const { hasChanges: storeHasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
   const { getEmployeeSkills, getSkillState, initializeEmployeeSkills, saveSkillStates } = useEmployeeSkillsStore();
   const { toast } = useToast();
 
@@ -66,23 +66,7 @@ export const SkillsMatrix = () => {
     }
   }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
 
-  // Apply basic filtering to employee skills
-  const filteredSkills = employeeSkillsData.filter(skill => {
-    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-    if (selectedInterest !== "all") {
-      const skillState = getSkillState(id || "", skill.title);
-      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
-    }
-    return true;
-  });
-
-  console.log('SkillsMatrix - Filtered skills:', {
-    totalSkills: employeeSkillsData.length,
-    filteredSkills: filteredSkills.length,
-    selectedLevel,
-    selectedInterest
-  });
-
+  // Update hasChanges when store changes
   useEffect(() => {
     setHasChanges(storeHasChanges);
   }, [storeHasChanges]);
@@ -92,6 +76,7 @@ export const SkillsMatrix = () => {
     if (id) {
       try {
         await saveSkillStates(id);
+        saveChanges();
         setHasChanges(false);
         toast({
           title: "Success",
@@ -111,6 +96,7 @@ export const SkillsMatrix = () => {
   const handleCancel = () => {
     if (id) {
       console.log('Canceling changes for employee:', id);
+      cancelChanges();
       initializeEmployeeSkills(id);
       setHasChanges(false);
       toast({
@@ -119,6 +105,23 @@ export const SkillsMatrix = () => {
       });
     }
   };
+
+  // Apply basic filtering to employee skills
+  const filteredSkills = employeeSkillsData.filter(skill => {
+    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
+    if (selectedInterest !== "all") {
+      const skillState = getSkillState(id || "", skill.title);
+      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
+    }
+    return true;
+  });
+
+  console.log('SkillsMatrix - Filtered skills:', {
+    totalSkills: employeeSkillsData.length,
+    filteredSkills: filteredSkills.length,
+    selectedLevel,
+    selectedInterest
+  });
 
   return (
     <div className="space-y-6">

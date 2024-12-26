@@ -7,7 +7,13 @@ export interface SkillsMatrixHeaderProps {
   onCancel: () => void;
 }
 
-export const SkillsMatrixHeader = ({ hasChanges, onSave, onCancel }: SkillsMatrixHeaderProps) => {
+export const SkillsMatrixHeader = ({ 
+  hasChanges, 
+  onSave, 
+  onCancel 
+}: SkillsMatrixHeaderProps) => {
+  console.log('SkillsMatrixHeader - Rendering:', { hasChanges });
+  
   return (
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-4">
@@ -28,12 +34,14 @@ export const SkillsMatrixHeader = ({ hasChanges, onSave, onCancel }: SkillsMatri
           variant="outline" 
           onClick={onCancel}
           disabled={!hasChanges}
+          className="transition-opacity"
         >
           Cancel
         </Button>
         <Button 
           onClick={onSave}
           disabled={!hasChanges}
+          className="transition-opacity"
         >
           Save
         </Button>
