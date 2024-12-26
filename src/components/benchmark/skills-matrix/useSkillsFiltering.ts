@@ -3,7 +3,6 @@ import { useCompetencyStateReader } from "../../skills/competency/CompetencyStat
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
-import { EmployeeSkillAchievement } from "../../employee/types/employeeSkillTypes";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
@@ -25,6 +24,8 @@ export const useSkillsFiltering = (
 
   console.log('Starting skills filtering with:', {
     employeeId,
+    selectedRole,
+    comparisonLevel,
     totalSkills: employeeSkills.length,
     selectedCategory,
     selectedWeight,
@@ -36,8 +37,27 @@ export const useSkillsFiltering = (
   });
 
   const filterSkills = () => {
-    // Start with employee skills
-    let skills = [...employeeSkills];
+    // Get role-specific skills
+    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
+    if (!currentRoleSkills) {
+      console.warn('No skills found for role:', selectedRole);
+      return [];
+    }
+
+    // Combine all skills for the role
+    let skills = [
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
+    ];
+
+    console.log('Role-specific skills loaded:', {
+      roleId: selectedRole,
+      totalSkills: skills.length,
+      specialized: currentRoleSkills.specialized.length,
+      common: currentRoleSkills.common.length,
+      certifications: currentRoleSkills.certifications.length
+    });
 
     // Remove duplicates using a Map with skill titles as keys
     const uniqueSkills = new Map();
@@ -47,11 +67,6 @@ export const useSkillsFiltering = (
       }
     });
     skills = Array.from(uniqueSkills.values());
-
-    console.log('After removing duplicates:', {
-      originalCount: employeeSkills.length,
-      uniqueCount: skills.length
-    });
 
     // Apply category filter
     if (selectedCategory !== 'all') {
@@ -129,6 +144,7 @@ export const useSkillsFiltering = (
 
   console.log('Skills filtering result:', {
     employeeId,
+    roleId: selectedRole,
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
     filters: {
