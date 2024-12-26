@@ -8,14 +8,6 @@ import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { benchmarkingService } from "../../services/benchmarking";
 
-// Define level order for sorting
-const levelOrder: { [key: string]: number } = {
-  'advanced': 0,
-  'intermediate': 1,
-  'beginner': 2,
-  'unspecified': 3
-};
-
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
@@ -38,7 +30,7 @@ export const SkillsMatrix = () => {
       
       // Transform skills to UnifiedSkill format with proper type checking
       const transformedSkills = skills
-        .filter(skill => skill && skill.title)
+        .filter(skill => skill && skill.title) // Filter out invalid skills
         .map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
@@ -55,7 +47,7 @@ export const SkillsMatrix = () => {
             id: skillData.id || `${id}-${skill.title}`,
             title: skill.title,
             subcategory: skillData.subcategory || 'General',
-            level: skillState.level || skill.level || 'unspecified',
+            level: skillState.level || skill.level || 'unspecified', // Preserve original level if available
             growth: skillData.growth || '0%',
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
@@ -72,35 +64,17 @@ export const SkillsMatrix = () => {
     }
   }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
 
-  // Apply filtering and sorting to employee skills
-  const filteredSkills = employeeSkillsData
-    .filter(skill => {
-      if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-      if (selectedInterest !== "all") {
-        const skillState = getSkillState(id || "", skill.title);
-        if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      // Sort by level (Advanced to Unspecified)
-      const aLevel = a.level?.toLowerCase() || 'unspecified';
-      const bLevel = b.level?.toLowerCase() || 'unspecified';
-      
-      const levelDiff = (levelOrder[aLevel] || 3) - (levelOrder[bLevel] || 3);
-      
-      console.log('Sorting skills:', {
-        skillA: a.title,
-        levelA: aLevel,
-        skillB: b.title,
-        levelB: bLevel,
-        levelDiff
-      });
-      
-      return levelDiff;
-    });
+  // Apply basic filtering to employee skills
+  const filteredSkills = employeeSkillsData.filter(skill => {
+    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
+    if (selectedInterest !== "all") {
+      const skillState = getSkillState(id || "", skill.title);
+      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
+    }
+    return true;
+  });
 
-  console.log('SkillsMatrix - Filtered and sorted skills:', {
+  console.log('SkillsMatrix - Filtered skills:', {
     totalSkills: employeeSkillsData.length,
     filteredSkills: filteredSkills.length,
     selectedLevel,
