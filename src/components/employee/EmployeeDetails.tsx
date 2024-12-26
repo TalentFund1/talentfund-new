@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
 import { getEmployeeTrack } from "./utils/employeeTrackUtils";
+import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -38,14 +39,17 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const { getTrackForRole } = useTrack();
   const roleTrack = getTrackForRole(roleId);
   const employeeTrack = getEmployeeTrack(employee.role);
-  const skillCount = employee.skills ? employee.skills.length : 0;
+  const { getEmployeeSkills } = useEmployeeSkillsStore();
+  const employeeSkills = getEmployeeSkills(id);
+  const skillCount = employeeSkills.length;
 
-  console.log(`Employee ${id} track info:`, {
+  console.log(`Employee ${id} details:`, {
     roleId,
     roleTrack,
     employeeTrack,
     role: employee.role,
-    skillCount
+    skillCount,
+    skills: employeeSkills.map(s => s.title)
   });
 
   return (
