@@ -25,8 +25,6 @@ interface BenchmarkSkillsMatrixContentProps {
   setSelectedCategory: (category: string) => void;
   selectedWeight: string;
   setSelectedWeight: (weight: string) => void;
-  visibleItems: number;
-  observerTarget: React.RefObject<HTMLDivElement>;
 }
 
 export const BenchmarkSkillsMatrixContent = ({
@@ -44,7 +42,6 @@ export const BenchmarkSkillsMatrixContent = ({
   const { selectedLevel } = useRoleStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  // Get all toggled skills as an array and filter by category
   const getToggledSkillsCount = (category: string) => {
     const allSkills = [
       ...currentRoleSkills.specialized,

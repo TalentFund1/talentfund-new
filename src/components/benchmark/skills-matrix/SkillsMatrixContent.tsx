@@ -14,8 +14,6 @@ interface SkillsMatrixContentProps {
   setSelectedSkillLevel: (level: string) => void;
   selectedSearchSkills: string[];
   setSelectedSearchSkills: (skills: string[]) => void;
-  visibleItems: number;
-  observerTarget: React.RefObject<HTMLDivElement>;
   isRoleBenchmark?: boolean;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
@@ -35,8 +33,6 @@ export const SkillsMatrixContent = ({
   setSelectedSkillLevel,
   selectedSearchSkills,
   setSelectedSearchSkills,
-  visibleItems,
-  observerTarget,
   isRoleBenchmark = false,
   selectedCategory,
   setSelectedCategory,
@@ -76,22 +72,13 @@ export const SkillsMatrixContent = ({
 
       {isRoleBenchmark ? (
         <BenchmarkSkillsMatrixTable 
-          filteredSkills={filteredSkills.slice(0, visibleItems)}
+          filteredSkills={filteredSkills}
         />
       ) : (
         <SkillsMatrixTable 
-          filteredSkills={filteredSkills.slice(0, visibleItems)}
+          filteredSkills={filteredSkills}
           isRoleBenchmark={false}
         />
-      )}
-
-      {visibleItems < filteredSkills.length && (
-        <div 
-          ref={observerTarget} 
-          className="h-10 flex items-center justify-center"
-        >
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-        </div>
       )}
     </>
   );
