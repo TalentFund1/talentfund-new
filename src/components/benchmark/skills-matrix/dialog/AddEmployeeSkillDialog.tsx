@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { getUnifiedSkillData } from '@/components/skills/data/skillDatabaseService';
-import { Skills } from '@/components/skills/data/skills/allSkills';
+import { universalSkillsDatabase } from '@/components/skills/data/skills/universalSkillsDatabase';
 import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
 import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
 
@@ -19,12 +19,10 @@ export const AddEmployeeSkillDialog = () => {
   const { setEmployeeSkills, getEmployeeSkills } = useEmployeeStore();
   const { initializeEmployeeSkills, setSkillLevel, setSkillGoalStatus } = useEmployeeSkillsStore();
 
-  // Get all available skills without role-specific filtering
-  const allSkills = Array.from(new Set([
-    ...Skills.specialized.map(s => normalizeSkillTitle(s.title)),
-    ...Skills.common.map(s => normalizeSkillTitle(s.title)),
-    ...Skills.certification.map(s => normalizeSkillTitle(s.title))
-  ]));
+  // Get all available skills from universal database
+  const allSkills = Array.from(new Set(
+    universalSkillsDatabase.map(skill => normalizeSkillTitle(skill.title))
+  ));
 
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
