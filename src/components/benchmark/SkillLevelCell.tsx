@@ -3,7 +3,6 @@ import { useCompetencyStore } from "./CompetencyState";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 import { useParams } from "react-router-dom";
-import { SkillGoalStatus } from "../employee/types/employeeSkillTypes";
 
 interface SkillCellProps {
   skillName: string;
@@ -21,11 +20,11 @@ export const SkillCell = ({
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
-  const { roleStates, setSkillState } = useCompetencyStore();
+  const { currentStates, setSkillState } = useCompetencyStore();
   const { id: roleId } = useParams<{ id: string }>();
   const currentRoleId = roleId || "123";
 
-  const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+  const currentState = currentStates[skillName]?.[levelKey] || {
     level: details.level || "unspecified",
     required: details.required || "preferred",
   };
@@ -35,43 +34,32 @@ export const SkillCell = ({
       skillName,
       levelKey,
       newLevel: value,
-      currentRequired: currentState.required,
-      roleId: currentRoleId
+      currentRequired: currentState.required
     });
     
     setSkillState(
       skillName,
       value,
       levelKey,
-      currentState.required || 'preferred',
-      currentRoleId
+      currentState.required || 'preferred'
     );
   };
 
-  const handleRequirementChange = (value: SkillGoalStatus) => {
+  const handleRequirementChange = (value: string) => {
     console.log('Changing requirement:', {
       skillName,
       levelKey,
       currentLevel: currentState.level,
-      newRequired: value,
-      roleId: currentRoleId
+      newRequired: value
     });
     
     setSkillState(
       skillName,
       currentState.level || 'unspecified',
       levelKey,
-      value,
-      currentRoleId
+      value
     );
   };
-
-  console.log('Rendering SkillCell:', {
-    skillName,
-    levelKey,
-    currentState,
-    roleId: currentRoleId
-  });
 
   return (
     <TableCell 
@@ -91,3 +79,5 @@ export const SkillCell = ({
     </TableCell>
   );
 };
+
+export default SkillCell;
