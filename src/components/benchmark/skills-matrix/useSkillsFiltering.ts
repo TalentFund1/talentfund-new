@@ -21,11 +21,13 @@ export const useSkillsFiltering = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
+  
+  // Get employee's actual skills
   const employeeSkills = getEmployeeSkills(employeeId);
 
   console.log('Starting skills filtering with:', {
     employeeId,
-    totalSkills: employeeSkills.length,
+    totalEmployeeSkills: employeeSkills.length,
     selectedCategory,
     selectedWeight,
     selectedLevel,
@@ -36,8 +38,34 @@ export const useSkillsFiltering = (
   });
 
   const filterSkills = () => {
-    // Start with employee skills
+    // Start with employee skills only
     let skills = [...employeeSkills];
+
+    // Get role skills for comparison
+    const roleData = roleSkills[selectedRole as keyof typeof roleSkills];
+    if (!roleData) {
+      console.warn('No role data found for:', selectedRole);
+      return [];
+    }
+
+    const allRoleSkills = [
+      ...roleData.specialized,
+      ...roleData.common,
+      ...roleData.certifications
+    ];
+
+    // Filter to only include skills that are both employee skills AND role skills
+    skills = skills.filter(empSkill => {
+      const isRoleSkill = allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title);
+      const isToggled = toggledSkills.has(empSkill.title);
+      return isRoleSkill && isToggled;
+    });
+
+    console.log('After matching with role skills:', {
+      employeeId,
+      matchingSkillsCount: skills.length,
+      matchingSkills: skills.map(s => s.title)
+    });
 
     // Remove duplicates using a Map with skill titles as keys
     const uniqueSkills = new Map();
@@ -47,11 +75,6 @@ export const useSkillsFiltering = (
       }
     });
     skills = Array.from(uniqueSkills.values());
-
-    console.log('After removing duplicates:', {
-      originalCount: employeeSkills.length,
-      uniqueCount: skills.length
-    });
 
     // Apply category filter
     if (selectedCategory !== 'all') {
@@ -129,8 +152,9 @@ export const useSkillsFiltering = (
 
   console.log('Skills filtering result:', {
     employeeId,
-    totalSkills: employeeSkills.length,
+    totalEmployeeSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
+    filteredSkillTitles: filteredSkills.map(s => s.title),
     filters: {
       selectedCategory,
       selectedWeight,
