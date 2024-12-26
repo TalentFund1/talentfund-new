@@ -6,6 +6,18 @@ import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { EmployeeSkillAchievement } from "../../employee/types/employeeSkillTypes";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
+const getSkillLevel = (state: any): string => {
+  if (typeof state === 'string') return state.toLowerCase();
+  if (state && typeof state === 'object' && 'level' in state) return state.level.toLowerCase();
+  return 'unspecified';
+};
+
+const getGoalStatus = (state: any): string => {
+  if (typeof state === 'string') return state.toLowerCase();
+  if (state && typeof state === 'object' && 'goalStatus' in state) return state.goalStatus.toLowerCase();
+  return 'unknown';
+};
+
 export const useSkillsFiltering = (
   employeeId: string,
   selectedRole: string,
@@ -100,13 +112,13 @@ export const useSkillsFiltering = (
       let matchesSkillLevel = true;
 
       const currentSkillState = currentStates[skill.title];
-      const skillLevel = (currentSkillState?.level || skill.level || 'unspecified').toLowerCase();
+      const skillLevel = getSkillLevel(currentSkillState?.level || skill.level || 'unspecified');
       
       if (selectedSkillLevel !== 'all') {
         matchesSkillLevel = skillLevel === selectedSkillLevel.toLowerCase();
       }
 
-      const goalStatus = (currentSkillState?.goalStatus || skill.goalStatus || 'unknown').toLowerCase();
+      const goalStatus = getGoalStatus(currentSkillState?.goalStatus || skill.goalStatus || 'unknown');
 
       if (selectedInterest !== 'all') {
         switch (selectedInterest.toLowerCase()) {

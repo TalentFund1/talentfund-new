@@ -2,6 +2,7 @@ import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { benchmarkingService } from "../../../services/benchmarking";
+import { SkillState } from "../../skills/competency/state/types";
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -9,6 +10,18 @@ interface MatchingSkillsResult {
   skillGoalMatchingSkills: UnifiedSkill[];
   totalToggledSkills: number;
 }
+
+const getSkillLevel = (state: SkillState | string | undefined): string => {
+  if (typeof state === 'string') return state;
+  if (state && typeof state === 'object' && 'level' in state) return state.level;
+  return 'unspecified';
+};
+
+const getGoalStatus = (state: SkillState | string | undefined): string => {
+  if (typeof state === 'string') return state;
+  if (state && typeof state === 'object' && 'required' in state) return state.required;
+  return 'unknown';
+};
 
 export const calculateMatchingSkills = (
   toggledRoleSkills: UnifiedSkill[],
@@ -37,8 +50,8 @@ export const calculateMatchingSkills = (
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
+    const employeeSkillLevel = getSkillLevel(currentStates[skill.title]?.level) || skill.level || 'unspecified';
+    const roleSkillLevel = getSkillLevel(roleSkillState.level);
 
     console.log('Comparing competency levels:', {
       skill: skill.title,
@@ -58,7 +71,9 @@ export const calculateMatchingSkills = (
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.goalStatus === 'required' || skillState.goalStatus === 'skill_goal';
+    
+    const goalStatus = getGoalStatus(skillState.goalStatus);
+    return goalStatus === 'required' || goalStatus === 'skill_goal';
   });
 
   return {
