@@ -12,14 +12,24 @@ interface StaticSkillLevelCellProps {
   isRoleBenchmark?: boolean;
 }
 
+const normalizeLevel = (level: string | undefined): SkillLevel => {
+  const normalizedLevel = (level || 'unspecified').toLowerCase();
+  return normalizedLevel as SkillLevel;
+};
+
+const normalizeGoalStatus = (status: string | undefined): SkillGoalStatus => {
+  const normalizedStatus = (status || 'unknown').toLowerCase();
+  return normalizedStatus as SkillGoalStatus;
+};
+
 export const StaticSkillLevelCell = ({ 
   initialLevel, 
   skillTitle,
   onLevelChange,
   isRoleBenchmark = false
 }: StaticSkillLevelCellProps) => {
-  const currentLevel = initialLevel?.toLowerCase() as SkillLevel || 'unspecified';
-  const currentGoalStatus = 'unknown' as SkillGoalStatus;
+  const currentLevel = normalizeLevel(initialLevel);
+  const currentGoalStatus = normalizeGoalStatus('unknown');
 
   console.log('StaticSkillLevelCell rendering:', {
     skillTitle,
