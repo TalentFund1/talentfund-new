@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
+import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { useToast } from "@/hooks/use-toast";
 import { benchmarkingService } from "../../services/benchmarking";
 
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
+  const [hasChanges, setHasChanges] = useState(false);
   const [employeeSkillsData, setEmployeeSkillsData] = useState<UnifiedSkill[]>([]);
   
   const { id } = useParams<{ id: string }>();
-  const { hasChanges, saveChanges, cancelChanges } = useSkillsMatrixStore();
+  const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
   const { getEmployeeSkills, getSkillState, initializeEmployeeSkills } = useEmployeeSkillsStore();
-  const { toast } = useToast();
 
   // Initialize employee skills if needed
   useEffect(() => {
@@ -30,7 +30,7 @@ export const SkillsMatrix = () => {
       
       // Transform skills to UnifiedSkill format with proper type checking
       const transformedSkills = skills
-        .filter(skill => skill && skill.title)
+        .filter(skill => skill && skill.title) // Filter out invalid skills
         .map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
@@ -47,7 +47,7 @@ export const SkillsMatrix = () => {
             id: skillData.id || `${id}-${skill.title}`,
             title: skill.title,
             subcategory: skillData.subcategory || 'General',
-            level: skillState.level || skill.level || 'unspecified',
+            level: skillState.level || skill.level || 'unspecified', // Preserve original level if available
             growth: skillData.growth || '0%',
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
@@ -74,23 +74,16 @@ export const SkillsMatrix = () => {
     return true;
   });
 
-  const handleSave = () => {
-    console.log('Saving changes for employee:', id);
-    saveChanges(id || "");
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
-  };
+  console.log('SkillsMatrix - Filtered skills:', {
+    totalSkills: employeeSkillsData.length,
+    filteredSkills: filteredSkills.length,
+    selectedLevel,
+    selectedInterest
+  });
 
-  const handleCancel = () => {
-    console.log('Canceling changes for employee:', id);
-    cancelChanges(id || "");
-    toast({
-      title: "Changes cancelled",
-      description: "Your changes have been discarded.",
-    });
-  };
+  useEffect(() => {
+    setHasChanges(storeHasChanges);
+  }, [storeHasChanges]);
 
   return (
     <div className="space-y-6">
@@ -101,8 +94,6 @@ export const SkillsMatrix = () => {
         setSelectedInterest={setSelectedInterest}
         filteredSkills={filteredSkills}
         hasChanges={hasChanges}
-        onSave={handleSave}
-        onCancel={handleCancel}
         isRoleBenchmark={false}
       />
     </div>

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { filterSkillsByCategory } from '../skills-matrix/skillCategories';
 import { benchmarkingService } from '../../../services/benchmarking';
 
 interface SkillState {
@@ -9,126 +11,115 @@ interface SkillState {
 }
 
 interface SkillsMatrixState {
-  currentStates: Record<string, Record<string, SkillState>>;
-  originalStates: Record<string, Record<string, SkillState>>;
+  currentStates: { [key: string]: SkillState };
   hasChanges: boolean;
-  setSkillState: (employeeId: string, skillName: string, updates: Partial<SkillState>) => void;
-  saveChanges: (employeeId: string) => void;
-  cancelChanges: (employeeId: string) => void;
-  initializeState: (employeeId: string, skillName: string, initialState: SkillState) => void;
+  setSkillState: (skillTitle: string, level: string, goalStatus: string) => void;
+  resetSkills: () => void;
+  initializeState: (skillTitle: string, level: string, goalStatus: string) => void;
+  saveChanges: () => void;
+  cancelChanges: () => void;
 }
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       currentStates: {},
-      originalStates: {},
       hasChanges: false,
 
-      setSkillState: (employeeId, skillName, updates) => {
-        console.log('Setting skill state:', { employeeId, skillName, updates });
+      setSkillState: (skillTitle, level, goalStatus) => {
+        console.log('Setting skill state in matrix:', { skillTitle, level, goalStatus });
         
-        set((state) => {
-          const currentEmployeeState = state.currentStates[employeeId] || {};
-          const currentSkillState = currentEmployeeState[skillName] || {
-            level: 'unspecified',
-            goalStatus: 'unknown',
-            lastUpdated: new Date().toISOString()
-          };
-
-          const newSkillState = {
-            ...currentSkillState,
-            ...updates,
-            lastUpdated: new Date().toISOString()
-          };
-
-          // Store original state if it doesn't exist
-          if (!state.originalStates[employeeId]?.[skillName]) {
-            state.originalStates = {
-              ...state.originalStates,
-              [employeeId]: {
-                ...state.originalStates[employeeId],
-                [skillName]: { ...currentSkillState }
-              }
-            };
-          }
-
-          const newState = {
-            currentStates: {
-              ...state.currentStates,
-              [employeeId]: {
-                ...currentEmployeeState,
-                [skillName]: newSkillState
-              }
-            },
-            hasChanges: true
-          };
-
-          console.log('Updated skill state:', {
-            employeeId,
-            skillName,
-            newState: newSkillState,
-            hasChanges: true
-          });
-
-          return newState;
-        });
-      },
-
-      saveChanges: (employeeId) => {
-        console.log('Saving changes for employee:', employeeId);
-        set((state) => ({
-          originalStates: {
-            ...state.originalStates,
-            [employeeId]: { ...state.currentStates[employeeId] }
-          },
-          hasChanges: false
-        }));
-      },
-
-      cancelChanges: (employeeId) => {
-        console.log('Canceling changes for employee:', employeeId);
         set((state) => ({
           currentStates: {
             ...state.currentStates,
-            [employeeId]: { ...state.originalStates[employeeId] }
+            [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
           },
-          hasChanges: false
+          hasChanges: true,
         }));
       },
 
-      initializeState: (employeeId, skillName, initialState) => {
-        console.log('Initializing state:', { employeeId, skillName, initialState });
+      resetSkills: () =>
+        set(() => ({
+          currentStates: {},
+          hasChanges: false,
+        })),
+
+      initializeState: (skillTitle, level, goalStatus) =>
         set((state) => {
-          if (!state.currentStates[employeeId]?.[skillName]) {
+          if (!state.currentStates[skillTitle]) {
+            console.log('Initializing skill state:', { skillTitle, level, goalStatus });
             return {
               currentStates: {
                 ...state.currentStates,
-                [employeeId]: {
-                  ...state.currentStates[employeeId],
-                  [skillName]: initialState
-                }
+                [skillTitle]: benchmarkingService.createSkillState(level, goalStatus)
               },
-              originalStates: {
-                ...state.originalStates,
-                [employeeId]: {
-                  ...state.originalStates[employeeId],
-                  [skillName]: initialState
-                }
-              }
             };
           }
           return state;
-        });
-      }
+        }),
+
+      saveChanges: () => {
+        set(() => ({
+          hasChanges: false,
+        }));
+      },
+
+      cancelChanges: () =>
+        set(() => ({
+          hasChanges: false,
+        })),
     }),
     {
       name: 'skills-matrix-storage',
       version: 2,
       partialize: (state) => ({
         currentStates: state.currentStates,
-        originalStates: state.originalStates,
       }),
     }
   )
 );
+
+export const useSkillsMatrixState = (
+  selectedCategory: string,
+  selectedLevel: string,
+  selectedInterest: string
+) => {
+  const { currentStates } = useSkillsMatrixStore();
+
+  const filterAndSortSkills = (skills: UnifiedSkill[]) => {
+    console.log('Filtering skills:', { 
+      totalSkills: skills.length,
+      selectedCategory,
+      selectedLevel,
+      selectedInterest 
+    });
+
+    let filteredSkills = [...skills];
+
+    if (selectedCategory !== "all") {
+      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
+    }
+
+    if (selectedLevel !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const skillState = currentStates[skill.title];
+        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
+      });
+    }
+
+    if (selectedInterest !== "all") {
+      filteredSkills = filteredSkills.filter((skill) => {
+        const skillState = currentStates[skill.title];
+        if (!skillState?.goalStatus) return false;
+
+        return benchmarkingService.matchesInterestFilter(skillState.goalStatus, selectedInterest);
+      });
+    }
+
+    return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
+  };
+
+  return {
+    filterAndSortSkills,
+  };
+};

@@ -43,24 +43,14 @@ export const SkillBadge = ({
     
     // If it's in the current states
     if (skillState) {
-      const goalStatus = typeof skillState.goalStatus === 'string' ? 
-        skillState.goalStatus : 
-        skillState.goalStatus?.goalStatus || 'unknown';
-      
-      return goalStatus === 'required' || goalStatus === 'skill_goal';
+      return skillState.goalStatus === 'required' || 
+             skillState.goalStatus === 'skill_goal';
     }
     
-    return false;
+    // For all skill levels, show goal by default
+    const currentLevel = (skillState?.level || level || '').toLowerCase();
+    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
   };
-
-  const getCurrentLevel = () => {
-    if (!skillState) return level || 'unspecified';
-    return typeof skillState.level === 'string' ? 
-      skillState.level : 
-      skillState.level?.level || 'unspecified';
-  };
-
-  const currentLevel = getCurrentLevel();
 
   return (
     <Badge 
@@ -71,7 +61,9 @@ export const SkillBadge = ({
       {skill.name}
       {(showLevel || skillState) && (
         <div className="flex items-center gap-1.5">
-          <div className={`h-2 w-2 rounded-full ${getLevelColor(currentLevel)}`} />
+          <div className={`h-2 w-2 rounded-full ${
+            getLevelColor(skillState?.level || level || "unspecified")
+          }`} />
           {shouldShowGoal() && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}

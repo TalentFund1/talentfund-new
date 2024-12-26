@@ -28,10 +28,9 @@ export const EmployeeSkillMatch = ({ employeeId, selectedSkills }: EmployeeSkill
             return (
               <SkillBubble
                 key={skillName}
-                skill={{ name: skillName }}
-                level={employeeSkill.level}
-                isSkillGoal={false}
-                showLevel={true}
+                skillName={skillName}
+                level={employeeSkill.level || 'unspecified'}
+                isRequired={false}
               />
             );
           })}
@@ -42,10 +41,9 @@ export const EmployeeSkillMatch = ({ employeeId, selectedSkills }: EmployeeSkill
           {adjacentSkills.map(skill => (
             <SkillBubble
               key={skill.title}
-              skill={{ name: skill.title }}
-              level={skill.level}
-              isSkillGoal={false}
-              showLevel={true}
+              skillName={skill.title}
+              level={skill.level || 'unspecified'}
+              isRequired={false}
             />
           ))}
         </div>
