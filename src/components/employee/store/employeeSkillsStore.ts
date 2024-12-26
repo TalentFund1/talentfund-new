@@ -14,6 +14,7 @@ interface EmployeeSkillsStore {
   initializeEmployeeSkills: (employeeId: string) => void;
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
+  saveSkillStates: (employeeId: string) => Promise<void>;
 }
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
@@ -24,6 +25,29 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       ...createSkillStateActions(set, get),
       ...createInitializationActions(set, get),
       ...createSkillSelectors(get),
+
+      saveSkillStates: async (employeeId: string) => {
+        console.log('Saving skill states for employee:', employeeId);
+        const currentState = get().skillStates[employeeId];
+        
+        if (currentState) {
+          set((state) => ({
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                ...currentState,
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          }));
+          
+          console.log('Successfully saved skill states:', {
+            employeeId,
+            skillCount: Object.keys(currentState.skills || {}).length,
+            timestamp: new Date().toISOString()
+          });
+        }
+      },
 
       updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => {
         console.log('Updating skill state:', { employeeId, skillTitle, updates });

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
@@ -7,6 +7,7 @@ import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { benchmarkingService } from "../../services/benchmarking";
+import { useToast } from "@/hooks/use-toast";
 
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
@@ -16,7 +17,8 @@ export const SkillsMatrix = () => {
   
   const { id } = useParams<{ id: string }>();
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { getEmployeeSkills, getSkillState, initializeEmployeeSkills } = useEmployeeSkillsStore();
+  const { getEmployeeSkills, getSkillState, initializeEmployeeSkills, saveSkillStates } = useEmployeeSkillsStore();
+  const { toast } = useToast();
 
   // Initialize employee skills if needed
   useEffect(() => {
@@ -30,7 +32,7 @@ export const SkillsMatrix = () => {
       
       // Transform skills to UnifiedSkill format with proper type checking
       const transformedSkills = skills
-        .filter(skill => skill && skill.title) // Filter out invalid skills
+        .filter(skill => skill && skill.title)
         .map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
@@ -47,7 +49,7 @@ export const SkillsMatrix = () => {
             id: skillData.id || `${id}-${skill.title}`,
             title: skill.title,
             subcategory: skillData.subcategory || 'General',
-            level: skillState.level || skill.level || 'unspecified', // Preserve original level if available
+            level: skillState.level || skill.level || 'unspecified',
             growth: skillData.growth || '0%',
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
@@ -85,6 +87,39 @@ export const SkillsMatrix = () => {
     setHasChanges(storeHasChanges);
   }, [storeHasChanges]);
 
+  const handleSave = async () => {
+    console.log('Saving skill states for employee:', id);
+    if (id) {
+      try {
+        await saveSkillStates(id);
+        setHasChanges(false);
+        toast({
+          title: "Success",
+          description: "Skill changes have been saved successfully.",
+        });
+      } catch (error) {
+        console.error('Error saving skill states:', error);
+        toast({
+          title: "Error",
+          description: "Failed to save skill changes. Please try again.",
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    if (id) {
+      console.log('Canceling changes for employee:', id);
+      initializeEmployeeSkills(id);
+      setHasChanges(false);
+      toast({
+        title: "Changes Cancelled",
+        description: "Your changes have been discarded.",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <SkillsMatrixView
@@ -95,6 +130,8 @@ export const SkillsMatrix = () => {
         filteredSkills={filteredSkills}
         hasChanges={hasChanges}
         isRoleBenchmark={false}
+        onSave={handleSave}
+        onCancel={handleCancel}
       />
     </div>
   );
