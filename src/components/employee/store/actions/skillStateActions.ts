@@ -9,13 +9,7 @@ export const createSkillStateActions = (set: any, get: any) => ({
 
   setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
     console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
-    // Normalize legacy values to 'skill_goal'
-    let normalizedStatus = goalStatus;
-    if (goalStatus === 'required' || goalStatus === 'preferred') {
-      normalizedStatus = 'skill_goal';
-    }
-    
     const store = get();
-    store.updateSkillState(employeeId, skillTitle, { goalStatus: normalizedStatus });
+    store.updateSkillState(employeeId, skillTitle, { goalStatus });
   }
 });
