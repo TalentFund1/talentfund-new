@@ -44,19 +44,17 @@ export const useSkillsFiltering = (
       return [];
     }
 
-    // Combine all skills for the role
+    // Combine all skills for the role and filter for toggled skills only
     let skills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ];
+    ].filter(skill => toggledSkills.has(skill.title));
 
-    console.log('Role-specific skills loaded:', {
+    console.log('Role-specific toggled skills loaded:', {
       roleId: selectedRole,
       totalSkills: skills.length,
-      specialized: currentRoleSkills.specialized.length,
-      common: currentRoleSkills.common.length,
-      certifications: currentRoleSkills.certifications.length
+      toggledSkills: Array.from(toggledSkills)
     });
 
     // Remove duplicates using a Map with skill titles as keys
