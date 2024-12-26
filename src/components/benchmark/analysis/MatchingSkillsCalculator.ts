@@ -1,63 +1,57 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { EmployeeSkillAchievement } from "../../employee/types/employeeSkillTypes";
 import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
 import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { benchmarkingService } from "../../../services/benchmarking";
 import { SkillState } from "../../skills/competency/state/types";
 
-interface MatchingSkillsResult {
-  matchingSkills: UnifiedSkill[];
-  competencyMatchingSkills: UnifiedSkill[];
-  skillGoalMatchingSkills: UnifiedSkill[];
-  totalToggledSkills: number;
-}
-
-const getSkillLevel = (state: SkillState | string | undefined): string => {
+const getSkillLevel = (state: string | SkillState): string => {
   if (typeof state === 'string') return state;
-  if (state && typeof state === 'object' && 'level' in state) return state.level;
+  if ('level' in state) return state.level;
   return 'unspecified';
 };
 
-const getGoalStatus = (state: SkillState | string | undefined): string => {
+const getSkillGoalStatus = (state: string | SkillState): string => {
   if (typeof state === 'string') return state;
-  if (state && typeof state === 'object' && 'required' in state) return state.required;
+  if ('goalStatus' in state) return state.goalStatus;
   return 'unknown';
 };
 
 export const calculateMatchingSkills = (
   toggledRoleSkills: UnifiedSkill[],
-  employeeSkills: UnifiedSkill[],
+  employeeSkills: EmployeeSkillAchievement[],
   comparisonLevel: string,
   selectedRole: string,
   track: string
-): MatchingSkillsResult => {
-  const { currentStates } = useSkillsMatrixStore();
+) => {
+  const { currentStates } = useSkillsMatrixStore.getState();
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
   console.log('Calculating matching skills:', {
-    toggledCount: toggledRoleSkills.length,
-    employeeSkillsCount: employeeSkills.length,
+    toggledSkillCount: toggledRoleSkills.length,
+    employeeSkillCount: employeeSkills.length,
     level: comparisonLevel,
     role: selectedRole,
     track
   });
 
   const matchingSkills = toggledRoleSkills.filter(roleSkill => {
-    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined;
+    return employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = getSkillLevel(currentStates[skill.title]?.level) || skill.level || 'unspecified';
-    const roleSkillLevel = getSkillLevel(roleSkillState.level);
+    const employeeSkillLevel = getSkillLevel(currentStates[skill.title]?.level) || 
+      employeeSkills.find(s => s.title === skill.title)?.level || 
+      'unspecified';
+    const roleSkillLevel = roleSkillState.level;
 
-    console.log('Comparing competency levels:', {
+    console.log('Comparing skill levels:', {
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      track
+      roleLevel: roleSkillLevel
     });
 
     const comparison = benchmarkingService.compareSkillLevels(
@@ -72,7 +66,7 @@ export const calculateMatchingSkills = (
     const skillState = currentStates[skill.title];
     if (!skillState) return false;
     
-    const goalStatus = getGoalStatus(skillState.goalStatus);
+    const goalStatus = getSkillGoalStatus(skillState.goalStatus);
     return goalStatus === 'required' || goalStatus === 'skill_goal';
   });
 
