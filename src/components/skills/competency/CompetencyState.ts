@@ -14,6 +14,32 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
+      getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string) => {
+        console.log('Getting skill competency state:', { skillName, levelKey, roleId });
+        const roleState = get().roleStates[roleId];
+        if (!roleState?.[skillName]?.[levelKey]) {
+          return {
+            level: 'unspecified',
+            required: 'preferred'
+          };
+        }
+        return roleState[skillName][levelKey];
+      },
+
+      getAllSkillStatesForLevel: (levelKey: string, roleId: string) => {
+        console.log('Getting all skill states for level:', { levelKey, roleId });
+        const roleState = get().roleStates[roleId] || {};
+        const result: Record<string, any> = {};
+        
+        Object.entries(roleState).forEach(([skillName, skillStates]) => {
+          if (skillStates[levelKey]) {
+            result[skillName] = skillStates[levelKey];
+          }
+        });
+        
+        return result;
+      },
+
       setSkillState: (skillName, level, levelKey, required, roleId) => {
         console.log('Setting skill state:', { skillName, level, levelKey, required, roleId });
         
