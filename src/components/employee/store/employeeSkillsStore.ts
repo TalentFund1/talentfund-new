@@ -25,20 +25,70 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       skillStates: {},
-      ...createSkillStateActions(set, get),
-      ...createInitializationActions(set, get),
-      ...createSkillSelectors(get),
+      
+      getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
+        console.log('Getting skill state:', { employeeId, skillTitle });
+        const state = get().skillStates[employeeId]?.skills[skillTitle];
+        const defaultState: EmployeeSkillData = {
+          id: `${employeeId}-${skillTitle}`,
+          employeeId,
+          skillId: `${employeeId}-${skillTitle}`,
+          title: skillTitle,
+          level: 'unspecified',
+          goalStatus: 'unknown',
+          lastUpdated: new Date().toISOString(),
+          confidence: 'medium',
+          subcategory: 'General',
+          category: 'specialized',
+          businessCategory: 'Technical Skills',
+          weight: 'technical',
+          growth: '0%',
+          salary: 'market',
+          benchmarks: {
+            B: false,
+            R: false,
+            M: false,
+            O: false
+          }
+        };
+        return state || defaultState;
+      },
+
+      getEmployeeSkills: (employeeId: string): EmployeeSkillData[] => {
+        console.log('Getting skills for employee:', employeeId);
+        return Object.values(get().skillStates[employeeId]?.skills || {});
+      },
+
+      setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
+        console.log('Setting skill level:', { employeeId, skillTitle, level });
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { level });
+      },
+
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => {
+        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { goalStatus: status });
+      },
+
+      initializeEmployeeSkills: (employeeId: string) => {
+        console.log('Initializing skills for employee:', employeeId);
+        set((state) => ({
+          skillStates: {
+            ...state.skillStates,
+            [employeeId]: {
+              skills: {},
+              lastUpdated: new Date().toISOString()
+            }
+          }
+        }));
+      },
 
       updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => {
         console.log('Updating skill state:', { employeeId, skillTitle, updates });
         
         set((state) => {
-          const currentState = state.skillStates[employeeId] || { 
-            skills: {},
-            lastUpdated: new Date().toISOString()
-          };
-
-          const currentSkill = currentState.skills[skillTitle] || {
+          const currentState = state.skillStates[employeeId]?.skills[skillTitle] || {
             id: `${employeeId}-${skillTitle}`,
             employeeId,
             skillId: `${employeeId}-${skillTitle}`,
@@ -64,11 +114,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           const updatedSkillStates = {
             ...state.skillStates,
             [employeeId]: {
-              ...currentState,
               skills: {
-                ...currentState.skills,
+                ...state.skillStates[employeeId]?.skills,
                 [skillTitle]: {
-                  ...currentSkill,
+                  ...currentState,
                   ...updates,
                   lastUpdated: new Date().toISOString()
                 }
@@ -77,26 +126,15 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Updated skill state:', updatedSkillStates);
           return {
             ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
+            skillStates: updatedSkillStates
           };
         });
       },
 
       batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => {
-        console.log('Processing batch update:', { 
-          employeeId, 
-          updateCount: Object.keys(updates).length 
-        });
+        console.log('Processing batch update:', { employeeId, updateCount: Object.keys(updates).length });
 
         set((state) => {
           const currentState = state.skillStates[employeeId] || {
@@ -145,17 +183,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Batch update complete:', updatedSkillStates);
           return {
             ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
+            skillStates: updatedSkillStates
           };
         });
       }
@@ -163,22 +193,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     {
       name: 'employee-skills-storage',
       version: 2,
-      storage: {
-        getItem: (name) => {
-          const str = localStorage.getItem(name);
-          console.log('Loading from storage:', { name, value: str });
-          return str ? Promise.resolve(JSON.parse(str)) : Promise.resolve(null);
-        },
-        setItem: (name, value) => {
-          console.log('Saving to storage:', { name, value });
-          localStorage.setItem(name, JSON.stringify(value));
-          return Promise.resolve();
-        },
-        removeItem: (name) => {
-          localStorage.removeItem(name);
-          return Promise.resolve();
-        },
-      },
       partialize: (state) => ({
         skillStates: state.skillStates
       })
