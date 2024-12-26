@@ -5,6 +5,7 @@ import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
 import { RoleSkillLevelCell } from "./RoleSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
+import { useParams } from "react-router-dom";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -24,7 +25,8 @@ export const SkillsMatrixRow = ({
   skill, 
   isRoleBenchmark
 }: SkillsMatrixRowProps) => {
-  const { currentStates } = useSkillsMatrixStore();
+  const { id: employeeId } = useParams();
+  const { getSkillState } = useSkillsMatrixStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -85,6 +87,7 @@ export const SkillsMatrixRow = ({
           <StaticSkillLevelCell 
             initialLevel={skill.level || 'unspecified'}
             skillTitle={skill.title}
+            employeeId={employeeId || ''}
           />
         </>
       ) : (
