@@ -5,13 +5,13 @@ export interface IEmployeeSkillsStore {
   getEmployeeSkills: (employeeId: string) => EmployeeSkillAchievement[];
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillState;
   
+  // Initialization
+  initializeEmployeeSkills: (employeeId: string) => void;
+  
   // State updates
   setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillState>) => void;
-  
-  // Initialization
-  initializeEmployeeSkills: (employeeId: string) => void;
 }
 
 // Type guard to verify store implementation

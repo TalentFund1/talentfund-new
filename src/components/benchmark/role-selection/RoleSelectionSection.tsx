@@ -1,6 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { professionalLevels, managerialLevels } from "../data/levelData";
+import { useEmployeeStore } from "../../employee/store/employeeStore";
 
 interface RoleSelectionSectionProps {
   selectedRole: string;
@@ -24,21 +25,27 @@ export const RoleSelectionSection = ({
     roleTrack: data.roleTrack || "Professional"
   }));
 
+  // Get employee data to access their current level
+  const employees = useEmployeeStore((state) => state.employees);
+  const employee = employees.find(emp => emp.id === employeeId);
+  const employeeLevel = employee?.role.split(':')[1]?.trim() || "P4"; // Default to P4 if not found
+
   console.log('Role selection state:', {
     selectedRole,
     roleTrack: roleSkills[selectedRole as keyof typeof roleSkills]?.roleTrack,
+    employeeLevel,
     availableRoles: availableRoles.map(r => ({ id: r.id, title: r.title }))
   });
 
   const handleRoleChange = (newRole: string) => {
-    console.log('Role changed for benchmarking:', { newRole });
+    console.log('Role changed for benchmarking:', { 
+      newRole,
+      maintainingLevel: employeeLevel
+    });
     onRoleChange(newRole);
     
-    // Reset level when role changes to ensure track compatibility
-    const roleData = roleSkills[newRole as keyof typeof roleSkills];
-    const isManagerialRole = roleData?.roleTrack === "Managerial";
-    const defaultLevel = isManagerialRole ? "m3" : "p1";
-    onLevelChange(defaultLevel);
+    // Keep the employee's current level when changing roles
+    onLevelChange(employeeLevel);
   };
 
   const handleLevelChange = (newLevel: string) => {
