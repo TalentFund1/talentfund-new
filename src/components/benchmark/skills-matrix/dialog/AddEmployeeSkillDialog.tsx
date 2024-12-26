@@ -9,6 +9,7 @@ import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { getUnifiedSkillData } from '@/components/skills/data/skillDatabaseService';
 import { Skills } from '@/components/skills/data/skills/allSkills';
 import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
+import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
 
 export const AddEmployeeSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -16,6 +17,7 @@ export const AddEmployeeSkillDialog = () => {
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { setEmployeeSkills, getEmployeeSkills } = useEmployeeStore();
+  const { initializeEmployeeSkills, setSkillLevel, setSkillGoalStatus } = useEmployeeSkillsStore();
 
   const allSkills = Array.from(new Set([
     ...Skills.specialized.map(s => normalizeSkillTitle(s.title)),
@@ -38,10 +40,19 @@ export const AddEmployeeSkillDialog = () => {
       return;
     }
 
+    // Initialize employee skills if needed
+    initializeEmployeeSkills(id);
+
     const currentSkills = getEmployeeSkills(id);
     const newSkills = selectedSkills.map(skillTitle => {
       console.log('Processing new skill:', skillTitle);
-      return getUnifiedSkillData(skillTitle);
+      const skillData = getUnifiedSkillData(skillTitle);
+      
+      // Initialize skill state in employee store
+      setSkillLevel(id, skillTitle, 'beginner');
+      setSkillGoalStatus(id, skillTitle, 'unknown');
+      
+      return skillData;
     });
 
     // Combine existing and new skills, avoiding duplicates
