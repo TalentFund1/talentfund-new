@@ -76,7 +76,8 @@ export const BenchmarkAnalysis = () => {
         key,
         {
           level: value.level || 'unspecified',
-          required: value.required || 'unknown'
+          required: value.required || 'preferred',
+          goalStatus: value.goalStatus || 'unknown'
         }
       ])
     )
