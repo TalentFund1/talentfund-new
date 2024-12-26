@@ -6,18 +6,19 @@ import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { EmployeeSkillAchievement } from "../../employee/types/employeeSkillTypes";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
+// Updated levelOrder to sort from Advanced to Unspecified
 const levelOrder = {
-  'advanced': 0,
-  'intermediate': 1,
+  'unspecified': 3,
   'beginner': 2,
-  'unspecified': 3
+  'intermediate': 1,
+  'advanced': 0
 };
 
 const goalStatusOrder = {
-  'skill_goal': 0,
-  'required': 1,
+  'unknown': 3,
   'not_interested': 2,
-  'unknown': 3
+  'required': 1,
+  'skill_goal': 0
 };
 
 export const useSkillsFiltering = (
@@ -145,13 +146,13 @@ export const useSkillsFiltering = (
         };
       })
       .sort((a, b) => {
-        // First sort by level
+        // First sort by level (Advanced to Unspecified)
         const levelDiff = (levelOrder[a.employeeLevel.toLowerCase()] || 3) - 
                          (levelOrder[b.employeeLevel.toLowerCase()] || 3);
         
         if (levelDiff !== 0) return levelDiff;
         
-        // Then sort by goal status
+        // Then sort by goal status (Skill Goal to Unknown)
         const goalStatusDiff = (goalStatusOrder[a.goalStatus.toLowerCase()] || 3) - 
                              (goalStatusOrder[b.goalStatus.toLowerCase()] || 3);
         
