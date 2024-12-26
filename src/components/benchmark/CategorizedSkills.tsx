@@ -3,12 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useRoleStore } from "./RoleBenchmark";
-import { useTrack } from "../skills/context/TrackContext";
-import { benchmarkingService } from "../../services/benchmarking";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -20,44 +19,33 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedLevel } = useRoleStore();
-  const { getTrackForRole } = useTrack();
-  const track = getTrackForRole(roleId);
   
   // Get employee's actual skills
   const employeeSkills = getEmployeeSkills(employeeId);
 
-  console.log('CategorizedSkills - Current state:', {
-    roleId,
+  console.log('CategorizedSkills - Employee skills:', {
     employeeId,
-    selectedLevel,
-    track,
-    skillCount: employeeSkills.length
+    skillCount: employeeSkills.length,
+    skills: employeeSkills.map(s => ({ title: s.title, level: s.level })),
+    selectedLevel
   });
 
   // Get current role skills
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
-  if (!currentRoleSkills) {
-    console.error('Role skills not found:', roleId);
-    return null;
-  }
-
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
   const allRoleSkills = [
     ...currentRoleSkills.specialized,
     ...currentRoleSkills.common,
     ...currentRoleSkills.certifications
   ];
 
-  // Filter skills by toggled state
+  // Filter skills by category and toggled state
   const filteredSkills = allRoleSkills
     .filter(skill => toggledSkills.has(skill.title))
     .map(skill => {
       const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-      const employeeSkill = employeeSkills.find(es => es.title === skill.title);
-      
       return {
         ...skill,
-        employeeLevel: employeeSkill?.level || 'unspecified',
-        roleLevel: competencyState.level,
+        level: competencyState.level,
         required: competencyState.required
       };
     });
@@ -68,59 +56,27 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     totalSkills: filteredSkills.length,
     skills: filteredSkills.map(s => ({
       title: s.title,
-      employeeLevel: s.employeeLevel,
-      roleLevel: s.roleLevel,
+      level: s.level,
       required: s.required
     }))
   });
 
   // Categorize skills based on their competency requirements for current level
   const requiredSkills = filteredSkills.filter(skill => {
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: skill.employeeLevel },
-      { title: skill.title, minimumLevel: skill.roleLevel }
-    );
-    
-    console.log('Checking required skill:', {
-      skill: skill.title,
-      employeeLevel: skill.employeeLevel,
-      roleLevel: skill.roleLevel,
-      required: skill.required,
-      matchPercentage: comparison.matchPercentage
-    });
-    
-    return skill.required === 'required' && comparison.matchPercentage >= 100;
+    const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+    return (state.level === 'advanced' || state.level === 'intermediate') && 
+           state.required === 'required';
   });
 
   const preferredSkills = filteredSkills.filter(skill => {
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: skill.employeeLevel },
-      { title: skill.title, minimumLevel: skill.roleLevel }
-    );
-    
-    console.log('Checking preferred skill:', {
-      skill: skill.title,
-      employeeLevel: skill.employeeLevel,
-      roleLevel: skill.roleLevel,
-      required: skill.required,
-      matchPercentage: comparison.matchPercentage
-    });
-    
-    return skill.required === 'preferred' || 
-           (skill.required === 'required' && comparison.matchPercentage < 100);
+    const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+    return state.required === 'preferred' || 
+           (state.level === 'beginner' && state.required === 'required');
   });
 
   const missingSkills = filteredSkills.filter(skill => {
-    const isUnspecified = skill.employeeLevel === 'unspecified' || !skill.employeeLevel;
-    
-    console.log('Checking missing skill:', {
-      skill: skill.title,
-      employeeLevel: skill.employeeLevel,
-      roleLevel: skill.roleLevel,
-      isUnspecified
-    });
-    
-    return isUnspecified;
+    const state = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+    return state.level === 'unspecified' || !state.level;
   });
 
   const getLevelColor = (level: string) => {
@@ -136,7 +92,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     }
   };
 
-  console.log('Skills categorization:', {
+  console.log('Skills categorization for level:', {
     level: selectedLevel,
     required: requiredSkills.length,
     preferred: preferredSkills.length,
@@ -155,16 +111,24 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <Badge 
-            key={skill.title}
-            variant="outline" 
-            className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
-          >
-            {skill.title}
-            <div className={`h-2 w-2 rounded-full ${getLevelColor(skill.roleLevel)}`} />
-          </Badge>
-        ))}
+        {skills.map((skill) => {
+          const competencyState = getSkillCompetencyState(
+            skill.title, 
+            selectedLevel.toLowerCase(), 
+            roleId
+          );
+          
+          return (
+            <Badge 
+              key={skill.title}
+              variant="outline" 
+              className="rounded-md px-4 py-2 border border-border bg-white hover:bg-background/80 transition-colors flex items-center gap-2"
+            >
+              {skill.title}
+              <div className={`h-2 w-2 rounded-full ${getLevelColor(competencyState.level)}`} />
+            </Badge>
+          );
+        })}
       </div>
     </Card>
   );
@@ -176,7 +140,7 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
         onCategorySelect={setSelectedCategory}
         roleId={roleId}
       />
-      
+
       <SkillSection 
         title="Required Skills" 
         skills={requiredSkills} 
