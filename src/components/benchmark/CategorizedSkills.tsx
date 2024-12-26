@@ -3,11 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { getEmployeeSkills } from "./skills-matrix/initialSkills";
 import { CategoryCards } from "./CategoryCards";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { roleSkills } from '../skills/data/roleSkills';
 import { useRoleStore } from "./RoleBenchmark";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface CategorizedSkillsProps {
   roleId: string;
@@ -19,15 +20,19 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   const { toggledSkills } = useToggledSkills();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedLevel } = useRoleStore();
+  const { getTrackForRole } = useTrack();
+  const track = getTrackForRole(roleId);
   
   // Get employee's actual skills
   const employeeSkills = getEmployeeSkills(employeeId);
 
-  console.log('CategorizedSkills - Employee skills:', {
+  console.log('CategorizedSkills - Current state:', {
+    roleId,
     employeeId,
+    selectedLevel,
+    track,
     skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => ({ title: s.title, level: s.level })),
-    selectedLevel
+    skills: employeeSkills.map(s => ({ title: s.title, level: s.level }))
   });
 
   // Get current role skills
