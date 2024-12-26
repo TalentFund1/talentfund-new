@@ -20,10 +20,10 @@ export const SkillsMatrixFilters = ({
       <div className="flex gap-4">
         <Select value={selectedLevel} onValueChange={setSelectedLevel}>
           <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Select Level" />
+            <SelectValue placeholder="All Skill Levels" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Levels</SelectItem>
+            <SelectItem value="all">All Skill Levels</SelectItem>
             <SelectItem value="beginner">Beginner</SelectItem>
             <SelectItem value="intermediate">Intermediate</SelectItem>
             <SelectItem value="advanced">Advanced</SelectItem>
