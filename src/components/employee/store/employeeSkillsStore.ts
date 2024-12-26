@@ -1,9 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createSkillStateActions } from './actions/skillStateActions';
-import { SkillLevel, normalizeSkillLevel } from '../types/skillLevels';
-import { SkillGoalStatus, normalizeSkillStatus } from '../types/skillStatus';
-import { EmployeeSkillState, EmployeeSkillData, EmployeeSkillAchievement } from '../types/employeeSkillTypes';
+import { 
+  EmployeeSkillState, 
+  EmployeeSkillData, 
+  EmployeeSkillsData,
+  SkillLevel,
+  SkillGoalStatus,
+  EmployeeSkillAchievement
+} from '../types/employeeSkillTypes';
+import { normalizeSkillLevel } from '../types/skillLevels';
+import { normalizeSkillStatus } from '../types/skillStatus';
+import { benchmarkingService } from '../../../services/benchmarking';
 
 interface EmployeeSkillsStore {
   skillStates: Record<string, {
@@ -23,7 +30,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
     (set, get) => ({
       skillStates: {},
-      ...createSkillStateActions(set, get),
 
       getEmployeeSkills: (employeeId: string) => {
         console.log('Getting skills for employee:', employeeId);
@@ -128,6 +134,55 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             O: false
           }
         };
+      },
+
+      setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
+        console.log('Setting skill level:', { employeeId, skillTitle, level });
+        const normalizedLevel = normalizeSkillLevel(level);
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { level: normalizedLevel });
+      },
+
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => {
+        console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+        const normalizedStatus = normalizeSkillStatus(status);
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { goalStatus: normalizedStatus });
+      },
+
+      updateSkillState: (employeeId: string, skillTitle: string, updates: Partial<EmployeeSkillState>) => {
+        console.log('Updating skill state:', { employeeId, skillTitle, updates });
+        set((state) => {
+          const currentState = state.skillStates[employeeId]?.skills[skillTitle] || {
+            level: 'unspecified' as SkillLevel,
+            goalStatus: 'unknown' as SkillGoalStatus,
+            lastUpdated: new Date().toISOString(),
+            confidence: 'medium'
+          };
+
+          const normalizedUpdates = {
+            ...updates,
+            level: updates.level ? normalizeSkillLevel(updates.level) : currentState.level,
+            goalStatus: updates.goalStatus ? normalizeSkillStatus(updates.goalStatus) : currentState.goalStatus,
+            lastUpdated: new Date().toISOString()
+          };
+
+          return {
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                ...state.skillStates[employeeId],
+                skills: {
+                  ...state.skillStates[employeeId]?.skills,
+                  [skillTitle]: {
+                    ...currentState,
+                    ...normalizedUpdates
+                  }
+                }
+              }
+            }
+          };
+        });
       },
 
       initializeEmployeeSkills: (employeeId: string) => {

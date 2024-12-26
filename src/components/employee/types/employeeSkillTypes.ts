@@ -52,10 +52,4 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-// State management
-export interface EmployeeSkillsState {
-  skills: Record<string, EmployeeSkillData>;
-  lastUpdated: string;
-}
-
 console.log('Employee skill types updated with simplified status system');
