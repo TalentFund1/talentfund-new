@@ -146,9 +146,10 @@ export const useSkillsFiltering = (
         };
       })
       .sort((a, b) => {
-        // First sort by level (Advanced to Unspecified)
-        const levelDiff = (levelOrder[a.employeeLevel.toLowerCase()] || 3) - 
-                         (levelOrder[b.employeeLevel.toLowerCase()] || 3);
+        // Sort by level (Advanced to Unspecified)
+        // Reverse the comparison to get Advanced (0) at the top
+        const levelDiff = (levelOrder[b.employeeLevel.toLowerCase()] || 3) - 
+                         (levelOrder[a.employeeLevel.toLowerCase()] || 3);
         
         if (levelDiff !== 0) return levelDiff;
         
