@@ -5,6 +5,7 @@ import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
+import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -42,6 +43,7 @@ export const BenchmarkSkillsMatrixContent = ({
 }: BenchmarkSkillsMatrixContentProps) => {
   const { toggledSkills } = useToggledSkills();
   const { selectedLevel } = useRoleStore();
+  const { getSkillState } = useEmployeeSkillsStore();
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   // Get all toggled skills as an array and filter by category
@@ -100,6 +102,7 @@ export const BenchmarkSkillsMatrixContent = ({
         setSelectedWeight={setSelectedWeight}
         {...props}
         isRoleBenchmark={true}
+        employeeId={employeeId}
       />
     </>
   );
