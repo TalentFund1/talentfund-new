@@ -1,4 +1,4 @@
-export type SkillGoalStatus = 'required' | 'preferred' | 'unknown';
+export type SkillGoalStatus = 'required' | 'preferred' | 'unknown' | 'skill_goal' | 'not_interested';
 
 export const normalizeSkillStatus = (status: string): SkillGoalStatus => {
   // Map legacy values to new system
