@@ -2,6 +2,7 @@ import { SkillSection } from "../SkillSection";
 import { SkillBadge } from "../SkillBadge";
 import { Button } from "@/components/ui/button";
 import { DetailedSkill, Certification } from "../types";
+import { useParams } from "react-router-dom";
 
 interface SkillsContainerProps {
   specializedSkills: DetailedSkill[];
@@ -23,6 +24,7 @@ export const SkillsContainer = ({
   expandedSections,
   onToggleSection
 }: SkillsContainerProps) => {
+  const { id: employeeId } = useParams<{ id: string }>();
   const INITIAL_VISIBLE_COUNT = 12;
 
   const renderDetailedSkills = (skills: DetailedSkill[], isExpanded: boolean) => {
@@ -35,6 +37,7 @@ export const SkillsContainer = ({
         showLevel={true}
         level={skill.level}
         isSkillGoal={skill.isSkillGoal}
+        employeeId={employeeId || ''}
       />
     ));
   };
@@ -86,6 +89,7 @@ export const SkillsContainer = ({
                 showLevel={true}
                 level={cert.level}
                 isSkillGoal={cert.isSkillGoal}
+                employeeId={employeeId || ''}
               />
             ))}
         </div>

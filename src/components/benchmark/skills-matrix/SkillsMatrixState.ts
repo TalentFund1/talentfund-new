@@ -1,14 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UnifiedSkill } from '../../skills/types/SkillTypes';
-import { filterSkillsByCategory } from './skillCategories';
-import { benchmarkingService } from '../../../services/benchmarking';
 import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
-import { EmployeeSkillState } from '../../employee/types/employeeSkillTypes';
+import { EmployeeSkillData } from '../../employee/types/employeeSkillTypes';
 
-interface SkillsMatrixState {
-  getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillState;
+export interface SkillsMatrixState {
   hasChanges: boolean;
+  getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillData;
   saveChanges: () => void;
   cancelChanges: () => void;
   initializeState: (skillTitle: string, employeeId: string) => void;
@@ -16,31 +13,27 @@ interface SkillsMatrixState {
 
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       hasChanges: false,
 
       getSkillState: (skillTitle: string, employeeId: string) => {
-        const employeeStore = useEmployeeSkillsStore.getState();
-        const skillState = employeeStore.getSkillState(employeeId, skillTitle);
-        
         console.log('Matrix getting skill state:', {
           employeeId,
-          skillTitle,
-          level: skillState.level,
-          goalStatus: skillState.goalStatus
+          skillTitle
         });
-
-        return skillState;
+        
+        const employeeStore = useEmployeeSkillsStore.getState();
+        return employeeStore.getSkillState(employeeId, skillTitle);
       },
 
       initializeState: (skillTitle: string, employeeId: string) => {
-        const employeeStore = useEmployeeSkillsStore.getState();
-        employeeStore.initializeEmployeeSkills(employeeId);
-        
         console.log('Matrix initialized skill state:', {
           employeeId,
           skillTitle
         });
+        
+        const employeeStore = useEmployeeSkillsStore.getState();
+        employeeStore.initializeEmployeeSkills(employeeId);
       },
 
       saveChanges: () => {
@@ -62,49 +55,3 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
     }
   )
 );
-
-export const useSkillsMatrixState = (
-  selectedCategory: string,
-  selectedLevel: string,
-  selectedInterest: string
-) => {
-  const { getSkillState } = useSkillsMatrixStore();
-
-  const filterAndSortSkills = (skills: UnifiedSkill[], employeeId: string) => {
-    console.log('Filtering skills:', { 
-      totalSkills: skills.length,
-      selectedCategory,
-      selectedLevel,
-      selectedInterest,
-      employeeId
-    });
-
-    let filteredSkills = [...skills];
-
-    if (selectedCategory !== "all") {
-      filteredSkills = filterSkillsByCategory(filteredSkills, selectedCategory);
-    }
-
-    if (selectedLevel !== "all") {
-      filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = getSkillState(skill.title, employeeId);
-        return skillState?.level.toLowerCase() === selectedLevel.toLowerCase();
-      });
-    }
-
-    if (selectedInterest !== "all") {
-      filteredSkills = filteredSkills.filter((skill) => {
-        const skillState = getSkillState(skill.title, employeeId);
-        if (!skillState?.goalStatus) return false;
-
-        return benchmarkingService.matchesInterestFilter(skillState.goalStatus, selectedInterest);
-      });
-    }
-
-    return filteredSkills.sort((a, b) => a.title.localeCompare(b.title));
-  };
-
-  return {
-    filterAndSortSkills,
-  };
-};

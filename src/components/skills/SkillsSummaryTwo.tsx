@@ -51,6 +51,7 @@ export const SkillsSummaryTwo = () => {
             skill={{ name: skill.title }}
             showLevel={true}
             level={skill.level}
+            employeeId={id || ''}
           />
         ))}
       </div>

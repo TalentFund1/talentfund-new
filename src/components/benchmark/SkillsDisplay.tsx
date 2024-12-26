@@ -1,6 +1,7 @@
 import { SkillBadge } from "../skills/SkillBadge";
 import { roleSkills } from "../skills/data/roleSkills";
 import { useTrack } from "../skills/context/TrackContext";
+import { useParams } from "react-router-dom";
 
 interface SkillsDisplayProps {
   selectedRoleSkills: any;
@@ -15,6 +16,7 @@ export const SkillsDisplay = ({
   roleId, 
   selectedLevel 
 }: SkillsDisplayProps) => {
+  const { id: employeeId } = useParams();
   const { getTrackForRole } = useTrack();
   const track = getTrackForRole(roleId);
   const currentTrack = track?.toLowerCase() as 'professional' | 'managerial';
@@ -49,6 +51,7 @@ export const SkillsDisplay = ({
             showLevel={true}
             level={skill.level}
             isRoleBenchmark={true}
+            employeeId={employeeId || ''}
           />
         ))}
       </div>
