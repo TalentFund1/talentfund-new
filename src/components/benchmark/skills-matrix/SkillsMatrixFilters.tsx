@@ -26,6 +26,31 @@ export const SkillsMatrixFilters = ({
   return (
     <div className="flex items-center justify-between mb-6">
       <div className="flex gap-4">
+        <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Skill Levels" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Skill Levels</SelectItem>
+            <SelectItem value="advanced">Advanced</SelectItem>
+            <SelectItem value="intermediate">Intermediate</SelectItem>
+            <SelectItem value="beginner">Beginner</SelectItem>
+            <SelectItem value="unspecified">Unspecified</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="All Skill Interests" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Skill Interests</SelectItem>
+            <SelectItem value="skill_goal">Skill Goal</SelectItem>
+            <SelectItem value="not_interested">Not Interested</SelectItem>
+            <SelectItem value="unknown">Unknown</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="All Skill Types" />
@@ -47,30 +72,6 @@ export const SkillsMatrixFilters = ({
             <SelectItem value="critical">Critical</SelectItem>
             <SelectItem value="technical">Technical</SelectItem>
             <SelectItem value="necessary">Necessary</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedInterest} onValueChange={setSelectedInterest}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Interests" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Skill Interests</SelectItem>
-            <SelectItem value="skill_goal">Skill Goal</SelectItem>
-            <SelectItem value="not_interested">Not Interested</SelectItem>
-            <SelectItem value="unknown">Unknown</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="All Skill Levels" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Skill Levels</SelectItem>
-            <SelectItem value="beginner">Beginner</SelectItem>
-            <SelectItem value="intermediate">Intermediate</SelectItem>
-            <SelectItem value="advanced">Advanced</SelectItem>
           </SelectContent>
         </Select>
       </div>
