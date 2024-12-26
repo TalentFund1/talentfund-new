@@ -1,9 +1,7 @@
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { SkillsMatrixFilters } from "./SkillsMatrixFilters";
 import { SkillsMatrixTable } from "./SkillsMatrixTable";
-import { AddEmployeeSkillDialog } from "./dialog/AddEmployeeSkillDialog";
 
 interface SkillsMatrixViewProps {
   selectedLevel: string;
@@ -11,10 +9,10 @@ interface SkillsMatrixViewProps {
   selectedInterest: string;
   setSelectedInterest: (interest: string) => void;
   filteredSkills: any[];
-  hasChanges: boolean;
-  onSave: () => void;
-  onCancel: () => void;
-  isRoleBenchmark: boolean;
+  hasChanges?: boolean;
+  onSave?: () => void;
+  onCancel?: () => void;
+  isRoleBenchmark?: boolean;
 }
 
 export const SkillsMatrixView = ({
@@ -26,45 +24,51 @@ export const SkillsMatrixView = ({
   hasChanges,
   onSave,
   onCancel,
-  isRoleBenchmark
+  isRoleBenchmark = false,
 }: SkillsMatrixViewProps) => {
-  return (
-    <Card className="p-6 space-y-6 animate-fade-in bg-white">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
-        {hasChanges && (
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              onClick={onCancel}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={onSave}
-              className="bg-primary hover:bg-primary/90"
-            >
-              Save
-            </Button>
-          </div>
-        )}
-      </div>
-      
-      <Separator className="mb-6" />
-      
-      <SkillsMatrixFilters 
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        addSkillButton={<AddEmployeeSkillDialog />}
-      />
+  console.log('SkillsMatrixView rendering:', {
+    hasChanges,
+    isRoleBenchmark,
+    skillCount: filteredSkills.length
+  });
 
-      <SkillsMatrixTable 
-        filteredSkills={filteredSkills}
-        isRoleBenchmark={isRoleBenchmark}
-      />
-    </Card>
+  return (
+    <div className="space-y-6">
+      <Card className="p-6">
+        <div className="space-y-4">
+          <SkillsMatrixFilters
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            selectedInterest={selectedInterest}
+            setSelectedInterest={setSelectedInterest}
+          />
+          
+          {hasChanges && !isRoleBenchmark && (
+            <div className="flex justify-end space-x-2 mt-4">
+              <Button
+                variant="outline"
+                onClick={onCancel}
+                className="w-24"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={onSave}
+                className="w-24"
+              >
+                Save
+              </Button>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <SkillsMatrixTable
+          filteredSkills={filteredSkills}
+          isRoleBenchmark={isRoleBenchmark}
+        />
+      </Card>
+    </div>
   );
 };
