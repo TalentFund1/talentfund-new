@@ -13,7 +13,7 @@ export const calculateBenchmarkPercentage = (
   baseRole: string,
   employeeSkills: UnifiedSkill[] | Record<string, any>,
   toggledSkills: Set<string>,
-  getSkillCompetencyState: CompetencyStateReader
+  competencyReader: CompetencyStateReader
 ): number => {
   console.log('Calculating benchmark percentage:', {
     employeeId,
@@ -42,8 +42,15 @@ export const calculateBenchmarkPercentage = (
 
   const comparisons: SkillComparison[] = matchingSkills.map(skill => {
     const employeeLevel = skill.level as SkillLevel;
-    const competencyState = getSkillCompetencyState(skill.title, baseRole, roleId);
+    const competencyState = competencyReader.getSkillCompetencyState(skill.title, baseRole, roleId);
     const requiredLevel = (competencyState?.level || 'beginner') as SkillLevel;
+
+    console.log('Comparing skill levels:', {
+      skill: skill.title,
+      employeeLevel,
+      requiredLevel,
+      competencyState
+    });
 
     return {
       employeeLevel,
@@ -65,5 +72,12 @@ export const calculateBenchmarkPercentage = (
   }, 0);
 
   const percentage = (matchCount / toggledSkills.size) * 100;
+  
+  console.log('Benchmark calculation result:', {
+    matchCount,
+    totalSkills: toggledSkills.size,
+    percentage: Math.round(percentage)
+  });
+  
   return Math.round(percentage);
 };
