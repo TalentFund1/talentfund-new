@@ -40,10 +40,10 @@ const normalizeSkillLevel = (level: string): SkillLevel => {
 
 const normalizeGoalStatus = (status: string): SkillGoalStatus => {
   // Map legacy values to new format
-  if (status === 'skill_goal') return 'required';
-  if (status === 'not_interested') return 'preferred';
+  if (status === 'required') return 'skill_goal';
+  if (status === 'preferred') return 'skill_goal';
   
-  const validStatuses: SkillGoalStatus[] = ['required', 'preferred', 'unknown'];
+  const validStatuses: SkillGoalStatus[] = ['skill_goal', 'not_interested', 'unknown'];
   const normalizedStatus = status.toLowerCase() as SkillGoalStatus;
   return validStatuses.includes(normalizedStatus) ? normalizedStatus : 'unknown';
 };

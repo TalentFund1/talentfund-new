@@ -1,5 +1,4 @@
-import { EmployeeSkillData, EmployeeSkillAchievement } from '../../types/employeeSkillTypes';
-import { benchmarkingService } from '../../../../services/benchmarking';
+import { EmployeeSkillData, EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export const createSkillSelectors = (get: any) => ({
   getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
@@ -35,7 +34,7 @@ export const createSkillSelectors = (get: any) => ({
     return state;
   },
 
-  getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
+  getEmployeeSkills: (employeeId: string): EmployeeSkillData[] => {
     console.log('Getting skills for employee:', employeeId);
     const employeeState = get().skillStates[employeeId];
     

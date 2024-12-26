@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
@@ -31,7 +30,7 @@ export const SkillsMatrix = () => {
       
       // Transform skills to UnifiedSkill format with proper type checking
       const transformedSkills = skills
-        .filter(skill => skill && skill.title)
+        .filter(skill => skill && skill.title) // Filter out invalid skills
         .map(skill => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
@@ -48,7 +47,7 @@ export const SkillsMatrix = () => {
             id: skillData.id || `${id}-${skill.title}`,
             title: skill.title,
             subcategory: skillData.subcategory || 'General',
-            level: skillState.level || skill.level || 'unspecified',
+            level: skillState.level || skill.level || 'unspecified', // Preserve original level if available
             growth: skillData.growth || '0%',
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
@@ -70,7 +69,7 @@ export const SkillsMatrix = () => {
     if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
     if (selectedInterest !== "all") {
       const skillState = getSkillState(id || "", skill.title);
-      if (selectedInterest === "required" && skillState.goalStatus !== "required") return false;
+      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
     }
     return true;
   });

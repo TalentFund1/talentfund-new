@@ -1,7 +1,6 @@
 import { TableCell } from "@/components/ui/table";
 import { Star, Shield, Target, CircleDashed, X, Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { SkillGoalStatus } from "../employee/types/employeeSkillTypes";
 
 interface StaticSkillLevelCellProps {
   initialLevel: string;
@@ -37,21 +36,21 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementIcon = (goalStatus: SkillGoalStatus = 'unknown') => {
-    switch (goalStatus) {
+  const getRequirementIcon = (goalStatus: string = 'unknown') => {
+    switch (goalStatus?.toLowerCase()) {
       case 'required':
         return <Heart className="w-3.5 h-3.5" />;
-      case 'preferred':
+      case 'not_interested':
         return <X className="w-3.5 h-3.5" />;
       default:
         return <CircleDashed className="w-3.5 h-3.5" />;
     }
   };
 
-  const getLevelStyles = (level: string) => {
+  const getLevelStyles = (level: string = 'unspecified') => {
     const baseStyles = 'rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]';
     
-    switch (level?.toLowerCase()) {
+    switch (level.toLowerCase()) {
       case 'advanced':
         return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
       case 'intermediate':
@@ -63,10 +62,10 @@ export const StaticSkillLevelCell = ({
     }
   };
 
-  const getRequirementStyles = (goalStatus: SkillGoalStatus, level: string) => {
-    const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
+  const getRequirementStyles = (goalStatus: string = 'unknown', level: string = 'unspecified') => {
+    const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
     
-    switch (goalStatus) {
+    switch (goalStatus?.toLowerCase()) {
       case 'required':
         return `${baseStyles} ${
           level.toLowerCase() === 'advanced' 
@@ -77,7 +76,7 @@ export const StaticSkillLevelCell = ({
                 ? 'border-[#008000]'
                 : 'border-gray-300'
         }`;
-      case 'preferred':
+      case 'not_interested':
       case 'unknown':
       default:
         return `${baseStyles} border-gray-300`;
@@ -93,11 +92,11 @@ export const StaticSkillLevelCell = ({
             {(skillState?.level || 'unspecified').charAt(0).toUpperCase() + (skillState?.level || 'unspecified').slice(1)}
           </span>
         </div>
-        <div className={getRequirementStyles(skillState?.goalStatus || 'unknown', skillState?.level || 'unspecified')}>
+        <div className={getRequirementStyles(skillState?.goalStatus, skillState?.level)}>
           <span className="flex items-center gap-1.5">
             {getRequirementIcon(skillState?.goalStatus)}
-            {skillState?.goalStatus === 'required' ? 'Required' : 
-             skillState?.goalStatus === 'preferred' ? 'Preferred' : 
+            {skillState?.goalStatus === 'required' ? 'Skill Goal' : 
+             skillState?.goalStatus === 'not_interested' ? 'Not Interested' : 
              'Unknown'}
           </span>
         </div>

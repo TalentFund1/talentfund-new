@@ -1,88 +1,121 @@
 import { TableCell } from "@/components/ui/table";
-import { useCompetencyStore } from "./CompetencyState";
-import { LevelSelector } from "./LevelSelector";
-import { RequirementSelector } from "./RequirementSelector";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { SkillLevel, SkillGoalStatus } from "../employee/types/employeeSkillTypes";
 import { useParams } from "react-router-dom";
-import { SkillGoalStatus } from "../employee/types/employeeSkillTypes";
+import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
+import { getLevelStyles, getGoalStatusStyles } from "./skill-level/SkillLevelStyles";
 
-interface SkillCellProps {
-  skillName: string;
-  details: {
-    level: string;
-    required: string;
-  };
-  isLastColumn: boolean;
-  levelKey: string;
+interface SkillLevelCellProps {
+  initialLevel: string;
+  skillTitle: string;
+  onLevelChange?: (newLevel: string, goalStatus: string) => void;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillCell = ({ 
-  skillName, 
-  details, 
-  isLastColumn, 
-  levelKey 
-}: SkillCellProps) => {
-  const { currentStates, setSkillState } = useCompetencyStore();
-  const { id: roleId } = useParams<{ id: string }>();
-  const currentRoleId = roleId || "123";
+export const SkillLevelCell = ({ 
+  initialLevel, 
+  skillTitle,
+  onLevelChange,
+  isRoleBenchmark = false
+}: SkillLevelCellProps) => {
+  const { id } = useParams<{ id: string }>();
+  const { setSkillLevel, setSkillGoalStatus, getEmployeeSkills } = useEmployeeSkillsStore();
 
-  const currentState = currentStates[currentRoleId]?.[skillName]?.[levelKey] || {
-    level: details.level || "unspecified",
-    required: details.required || "preferred",
-  };
+  const employeeSkills = getEmployeeSkills(id || "");
+  const currentSkill = employeeSkills.find(skill => skill.title === skillTitle);
 
-  const handleLevelChange = (value: string) => {
-    console.log('Changing level:', {
-      skillName,
-      levelKey,
-      newLevel: value,
-      currentRequired: currentState.required
-    });
-    
-    setSkillState(
-      skillName,
-      value,
-      levelKey,
-      currentState.required || 'preferred'
-    );
-  };
-
-  const handleRequirementChange = (value: string) => {
-    console.log('Changing requirement:', {
-      skillName,
-      levelKey,
-      currentLevel: currentState.level,
-      newRequired: value
-    });
-    
-    setSkillState(
-      skillName,
-      currentState.level || 'unspecified',
-      levelKey,
-      value
-    );
-  };
-
-  console.log('Rendering SkillCell:', {
-    skillName,
-    levelKey,
-    currentState,
-    roleId: currentRoleId
-  });
+  const currentLevel = currentSkill?.level || initialLevel?.toLowerCase() as SkillLevel || 'unspecified';
+  const currentGoalStatus = currentSkill?.goalStatus || 'unknown';
 
   return (
-    <TableCell 
-      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
-    >
-      <div className="flex flex-col items-center gap-0">
-        <LevelSelector
-          currentLevel={currentState.level || 'unspecified'}
-          onLevelChange={handleLevelChange}
-        />
-        <RequirementSelector
-          currentRequired={currentState.required || 'preferred'}
-          currentLevel={currentState.level || 'unspecified'}
-          onRequirementChange={handleRequirementChange}
-        />
+    <TableCell className="border-r border-blue-200 p-0">
+      <div className="flex flex-col items-center">
+        <Select 
+          value={currentLevel} 
+          onValueChange={(value) => {
+            if (id) {
+              setSkillLevel(id, skillTitle, value as SkillLevel);
+              onLevelChange?.(value, currentGoalStatus);
+            }
+          }}
+        >
+          <SelectTrigger className={getLevelStyles(currentLevel)}>
+            <SelectValue>
+              <span className="flex items-center gap-2">
+                {getLevelIcon(currentLevel)}
+                {currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}
+              </span>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="unspecified">
+              <span className="flex items-center gap-2">
+                {getLevelIcon('unspecified')}
+                Unspecified
+              </span>
+            </SelectItem>
+            <SelectItem value="beginner">
+              <span className="flex items-center gap-2">
+                {getLevelIcon('beginner')}
+                Beginner
+              </span>
+            </SelectItem>
+            <SelectItem value="intermediate">
+              <span className="flex items-center gap-2">
+                {getLevelIcon('intermediate')}
+                Intermediate
+              </span>
+            </SelectItem>
+            <SelectItem value="advanced">
+              <span className="flex items-center gap-2">
+                {getLevelIcon('advanced')}
+                Advanced
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select 
+          value={currentGoalStatus}
+          onValueChange={(value) => {
+            if (id) {
+              setSkillGoalStatus(id, skillTitle, value as SkillGoalStatus);
+              onLevelChange?.(currentLevel, value);
+            }
+          }}
+        >
+          <SelectTrigger className={getGoalStatusStyles(currentGoalStatus, currentLevel)}>
+            <SelectValue>
+              <span className="flex items-center gap-1.5">
+                {getRequirementIcon(currentGoalStatus)}
+                {currentGoalStatus === 'skill_goal' ? 'Skill Goal' : 
+                 currentGoalStatus === 'not_interested' ? 'Not Interested' : 
+                 'Unknown'}
+              </span>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="skill_goal">
+              <span className="flex items-center gap-1.5">
+                {getRequirementIcon('required')}
+                Skill Goal
+              </span>
+            </SelectItem>
+            <SelectItem value="not_interested">
+              <span className="flex items-center gap-1.5">
+                {getRequirementIcon('not_interested')}
+                Not Interested
+              </span>
+            </SelectItem>
+            <SelectItem value="unknown">
+              <span className="flex items-center gap-1.5">
+                {getRequirementIcon('unknown')}
+                Unknown
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </TableCell>
   );
