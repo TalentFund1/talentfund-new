@@ -155,9 +155,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 3, // Increment version to ensure clean state
+      version: 4, // Increment version for clean state
       partialize: (state) => ({
-        skillStates: state.skillStates
+        skillStates: state.skillStates,
+        // Include the full state structure to ensure proper persistence
+        lastUpdated: new Date().toISOString()
       }),
       storage: {
         getItem: (name) => {
@@ -168,9 +170,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           }
           try {
             const parsed = JSON.parse(str);
+            const skillStatesCount = Object.keys(parsed?.state?.skillStates || {}).length;
             console.log('Successfully loaded stored state:', { 
-              name, 
-              skillStatesCount: Object.keys(parsed?.state?.skillStates || {}).length 
+              name,
+              skillStatesCount,
+              timestamp: new Date().toISOString()
             });
             return parsed;
           } catch (error) {
@@ -181,9 +185,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         setItem: (name, value) => {
           try {
             const serialized = JSON.stringify(value);
+            const skillStatesCount = Object.keys(value?.state?.skillStates || {}).length;
             console.log('Persisting state:', { 
-              name, 
-              skillStatesCount: Object.keys(value?.state?.skillStates || {}).length 
+              name,
+              skillStatesCount,
+              timestamp: new Date().toISOString()
             });
             localStorage.setItem(name, serialized);
           } catch (error) {
@@ -191,7 +197,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           }
         },
         removeItem: (name) => {
-          console.log('Removing stored state:', { name });
+          console.log('Removing stored state:', { 
+            name,
+            timestamp: new Date().toISOString()
+          });
           localStorage.removeItem(name);
         }
       }
