@@ -3,6 +3,7 @@ import { useCompetencyStateReader } from "../../skills/competency/CompetencyStat
 import { getEmployeeSkills } from "./initialSkills";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
+import { EmployeeSkillAchievement } from "../../employee/types/employeeSkillTypes";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
@@ -20,15 +21,11 @@ export const useSkillsFiltering = (
 ) => {
   const { currentStates } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  
-  // Get employee's actual skills first
   const employeeSkills = getEmployeeSkills(employeeId);
 
   console.log('Starting skills filtering with:', {
     employeeId,
-    selectedRole,
-    comparisonLevel,
-    totalEmployeeSkills: employeeSkills.length,
+    totalSkills: employeeSkills.length,
     selectedCategory,
     selectedWeight,
     selectedLevel,
@@ -39,49 +36,21 @@ export const useSkillsFiltering = (
   });
 
   const filterSkills = () => {
-    // Get role-specific skills
-    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-    if (!currentRoleSkills) {
-      console.warn('No skills found for role:', selectedRole);
-      return [];
-    }
+    // Start with employee skills
+    let skills = [...employeeSkills];
 
-    // Get all role skills
-    const allRoleSkills = [
-      ...currentRoleSkills.specialized,
-      ...currentRoleSkills.common,
-      ...currentRoleSkills.certifications
-    ];
-
-    // Create a set of role skill titles for efficient lookup
-    const roleSkillTitles = new Set(allRoleSkills.map(skill => skill.title));
-
-    // Start with employee skills and filter to only include those that:
-    // 1. Exist in role skills
-    // 2. Are toggled
-    // 3. Have a non-unspecified level in employee's current states
-    let skills = employeeSkills.filter(empSkill => {
-      const isInRole = roleSkillTitles.has(empSkill.title);
-      const isToggled = toggledSkills.has(empSkill.title);
-      const skillState = currentStates[empSkill.title];
-      const hasLevel = skillState?.level && skillState.level !== 'unspecified';
-      
-      return isInRole && isToggled && hasLevel;
+    // Remove duplicates using a Map with skill titles as keys
+    const uniqueSkills = new Map();
+    skills.forEach(skill => {
+      if (!uniqueSkills.has(skill.title)) {
+        uniqueSkills.set(skill.title, skill);
+      }
     });
+    skills = Array.from(uniqueSkills.values());
 
-    console.log('Filtered employee skills against role skills:', {
-      employeeId,
-      roleId: selectedRole,
-      totalEmployeeSkills: employeeSkills.length,
-      matchingRoleSkills: skills.length,
-      employeeSkills: employeeSkills.map(s => ({ 
-        title: s.title, 
-        level: currentStates[s.title]?.level 
-      })),
-      filteredSkills: skills.map(s => ({ 
-        title: s.title, 
-        level: currentStates[s.title]?.level 
-      }))
+    console.log('After removing duplicates:', {
+      originalCount: employeeSkills.length,
+      uniqueCount: skills.length
     });
 
     // Apply category filter
@@ -160,7 +129,6 @@ export const useSkillsFiltering = (
 
   console.log('Skills filtering result:', {
     employeeId,
-    roleId: selectedRole,
     totalSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
     filters: {

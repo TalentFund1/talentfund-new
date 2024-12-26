@@ -42,23 +42,40 @@ export const BenchmarkSkillsMatrixContent = ({
 }: BenchmarkSkillsMatrixContentProps) => {
   const { toggledSkills } = useToggledSkills();
   const { selectedLevel } = useRoleStore();
-  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills];
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
-  console.log('BenchmarkSkillsMatrixContent - Rendering for role:', {
-    roleId,
-    level: selectedLevel,
-    skillsCount: currentRoleSkills ? [
+  // Get all toggled skills as an array and filter by category
+  const getToggledSkillsCount = (category: string) => {
+    const allSkills = [
       ...currentRoleSkills.specialized,
       ...currentRoleSkills.common,
       ...currentRoleSkills.certifications
-    ].length : 0,
-    toggledSkillsCount: toggledSkills.size
-  });
+    ];
 
-  if (!currentRoleSkills) {
-    console.error('No skills found for role:', roleId);
-    return null;
-  }
+    return allSkills.filter(skill => {
+      if (!toggledSkills.has(skill.title)) return false;
+
+      switch (category) {
+        case 'specialized':
+          return currentRoleSkills.specialized.some(s => s.title === skill.title);
+        case 'common':
+          return currentRoleSkills.common.some(s => s.title === skill.title);
+        case 'certification':
+          return currentRoleSkills.certifications.some(s => s.title === skill.title);
+        default:
+          return true;
+      }
+    }).length;
+  };
+
+  const skillCounts = {
+    all: getToggledSkillsCount('all'),
+    specialized: getToggledSkillsCount('specialized'),
+    common: getToggledSkillsCount('common'),
+    certification: getToggledSkillsCount('certification')
+  };
+
+  console.log('BenchmarkSkillsMatrixContent - Skill counts:', skillCounts);
 
   return (
     <>
@@ -93,9 +110,7 @@ const getRoleTitle = (id: string) => {
     "123": "AI Engineer",
     "124": "Backend Engineer",
     "125": "Frontend Engineer",
-    "126": "Engineering Manager",
-    "127": "Data Scientist",
-    "128": "DevOps Engineer"
+    "126": "Engineering Manager"
   };
   return roleTitles[id] || "AI Engineer";
 };
