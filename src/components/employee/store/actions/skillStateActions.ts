@@ -1,6 +1,6 @@
-import { SkillLevel, normalizeSkillLevel } from '../../types/skillLevels';
-import { SkillGoalStatus, normalizeSkillStatus } from '../../types/skillStatus';
-import { EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { SkillLevel, SkillGoalStatus, EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { normalizeSkillLevel } from '../../types/skillLevels';
+import { normalizeSkillStatus } from '../../types/skillStatus';
 
 export const createSkillStateActions = (set: any, get: any) => ({
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
@@ -27,6 +27,13 @@ export const createSkillStateActions = (set: any, get: any) => ({
         confidence: 'medium'
       };
 
+      const normalizedUpdates = {
+        ...updates,
+        level: updates.level ? normalizeSkillLevel(updates.level) : currentState.level,
+        goalStatus: updates.goalStatus ? normalizeSkillStatus(updates.goalStatus) : currentState.goalStatus,
+        lastUpdated: new Date().toISOString()
+      };
+
       return {
         skillStates: {
           ...state.skillStates,
@@ -36,8 +43,7 @@ export const createSkillStateActions = (set: any, get: any) => ({
               ...state.skillStates[employeeId]?.skills,
               [skillTitle]: {
                 ...currentState,
-                ...updates,
-                lastUpdated: new Date().toISOString()
+                ...normalizedUpdates
               }
             }
           }
