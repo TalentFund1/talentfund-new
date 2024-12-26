@@ -14,6 +14,8 @@ interface SkillsMatrixViewProps {
   filteredSkills: any[];
   hasChanges: boolean;
   isRoleBenchmark: boolean;
+  onSave: () => void;
+  onCancel: () => void;
 }
 
 export const SkillsMatrixView = ({
@@ -23,33 +25,24 @@ export const SkillsMatrixView = ({
   setSelectedInterest,
   filteredSkills,
   hasChanges,
-  isRoleBenchmark
+  isRoleBenchmark,
+  onSave,
+  onCancel
 }: SkillsMatrixViewProps) => {
   const { toast } = useToast();
-  const { saveChanges, cancelChanges } = useSkillsMatrixStore();
 
-  const handleSave = () => {
-    saveChanges();
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
-  };
-
-  const handleCancel = () => {
-    cancelChanges();
-    toast({
-      title: "Changes cancelled",
-      description: "Your changes have been discarded.",
-    });
-  };
+  console.log('SkillsMatrixView - Rendering with:', {
+    hasChanges,
+    filteredSkillsCount: filteredSkills.length,
+    isRoleBenchmark
+  });
 
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
       <SkillsMatrixHeader 
         hasChanges={hasChanges}
-        onSave={handleSave}
-        onCancel={handleCancel}
+        onSave={onSave}
+        onCancel={onCancel}
       />
       
       <SkillsMatrixFilters 
