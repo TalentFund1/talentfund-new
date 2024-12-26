@@ -19,6 +19,7 @@ export const AddEmployeeSkillDialog = () => {
   const { setEmployeeSkills, getEmployeeSkills } = useEmployeeStore();
   const { initializeEmployeeSkills, setSkillLevel, setSkillGoalStatus } = useEmployeeSkillsStore();
 
+  // Get all available skills without role-specific filtering
   const allSkills = Array.from(new Set([
     ...Skills.specialized.map(s => normalizeSkillTitle(s.title)),
     ...Skills.common.map(s => normalizeSkillTitle(s.title)),
