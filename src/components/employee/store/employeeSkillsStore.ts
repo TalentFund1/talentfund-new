@@ -38,7 +38,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return [];
         }
 
-        const skills = Object.entries(employeeState.skills).map(([title, state]) => ({
+        const skills: EmployeeSkillAchievement[] = Object.entries(employeeState.skills).map(([title, state]) => ({
           id: `${employeeId}-${title}`,
           employeeId,
           skillId: `${employeeId}-${title}`,
@@ -48,7 +48,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           lastUpdated: state.lastUpdated,
           confidence: state.confidence,
           subcategory: 'General',
-          category: 'specialized',
+          category: 'specialized' as const,
           businessCategory: 'Technical Skills',
           weight: 'technical',
           growth: '0%',
@@ -92,7 +92,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             lastUpdated: new Date().toISOString(),
             confidence: 'medium',
             subcategory: 'General',
-            category: 'specialized',
+            category: 'specialized' as const,
             businessCategory: 'Technical Skills',
             weight: 'technical',
             growth: '0%',
@@ -116,7 +116,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           lastUpdated: skillState.lastUpdated,
           confidence: skillState.confidence,
           subcategory: 'General',
-          category: 'specialized',
+          category: 'specialized' as const,
           businessCategory: 'Technical Skills',
           weight: 'technical',
           growth: '0%',
@@ -164,13 +164,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             const normalizedUpdates = {
               ...updates,
               level: updates.level ? normalizeSkillLevel(updates.level) : currentSkill.level,
-              goalStatus: updates.goalStatus ? normalizeSkillStatus(updates.goalStatus) : currentSkill.goalStatus
+              goalStatus: updates.goalStatus ? normalizeSkillStatus(updates.goalStatus) : currentSkill.goalStatus,
+              lastUpdated: new Date().toISOString()
             };
 
             updatedSkills[skillTitle] = {
               ...currentSkill,
-              ...normalizedUpdates,
-              lastUpdated: new Date().toISOString()
+              ...normalizedUpdates
             };
           });
 
