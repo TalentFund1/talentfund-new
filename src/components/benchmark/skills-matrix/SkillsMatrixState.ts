@@ -11,39 +11,6 @@ export interface SkillsMatrixState {
   initializeState: (skillTitle: string, employeeId: string) => void;
 }
 
-const mapSkillState = (state: any) => {
-  // Map requirement/goalStatus
-  let goalStatus = state.goalStatus || state.requirement || 'unknown';
-  
-  // Normalize the goalStatus mapping
-  switch (goalStatus.toLowerCase()) {
-    case 'required':
-    case 'preferred':
-      goalStatus = 'skill_goal';
-      break;
-    case 'not_interested':
-      goalStatus = 'not_interested';
-      break;
-    default:
-      goalStatus = 'unknown';
-  }
-
-  // Map level
-  const level = state.level || 'unspecified';
-
-  console.log('Mapping skill state:', {
-    originalState: state,
-    mappedGoalStatus: goalStatus,
-    mappedLevel: level
-  });
-
-  return {
-    ...state,
-    level,
-    goalStatus
-  };
-};
-
 export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set, get) => ({
@@ -56,9 +23,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         });
         
         const employeeStore = useEmployeeSkillsStore.getState();
-        const skillState = employeeStore.getSkillState(employeeId, skillTitle);
-        
-        return mapSkillState(skillState);
+        return employeeStore.getSkillState(employeeId, skillTitle);
       },
 
       initializeState: (skillTitle: string, employeeId: string) => {
