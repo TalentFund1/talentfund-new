@@ -5,7 +5,7 @@ export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   level: string,
-  currentStates: any,
+  getSkillState: (skillTitle: string, employeeId: string) => any,
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): number => {
@@ -44,7 +44,8 @@ export const calculateBenchmarkPercentage = (
     const roleSkillState = getSkillCompetencyState(roleSkill.title, level.toLowerCase(), roleId);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[roleSkill.title]?.level || employeeSkill.level || 'unspecified';
+    const employeeSkillState = getSkillState(roleSkill.title, employeeId);
+    const employeeSkillLevel = employeeSkillState?.level || employeeSkill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     console.log('Comparing skill levels:', {

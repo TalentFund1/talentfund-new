@@ -76,7 +76,7 @@ const EmployeeTableContent = ({
   selectedManager = [],
   selectedRole = []
 }: Readonly<EmployeeTableProps>) => {
-  const { currentStates } = useSkillsMatrixStore();
+  const { getSkillState } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const employees = useEmployeeStore((state) => {
@@ -104,7 +104,7 @@ const EmployeeTableContent = ({
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
     [...selectedRole],
-    currentStates,
+    getSkillState,
     new Set(),
     getSkillCompetencyState
   ).filter(employee => {

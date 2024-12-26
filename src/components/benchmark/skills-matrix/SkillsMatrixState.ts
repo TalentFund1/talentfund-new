@@ -53,10 +53,11 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         }));
       },
 
-      cancelChanges: () =>
+      cancelChanges: () => {
         set(() => ({
           hasChanges: false,
-        })),
+        }));
+      },
     }),
     {
       name: 'skills-matrix-storage',

@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useParams } from "react-router-dom";
 
 interface SkillBubbleProps {
   skillName: string;
@@ -9,8 +10,9 @@ interface SkillBubbleProps {
 }
 
 export const SkillBubble = ({ skillName, level = 'unspecified', isRequired = false }: SkillBubbleProps) => {
-  const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skillName];
+  const { id } = useParams();
+  const { getSkillState } = useSkillsMatrixStore();
+  const skillState = id ? getSkillState(skillName, id) : null;
 
   const getLevelColor = (level: string) => {
     switch (level.toLowerCase()) {
