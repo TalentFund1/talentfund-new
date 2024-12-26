@@ -18,7 +18,14 @@ export const SkillsMatrix = () => {
   
   const { id } = useParams<{ id: string }>();
   const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { getEmployeeSkills, getSkillState, initializeEmployeeSkills, batchUpdateSkills } = useEmployeeSkillsStore();
+  const { 
+    getEmployeeSkills, 
+    getSkillState, 
+    initializeEmployeeSkills, 
+    batchUpdateSkills,
+    setSkillLevel,
+    setSkillGoalStatus 
+  } = useEmployeeSkillsStore();
   const { toast } = useToast();
 
   // Initialize employee skills if needed
@@ -34,11 +41,17 @@ export const SkillsMatrix = () => {
       // Store original skill states
       const originalStates: Record<string, any> = {};
       skills.forEach(skill => {
-        originalStates[skill.title] = getSkillState(id, skill.title);
+        const state = getSkillState(id, skill.title);
+        originalStates[skill.title] = {
+          level: state.level,
+          goalStatus: state.goalStatus
+        };
       });
+      
+      console.log('Stored original states:', originalStates);
       setOriginalSkillStates(originalStates);
       
-      // Transform skills to UnifiedSkill format with proper type checking
+      // Transform skills to UnifiedSkill format
       const transformedSkills = skills
         .filter(skill => skill && skill.title)
         .map(skill => {
@@ -85,8 +98,26 @@ export const SkillsMatrix = () => {
   });
 
   const handleSave = () => {
-    console.log('Saving skill changes');
+    if (!id) return;
+
+    console.log('Saving skill changes for employee:', id);
+    
+    // Get current states to persist
+    const currentStates: Record<string, any> = {};
+    employeeSkillsData.forEach(skill => {
+      const state = getSkillState(id, skill.title);
+      currentStates[skill.title] = {
+        level: state.level,
+        goalStatus: state.goalStatus
+      };
+    });
+
+    // Update original states with current states
+    setOriginalSkillStates(currentStates);
     setHasChanges(false);
+
+    console.log('Saved new states:', currentStates);
+
     toast({
       title: "Changes saved",
       description: "Your changes have been saved successfully.",
@@ -94,21 +125,47 @@ export const SkillsMatrix = () => {
   };
 
   const handleCancel = () => {
-    console.log('Canceling skill changes');
-    if (id && originalSkillStates) {
-      // Restore original states
-      batchUpdateSkills(id, originalSkillStates);
-      setHasChanges(false);
-      toast({
-        title: "Changes cancelled",
-        description: "Your changes have been discarded.",
-      });
-    }
+    if (!id) return;
+
+    console.log('Canceling skill changes for employee:', id);
+    console.log('Restoring original states:', originalSkillStates);
+
+    // Restore original states
+    Object.entries(originalSkillStates).forEach(([skillTitle, state]) => {
+      setSkillLevel(id, skillTitle, state.level);
+      setSkillGoalStatus(id, skillTitle, state.goalStatus);
+    });
+
+    setHasChanges(false);
+    
+    toast({
+      title: "Changes cancelled",
+      description: "Your changes have been discarded.",
+    });
   };
 
+  // Track changes
   useEffect(() => {
-    setHasChanges(storeHasChanges);
-  }, [storeHasChanges]);
+    if (!id || !originalSkillStates) return;
+
+    const hasUnsavedChanges = employeeSkillsData.some(skill => {
+      const currentState = getSkillState(id, skill.title);
+      const originalState = originalSkillStates[skill.title];
+
+      return originalState && (
+        currentState.level !== originalState.level ||
+        currentState.goalStatus !== originalState.goalStatus
+      );
+    });
+
+    console.log('Checking for changes:', {
+      hasUnsavedChanges,
+      originalStates: originalSkillStates,
+      currentSkills: employeeSkillsData
+    });
+
+    setHasChanges(hasUnsavedChanges);
+  }, [id, employeeSkillsData, originalSkillStates, getSkillState]);
 
   return (
     <div className="space-y-6">
