@@ -2,6 +2,9 @@
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'skill_goal' | 'not_interested' | 'unknown';
 
+// Legacy status types for backward compatibility
+export type LegacyGoalStatus = 'required' | 'preferred' | SkillGoalStatus;
+
 // Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
@@ -13,7 +16,7 @@ export interface EmployeeSkillState {
 // Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
-  goalStatus?: SkillGoalStatus;
+  goalStatus?: SkillGoalStatus | LegacyGoalStatus;
   confidence?: 'low' | 'medium' | 'high';
 }
 
@@ -50,12 +53,6 @@ export interface EmployeeSkillsData {
   skills: EmployeeSkillAchievement[];
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
-}
-
-// State management for employee skills
-export interface EmployeeSkillsState {
-  skills: Record<string, EmployeeSkillData>;
-  lastUpdated: string;
 }
 
 console.log('Employee skill types updated with complete interfaces');

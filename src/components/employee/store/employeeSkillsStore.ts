@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
 import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
+import { normalizeGoalStatus } from '../utils/skillStatusNormalizer';
 import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
 interface EmployeeSkillsStore {
@@ -56,16 +57,14 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          // Normalize legacy goal status values
-          let normalizedGoalStatus = updates.goalStatus;
-          if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
-            normalizedGoalStatus = 'skill_goal';
-          }
+          const normalizedUpdates = {
+            ...updates,
+            goalStatus: updates.goalStatus ? normalizeGoalStatus(updates.goalStatus) : currentSkill.goalStatus
+          };
 
           const updatedSkill = {
             ...currentSkill,
-            ...updates,
-            goalStatus: normalizedGoalStatus || currentSkill.goalStatus,
+            ...normalizedUpdates,
             lastUpdated: new Date().toISOString()
           };
 
@@ -132,16 +131,14 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             };
 
-            // Normalize legacy goal status values
-            let normalizedGoalStatus = skillUpdates.goalStatus;
-            if (normalizedGoalStatus === 'required' || normalizedGoalStatus === 'preferred') {
-              normalizedGoalStatus = 'skill_goal';
-            }
+            const normalizedUpdates = {
+              ...skillUpdates,
+              goalStatus: skillUpdates.goalStatus ? normalizeGoalStatus(skillUpdates.goalStatus) : currentSkill.goalStatus
+            };
 
             updatedSkills[skillTitle] = {
               ...currentSkill,
-              ...skillUpdates,
-              goalStatus: normalizedGoalStatus || currentSkill.goalStatus,
+              ...normalizedUpdates,
               lastUpdated: new Date().toISOString()
             };
           });
@@ -172,33 +169,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       version: 5,
       partialize: (state) => ({
         skillStates: state.skillStates
-      }),
-      storage: {
-        getItem: async (name: string) => {
-          const str = localStorage.getItem(name);
-          if (!str) return null;
-          try {
-            const parsed = JSON.parse(str);
-            console.log('Loading persisted state:', { name, value: parsed });
-            return parsed;
-          } catch (error) {
-            console.error('Error parsing stored state:', error);
-            return null;
-          }
-        },
-        setItem: async (name: string, value: unknown) => {
-          try {
-            const serialized = JSON.stringify(value);
-            console.log('Persisting state:', { name, value });
-            localStorage.setItem(name, serialized);
-          } catch (error) {
-            console.error('Error storing state:', error);
-          }
-        },
-        removeItem: async (name: string) => {
-          localStorage.removeItem(name);
-        }
-      }
+      })
     }
   )
 );
