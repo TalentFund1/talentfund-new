@@ -1,7 +1,7 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { EmployeeSkillAchievement } from "../../employee/types/employeeSkillTypes";
+import { useSkillsMatrixStore } from "../skills-matrix/SkillsMatrixState";
+import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
 import { benchmarkingService } from "../../../services/benchmarking";
-import { SkillState } from "../../skills/competency/state/types";
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -12,13 +12,14 @@ interface MatchingSkillsResult {
 
 export const calculateMatchingSkills = (
   toggledRoleSkills: UnifiedSkill[],
-  employeeSkills: EmployeeSkillAchievement[],
+  employeeSkills: UnifiedSkill[],
   comparisonLevel: string,
   selectedRole: string,
-  track: string,
-  currentStates: Record<string, Record<string, SkillState>>,
-  getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string) => SkillState | undefined
+  track: string
 ): MatchingSkillsResult => {
+  const { currentStates } = useSkillsMatrixStore();
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+
   console.log('Calculating matching skills:', {
     toggledCount: toggledRoleSkills.length,
     employeeSkillsCount: employeeSkills.length,
@@ -36,15 +37,14 @@ export const calculateMatchingSkills = (
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[selectedRole]?.[skill.title]?.level || 
-      employeeSkills.find(s => s.title === skill.title)?.level || 
-      'unspecified';
+    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
-    console.log('Comparing skill levels:', {
+    console.log('Comparing competency levels:', {
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel
+      roleLevel: roleSkillLevel,
+      track
     });
 
     const comparison = benchmarkingService.compareSkillLevels(
@@ -56,9 +56,9 @@ export const calculateMatchingSkills = (
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
-    const skillState = currentStates[selectedRole]?.[skill.title];
+    const skillState = currentStates[skill.title];
     if (!skillState) return false;
-    return skillState.required === 'required' || skillState.required === 'skill_goal';
+    return skillState.goalStatus === 'required' || skillState.goalStatus === 'skill_goal';
   });
 
   return {

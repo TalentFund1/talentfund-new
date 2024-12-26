@@ -1,7 +1,6 @@
 export interface SkillState {
   level: string;
   required: string;
-  goalStatus: string;
 }
 
 export interface LevelState {

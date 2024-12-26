@@ -17,11 +17,7 @@ export const setSkillStateAction = (
       ...roleStates[roleId],
       [skillName]: {
         ...roleStates[roleId]?.[skillName],
-        [levelKey]: { 
-          level, 
-          required,
-          goalStatus: 'unknown' 
-        }
+        [levelKey]: { level, required }
       }
     }
   };

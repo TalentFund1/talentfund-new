@@ -13,7 +13,6 @@ import { useEffect } from "react";
 import { calculateMatchingSkills } from "./analysis/MatchingSkillsCalculator";
 import { calculateMatchPercentages } from "./analysis/MatchPercentageCalculator";
 import { ProgressBar } from "./analysis/ProgressBar";
-import { SkillState } from "../skills/competency/state/types";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -69,19 +68,6 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
-  const nestedCurrentStates: Record<string, Record<string, SkillState>> = {
-    [selectedRole]: Object.fromEntries(
-      Object.entries(currentStates).map(([key, value]) => [
-        key,
-        {
-          level: value.level || 'unspecified',
-          required: value.required || 'preferred',
-          goalStatus: value.goalStatus || 'unknown'
-        }
-      ])
-    )
-  };
-
   const {
     matchingSkills,
     competencyMatchingSkills,
@@ -92,9 +78,7 @@ export const BenchmarkAnalysis = () => {
     employeeSkills,
     comparisonLevel,
     selectedRole,
-    track,
-    nestedCurrentStates,
-    getSkillCompetencyState
+    track
   );
 
   const {

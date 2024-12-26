@@ -39,8 +39,7 @@ export const initializeSkillStates = (roleId: string) => {
     ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(level => {
       states[skill.title][level] = {
         level: 'unspecified',
-        required: 'preferred',
-        goalStatus: 'unknown'
+        required: 'preferred'
       };
     });
     
@@ -48,8 +47,7 @@ export const initializeSkillStates = (roleId: string) => {
     ['m3', 'm4', 'm5', 'm6'].forEach(level => {
       states[skill.title][level] = {
         level: 'unspecified',
-        required: 'preferred',
-        goalStatus: 'unknown'
+        required: 'preferred'
       };
     });
   });
