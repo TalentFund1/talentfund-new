@@ -57,7 +57,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          return {
+          const updatedState = {
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -74,6 +74,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           };
+
+          console.log('Updated skill state:', updatedState);
+          return updatedState;
         });
       },
 
@@ -122,7 +125,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             };
           });
 
-          return {
+          const updatedState = {
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -131,12 +134,31 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           };
+
+          console.log('Batch update complete:', updatedState);
+          return updatedState;
         });
       }
     }),
     {
       name: 'employee-skills-storage',
-      version: 1,
+      version: 2,
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          console.log('Loading from storage:', { name, value: str });
+          return str ? Promise.resolve(JSON.parse(str)) : Promise.resolve(null);
+        },
+        setItem: (name, value) => {
+          console.log('Saving to storage:', { name, value });
+          localStorage.setItem(name, JSON.stringify(value));
+          return Promise.resolve();
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+          return Promise.resolve();
+        },
+      },
       partialize: (state) => ({
         skillStates: state.skillStates
       })
