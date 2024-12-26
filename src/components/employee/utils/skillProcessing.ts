@@ -1,20 +1,16 @@
 import { categorizeSkills } from "../../skills/competency/skillCategories";
 import { getSkillProfileId } from "../../EmployeeTable";
-import { useSkillsMatrixStore } from "../../benchmark/skills-matrix/SkillsMatrixState";
+import { useEmployeeSkillsStore } from "../store/employeeSkillsStore";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 export const processEmployeeSkills = (skills: string, role: string) => {
-  // Convert comma-separated string to array and clean up
   const skillsList = skills
     .split(',')
     .map(skill => skill.trim())
     .filter(skill => skill.length > 0);
 
-  // Get role ID for categorization
   const roleId = getSkillProfileId(role);
-  
-  // Initialize skills with default values
-  const skillsMatrixStore = useSkillsMatrixStore.getState();
+  const employeeStore = useEmployeeSkillsStore.getState();
   
   const processedSkills = skillsList.map(skillTitle => {
     const unifiedData = getUnifiedSkillData(skillTitle);
@@ -27,7 +23,7 @@ export const processEmployeeSkills = (skills: string, role: string) => {
   });
   
   processedSkills.forEach(skill => {
-    skillsMatrixStore.setSkillState(skill.title, 'unspecified', 'unknown');
+    employeeStore.setSkillLevel(role, skill.title, 'unspecified');
     console.log('Initialized skill:', {
       skill: skill.title,
       level: 'unspecified',
@@ -35,7 +31,6 @@ export const processEmployeeSkills = (skills: string, role: string) => {
     });
   });
   
-  // Categorize skills
   const categorizedSkills = categorizeSkills(skillsList, roleId);
 
   console.log('Processed and categorized skills:', {

@@ -9,18 +9,24 @@ import { benchmarkingService } from "../../services/benchmarking";
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
   roleLevel: string;
+  employeeId: string;
 }
 
-export const CompetencyMatchSection = ({ skills, roleLevel }: CompetencyMatchSectionProps) => {
+export const CompetencyMatchSection = ({ 
+  skills, 
+  roleLevel,
+  employeeId 
+}: CompetencyMatchSectionProps) => {
+  const { getSkillState } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
-  const { currentStates } = useSkillsMatrixStore();
   const { selectedRole } = useRoleStore();
 
   const matchingSkills = skills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
 
-    const employeeSkillLevel = currentStates[skill.title]?.level || skill.level || 'unspecified';
+    const skillState = getSkillState(skill.title, employeeId);
+    const employeeSkillLevel = skillState?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
     console.log(`Analyzing skill match:`, {

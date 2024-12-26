@@ -7,30 +7,27 @@ import { SkillLevel, SkillGoalStatus } from "../employee/types/employeeSkillType
 interface StaticSkillLevelCellProps {
   initialLevel: string;
   skillTitle: string;
+  employeeId: string;
 }
 
 export const StaticSkillLevelCell = ({ 
   initialLevel, 
   skillTitle,
+  employeeId
 }: StaticSkillLevelCellProps) => {
-  const { currentStates, initializeState } = useSkillsMatrixStore();
+  const { getSkillState, initializeState } = useSkillsMatrixStore();
 
   useEffect(() => {
     console.log('Initializing static skill cell:', {
       skillTitle,
       initialLevel,
-      currentState: currentStates[skillTitle]
+      employeeId
     });
     
-    if (!currentStates[skillTitle]) {
-      initializeState(skillTitle, 'unspecified' as SkillLevel, 'unknown' as SkillGoalStatus);
-    }
-  }, [skillTitle, initialLevel, currentStates, initializeState]);
+    initializeState(skillTitle, employeeId);
+  }, [skillTitle, initialLevel, employeeId, initializeState]);
 
-  const currentState = currentStates[skillTitle] || {
-    level: 'unspecified',
-    goalStatus: 'unknown'
-  };
+  const skillState = getSkillState(skillTitle, employeeId);
 
   const getLevelIcon = (level: string = 'unspecified') => {
     switch (level.toLowerCase()) {
@@ -95,17 +92,17 @@ export const StaticSkillLevelCell = ({
   return (
     <TableCell className="border-r border-blue-200 p-0">
       <div className="flex flex-col items-center">
-        <div className={getLevelStyles(currentState?.level)}>
+        <div className={getLevelStyles(skillState?.level)}>
           <span className="flex items-center gap-2">
-            {getLevelIcon(currentState?.level)}
-            {(currentState?.level || 'unspecified').charAt(0).toUpperCase() + (currentState?.level || 'unspecified').slice(1)}
+            {getLevelIcon(skillState?.level)}
+            {(skillState?.level || 'unspecified').charAt(0).toUpperCase() + (skillState?.level || 'unspecified').slice(1)}
           </span>
         </div>
-        <div className={getRequirementStyles(currentState?.goalStatus, currentState?.level)}>
+        <div className={getRequirementStyles(skillState?.goalStatus, skillState?.level)}>
           <span className="flex items-center gap-1.5">
-            {getRequirementIcon(currentState?.goalStatus)}
-            {currentState?.goalStatus === 'required' ? 'Skill Goal' : 
-             currentState?.goalStatus === 'not_interested' ? 'Not Interested' : 
+            {getRequirementIcon(skillState?.goalStatus)}
+            {skillState?.goalStatus === 'required' ? 'Skill Goal' : 
+             skillState?.goalStatus === 'not_interested' ? 'Not Interested' : 
              'Unknown'}
           </span>
         </div>

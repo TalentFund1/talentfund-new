@@ -9,6 +9,7 @@ interface SkillBadgeProps {
   level?: string;
   isSkillGoal?: boolean;
   isRoleBenchmark?: boolean;
+  employeeId: string;
 }
 
 export const SkillBadge = ({ 
@@ -16,10 +17,11 @@ export const SkillBadge = ({
   showLevel = false, 
   level, 
   isSkillGoal,
-  isRoleBenchmark = false 
+  isRoleBenchmark = false,
+  employeeId 
 }: SkillBadgeProps) => {
-  const { currentStates } = useSkillsMatrixStore();
-  const skillState = currentStates[skill.name];
+  const { getSkillState } = useSkillsMatrixStore();
+  const skillState = getSkillState(skill.name, employeeId);
 
   const getLevelColor = (level: string) => {
     switch (level?.toLowerCase()) {
@@ -35,19 +37,14 @@ export const SkillBadge = ({
   };
 
   const shouldShowGoal = () => {
-    // Don't show heart in role benchmark view
     if (isRoleBenchmark) return false;
-    
-    // If explicitly passed as a prop
     if (isSkillGoal) return true;
     
-    // If it's in the current states
     if (skillState) {
       return skillState.goalStatus === 'required' || 
              skillState.goalStatus === 'skill_goal';
     }
     
-    // For all skill levels, show goal by default
     const currentLevel = (skillState?.level || level || '').toLowerCase();
     return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
   };
