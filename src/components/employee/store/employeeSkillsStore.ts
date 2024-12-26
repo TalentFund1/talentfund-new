@@ -3,10 +3,16 @@ import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
 import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
-import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData, SkillGoalStatus } from '../types/employeeSkillTypes';
+import { normalizeGoalStatus } from './utils/skillStateNormalizer';
+import { 
+  EmployeeSkillsData, 
+  EmployeeSkillUpdate, 
+  EmployeeSkillData, 
+  SkillGoalStatus 
+} from '../types/employeeSkillTypes';
 
 interface EmployeeSkillsStore {
-  skillStates: Record<string, EmployeeSkillsState>;
+  skillStates: Record<string, EmployeeSkillsData>;
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
@@ -56,16 +62,15 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          // Normalize legacy goal status values to 'skill_goal'
-          let normalizedGoalStatus = updates.goalStatus as SkillGoalStatus;
-          if (updates.goalStatus === 'required' || updates.goalStatus === 'preferred') {
-            normalizedGoalStatus = 'skill_goal';
-          }
+          // Normalize the goal status if it's being updated
+          const normalizedGoalStatus = updates.goalStatus 
+            ? normalizeGoalStatus(updates.goalStatus)
+            : currentSkill.goalStatus;
 
           const updatedSkill = {
             ...currentSkill,
             ...updates,
-            goalStatus: normalizedGoalStatus || currentSkill.goalStatus,
+            goalStatus: normalizedGoalStatus,
             lastUpdated: new Date().toISOString()
           };
 
