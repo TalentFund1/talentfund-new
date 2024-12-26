@@ -4,87 +4,62 @@ import { useEffect, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
 
-interface SkillCellProps {
-  skillName: string;
-  details: {
-    level: string;
-    required: string;
-  };
-  isLastColumn: boolean;
-  levelKey: string;
+interface SkillLevelCellProps {
+  initialLevel: string;
+  skillTitle: string;
 }
 
-export const SkillCell = ({ 
-  skillName, 
-  details, 
-  isLastColumn, 
-  levelKey 
-}: SkillCellProps) => {
+export const SkillLevelCell = ({ 
+  initialLevel,
+  skillTitle
+}: SkillLevelCellProps) => {
   const { currentStates, setSkillState } = useCompetencyStore();
   const initRef = useRef(false);
 
   // Initialize state only once when component mounts
   useEffect(() => {
     if (!initRef.current) {
-      console.log('Initializing skill state:', {
-        skillName,
-        levelKey,
-        initialLevel: details.level || "unspecified",
-        initialRequired: details.required || "unknown"
+      console.log('Initializing skill level:', {
+        skillTitle,
+        initialLevel
       });
       
       setSkillState(
-        skillName,
-        details.level || "unspecified",
-        levelKey,
-        details.required || "unknown"
+        skillTitle,
+        initialLevel || "unspecified",
+        "p4",
+        "unknown"
       );
       initRef.current = true;
     }
-  }, [skillName, levelKey, details.level, details.required, setSkillState]);
+  }, [skillTitle, initialLevel, setSkillState]);
 
-  const currentState = currentStates[skillName]?.[levelKey] || {
-    level: details.level || "unspecified",
-    required: details.required || "unknown",
+  const currentState = currentStates[skillTitle]?.p4 || {
+    level: initialLevel || "unspecified",
+    required: "unknown"
   };
 
   const handleLevelChange = (value: string) => {
     console.log('Changing level:', {
-      skillName,
-      levelKey,
+      skillTitle,
       newLevel: value,
       currentRequired: currentState.required
     });
-    
-    setSkillState(
-      skillName,
-      value,
-      levelKey,
-      currentState.required
-    );
+    setSkillState(skillTitle, value, "p4", currentState.required);
   };
 
   const handleRequirementChange = (value: string) => {
     console.log('Changing requirement:', {
-      skillName,
-      levelKey,
+      skillTitle,
       currentLevel: currentState.level,
       newRequired: value
     });
-    
-    setSkillState(
-      skillName,
-      currentState.level,
-      levelKey,
-      value
-    );
+    setSkillState(skillTitle, currentState.level, "p4", value);
   };
 
   return (
-    <TableCell 
-      className={`text-center p-2 align-middle ${!isLastColumn ? 'border-r' : ''} border-border`}
-    >
-      <div className="flex flex-col items-center gap-0">
+    <TableCell className="text-center border-r border-blue-200 p-0">
+      <div className="flex flex-col items-center">
         <LevelSelector
           currentLevel={currentState.level}
           onLevelChange={handleLevelChange}

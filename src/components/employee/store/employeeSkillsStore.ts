@@ -5,13 +5,8 @@ import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { EmployeeSkillsState, EmployeeSkillUpdate, EmployeeSkillData } from '../types/employeeSkillTypes';
 
-// Define the structure of persisted state separately
-interface PersistedState {
+interface EmployeeSkillsStore {
   skillStates: Record<string, EmployeeSkillsState>;
-}
-
-// Complete store interface including all methods
-interface EmployeeSkillsStore extends PersistedState {
   getSkillState: (employeeId: string, skillTitle: string) => EmployeeSkillData;
   getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
@@ -20,6 +15,29 @@ interface EmployeeSkillsStore extends PersistedState {
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
 }
+
+const defaultSkillState: EmployeeSkillData = {
+  id: '',
+  employeeId: '',
+  skillId: '',
+  title: '',
+  level: 'unspecified',
+  goalStatus: 'unknown',
+  lastUpdated: new Date().toISOString(),
+  confidence: 'medium',
+  subcategory: 'General',
+  category: 'specialized',
+  businessCategory: 'Technical Skills',
+  weight: 'technical',
+  growth: '0%',
+  salary: 'market',
+  benchmarks: {
+    B: false,
+    R: false,
+    M: false,
+    O: false
+  }
+};
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -39,26 +57,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           };
 
           const currentSkill = currentState.skills[skillTitle] || {
+            ...defaultSkillState,
             id: `${employeeId}-${skillTitle}`,
             employeeId,
             skillId: `${employeeId}-${skillTitle}`,
             title: skillTitle,
-            level: 'unspecified',
-            goalStatus: 'unknown',
-            lastUpdated: new Date().toISOString(),
-            confidence: 'medium',
-            subcategory: 'General',
-            category: 'specialized',
-            businessCategory: 'Technical Skills',
-            weight: 'technical',
-            growth: '0%',
-            salary: 'market',
-            benchmarks: {
-              B: false,
-              R: false,
-              M: false,
-              O: false
-            }
           };
 
           const updatedSkillStates = {
@@ -77,18 +80,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Updated skill state:', updatedSkillStates);
-          return {
-            ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
-          };
+          console.log('Updated skill state:', updatedSkillStates[employeeId].skills[skillTitle]);
+          return { skillStates: updatedSkillStates };
         });
       },
 
@@ -108,26 +101,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
           Object.entries(updates).forEach(([skillTitle, skillUpdates]) => {
             const currentSkill = currentState.skills[skillTitle] || {
+              ...defaultSkillState,
               id: `${employeeId}-${skillTitle}`,
               employeeId,
               skillId: `${employeeId}-${skillTitle}`,
               title: skillTitle,
-              level: 'unspecified',
-              goalStatus: 'unknown',
-              lastUpdated: new Date().toISOString(),
-              confidence: 'medium',
-              subcategory: 'General',
-              category: 'specialized',
-              businessCategory: 'Technical Skills',
-              weight: 'technical',
-              growth: '0%',
-              salary: 'market',
-              benchmarks: {
-                B: false,
-                R: false,
-                M: false,
-                O: false
-              }
             };
 
             updatedSkills[skillTitle] = {
@@ -145,40 +123,18 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
-          console.log('Batch update complete:', updatedSkillStates);
-          return {
-            ...state,
-            skillStates: updatedSkillStates,
-            getSkillState: state.getSkillState,
-            getEmployeeSkills: state.getEmployeeSkills,
-            setSkillLevel: state.setSkillLevel,
-            setSkillGoalStatus: state.setSkillGoalStatus,
-            initializeEmployeeSkills: state.initializeEmployeeSkills,
-            updateSkillState: state.updateSkillState,
-            batchUpdateSkills: state.batchUpdateSkills
-          };
+          console.log('Batch update complete:', {
+            employeeId,
+            updatedSkillCount: Object.keys(updatedSkills).length
+          });
+          
+          return { skillStates: updatedSkillStates };
         });
       }
     }),
     {
       name: 'employee-skills-storage',
       version: 2,
-      storage: {
-        getItem: (name) => {
-          const str = localStorage.getItem(name);
-          console.log('Loading from storage:', { name, value: str });
-          return str ? Promise.resolve(JSON.parse(str)) : Promise.resolve(null);
-        },
-        setItem: (name, value) => {
-          console.log('Saving to storage:', { name, value });
-          localStorage.setItem(name, JSON.stringify(value));
-          return Promise.resolve();
-        },
-        removeItem: (name) => {
-          localStorage.removeItem(name);
-          return Promise.resolve();
-        },
-      },
       partialize: (state) => ({
         skillStates: state.skillStates
       })
