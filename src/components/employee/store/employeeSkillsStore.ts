@@ -57,6 +57,14 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
 
+          const updatedSkill = {
+            ...currentSkill,
+            ...updates,
+            lastUpdated: new Date().toISOString()
+          };
+
+          console.log('Updated skill data:', updatedSkill);
+
           return {
             skillStates: {
               ...state.skillStates,
@@ -64,11 +72,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                 ...currentState,
                 skills: {
                   ...currentState.skills,
-                  [skillTitle]: {
-                    ...currentSkill,
-                    ...updates,
-                    lastUpdated: new Date().toISOString()
-                  }
+                  [skillTitle]: updatedSkill
                 },
                 lastUpdated: new Date().toISOString()
               }
@@ -136,10 +140,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 1,
+      version: 2, // Increment version to ensure clean state
       partialize: (state) => ({
         skillStates: state.skillStates
-      })
+      }),
+      merge: (persistedState: any, currentState: any) => {
+        console.log('Merging persisted state:', { persistedState, currentState });
+        return {
+          ...currentState,
+          ...persistedState,
+        };
+      }
     }
   )
 );
