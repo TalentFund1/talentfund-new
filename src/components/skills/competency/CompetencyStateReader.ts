@@ -1,5 +1,5 @@
-import { SkillCompetencyState } from './CompetencyState';
-import { useCompetencyStore } from './state/stateStore';
+import { SkillCompetencyState } from './state/types';
+import { useCompetencyStore } from './CompetencyState';
 
 export interface CompetencyStateReader {
   getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string) => SkillCompetencyState;

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CompetencyState } from './state/types';
+import { CompetencyState, SkillCompetencyState } from './state/types';
 import { setSkillStateAction, setSkillProgressionAction } from './state/stateActions';
 import { loadPersistedState } from './state/persistenceUtils';
 import { initializeRoleState } from './state/initializeState';
@@ -14,7 +14,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       originalStates: {},
       hasChanges: false,
 
-      getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string) => {
+      getSkillCompetencyState: (skillName: string, levelKey: string, roleId: string): SkillCompetencyState => {
         console.log('Getting skill competency state:', { skillName, levelKey, roleId });
         const roleState = get().roleStates[roleId];
         if (!roleState?.[skillName]?.[levelKey]) {
@@ -29,7 +29,7 @@ export const useCompetencyStore = create<CompetencyState>()(
       getAllSkillStatesForLevel: (levelKey: string, roleId: string) => {
         console.log('Getting all skill states for level:', { levelKey, roleId });
         const roleState = get().roleStates[roleId] || {};
-        const result: Record<string, any> = {};
+        const result: Record<string, SkillCompetencyState> = {};
         
         Object.entries(roleState).forEach(([skillName, skillStates]) => {
           if (skillStates[levelKey]) {
