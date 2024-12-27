@@ -17,16 +17,16 @@ interface ComparisonMetrics {
 }
 
 class SkillComparisonService {
-  private readonly MAX_LEVEL_VALUE = 3;
   private readonly LEVEL_VALUES: { [key: string]: number } = {
     'advanced': 3,
     'intermediate': 2,
     'beginner': 1,
-    'unspecified': 0
+    'unspecified': 1  // Changed from 0 to 1 - unspecified is equivalent to beginner level
   };
 
   public getLevelValue(level: string): number {
-    return this.LEVEL_VALUES[level.toLowerCase()] || 0;
+    console.log('Getting level value for:', level, 'Value:', this.LEVEL_VALUES[level.toLowerCase()] || 1);
+    return this.LEVEL_VALUES[level.toLowerCase()] || 1; // Default to 1 (beginner) instead of 0
   }
 
   public getProgressColor(percentage: number): string {
@@ -40,16 +40,18 @@ class SkillComparisonService {
     roleRequirement: RoleSkillRequirement
   ): SkillComparisonResult {
     const employeeValue = this.getLevelValue(employeeSkill.level);
+    const roleValue = this.getLevelValue(roleRequirement.minimumLevel);
 
     console.log('Comparing skill levels numerically:', {
       skill: employeeSkill.title,
       employeeLevel: employeeSkill.level,
       employeeValue,
-      maxValue: this.MAX_LEVEL_VALUE
+      roleLevel: roleRequirement.minimumLevel,
+      roleValue
     });
 
     // Pure numerical comparison based on absolute skill level
-    const matchPercentage = (employeeValue / this.MAX_LEVEL_VALUE) * 100;
+    const matchPercentage = (employeeValue / Math.max(roleValue, 1)) * 100;
 
     return {
       skillTitle: employeeSkill.title,
