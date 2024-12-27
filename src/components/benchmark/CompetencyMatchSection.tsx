@@ -4,7 +4,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { BenchmarkCalculator } from "./analysis/BenchmarkCalculator";
+import { unifiedBenchmarkCalculator } from "../../services/benchmarking/services/UnifiedBenchmarkCalculator";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
@@ -21,8 +21,7 @@ export const CompetencyMatchSection = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRole } = useRoleStore();
 
-  const calculator = new BenchmarkCalculator(getSkillCompetencyState);
-  const { competencyMatchingSkills } = calculator.calculateMatchingSkills(
+  const { competencyMatchingSkills } = unifiedBenchmarkCalculator.calculateMatchingSkills(
     Array.from(skills),
     Array.from(skills),
     roleLevel.toLowerCase(),
