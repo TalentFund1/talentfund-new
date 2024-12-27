@@ -1,7 +1,7 @@
 import { EmployeeSkillData, SkillLevel } from "./types/employeeSkillTypes";
 import { roleSkills } from "../skills/data/roleSkills";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { CompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
 import { RoleSkillRequirement } from "../skills/types/roleSkillTypes";
 import { benchmarkingService } from "../../services/benchmarking";
 
@@ -11,7 +11,7 @@ export const calculateBenchmarkPercentage = (
   employeeLevel: string,
   employeeSkills: EmployeeSkillData[] | undefined,
   toggledSkills: Set<string>,
-  competencyReader: CompetencyStateReader
+  competencyReader: ReturnType<typeof useCompetencyStateReader>
 ): number => {
   console.log('Calculating benchmark percentage:', {
     employeeId,
