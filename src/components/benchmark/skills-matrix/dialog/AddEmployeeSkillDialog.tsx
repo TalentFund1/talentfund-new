@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SearchFilter } from "@/components/market/SearchFilter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
 import { useToggledSkills } from "../../../skills/context/ToggledSkillsContext";
@@ -11,7 +11,7 @@ import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { Skills, getAllSkills } from '../../../skills/data/skills/allSkills';
 import { roleSkills, saveRoleSkills } from '../../../skills/data/roleSkills';
 import { normalizeSkillTitle } from '../../../skills/utils/normalization';
-import { generateSkillProgression } from '../../../skills/competency/autoFillUtils';
+import { generateSkillProgression } from '../../../competency/autoFillUtils';
 import { useTrack } from "../../../skills/context/TrackContext";
 import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
 
@@ -24,12 +24,22 @@ export const AddEmployeeSkillDialog = () => {
   const { setSkillState, setSkillProgression } = useCompetencyStore();
   const { getTrackForRole } = useTrack();
   const { addSkill, getEmployeeSkills } = useEmployeeSkillsStore();
+  const [skillsUpdated, setSkillsUpdated] = useState(false);
 
   // Get all available skills from universal database
   const universalSkills = getAllSkills();
   const allSkills = Array.from(new Set(
     universalSkills.map(s => normalizeSkillTitle(s.title))
   ));
+
+  // Force re-render when skills are updated
+  useEffect(() => {
+    if (skillsUpdated && id) {
+      console.log('Refreshing skills after update for employee:', id);
+      getEmployeeSkills(id);
+      setSkillsUpdated(false);
+    }
+  }, [skillsUpdated, id, getEmployeeSkills]);
 
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
@@ -117,6 +127,7 @@ export const AddEmployeeSkillDialog = () => {
     roleSkills[id] = updatedRoleSkills;
     saveRoleSkills(id, updatedRoleSkills);
     setToggledSkills(newToggledSkills);
+    setSkillsUpdated(true);
 
     toast({
       title: "Skills Added",
