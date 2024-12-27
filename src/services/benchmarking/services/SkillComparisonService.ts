@@ -38,17 +38,6 @@ class SkillComparisonService {
     employeeSkill: EmployeeSkillData,
     roleRequirement: RoleSkillRequirement
   ): SkillComparisonResult {
-    // If employee level is unspecified, it's always a non-match
-    if (employeeSkill.level === 'unspecified') {
-      return {
-        skillTitle: employeeSkill.title,
-        employeeLevel: employeeSkill.level as SkillLevel,
-        requiredLevel: roleRequirement.minimumLevel as SkillLevel,
-        matchPercentage: 0
-      };
-    }
-
-    // Get numerical values for comparison
     const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
     const requiredValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
 
