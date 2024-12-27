@@ -76,10 +76,15 @@ export const SkillsMatrix = () => {
     }
   }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
 
-  // Apply filters to employee skills
+  // Apply basic filtering to employee skills
   const filteredSkills = employeeSkillsData.filter(skill => {
     if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-    if (selectedInterest !== "all" && skill.goalStatus !== selectedInterest) return false;
+    if (selectedInterest !== "all") {
+      const skillState = getSkillState(id || "", skill.title);
+      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
+      if (selectedInterest === "not_interested" && skillState.goalStatus !== "not_interested") return false;
+      if (selectedInterest === "unknown" && skillState.goalStatus !== "unknown") return false;
+    }
     if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
     if (selectedWeight !== "all" && skill.weight !== selectedWeight) return false;
     return true;
