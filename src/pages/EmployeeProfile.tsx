@@ -63,6 +63,7 @@ const EmployeeProfile = () => {
     startDate: employee.startDate,
     termDate: employee.termDate,
     tenure: "1.9",
+    team: employee.team,
     image: employeeImages[id as keyof typeof employeeImages],
     skills: employee.skills // Add this line to pass skills data
   };
