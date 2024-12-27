@@ -1,25 +1,26 @@
 import { EmployeeSkillData } from './types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../skills/types/roleSkillTypes';
-import { skillComparisonService } from '../../services/benchmarking';
-import { CompetencyStateReader } from '../skills/competency/types/competencyTypes';
+import { skillComparisonService } from '../../services/benchmarking/services/SkillComparisonService';
 
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   baseRole: string,
-  employeeSkills: EmployeeSkillData[],
+  employeeSkills: EmployeeSkillData[] | undefined,
   toggledSkills: Set<string>,
-  competencyReader: CompetencyStateReader
+  getSkillCompetencyState: any
 ): number => {
   console.log('BenchmarkCalculator: Starting calculation:', {
     employeeId,
     roleId,
     baseRole,
-    skillsCount: employeeSkills.length,
-    toggledCount: toggledSkills.size
+    employeeSkillsCount: employeeSkills?.length || 0,
+    toggledSkillsCount: toggledSkills.size
   });
 
-  if (employeeSkills.length === 0 || toggledSkills.size === 0) {
+  // Ensure employeeSkills is an array
+  if (!Array.isArray(employeeSkills)) {
+    console.warn('BenchmarkCalculator: employeeSkills is not an array:', employeeSkills);
     return 0;
   }
 
@@ -28,64 +29,53 @@ export const calculateBenchmarkPercentage = (
     toggledSkills.has(skill.title)
   );
 
-  const totalSkills = toggledSkills.size;
-
-  // Calculate skill match percentage (basic presence)
-  const skillMatchCount = relevantSkills.length;
-  const skillMatchPercentage = (skillMatchCount / totalSkills) * 100;
-
-  console.log('Skill match calculation:', {
-    matchingSkills: skillMatchCount,
-    totalSkills,
-    percentage: skillMatchPercentage
+  console.log('BenchmarkCalculator: Filtered relevant skills:', {
+    totalSkills: employeeSkills.length,
+    relevantSkillsCount: relevantSkills.length,
+    skills: relevantSkills.map(s => s.title)
   });
 
-  // Calculate competency match percentage
-  const competencyMatchCount = relevantSkills.filter(skill => {
-    const roleSkillState = competencyReader.getSkillCompetencyState(skill.title, baseRole, roleId);
-    if (!roleSkillState) return false;
+  if (relevantSkills.length === 0) {
+    console.log('BenchmarkCalculator: No relevant skills found');
+    return 0;
+  }
+
+  // Calculate matches
+  const matchingSkills = relevantSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, baseRole.toLowerCase(), roleId);
+    if (!roleSkillState) {
+      console.log('BenchmarkCalculator: No role skill state found for:', {
+        skill: skill.title,
+        baseRole,
+        roleId
+      });
+      return false;
+    }
 
     const employeeSkillLevel = skill.level;
     const roleSkillLevel = roleSkillState.level;
 
-    return employeeSkillLevel === roleSkillLevel || 
-           (employeeSkillLevel === 'advanced' && roleSkillLevel === 'intermediate') ||
-           (employeeSkillLevel === 'advanced' && roleSkillLevel === 'beginner') ||
-           (employeeSkillLevel === 'intermediate' && roleSkillLevel === 'beginner');
-  }).length;
+    console.log('BenchmarkCalculator: Comparing skill levels:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel
+    });
 
-  const competencyMatchPercentage = (competencyMatchCount / totalSkills) * 100;
+    const comparison = skillComparisonService.compareSkillLevels(
+      { title: skill.title, level: employeeSkillLevel },
+      { title: skill.title, minimumLevel: roleSkillLevel }
+    );
 
-  console.log('Competency match calculation:', {
-    matchingCompetencies: competencyMatchCount,
-    totalSkills,
-    percentage: competencyMatchPercentage
+    return comparison.matchPercentage >= 100;
   });
 
-  // Calculate skill goal match percentage
-  const skillGoalMatchCount = relevantSkills.filter(skill => 
-    skill.goalStatus === 'required' || skill.goalStatus === 'skill_goal'
-  ).length;
+  const matchPercentage = (matchingSkills.length / toggledSkills.size) * 100;
 
-  const skillGoalMatchPercentage = (skillGoalMatchCount / totalSkills) * 100;
-
-  console.log('Skill goal match calculation:', {
-    matchingGoals: skillGoalMatchCount,
-    totalSkills,
-    percentage: skillGoalMatchPercentage
+  console.log('BenchmarkCalculator: Final calculation:', {
+    matchingSkillsCount: matchingSkills.length,
+    totalSkills: toggledSkills.size,
+    matchPercentage
   });
 
-  // Calculate average percentage
-  const averagePercentage = Math.round(
-    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
-  );
-
-  console.log('Final benchmark calculation:', {
-    skillMatch: skillMatchPercentage,
-    competencyMatch: competencyMatchPercentage,
-    goalMatch: skillGoalMatchPercentage,
-    average: averagePercentage
-  });
-
-  return averagePercentage;
+  return Math.round(matchPercentage);
 };
