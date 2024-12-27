@@ -48,29 +48,39 @@ export const calculateMatchingSkills = (
   // Competency matches - employee meets or exceeds required level
   const competencyMatchingSkills = toggledRoleSkills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
-    if (!roleSkillState) return false;
+    if (!roleSkillState) {
+      console.log(`No role skill state found for ${skill.title}`);
+      return false;
+    }
 
     const employeeSkillState = getSkillState(skill.title, employeeId);
     const employeeLevel = employeeSkillState?.level || 'unspecified';
-    const roleLevel = roleSkillState.level;
+    const roleLevel = roleSkillState.level || 'unspecified';
 
     console.log('Comparing competency levels:', {
       skill: skill.title,
       employeeLevel,
-      roleLevel
+      roleLevel,
+      employeeValue: getLevelValue(employeeLevel),
+      roleValue: getLevelValue(roleLevel)
     });
 
+    // Special case: both unspecified is NOT a match
+    if (employeeLevel === 'unspecified' && roleLevel === 'unspecified') {
+      console.log(`${skill.title}: Both levels unspecified - NO match`);
+      return false;
+    }
+
+    // Special case: role unspecified but employee has level IS a match
+    if (roleLevel === 'unspecified' && employeeLevel !== 'unspecified') {
+      console.log(`${skill.title}: Role unspecified, employee has level - match`);
+      return true;
+    }
+
+    // Compare numeric values for all other cases
     const employeeLevelValue = getLevelValue(employeeLevel);
     const roleLevelValue = getLevelValue(roleLevel);
-
-    // Match if:
-    // 1. Both levels are unspecified (counts as a match)
-    // 2. Role level is unspecified but employee has any level (counts as a match)
-    // 3. Employee level meets or exceeds role level
-    const isMatch = 
-      (employeeLevel === 'unspecified' && roleLevel === 'unspecified') ||
-      (roleLevel === 'unspecified' && employeeLevel !== 'unspecified') ||
-      employeeLevelValue >= roleLevelValue;
+    const isMatch = employeeLevelValue >= roleLevelValue;
 
     console.log('Competency match result:', {
       skill: skill.title,
