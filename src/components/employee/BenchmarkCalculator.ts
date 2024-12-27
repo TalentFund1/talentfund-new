@@ -1,34 +1,38 @@
 import { EmployeeSkillData } from './types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../skills/types/roleSkillTypes';
 import { skillComparisonService } from '../../services/benchmarking';
-import { CompetencyStateReader } from '../skills/competency/types/competencyTypes';
 
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   baseRole: string,
-  employeeSkills: EmployeeSkillData[],
+  employeeSkills: ReadonlyArray<EmployeeSkillData> | undefined,
   toggledSkills: Set<string>,
-  competencyReader: CompetencyStateReader
+  competencyReader: any
 ): number => {
   console.log('BenchmarkCalculator: Starting calculation:', {
     employeeId,
     roleId,
     baseRole,
-    skillsCount: employeeSkills.length,
+    skillsCount: employeeSkills?.length || 0,
     toggledCount: toggledSkills.size
   });
 
-  if (employeeSkills.length === 0 || toggledSkills.size === 0) {
+  // Ensure employeeSkills is an array
+  const skills = Array.isArray(employeeSkills) ? employeeSkills : [];
+
+  if (skills.length === 0 || toggledSkills.size === 0) {
+    console.log('BenchmarkCalculator: No skills to compare');
     return 0;
   }
 
   // Filter for toggled skills only
-  const relevantSkills = employeeSkills.filter(skill => 
+  const relevantSkills = skills.filter(skill => 
     toggledSkills.has(skill.title)
   );
 
   const totalSkills = toggledSkills.size;
+  if (totalSkills === 0) return 0;
 
   // Calculate skill match percentage (basic presence)
   const skillMatchCount = relevantSkills.length;
