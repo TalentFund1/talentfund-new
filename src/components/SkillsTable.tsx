@@ -8,13 +8,21 @@ export const SkillsTable = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all");
 
-  // Get skills directly from universal database
-  const skills = getAllSkills();
-
-  console.log('Loading skills from universal database:', {
-    totalSkills: skills.length,
-    sample: skills[0]
-  });
+  // Get skills directly from universal database with error handling
+  const skills = (() => {
+    try {
+      console.log('Fetching skills from universal database...');
+      const allSkills = getAllSkills();
+      console.log('Successfully loaded skills:', {
+        count: allSkills.length,
+        sample: allSkills[0]
+      });
+      return allSkills;
+    } catch (error) {
+      console.error('Error loading skills:', error);
+      return [];
+    }
+  })();
 
   return (
     <div className="space-y-6 bg-white rounded-lg shadow-sm">
