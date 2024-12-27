@@ -18,16 +18,19 @@ interface ComparisonMetrics {
 }
 
 class SkillComparisonService {
-  private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
+  private getLevelValue(level: SkillLevel): number {
     const levelValues = {
       'advanced': 3,
       'intermediate': 2,
       'beginner': 1,
       'unspecified': 0
     };
+    return levelValues[level] || 0;
+  }
 
-    const employeeValue = levelValues[employeeLevel] || 0;
-    const requiredValue = levelValues[requiredLevel] || 0;
+  private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
+    const employeeValue = this.getLevelValue(employeeLevel);
+    const requiredValue = this.getLevelValue(requiredLevel);
 
     console.log('Level comparison:', {
       employeeLevel,
