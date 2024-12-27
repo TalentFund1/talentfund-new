@@ -36,15 +36,19 @@ export const createSkillActions = (set: any, get: any) => ({
         }
       };
 
+      // Create a new skills object with the added skill
+      const updatedSkills = {
+        ...currentState.skills,
+        [skillTitle]: newSkill
+      };
+
+      // Return new state with updated skills
       return {
         skillStates: {
           ...state.skillStates,
           [employeeId]: {
             ...currentState,
-            skills: {
-              ...currentState.skills,
-              [skillTitle]: newSkill
-            },
+            skills: updatedSkills,
             lastUpdated: new Date().toISOString()
           }
         }

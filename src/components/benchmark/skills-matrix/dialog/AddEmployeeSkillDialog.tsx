@@ -78,7 +78,7 @@ export const AddEmployeeSkillDialog = () => {
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Add skill to employee skills store
+        // Add skill to employee skills store - This is the new line
         addSkill(id, skillTitle);
         
         // Determine category and add to appropriate array if not already present
