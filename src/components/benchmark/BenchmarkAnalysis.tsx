@@ -10,9 +10,8 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
-import { calculateMatchingSkills } from "./analysis/MatchingSkillsCalculator";
-import { calculateMatchPercentages } from "./analysis/MatchPercentageCalculator";
 import { ProgressBar } from "./analysis/ProgressBar";
+import { unifiedBenchmarkCalculator } from "./analysis/UnifiedBenchmarkCalculator";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +20,6 @@ export const BenchmarkAnalysis = () => {
   const employeeSkills = getEmployeeSkills(id || "");
   const { selectedRole, selectedLevel, setSelectedRole, setSelectedLevel } = useRoleStore();
   const { getTrackForRole } = useTrack();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   const employees = useEmployeeStore((state) => state.employees);
   
   const employee = employees.find(emp => emp.id === id);
@@ -72,8 +70,12 @@ export const BenchmarkAnalysis = () => {
     matchingSkills,
     competencyMatchingSkills,
     skillGoalMatchingSkills,
-    totalToggledSkills
-  } = calculateMatchingSkills(
+    totalToggledSkills,
+    skillMatchPercentage,
+    competencyMatchPercentage,
+    skillGoalMatchPercentage,
+    averagePercentage
+  } = unifiedBenchmarkCalculator.calculateBenchmark(
     toggledRoleSkills,
     employeeSkills,
     comparisonLevel,
@@ -83,19 +85,7 @@ export const BenchmarkAnalysis = () => {
     id || ""
   );
 
-  const {
-    skillMatchPercentage,
-    competencyMatchPercentage,
-    skillGoalMatchPercentage,
-    averagePercentage
-  } = calculateMatchPercentages(
-    matchingSkills.length,
-    competencyMatchingSkills.length,
-    skillGoalMatchingSkills.length,
-    totalToggledSkills
-  );
-
-  console.log('Benchmark Analysis Calculation:', {
+  console.log('Benchmark Analysis Results:', {
     totalToggled: totalToggledSkills,
     skillMatch: { count: matchingSkills.length, percentage: skillMatchPercentage },
     competencyMatch: { count: competencyMatchingSkills.length, percentage: competencyMatchPercentage },

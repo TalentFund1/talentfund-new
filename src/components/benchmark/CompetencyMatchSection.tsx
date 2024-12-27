@@ -4,7 +4,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { benchmarkingService } from "../../services/benchmarking";
+import { unifiedBenchmarkCalculator } from "./analysis/UnifiedBenchmarkCalculator";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
@@ -18,43 +18,32 @@ export const CompetencyMatchSection = ({
   employeeId 
 }: CompetencyMatchSectionProps) => {
   const { getSkillState } = useSkillsMatrixStore();
-  const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRole } = useRoleStore();
+  const { getTrackForRole } = useTrack();
 
-  const matchingSkills = skills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
-    if (!roleSkillState) return false;
-
-    const skillState = getSkillState(skill.title, employeeId);
-    const employeeSkillLevel = skillState?.level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
-
-    console.log(`Analyzing skill match:`, {
-      skill: skill.title,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      roleId: selectedRole
-    });
-
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: employeeSkillLevel },
-      { title: skill.title, minimumLevel: roleSkillLevel }
-    );
-
-    return comparison.matchPercentage >= 100;
-  });
+  const track = getTrackForRole(selectedRole);
+  
+  const { competencyMatchingSkills } = unifiedBenchmarkCalculator.calculateBenchmark(
+    skills as UnifiedSkill[],
+    skills as UnifiedSkill[],
+    roleLevel.toLowerCase(),
+    selectedRole,
+    track,
+    getSkillState,
+    employeeId
+  );
 
   return (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">Competency Match</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-          {matchingSkills.length}
+          {competencyMatchingSkills.length}
         </span>
       </div>
-      {matchingSkills.length > 0 && (
+      {competencyMatchingSkills.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {matchingSkills.map((skill) => (
+          {competencyMatchingSkills.map((skill) => (
             <Badge 
               key={skill.title}
               variant="outline" 
