@@ -51,7 +51,7 @@ export const calculateMatchingSkills = (
     const employeeSkillLevel = skillState?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
-    console.log('Comparing competency levels:', {
+    console.log('Comparing competency levels for skill:', {
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
       roleLevel: roleSkillLevel,
@@ -64,7 +64,14 @@ export const calculateMatchingSkills = (
     const roleLevelValue = getLevelValue(roleSkillLevel);
 
     // Match if employee level is equal to or higher than role level
-    return employeeLevelValue >= roleLevelValue;
+    const isMatch = employeeLevelValue >= roleLevelValue;
+    console.log(`Skill ${skill.title} match result:`, {
+      isMatch,
+      employeeLevelValue,
+      roleLevelValue
+    });
+
+    return isMatch;
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
@@ -76,7 +83,8 @@ export const calculateMatchingSkills = (
     totalSkills: toggledRoleSkills.length,
     matchingSkills: matchingSkills.length,
     competencyMatches: competencyMatchingSkills.length,
-    skillGoalMatches: skillGoalMatchingSkills.length
+    skillGoalMatches: skillGoalMatchingSkills.length,
+    competencyMatchingSkills: competencyMatchingSkills.map(s => s.title)
   });
 
   return {
