@@ -1,5 +1,5 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { skillComparisonService } from "../../../services/benchmarking/services/SkillComparisonService";
+import { skillComparisonService } from "../../../services/benchmarking";
 import { SkillLevel } from "../../skills/types/sharedSkillTypes";
 import { RoleSkillRequirement } from "../../skills/types/roleSkillTypes";
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
@@ -40,34 +40,8 @@ export class UnifiedBenchmarkCalculator {
     const competencyMatchingSkills = matchingSkills.filter(skill => {
       const employeeSkill = getSkillState(skill.title, employeeId);
       const employeeLevel = employeeSkill?.level || 'unspecified';
-      
-      // Get the role's required level for this skill
       const roleLevel = skill.level || 'unspecified';
       
-      console.log('Comparing competency levels:', {
-        skill: skill.title,
-        employeeLevel,
-        roleLevel,
-        track
-      });
-
-      // Handle unspecified levels
-      if (roleLevel === 'unspecified' && employeeLevel === 'unspecified') {
-        console.log('Both levels are unspecified, considering it a match');
-        return true;
-      }
-
-      if (roleLevel === 'unspecified') {
-        console.log('Role level is unspecified, considering any employee level as matching');
-        return true;
-      }
-
-      if (employeeLevel === 'unspecified') {
-        console.log('Employee level is unspecified, considering it as not matching');
-        return false;
-      }
-
-      // Level comparison logic
       const levelValues = {
         'advanced': 3,
         'intermediate': 2,
@@ -78,18 +52,16 @@ export class UnifiedBenchmarkCalculator {
       const employeeValue = levelValues[employeeLevel as keyof typeof levelValues];
       const roleValue = levelValues[roleLevel as keyof typeof levelValues];
 
-      const isMatch = employeeValue >= roleValue;
-
-      console.log('Level comparison result:', {
+      console.log('Comparing competency levels:', {
         skill: skill.title,
         employeeLevel,
         roleLevel,
         employeeValue,
         roleValue,
-        isMatch
+        isMatch: employeeValue >= roleValue
       });
 
-      return isMatch;
+      return employeeValue >= roleValue;
     });
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
