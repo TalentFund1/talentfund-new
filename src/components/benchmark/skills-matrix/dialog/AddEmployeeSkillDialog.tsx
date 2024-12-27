@@ -5,14 +5,14 @@ import { SearchFilter } from "@/components/market/SearchFilter";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
-import { useToggledSkills } from "../../../skills/context/ToggledSkillsContext";
+import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
-import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
-import { Skills, getAllSkills } from '../../../skills/data/skills/allSkills';
-import { roleSkills, saveRoleSkills } from '../../../skills/data/roleSkills';
-import { normalizeSkillTitle } from '../../../skills/utils/normalization';
-import { generateSkillProgression } from '../../../skills/competency/autoFillUtils';
-import { useTrack } from "../../../skills/context/TrackContext";
+import { getUnifiedSkillData } from '../data/skillDatabaseService';
+import { Skills, getAllSkills } from '../data/skills/allSkills';
+import { roleSkills, saveRoleSkills } from '../data/roleSkills';
+import { normalizeSkillTitle } from '../utils/normalization';
+import { generateSkillProgression } from '../competency/autoFillUtils';
+import { useTrack } from "../context/TrackContext";
 import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
 
 export const AddEmployeeSkillDialog = () => {
@@ -36,13 +36,17 @@ export const AddEmployeeSkillDialog = () => {
   useEffect(() => {
     if (skillsUpdated && id) {
       console.log('Re-initializing skills after update for employee:', id);
-      initializeEmployeeSkills(id);
-      // Force a re-render by toggling skills
-      const currentSkills = new Set(toggledSkills);
-      setToggledSkills(new Set(currentSkills));
-      setSkillsUpdated(false);
+      
+      const updateSkills = async () => {
+        await initializeEmployeeSkills(id);
+        // Force a re-render by creating a new Set with current skills
+        setToggledSkills(new Set(toggledSkills));
+        setSkillsUpdated(false);
+      };
+
+      updateSkills();
     }
-  }, [skillsUpdated, id, initializeEmployeeSkills, toggledSkills, setToggledSkills]);
+  }, [skillsUpdated, id, initializeEmployeeSkills, setToggledSkills]);
 
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
@@ -60,88 +64,97 @@ export const AddEmployeeSkillDialog = () => {
       return;
     }
 
-    // Get existing role skills or initialize if not exists
-    const existingRoleSkills = roleSkills[id] || {
-      title: "",
-      specialized: [],
-      common: [],
-      certifications: [],
-      skills: []
-    };
+    try {
+      // Get existing role skills or initialize if not exists
+      const existingRoleSkills = roleSkills[id] || {
+        title: "",
+        specialized: [],
+        common: [],
+        certifications: [],
+        skills: []
+      };
 
-    console.log('Current role skills before adding:', {
-      roleId: id,
-      specialized: existingRoleSkills.specialized.length,
-      common: existingRoleSkills.common.length,
-      certifications: existingRoleSkills.certifications.length
-    });
+      console.log('Current role skills before adding:', {
+        roleId: id,
+        specialized: existingRoleSkills.specialized.length,
+        common: existingRoleSkills.common.length,
+        certifications: existingRoleSkills.certifications.length
+      });
 
-    const track = getTrackForRole(id);
-    const newToggledSkills = new Set(toggledSkills);
-    const updatedRoleSkills = { ...existingRoleSkills };
+      const track = getTrackForRole(id);
+      const newToggledSkills = new Set(toggledSkills);
+      const updatedRoleSkills = { ...existingRoleSkills };
 
-    // Process each selected skill
-    for (const skillTitle of selectedSkills) {
-      const normalizedTitle = normalizeSkillTitle(skillTitle);
-      console.log('Processing skill:', skillTitle);
-      const skillData = getUnifiedSkillData(skillTitle);
-      
-      if (skillData) {
-        console.log('Adding skill:', skillData);
+      // Process each selected skill
+      for (const skillTitle of selectedSkills) {
+        const normalizedTitle = normalizeSkillTitle(skillTitle);
+        console.log('Processing skill:', skillTitle);
+        const skillData = getUnifiedSkillData(skillTitle);
         
-        // Add to toggled skills
-        newToggledSkills.add(skillTitle);
-        
-        // Add skill to employee skills store
-        await addSkill(id, skillTitle);
-        
-        // Determine category and add to appropriate array if not already present
-        const category = skillData.category?.toLowerCase() || 'common';
-        
-        if (category === 'specialized' && !updatedRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          updatedRoleSkills.specialized.push(skillData);
-        } else if (category === 'common' && !updatedRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          updatedRoleSkills.common.push(skillData);
-        } else if (category === 'certification' && !updatedRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-          updatedRoleSkills.certifications.push(skillData);
+        if (skillData) {
+          console.log('Adding skill:', skillData);
+          
+          // Add to toggled skills
+          newToggledSkills.add(skillTitle);
+          
+          // Add skill to employee skills store
+          await addSkill(id, skillTitle);
+          
+          // Determine category and add to appropriate array if not already present
+          const category = skillData.category?.toLowerCase() || 'common';
+          
+          if (category === 'specialized' && !updatedRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+            updatedRoleSkills.specialized.push(skillData);
+          } else if (category === 'common' && !updatedRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+            updatedRoleSkills.common.push(skillData);
+          } else if (category === 'certification' && !updatedRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+            updatedRoleSkills.certifications.push(skillData);
+          }
+
+          // Generate and set progression
+          const progression = generateSkillProgression(skillTitle, category, track, id);
+          if (progression) {
+            console.log('Generated progression for skill:', {
+              skill: skillTitle,
+              progression
+            });
+            setSkillProgression(skillTitle, progression, id);
+          }
+        } else {
+          console.warn('Skill not found in universal database:', skillTitle);
         }
-
-        // Generate and set progression
-        const progression = generateSkillProgression(skillTitle, category, track, id);
-        if (progression) {
-          console.log('Generated progression for skill:', {
-            skill: skillTitle,
-            progression
-          });
-          setSkillProgression(skillTitle, progression, id);
-        }
-      } else {
-        console.warn('Skill not found in universal database:', skillTitle);
       }
+
+      // Save updated skills
+      console.log('Saving updated role skills:', {
+        roleId: id,
+        specialized: updatedRoleSkills.specialized.length,
+        common: updatedRoleSkills.common.length,
+        certifications: updatedRoleSkills.certifications.length
+      });
+
+      roleSkills[id] = updatedRoleSkills;
+      saveRoleSkills(id, updatedRoleSkills);
+      
+      // Update toggled skills and trigger re-render
+      setToggledSkills(newToggledSkills);
+      setSkillsUpdated(true);
+
+      toast({
+        title: "Skills Added",
+        description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
+      });
+
+      setSelectedSkills([]);
+      setOpen(false);
+    } catch (error) {
+      console.error('Error adding skills:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add skills. Please try again.",
+        variant: "destructive"
+      });
     }
-
-    // Save updated skills
-    console.log('Saving updated role skills:', {
-      roleId: id,
-      specialized: updatedRoleSkills.specialized.length,
-      common: updatedRoleSkills.common.length,
-      certifications: updatedRoleSkills.certifications.length
-    });
-
-    roleSkills[id] = updatedRoleSkills;
-    saveRoleSkills(id, updatedRoleSkills);
-    
-    // Update toggled skills and trigger re-render
-    setToggledSkills(newToggledSkills);
-    setSkillsUpdated(true);
-
-    toast({
-      title: "Skills Added",
-      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
-    });
-
-    setSelectedSkills([]);
-    setOpen(false);
   };
 
   return (
