@@ -13,7 +13,6 @@ import { CompetencyGraphTable } from "@/components/skills/competency/CompetencyG
 import { generateSkillProgression } from "@/components/skills/competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
 import { useTrack } from "@/components/skills/context/TrackContext";
-import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -32,8 +31,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getTrackForRole } = useTrack();
-  const { selectedLevel } = useRoleStore();
-
   const currentRoleId = propRoleId || urlRoleId || "123";
   const savedTrack = getTrackForRole(currentRoleId);
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
@@ -70,9 +67,9 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       // Generate progression for each skill
       allSkills.forEach(skill => {
         let category = "specialized";
-        if (currentRoleSkills.common.some(s => s.title === skill.title)) {
+        if (currentRoleSkills.common?.some(s => s.title === skill.title)) {
           category = "common";
-        } else if (currentRoleSkills.certifications.some(s => s.title === skill.title)) {
+        } else if (currentRoleSkills.certifications?.some(s => s.title === skill.title)) {
           category = "certification";
         }
 
@@ -129,6 +126,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const handleResetLevels = () => {
     console.log('Resetting levels for role:', currentRoleId);
     resetLevels(currentRoleId);
+    saveChanges(currentRoleId); // Save the reset state
     toast({
       title: "Levels reset",
       description: "All skill levels have been reset to their default values.",
