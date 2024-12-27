@@ -44,7 +44,16 @@ export class UnifiedBenchmarkCalculator {
 
       const comparison = skillComparisonService.compareSkillLevels(
         { ...employeeSkill, level: employeeLevel as SkillLevel },
-        { ...skill, minimumLevel: roleLevel as SkillLevel } as RoleSkillRequirement
+        { 
+          ...skill,
+          minimumLevel: roleLevel as SkillLevel,
+          requirementLevel: 'required',
+          metrics: {
+            growth: skill.growth,
+            salary: skill.salary,
+            confidence: skill.confidence
+          }
+        } as RoleSkillRequirement
       );
 
       return comparison.matchPercentage === 100;
