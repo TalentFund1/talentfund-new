@@ -61,8 +61,32 @@ export const calculateBenchmarkPercentage = (
       roleLevel: roleSkillLevel
     });
 
+    // Create a complete EmployeeSkillData object for comparison
+    const employeeSkillData: EmployeeSkillData = {
+      id: `${employeeId}-${skill.title}`,
+      employeeId,
+      skillId: `${employeeId}-${skill.title}`,
+      title: skill.title,
+      subcategory: skill.subcategory || 'General',
+      level: skill.level,
+      goalStatus: skill.goalStatus || 'unknown',
+      lastUpdated: new Date().toISOString(),
+      category: skill.category || 'specialized',
+      weight: skill.weight || 'technical',
+      businessCategory: skill.businessCategory || 'Technical Skills',
+      growth: skill.growth || '0%',
+      salary: skill.salary || 'market',
+      confidence: skill.confidence || 'medium',
+      benchmarks: skill.benchmarks || {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      }
+    };
+
     const comparison = skillComparisonService.compareSkillLevels(
-      { title: skill.title, level: employeeSkillLevel },
+      employeeSkillData,
       { title: skill.title, minimumLevel: roleSkillLevel }
     );
 
