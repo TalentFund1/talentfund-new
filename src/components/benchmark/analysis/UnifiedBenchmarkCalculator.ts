@@ -14,15 +14,12 @@ export interface BenchmarkResult {
 }
 
 export class UnifiedBenchmarkCalculator {
-  private getLevelValue(level: string): number {
-    const values: { [key: string]: number } = {
-      'advanced': 4,
-      'intermediate': 3,
-      'beginner': 2,
-      'unspecified': 1
-    };
-    return values[level.toLowerCase()] || 1;
-  }
+  private readonly LEVEL_VALUES: { [key: string]: number } = {
+    'advanced': 4,
+    'intermediate': 3,
+    'beginner': 2,
+    'unspecified': 1
+  };
 
   calculateBenchmark(
     toggledRoleSkills: UnifiedSkill[],
@@ -50,8 +47,8 @@ export class UnifiedBenchmarkCalculator {
       const employeeLevel = skillState?.level || 'unspecified';
       const roleLevel = skill.level || 'unspecified';
 
-      const employeeLevelValue = this.getLevelValue(employeeLevel);
-      const roleLevelValue = this.getLevelValue(roleLevel);
+      const employeeLevelValue = this.LEVEL_VALUES[employeeLevel.toLowerCase()] || 1;
+      const roleLevelValue = this.LEVEL_VALUES[roleLevel.toLowerCase()] || 1;
 
       console.log('Comparing competency levels:', {
         skill: skill.title,
@@ -61,10 +58,13 @@ export class UnifiedBenchmarkCalculator {
         roleLevelValue
       });
 
+      // Simple direct comparison - employee level must be greater than or equal to role level
       const isMatch = employeeLevelValue >= roleLevelValue;
-      console.log(`Competency comparison for ${skill.title}:`, {
+      
+      console.log(`Competency comparison result for ${skill.title}:`, {
         isMatch,
-        reason: isMatch ? 'Employee level meets or exceeds role level' : 'Employee level below role level'
+        employeeLevel,
+        roleLevel
       });
 
       return isMatch;
@@ -102,12 +102,7 @@ export class UnifiedBenchmarkCalculator {
       matchingSkillsCount: matchingSkills.length,
       competencyMatchCount: competencyMatchingSkills.length,
       skillGoalMatchCount: skillGoalMatchingSkills.length,
-      averagePercentage: result.averagePercentage,
-      competencyMatches: competencyMatchingSkills.map(s => ({
-        skill: s.title,
-        employeeLevel: getSkillState(s.title, employeeId).level,
-        roleLevel: s.level
-      }))
+      averagePercentage: result.averagePercentage
     });
 
     return result;
