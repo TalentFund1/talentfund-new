@@ -8,12 +8,15 @@ import { SkillSearchSection } from "./components/SkillSearchSection";
 import { useSkillAddition } from "./hooks/useSkillAddition";
 import { useEmployeeSkillsStore } from "@/components/employee/store/employeeSkillsStore";
 import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
+import { useToast } from "@/hooks/use-toast";
 
 export const AddEmployeeSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { initializeEmployeeSkills } = useEmployeeSkillsStore();
   const { setToggledSkills, toggledSkills } = useToggledSkills();
+  const { toast } = useToast();
 
   // Get all available skills from universal database
   const universalSkills = getAllSkills();
@@ -22,10 +25,10 @@ export const AddEmployeeSkillDialog = () => {
   ));
 
   const handleSuccess = async () => {
-    console.log('Skills added successfully, reinitializing...');
-    
-    // Force reinitialization with a small delay to ensure state updates are processed
-    setTimeout(async () => {
+    try {
+      setIsLoading(true);
+      console.log('Skills added successfully, reinitializing...');
+      
       await initializeEmployeeSkills("123"); // Force reinitialization
       
       // Update toggled skills to include newly added ones
@@ -33,16 +36,32 @@ export const AddEmployeeSkillDialog = () => {
       selectedSkills.forEach(skill => newToggledSkills.add(skill));
       setToggledSkills(newToggledSkills);
       
+      toast({
+        title: "Success",
+        description: "Skills added successfully",
+      });
+
       setSelectedSkills([]);
       setOpen(false);
-    }, 100);
+    } catch (error) {
+      console.error('Error adding skills:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add skills. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const { handleAddSkills } = useSkillAddition(handleSuccess);
 
   const handleCancel = () => {
-    setSelectedSkills([]);
-    setOpen(false);
+    if (!isLoading) {
+      setSelectedSkills([]);
+      setOpen(false);
+    }
   };
 
   return (
@@ -50,6 +69,7 @@ export const AddEmployeeSkillDialog = () => {
       <DialogTrigger asChild>
         <Button 
           className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2"
+          disabled={isLoading}
         >
           <div className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
             <Plus className="h-3 w-3 stroke-[2]" />
@@ -68,6 +88,7 @@ export const AddEmployeeSkillDialog = () => {
           setSelectedSkills={setSelectedSkills}
           onCancel={handleCancel}
           onAdd={() => handleAddSkills(selectedSkills)}
+          isLoading={isLoading}
         />
       </DialogContent>
     </Dialog>
