@@ -39,9 +39,20 @@ export class UnifiedBenchmarkCalculator {
 
     const competencyMatchingSkills = matchingSkills.filter(skill => {
       const employeeSkill = getSkillState(skill.title, employeeId);
+      const roleRequirement: RoleSkillRequirement = {
+        ...skill,
+        minimumLevel: skill.level as SkillLevel,
+        requirementLevel: 'required',
+        metrics: {
+          growth: skill.growth,
+          salary: skill.salary,
+          confidence: skill.confidence
+        }
+      };
+
       const comparison = skillComparisonService.compareSkillLevels(
         employeeSkill,
-        { ...skill, minimumLevel: skill.level as SkillLevel } as RoleSkillRequirement
+        roleRequirement
       );
 
       return comparison.matchPercentage >= 100;
@@ -53,9 +64,7 @@ export class UnifiedBenchmarkCalculator {
     });
 
     const totalToggledSkills = toggledRoleSkills.length;
-
-    const calculatePercentage = (count: number) => 
-      (count / (totalToggledSkills || 1)) * 100;
+    const calculatePercentage = (count: number) => (count / (totalToggledSkills || 1)) * 100;
 
     const result = {
       matchingSkills,

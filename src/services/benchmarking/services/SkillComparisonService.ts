@@ -18,7 +18,7 @@ interface ComparisonMetrics {
 
 class SkillComparisonService {
   private getLevelValue(level: string): number {
-    const levelValues = {
+    const levelValues: { [key: string]: number } = {
       'advanced': 3,
       'intermediate': 2,
       'beginner': 1,
@@ -39,8 +39,9 @@ class SkillComparisonService {
   ): SkillComparisonResult {
     const employeeValue = this.getLevelValue(employeeSkill.level);
     const requiredValue = this.getLevelValue(roleRequirement.minimumLevel);
+    const maxValue = 3; // Maximum level value (advanced)
 
-    console.log('Comparing skill levels:', {
+    console.log('Comparing skill levels numerically:', {
       skill: employeeSkill.title,
       employeeLevel: employeeSkill.level,
       employeeValue,
@@ -48,7 +49,8 @@ class SkillComparisonService {
       requiredValue
     });
 
-    const matchPercentage = (employeeValue / (requiredValue || 1)) * 100;
+    // Pure numerical comparison: (employeeValue / maxValue) * 100
+    const matchPercentage = (employeeValue / maxValue) * 100;
 
     return {
       skillTitle: employeeSkill.title,
