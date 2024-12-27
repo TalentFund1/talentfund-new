@@ -28,21 +28,6 @@ class SkillComparisonService {
     return levelValues[level] || 0;
   }
 
-  private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
-    const employeeValue = this.getLevelValue(employeeLevel);
-    const requiredValue = this.getLevelValue(requiredLevel);
-
-    console.log('Level comparison:', {
-      employeeLevel,
-      requiredLevel,
-      employeeValue,
-      requiredValue,
-      isMatch: employeeValue >= requiredValue
-    });
-
-    return employeeValue >= requiredValue;
-  }
-
   public getProgressColor(percentage: number): string {
     if (percentage >= 80) return 'bg-green-500';
     if (percentage >= 60) return 'bg-yellow-500';
@@ -59,16 +44,14 @@ class SkillComparisonService {
       requiredLevel: roleRequirement.minimumLevel
     });
 
-    const isMatch = this.doesLevelMatch(
-      employeeSkill.level as SkillLevel, 
-      roleRequirement.minimumLevel as SkillLevel
-    );
+    const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
+    const requiredValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
 
     const result = {
       skillTitle: employeeSkill.title,
       employeeLevel: employeeSkill.level as SkillLevel,
       requiredLevel: roleRequirement.minimumLevel as SkillLevel,
-      matchPercentage: isMatch ? 100 : 0
+      matchPercentage: employeeValue >= requiredValue ? 100 : 0
     };
 
     console.log('SkillComparisonService: Comparison result:', result);
