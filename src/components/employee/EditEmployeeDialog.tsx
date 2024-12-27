@@ -35,7 +35,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     termDate: employee.termDate === "-" ? "" : employee.termDate,
     sex: employee.sex,
     category: employee.category,
-    team: employee.team
+    team: employee.team || "RnD" // Set default to "RnD" if not present
   });
 
   console.log('EditEmployeeDialog - Initial form data:', {
@@ -83,7 +83,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
         role: formattedRole,
         location: formData.location,
         sex: formData.sex as 'male' | 'female',
-        team: formData.team,
+        team: formData.team as 'RnD' | 'Legacy' | 'Mobile',
         // Preserve existing values that shouldn't change during edit
         skillCount: employee.skillCount,
         benchmark: employee.benchmark,
