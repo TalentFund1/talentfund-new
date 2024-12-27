@@ -18,15 +18,15 @@ interface ComparisonMetrics {
 
 class SkillComparisonService {
   private readonly LEVEL_VALUES: { [key: string]: number } = {
-    'advanced': 3,
-    'intermediate': 2,
-    'beginner': 1,
-    'unspecified': 1  // Changed from 0 to 1 - unspecified is equivalent to beginner level
+    'advanced': 4,
+    'intermediate': 3,
+    'beginner': 2,
+    'unspecified': 1
   };
 
   public getLevelValue(level: string): number {
     console.log('Getting level value for:', level, 'Value:', this.LEVEL_VALUES[level.toLowerCase()] || 1);
-    return this.LEVEL_VALUES[level.toLowerCase()] || 1; // Default to 1 (beginner) instead of 0
+    return this.LEVEL_VALUES[level.toLowerCase()] || 1; // Default to 1 (unspecified) as base level
   }
 
   public getProgressColor(percentage: number): string {
