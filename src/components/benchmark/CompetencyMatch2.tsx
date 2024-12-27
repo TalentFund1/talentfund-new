@@ -47,43 +47,19 @@ export const CompetencyMatch2 = ({ employeeId, roleId, roleLevel }: CompetencyMa
         toggledSkills.has(skill.title)
       );
 
-      console.log('Comparing skills:', {
-        employeeSkillsCount: employeeSkills.length,
-        toggledRoleSkillsCount: toggledRoleSkills.length
-      });
-
       const matching = employeeSkills.filter(empSkill => {
         const roleSkill = toggledRoleSkills.find(rs => rs.title === empSkill.title);
         if (!roleSkill) return false;
 
         const employeeLevelValue = getLevelValue(empSkill.level);
-        const roleLevelValue = getLevelValue(roleSkill.level);
+        const requiredLevelValue = getLevelValue(roleSkill.level);
 
-        console.log('Skill level comparison:', {
-          skill: empSkill.title,
-          employeeLevel: empSkill.level,
-          roleLevel: roleSkill.level,
-          employeeLevelValue,
-          roleLevelValue
-        });
-
-        // If role level is unspecified, any employee level is considered a match
-        if (roleSkill.level.toLowerCase() === 'unspecified') {
-          return true;
-        }
-
-        return employeeLevelValue >= roleLevelValue;
+        return employeeLevelValue >= requiredLevelValue;
       });
 
       const percentage = toggledRoleSkills.length > 0
         ? (matching.length / toggledRoleSkills.length) * 100
         : 0;
-
-      console.log('Match calculation result:', {
-        matchingSkills: matching.length,
-        totalSkills: toggledRoleSkills.length,
-        percentage
-      });
 
       setMatchingSkills(matching);
       setMatchPercentage(Math.round(percentage));
