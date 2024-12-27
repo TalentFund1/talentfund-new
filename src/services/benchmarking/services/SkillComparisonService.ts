@@ -49,11 +49,14 @@ class SkillComparisonService {
       requiredValue
     });
 
+    // Pure numerical comparison - no special cases
+    const matchPercentage = (employeeValue / Math.max(1, requiredValue)) * 100;
+
     return {
       skillTitle: employeeSkill.title,
       employeeLevel: employeeSkill.level as SkillLevel,
       requiredLevel: roleRequirement.minimumLevel as SkillLevel,
-      matchPercentage: requiredValue === 0 ? 100 : (employeeValue / requiredValue) * 100
+      matchPercentage
     };
   }
 
