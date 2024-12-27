@@ -80,8 +80,7 @@ export const BenchmarkAnalysis = () => {
     selectedRole,
     track,
     getSkillState,
-    id || "",
-    getSkillCompetencyState
+    id || ""
   );
 
   const {

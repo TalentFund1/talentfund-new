@@ -1,7 +1,7 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { EmployeeSkillState } from "../../employee/types/employeeSkillTypes";
-import { SkillCompetencyState } from "../../skills/competency/types/competencyTypes";
-import { getCompetencyMatches } from "../utils/competencyMatching";
+import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { benchmarkingService } from "../../../services/benchmarking";
+import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -16,45 +16,51 @@ export const calculateMatchingSkills = (
   comparisonLevel: string,
   selectedRole: string,
   track: string,
-  getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillState,
-  employeeId: string,
-  getSkillCompetencyState: (skillTitle: string, levelKey: string, roleId: string) => SkillCompetencyState
+  getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillData,
+  employeeId: string
 ): MatchingSkillsResult => {
+  const { getSkillCompetencyState } = useCompetencyStateReader();
+
   console.log('Calculating matching skills:', {
-    toggledSkillCount: toggledRoleSkills.length,
-    employeeSkillCount: employeeSkills.length,
-    comparisonLevel,
-    selectedRole,
+    toggledCount: toggledRoleSkills.length,
+    employeeSkillsCount: employeeSkills.length,
+    level: comparisonLevel,
+    role: selectedRole,
     track
   });
 
-  // Basic skill matches - employee has the skill
-  const matchingSkills = toggledRoleSkills.filter(skill => {
-    return employeeSkills.some(empSkill => empSkill.title === skill.title);
+  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
+    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
+    return employeeSkill !== undefined;
   });
 
-  // Competency matches using the new centralized logic
-  const competencyMatchingSkills = getCompetencyMatches(
-    toggledRoleSkills,
-    getSkillState,
-    getSkillCompetencyState,
-    employeeId,
-    comparisonLevel,
-    selectedRole
-  );
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+    if (!roleSkillState) return false;
 
-  // Skill goal matches
-  const skillGoalMatchingSkills = toggledRoleSkills.filter(skill => {
     const skillState = getSkillState(skill.title, employeeId);
-    return skillState?.goalStatus === 'skill_goal' || skillState?.goalStatus === 'required';
+    const employeeSkillLevel = skillState?.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
+
+    console.log('Comparing competency levels:', {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel,
+      track
+    });
+
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: employeeSkillLevel },
+      { title: skill.title, minimumLevel: roleSkillLevel }
+    );
+
+    return comparison.matchPercentage >= 100;
   });
 
-  console.log('Final matching calculations:', {
-    totalSkills: toggledRoleSkills.length,
-    matchingSkills: matchingSkills.length,
-    competencyMatches: competencyMatchingSkills.length,
-    skillGoalMatches: skillGoalMatchingSkills.length,
-    competencyMatchingSkills: competencyMatchingSkills.map(s => s.title)
+  const skillGoalMatchingSkills = matchingSkills.filter(skill => {
+    const skillState = getSkillState(skill.title, employeeId);
+    if (!skillState) return false;
+    return skillState.goalStatus === 'required' || skillState.goalStatus === 'skill_goal';
   });
 
   return {

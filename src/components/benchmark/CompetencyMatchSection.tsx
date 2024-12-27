@@ -4,7 +4,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { getCompetencyMatches } from "./utils/competencyMatching";
+import { benchmarkingService } from "../../services/benchmarking";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
@@ -21,14 +21,28 @@ export const CompetencyMatchSection = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRole } = useRoleStore();
 
-  const matchingSkills = getCompetencyMatches(
-    Array.from(skills),
-    getSkillState,
-    getSkillCompetencyState,
-    employeeId,
-    roleLevel.toLowerCase(),
-    selectedRole
-  );
+  const matchingSkills = skills.filter(skill => {
+    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
+    if (!roleSkillState) return false;
+
+    const skillState = getSkillState(skill.title, employeeId);
+    const employeeSkillLevel = skillState?.level || 'unspecified';
+    const roleSkillLevel = roleSkillState.level;
+
+    console.log(`Analyzing skill match:`, {
+      skill: skill.title,
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel,
+      roleId: selectedRole
+    });
+
+    const comparison = benchmarkingService.compareSkillLevels(
+      { title: skill.title, level: employeeSkillLevel },
+      { title: skill.title, minimumLevel: roleSkillLevel }
+    );
+
+    return comparison.matchPercentage >= 100;
+  });
 
   return (
     <Card className="p-6 space-y-4">
