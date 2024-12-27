@@ -38,6 +38,17 @@ class SkillComparisonService {
     employeeSkill: EmployeeSkillData,
     roleRequirement: RoleSkillRequirement
   ): SkillComparisonResult {
+    // If employee level is unspecified, it's always a non-match
+    if (employeeSkill.level === 'unspecified') {
+      return {
+        skillTitle: employeeSkill.title,
+        employeeLevel: employeeSkill.level as SkillLevel,
+        requiredLevel: roleRequirement.minimumLevel as SkillLevel,
+        matchPercentage: 0
+      };
+    }
+
+    // Get numerical values for comparison
     const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
     const requiredValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
 
@@ -53,11 +64,6 @@ class SkillComparisonService {
     employeeSkills: ReadonlyArray<EmployeeSkillData>,
     roleRequirements: ReadonlyArray<RoleSkillRequirement>
   ): ComparisonMetrics {
-    console.log('SkillComparisonService: Calculating overall match:', {
-      employeeSkillCount: employeeSkills.length,
-      roleRequirementCount: roleRequirements.length
-    });
-
     const metrics: ComparisonMetrics = {
       totalSkills: roleRequirements.length,
       matchingSkills: 0,
@@ -67,7 +73,6 @@ class SkillComparisonService {
     };
 
     if (roleRequirements.length === 0) {
-      console.log('SkillComparisonService: No role requirements to compare against');
       return metrics;
     }
 
@@ -94,7 +99,6 @@ class SkillComparisonService {
       ? (metrics.matchingSkills / metrics.totalSkills) * 100 
       : 0;
 
-    console.log('SkillComparisonService: Comparison metrics:', metrics);
     return metrics;
   }
 }
