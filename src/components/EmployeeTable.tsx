@@ -15,7 +15,7 @@ import { useEmployeeStore } from "./employee/store/employeeStore";
 import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 interface EmployeeTableProps {
   readonly selectedDepartment?: ReadonlyArray<string>;
@@ -83,6 +83,16 @@ const EmployeeTableContent = ({
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
   const baseEmployees = useEmployeeStore((state) => state.employees);
+  const [skillsVersion, setSkillsVersion] = useState(0);
+  
+  // Force refresh when skills change
+  useEffect(() => {
+    const unsubscribe = useEmployeeSkillsStore.subscribe(
+      (state) => state.skillStates,
+      () => setSkillsVersion(v => v + 1)
+    );
+    return () => unsubscribe();
+  }, []);
   
   // Memoize employees with their skills to prevent infinite updates
   const employees = useMemo(() => {
@@ -96,7 +106,7 @@ const EmployeeTableContent = ({
       };
     });
     return employeesWithSkills;
-  }, [baseEmployees, getEmployeeSkills]);
+  }, [baseEmployees, getEmployeeSkills, skillsVersion]);
 
   console.log('Employees with skills:', employees.map(emp => ({
     id: emp.id,
