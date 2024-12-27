@@ -1,7 +1,5 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { skillComparisonService } from '../../../services/benchmarking/services/SkillComparisonService';
-import { SkillLevel } from "../../skills/types/sharedSkillTypes";
-import { RoleSkillRequirement } from "../../skills/types/roleSkillTypes";
+import { skillComparisonService } from '../../../services/benchmarking';
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
 
 export interface BenchmarkResult {
@@ -50,12 +48,23 @@ export class UnifiedBenchmarkCalculator {
         employeeLevel,
         roleLevel,
         employeeLevelValue,
-        roleLevelValue,
-        matches: employeeLevelValue >= roleLevelValue
+        roleLevelValue
       });
 
-      // Pure numerical comparison
-      return employeeLevelValue >= roleLevelValue;
+      // Special case: if both are unspecified, it's a match
+      if (employeeLevel === 'unspecified' && roleLevel === 'unspecified') {
+        console.log(`Match found for ${skill.title}: both levels are unspecified`);
+        return true;
+      }
+
+      // If employee level is higher or equal, it's a match
+      const isMatch = employeeLevelValue >= roleLevelValue;
+      console.log(`Competency comparison for ${skill.title}:`, {
+        isMatch,
+        reason: isMatch ? 'Employee level meets or exceeds role level' : 'Employee level below role level'
+      });
+
+      return isMatch;
     });
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
@@ -93,9 +102,7 @@ export class UnifiedBenchmarkCalculator {
       competencyMatches: competencyMatchingSkills.map(s => ({
         skill: s.title,
         employeeLevel: getSkillState(s.title, employeeId).level,
-        roleLevel: s.level,
-        employeeLevelValue: skillComparisonService.getLevelValue(getSkillState(s.title, employeeId).level),
-        roleLevelValue: skillComparisonService.getLevelValue(s.level)
+        roleLevel: s.level
       }))
     });
 
