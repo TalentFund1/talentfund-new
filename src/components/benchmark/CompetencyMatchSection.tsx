@@ -36,6 +36,12 @@ export const CompetencyMatchSection = ({
       roleId: selectedRole
     });
 
+    // If role skill level is unspecified, any employee skill level counts as a match
+    // except unspecified (employee must have some skill level)
+    if (roleSkillLevel === 'unspecified') {
+      return employeeSkillLevel !== 'unspecified';
+    }
+
     const comparison = benchmarkingService.compareSkillLevels(
       { title: skill.title, level: employeeSkillLevel },
       { title: skill.title, minimumLevel: roleSkillLevel }
