@@ -1,7 +1,7 @@
-import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
-import { benchmarkingService } from "../../../services/benchmarking";
-import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { useCompetencyStateReader } from '../../skills/competency/CompetencyStateReader';
+import { benchmarkingService } from '../../../services/benchmarking';
+import { EmployeeSkillData } from '../../employee/types/employeeSkillTypes';
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -9,6 +9,16 @@ interface MatchingSkillsResult {
   skillGoalMatchingSkills: UnifiedSkill[];
   totalToggledSkills: number;
 }
+
+const getLevelValue = (level: string): number => {
+  switch (level?.toLowerCase()) {
+    case 'advanced': return 3;
+    case 'intermediate': return 2;
+    case 'beginner': return 1;
+    case 'unspecified': return 0;
+    default: return 0;
+  }
+};
 
 export const calculateMatchingSkills = (
   toggledRoleSkills: UnifiedSkill[],
@@ -49,12 +59,14 @@ export const calculateMatchingSkills = (
       track
     });
 
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: employeeSkillLevel },
-      { title: skill.title, minimumLevel: roleSkillLevel }
-    );
+    // If role level is unspecified, any employee level is considered a match
+    if (roleSkillLevel === 'unspecified') return true;
 
-    return comparison.matchPercentage >= 100;
+    const employeeLevelValue = getLevelValue(employeeSkillLevel);
+    const roleLevelValue = getLevelValue(roleSkillLevel);
+
+    // Employee level should be equal to or higher than role level
+    return employeeLevelValue >= roleLevelValue;
   });
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
