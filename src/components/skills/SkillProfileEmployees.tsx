@@ -5,13 +5,14 @@ import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { roleSkills } from "./data/roleSkills";
-import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "./competency/CompetencyStateReader";
 import { EMPLOYEE_IMAGES } from "../employee/EmployeeData";
 import { useNavigate } from "react-router-dom";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 export const SkillProfileEmployees = () => {
   const { id: roleId } = useParams();
@@ -36,17 +37,19 @@ export const SkillProfileEmployees = () => {
       });
       return matchesRole;
     })
-    .map(emp => ({
-      ...emp,
-      benchmark: calculateBenchmarkPercentage(
-        emp.id,
-        roleId || "",
+    .map(emp => {
+      const employeeSkills = getEmployeeSkills(emp.id);
+      const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
+        employeeSkills,
+        employeeSkills,
         getBaseRole(emp.role),
-        employeeSkillsStore.getEmployeeSkills(emp.id),
-        toggledSkills,
-        competencyReader
-      )
-    }))
+        roleId || "",
+        'Professional', // Default track
+        getSkillState,
+        emp.id
+      );
+      return { ...emp, benchmark };
+    })
     .sort((a, b) => b.benchmark - a.benchmark);
 
   // Get partial matches (different roles but matching skills)
@@ -55,28 +58,32 @@ export const SkillProfileEmployees = () => {
       const empRoleId = getSkillProfileId(emp.role);
       if (empRoleId === roleId) return false;
 
-      const benchmark = calculateBenchmarkPercentage(
-        emp.id,
-        roleId || "",
+      const employeeSkills = getEmployeeSkills(emp.id);
+      const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
+        employeeSkills,
+        employeeSkills,
         getBaseRole(emp.role),
-        employeeSkillsStore.getEmployeeSkills(emp.id),
-        toggledSkills,
-        competencyReader
+        roleId || "",
+        'Professional', // Default track
+        getSkillState,
+        emp.id
       );
 
       return benchmark > 70;
     })
-    .map(emp => ({
-      ...emp,
-      benchmark: calculateBenchmarkPercentage(
-        emp.id,
-        roleId || "",
+    .map(emp => {
+      const employeeSkills = getEmployeeSkills(emp.id);
+      const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
+        employeeSkills,
+        employeeSkills,
         getBaseRole(emp.role),
-        employeeSkillsStore.getEmployeeSkills(emp.id),
-        toggledSkills,
-        competencyReader
-      )
-    }))
+        roleId || "",
+        'Professional', // Default track
+        getSkillState,
+        emp.id
+      );
+      return { ...emp, benchmark };
+    })
     .sort((a, b) => b.benchmark - a.benchmark)
     .slice(0, 3);
 
