@@ -41,6 +41,7 @@ export const CompetencyMatchSection = ({
       { title: skill.title, minimumLevel: roleSkillLevel }
     );
 
+    // Only match if employee level is equal to or higher than role level
     return comparison.matchPercentage >= 100;
   });
 
