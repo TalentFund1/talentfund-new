@@ -23,7 +23,7 @@ export const AddEmployeeSkillDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { setSkillState, setSkillProgression } = useCompetencyStore();
   const { getTrackForRole } = useTrack();
-  const { addSkill, getEmployeeSkills } = useEmployeeSkillsStore();
+  const { addSkill, getEmployeeSkills, initializeEmployeeSkills } = useEmployeeSkillsStore();
   const [skillsUpdated, setSkillsUpdated] = useState(false);
 
   // Get all available skills from universal database
@@ -32,14 +32,17 @@ export const AddEmployeeSkillDialog = () => {
     universalSkills.map(s => normalizeSkillTitle(s.title))
   ));
 
-  // Force re-render when skills are updated
+  // Force re-initialization when skills are updated
   useEffect(() => {
     if (skillsUpdated && id) {
-      console.log('Refreshing skills after update for employee:', id);
-      getEmployeeSkills(id);
+      console.log('Re-initializing skills after update for employee:', id);
+      initializeEmployeeSkills(id);
+      // Force a re-render by toggling skills
+      const currentSkills = new Set(toggledSkills);
+      setToggledSkills(new Set(currentSkills));
       setSkillsUpdated(false);
     }
-  }, [skillsUpdated, id, getEmployeeSkills]);
+  }, [skillsUpdated, id, initializeEmployeeSkills, toggledSkills, setToggledSkills]);
 
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
@@ -47,7 +50,7 @@ export const AddEmployeeSkillDialog = () => {
     roleId: id
   });
 
-  const handleAddSkills = () => {
+  const handleAddSkills = async () => {
     if (!id) {
       toast({
         title: "Error",
@@ -77,19 +80,20 @@ export const AddEmployeeSkillDialog = () => {
     const newToggledSkills = new Set(toggledSkills);
     const updatedRoleSkills = { ...existingRoleSkills };
 
-    selectedSkills.forEach(skillTitle => {
+    // Process each selected skill
+    for (const skillTitle of selectedSkills) {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
-      console.log('Finding skill by title:', skillTitle);
+      console.log('Processing skill:', skillTitle);
       const skillData = getUnifiedSkillData(skillTitle);
       
       if (skillData) {
-        console.log('Processing skill:', skillData);
+        console.log('Adding skill:', skillData);
         
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Add skill to employee skills store and trigger UI update
-        addSkill(id, skillTitle);
+        // Add skill to employee skills store
+        await addSkill(id, skillTitle);
         
         // Determine category and add to appropriate array if not already present
         const category = skillData.category?.toLowerCase() || 'common';
@@ -114,9 +118,9 @@ export const AddEmployeeSkillDialog = () => {
       } else {
         console.warn('Skill not found in universal database:', skillTitle);
       }
-    });
+    }
 
-    // Save updated skills to localStorage and update state
+    // Save updated skills
     console.log('Saving updated role skills:', {
       roleId: id,
       specialized: updatedRoleSkills.specialized.length,
@@ -126,6 +130,8 @@ export const AddEmployeeSkillDialog = () => {
 
     roleSkills[id] = updatedRoleSkills;
     saveRoleSkills(id, updatedRoleSkills);
+    
+    // Update toggled skills and trigger re-render
     setToggledSkills(newToggledSkills);
     setSkillsUpdated(true);
 
