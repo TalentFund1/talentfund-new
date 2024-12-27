@@ -16,6 +16,40 @@ const defaultState: SkillCompetencyState = {
   required: 'preferred'
 };
 
+// Static methods for non-React contexts
+export class CompetencyStateReader {
+  static getSkillCompetencyState(
+    skillName: string, 
+    levelKey: string = 'p4',
+    roleId: string
+  ): SkillCompetencyState {
+    // Get role requirement
+    const roleData = roleSkills[roleId as keyof typeof roleSkills];
+    if (!roleData) {
+      console.warn('No role data found for:', roleId);
+      return defaultState;
+    }
+
+    const allSkills = [
+      ...roleData.specialized,
+      ...roleData.common,
+      ...roleData.certifications
+    ];
+
+    const skillData = allSkills.find(s => s.title === skillName);
+    if (!skillData) {
+      console.warn('No skill data found for:', skillName);
+      return defaultState;
+    }
+
+    return {
+      level: skillData.level || 'unspecified',
+      required: 'required'
+    };
+  }
+}
+
+// React hook for component contexts
 export const useCompetencyStateReader = () => {
   const { currentStates } = useCompetencyStore();
   const { toggledSkills } = useToggledSkills();
