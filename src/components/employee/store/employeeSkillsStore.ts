@@ -18,11 +18,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing skills for employee:', employeeId);
         
+        // Get current state
         const currentState = get().skillStates[employeeId];
         
         if (!currentState) {
           console.log('No existing state found, creating new state:', employeeId);
           
+          // Find employee data
           const employee = employees.find(emp => emp.id === employeeId);
           const initialSkills: Record<string, EmployeeSkillData> = {};
           
@@ -32,6 +34,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               skillCount: employee.skills.length
             });
             
+            // Initialize each skill
             employee.skills.forEach(skill => {
               const unifiedData = getUnifiedSkillData(skill.title);
               initialSkills[skill.title] = {
@@ -59,7 +62,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             });
           }
 
-          set(state => ({
+          set((state) => ({
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -70,6 +73,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           }));
         }
 
+        // Force refresh of skill states
         const store = get();
         const skills = store.getEmployeeSkills(employeeId);
         console.log('Refreshed employee skills:', {
@@ -88,6 +92,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return [];
         }
 
+        // Get all skills from the universal database and merge with current state
         const allSkills = Object.entries(state.skills).map(([title, skill]) => {
           const unifiedData = getUnifiedSkillData(title);
           const skillData = {
@@ -117,9 +122,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         const skillState = state?.skills?.[skillTitle];
         
         if (!skillState) {
+          // Create default state for new skill
           const defaultState = benchmarkingService.getDefaultSkillState();
           const unifiedData = getUnifiedSkillData(skillTitle);
           
+          // Update store with new skill
           set(state => ({
             skillStates: {
               ...state.skillStates,
