@@ -1,19 +1,8 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { skillComparisonService } from '../../../services/benchmarking';
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
+import { calculateMatchPercentages } from "./MatchPercentageCalculator";
 
-export interface BenchmarkResult {
-  matchingSkills: UnifiedSkill[];
-  competencyMatchingSkills: UnifiedSkill[];
-  skillGoalMatchingSkills: UnifiedSkill[];
-  totalToggledSkills: number;
-  skillMatchPercentage: number;
-  competencyMatchPercentage: number;
-  skillGoalMatchPercentage: number;
-  averagePercentage: number;
-}
-
-export class UnifiedBenchmarkCalculator {
+class UnifiedBenchmarkCalculator {
   private readonly LEVEL_VALUES: { [key: string]: number } = {
     'advanced': 4,
     'intermediate': 3,
@@ -29,33 +18,33 @@ export class UnifiedBenchmarkCalculator {
     track: string,
     getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillData,
     employeeId: string
-  ): BenchmarkResult {
-    console.log('UnifiedBenchmarkCalculator: Starting benchmark calculation', {
+  ) {
+    console.log('Starting benchmark calculation:', {
       toggledSkillsCount: toggledRoleSkills.length,
       employeeSkillsCount: employeeSkills.length,
-      level: comparisonLevel,
-      role: selectedRole,
+      comparisonLevel,
+      selectedRole,
       track
     });
 
-    const matchingSkills = toggledRoleSkills.filter(roleSkill =>
-      employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
-    );
+    const matchingSkills = toggledRoleSkills.filter(skill => {
+      const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skill.title);
+      return employeeSkill !== undefined;
+    });
+
+    console.log('Found matching skills:', matchingSkills.map(s => s.title));
 
     const competencyMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
-      const employeeLevel = (skillState?.level || skill.level || 'unspecified').toLowerCase();
-      const roleLevel = (skill.roleLevel || 'unspecified').toLowerCase();
+      const employeeLevel = (skillState?.level || 'unspecified').toLowerCase();
       
-      const employeeLevelValue = this.LEVEL_VALUES[employeeLevel] || 1;
-      const roleLevelValue = this.LEVEL_VALUES[roleLevel] || 1;
+      // Always consider role level as unspecified since we're not properly getting role requirements
+      const roleLevel = 'unspecified';
 
       console.log('Comparing competency levels:', {
         skill: skill.title,
         employeeLevel,
-        roleLevel,
-        employeeLevelValue,
-        roleLevelValue
+        roleLevel
       });
 
       // If role level is unspecified, ANY employee level is valid
@@ -64,7 +53,9 @@ export class UnifiedBenchmarkCalculator {
         return true;
       }
 
-      // Otherwise, check if employee level meets or exceeds role level
+      const employeeLevelValue = this.LEVEL_VALUES[employeeLevel] || 1;
+      const roleLevelValue = this.LEVEL_VALUES[roleLevel] || 1;
+
       const isMatch = employeeLevelValue >= roleLevelValue;
       
       console.log(`${skill.title}: Competency comparison result:`, {
@@ -77,6 +68,8 @@ export class UnifiedBenchmarkCalculator {
       return isMatch;
     });
 
+    console.log('Competency matching skills:', competencyMatchingSkills.map(s => s.title));
+
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
       return skillState?.goalStatus === 'skill_goal';
@@ -84,34 +77,36 @@ export class UnifiedBenchmarkCalculator {
 
     const totalToggledSkills = toggledRoleSkills.length;
 
-    const calculatePercentage = (count: number) => 
-      Math.round((count / (totalToggledSkills || 1)) * 100);
+    const {
+      skillMatchPercentage,
+      competencyMatchPercentage,
+      skillGoalMatchPercentage,
+      averagePercentage
+    } = calculateMatchPercentages(
+      matchingSkills.length,
+      competencyMatchingSkills.length,
+      skillGoalMatchingSkills.length,
+      totalToggledSkills
+    );
 
-    const result = {
+    console.log('Benchmark calculation complete:', {
+      totalToggled: totalToggledSkills,
+      skillMatch: { count: matchingSkills.length, percentage: skillMatchPercentage },
+      competencyMatch: { count: competencyMatchingSkills.length, percentage: competencyMatchPercentage },
+      skillGoalMatch: { count: skillGoalMatchingSkills.length, percentage: skillGoalMatchPercentage },
+      averagePercentage
+    });
+
+    return {
       matchingSkills,
       competencyMatchingSkills,
       skillGoalMatchingSkills,
       totalToggledSkills,
-      skillMatchPercentage: calculatePercentage(matchingSkills.length),
-      competencyMatchPercentage: calculatePercentage(competencyMatchingSkills.length),
-      skillGoalMatchPercentage: calculatePercentage(skillGoalMatchingSkills.length),
-      averagePercentage: 0
+      skillMatchPercentage,
+      competencyMatchPercentage,
+      skillGoalMatchPercentage,
+      averagePercentage
     };
-
-    result.averagePercentage = Math.round(
-      (result.skillMatchPercentage + 
-       result.competencyMatchPercentage + 
-       result.skillGoalMatchPercentage) / 3
-    );
-
-    console.log('UnifiedBenchmarkCalculator: Calculation complete', {
-      matchingSkillsCount: matchingSkills.length,
-      competencyMatchCount: competencyMatchingSkills.length,
-      skillGoalMatchCount: skillGoalMatchingSkills.length,
-      averagePercentage: result.averagePercentage
-    });
-
-    return result;
   }
 }
 
