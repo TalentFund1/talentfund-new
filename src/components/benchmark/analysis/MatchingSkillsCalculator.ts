@@ -1,6 +1,6 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { EmployeeSkillState } from '../../employee/types/employeeSkillTypes';
-import { CompetencyStateReader } from '../../skills/competency/CompetencyStateReader';
+import { useCompetencyStateReader } from '../../skills/competency/CompetencyStateReader';
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -39,8 +39,8 @@ export const calculateMatchingSkills = (
     track
   });
 
-  // Initialize competency reader directly
-  const competencyReader = new CompetencyStateReader();
+  // Get the competency reader hook
+  const { getSkillCompetencyState } = useCompetencyStateReader();
 
   const matchingSkills = toggledRoleSkills.filter(skill => {
     return employeeSkills.some(empSkill => empSkill.title === skill.title);
@@ -48,7 +48,7 @@ export const calculateMatchingSkills = (
 
   const competencyMatchingSkills = toggledRoleSkills.filter(skill => {
     const employeeSkillLevel = getSkillState(skill.title, employeeId)?.level || 'unspecified';
-    const roleSkillState = competencyReader.getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+    const roleSkillState = getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     const roleSkillLevel = roleSkillState?.level || 'unspecified';
 
     console.log('Comparing skill levels:', {
