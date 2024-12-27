@@ -54,7 +54,7 @@ export class UnifiedBenchmarkCalculator {
         matches: employeeLevelValue >= roleLevelValue
       });
 
-      // Pure numerical comparison based on level values
+      // Pure numerical comparison
       return employeeLevelValue >= roleLevelValue;
     });
 
