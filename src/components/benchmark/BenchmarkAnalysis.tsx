@@ -10,9 +10,8 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useEmployeeStore } from "../employee/store/employeeStore";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
-import { calculateMatchingSkills } from "./analysis/MatchingSkillsCalculator";
-import { calculateMatchPercentages } from "./analysis/MatchPercentageCalculator";
 import { ProgressBar } from "./analysis/ProgressBar";
+import { BenchmarkCalculator } from "./analysis/BenchmarkCalculator";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -68,19 +67,18 @@ export const BenchmarkAnalysis = () => {
     skills: toggledRoleSkills.map(s => s.title)
   });
 
+  const calculator = new BenchmarkCalculator(getSkillCompetencyState);
+  
   const {
     matchingSkills,
     competencyMatchingSkills,
     skillGoalMatchingSkills,
     totalToggledSkills
-  } = calculateMatchingSkills(
+  } = calculator.calculateMatchingSkills(
     toggledRoleSkills,
     employeeSkills,
     comparisonLevel,
-    selectedRole,
-    track,
-    getSkillState,
-    id || ""
+    selectedRole
   );
 
   const {
@@ -88,7 +86,7 @@ export const BenchmarkAnalysis = () => {
     competencyMatchPercentage,
     skillGoalMatchPercentage,
     averagePercentage
-  } = calculateMatchPercentages(
+  } = calculator.calculateMatchPercentages(
     matchingSkills.length,
     competencyMatchingSkills.length,
     skillGoalMatchingSkills.length,
