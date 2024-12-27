@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { EmployeeSkillCardProps } from "./employee/types/employeeSkillProps";
 import { benchmarkingService } from "../services/benchmarking";
 
@@ -15,8 +15,16 @@ export const EmployeeSkillCard = ({
   employeeId 
 }: Readonly<EmployeeSkillCardProps>) => {
   const { toast } = useToast();
-  const { getSkillState, batchUpdateSkills, getEmployeeSkills } = useEmployeeSkillsStore();
+  const { getSkillState, batchUpdateSkills, getEmployeeSkills, initializeEmployeeSkills } = useEmployeeSkillsStore();
   
+  // Initialize skills when component mounts
+  useEffect(() => {
+    if (employeeId) {
+      console.log('EmployeeSkillCard - Initializing skills for:', employeeId);
+      initializeEmployeeSkills(employeeId);
+    }
+  }, [employeeId, initializeEmployeeSkills]);
+
   // Get all employee skills including newly added ones
   const employeeSkills = useMemo(() => {
     return getEmployeeSkills(employeeId);

@@ -31,6 +31,15 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           }));
         }
+
+        // Force refresh of skill states
+        const store = get();
+        const skills = store.getEmployeeSkills(employeeId);
+        console.log('Refreshed employee skills:', {
+          employeeId,
+          skillCount: skills.length,
+          skills: skills.map(s => s.title)
+        });
       },
 
       getEmployeeSkills: (employeeId: string) => {
@@ -43,11 +52,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return [];
         }
 
-        // Get all skills from the universal database
-        const allSkills = Object.values(state.skills || {}).map(skill => ({
-          ...skill,
-          ...getUnifiedSkillData(skill.title) // Merge with universal skill data
-        }));
+        // Get all skills from the universal database and merge with current state
+        const allSkills = Object.values(state.skills || {}).map(skill => {
+          const unifiedData = getUnifiedSkillData(skill.title);
+          return {
+            ...unifiedData,
+            ...skill,
+            id: `${employeeId}-${skill.title}`,
+            employeeId,
+            skillId: `${employeeId}-${skill.title}`
+          };
+        });
 
         console.log('Retrieved employee skills:', {
           employeeId,
@@ -81,7 +96,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                     skillId: `${employeeId}-${skillTitle}`,
                     title: skillTitle,
                     ...defaultState,
-                    ...getUnifiedSkillData(skillTitle) // Merge with universal skill data
+                    ...getUnifiedSkillData(skillTitle)
                   }
                 },
                 lastUpdated: new Date().toISOString()
@@ -108,7 +123,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 5,
+      version: 6, // Increment version to ensure clean state
       partialize: (state: EmployeeSkillsStore) => ({
         skillStates: state.skillStates
       }),
