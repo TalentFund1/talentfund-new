@@ -2,7 +2,18 @@ import { EmployeeSkillData } from '../../../components/employee/types/employeeSk
 import { RoleSkillRequirement } from '../../../components/skills/types/roleSkillTypes';
 import { skillComparisonService } from './SkillComparisonService';
 
-export class BenchmarkCalculationService {
+class BenchmarkCalculationService {
+  private readonly LEVEL_VALUES: { [key: string]: number } = {
+    'advanced': 4,
+    'intermediate': 3,
+    'beginner': 2,
+    'unspecified': 1
+  };
+
+  private getLevelValue(level: string): number {
+    return this.LEVEL_VALUES[level.toLowerCase()] || 1;
+  }
+
   public calculateBenchmarkPercentage(
     employeeSkills: ReadonlyArray<EmployeeSkillData>,
     roleRequirements: ReadonlyArray<RoleSkillRequirement>,

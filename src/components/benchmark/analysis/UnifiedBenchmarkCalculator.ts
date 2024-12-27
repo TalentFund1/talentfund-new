@@ -40,8 +40,8 @@ export class UnifiedBenchmarkCalculator {
       const employeeLevel = skillState?.level || 'unspecified';
       const roleLevel = skill.level || 'unspecified';
 
-      const employeeLevelValue = skillComparisonService.getLevelValue(employeeLevel);
-      const roleLevelValue = skillComparisonService.getLevelValue(roleLevel);
+      const employeeLevelValue = this.getLevelValue(employeeLevel);
+      const roleLevelValue = this.getLevelValue(roleLevel);
 
       console.log('Comparing competency levels:', {
         skill: skill.title,
@@ -101,6 +101,16 @@ export class UnifiedBenchmarkCalculator {
     });
 
     return result;
+  }
+
+  private getLevelValue(level: string): number {
+    const values: { [key: string]: number } = {
+      'advanced': 4,
+      'intermediate': 3,
+      'beginner': 2,
+      'unspecified': 1
+    };
+    return values[level.toLowerCase()] ?? 1;
   }
 }
 
