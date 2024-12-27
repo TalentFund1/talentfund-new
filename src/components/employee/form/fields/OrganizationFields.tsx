@@ -60,15 +60,11 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Manager</label>
-        <Select 
-          value={formData.manager || "no_manager"} 
-          onValueChange={(value) => handleInputChange('manager', value === "no_manager" ? "" : value)}
-        >
+        <Select value={formData.manager} onValueChange={(value) => handleInputChange('manager', value)}>
           <SelectTrigger>
             <SelectValue placeholder="Select manager" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="no_manager">No Manager</SelectItem>
             {managers.map((manager) => (
               <SelectItem key={manager} value={manager}>
                 {manager}
