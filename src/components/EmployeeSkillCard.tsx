@@ -15,16 +15,21 @@ export const EmployeeSkillCard = ({
   employeeId 
 }: Readonly<EmployeeSkillCardProps>) => {
   const { toast } = useToast();
-  const { getSkillState, batchUpdateSkills } = useEmployeeSkillsStore();
+  const { getSkillState, batchUpdateSkills, getEmployeeSkills } = useEmployeeSkillsStore();
   
+  // Get all employee skills including newly added ones
+  const employeeSkills = useMemo(() => {
+    return getEmployeeSkills(employeeId);
+  }, [employeeId, getEmployeeSkills]);
+
   console.log('Rendering EmployeeSkillCard:', { 
     name, 
     role, 
-    skillCount: skills.length,
     employeeId,
-    skills: skills.map(s => ({ 
-      name: s.name, 
-      level: getSkillState(employeeId, s.name).level 
+    totalSkills: employeeSkills.length,
+    skills: employeeSkills.map(s => ({ 
+      title: s.title, 
+      level: getSkillState(employeeId, s.title).level 
     }))
   });
 
@@ -67,11 +72,12 @@ export const EmployeeSkillCard = ({
     });
   };
 
-  // Memoize the processed skills data
-  const processedSkills = useMemo(() => skills.map(skill => ({
+  // Memoize the processed skills data using all employee skills
+  const processedSkills = useMemo(() => employeeSkills.map(skill => ({
     ...skill,
-    percentage: getLevelPercentage(skill.name)
-  })), [skills, employeeId]);
+    name: skill.title,
+    percentage: getLevelPercentage(skill.title)
+  })), [employeeSkills, employeeId]);
 
   return (
     <Card className="p-6 animate-fade-in">
