@@ -51,13 +51,7 @@ export class UnifiedBenchmarkCalculator {
         roleLevelValue
       });
 
-      // Special case: if both are unspecified, it's a match
-      if (employeeLevel === 'unspecified' && roleLevel === 'unspecified') {
-        console.log(`Match found for ${skill.title}: both levels are unspecified`);
-        return true;
-      }
-
-      // If employee level is higher or equal, it's a match
+      // Pure numerical comparison only
       const isMatch = employeeLevelValue >= roleLevelValue;
       console.log(`Competency comparison for ${skill.title}:`, {
         isMatch,
