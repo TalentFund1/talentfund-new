@@ -1,6 +1,5 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
-import { calculateMatchPercentages } from "./MatchPercentageCalculator";
 
 class UnifiedBenchmarkCalculator {
   private readonly LEVEL_VALUES: { [key: string]: number } = {
@@ -27,6 +26,7 @@ class UnifiedBenchmarkCalculator {
       track
     });
 
+    // Basic skill match - employee has the skill
     const matchingSkills = toggledRoleSkills.filter(skill => {
       const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skill.title);
       return employeeSkill !== undefined;
@@ -34,6 +34,7 @@ class UnifiedBenchmarkCalculator {
 
     console.log('Found matching skills:', matchingSkills.map(s => s.title));
 
+    // Competency match - employee has the skill at required level or higher
     const competencyMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
       const employeeLevel = (skillState?.level || 'unspecified').toLowerCase();
@@ -46,32 +47,33 @@ class UnifiedBenchmarkCalculator {
         hasSkill: true
       });
 
-      // If employee has the skill and it's not unspecified, count it as a match
+      // Only count skills that have a defined level
       return employeeLevel !== 'unspecified';
     });
 
     console.log('Competency matching skills:', competencyMatchingSkills.map(s => s.title));
 
+    // Skill goal match - employee has set this as a goal
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
       return skillState?.goalStatus === 'skill_goal';
     });
 
-    const totalToggledSkills = toggledRoleSkills.length;
+    const totalToggledSkills = Math.max(toggledRoleSkills.length, 1); // Prevent division by zero
 
-    // Calculate individual percentages
+    // Calculate individual percentages with proper normalization
     const skillMatchPercentage = Math.min(
-      (matchingSkills.length / Math.max(totalToggledSkills, 1)) * 100,
+      (matchingSkills.length / totalToggledSkills) * 100,
       100
     );
 
     const competencyMatchPercentage = Math.min(
-      (competencyMatchingSkills.length / Math.max(totalToggledSkills, 1)) * 100,
+      (competencyMatchingSkills.length / totalToggledSkills) * 100,
       100
     );
 
     const skillGoalMatchPercentage = Math.min(
-      (skillGoalMatchingSkills.length / Math.max(totalToggledSkills, 1)) * 100,
+      (skillGoalMatchingSkills.length / totalToggledSkills) * 100,
       100
     );
 
