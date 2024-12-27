@@ -38,24 +38,23 @@ export class UnifiedBenchmarkCalculator {
     );
 
     const competencyMatchingSkills = matchingSkills.filter(skill => {
-      const employeeSkill = getSkillState(skill.title, employeeId);
-      const roleRequirement: RoleSkillRequirement = {
-        ...skill,
-        minimumLevel: skill.level as SkillLevel,
-        requirementLevel: 'required',
-        metrics: {
-          growth: skill.growth,
-          salary: skill.salary,
-          confidence: skill.confidence
-        }
-      };
+      const skillState = getSkillState(skill.title, employeeId);
+      const employeeLevel = skillState?.level || 'unspecified';
+      const roleLevel = skill.level || 'unspecified';
 
-      const comparison = skillComparisonService.compareSkillLevels(
-        employeeSkill,
-        roleRequirement
-      );
+      console.log('Comparing competency levels numerically:', {
+        skill: skill.title,
+        employeeLevel,
+        roleLevel,
+        employeeValue: skillComparisonService.getLevelValue(employeeLevel),
+        roleValue: skillComparisonService.getLevelValue(roleLevel)
+      });
 
-      return comparison.matchPercentage >= 100;
+      // Pure numerical comparison
+      const employeeLevelValue = skillComparisonService.getLevelValue(employeeLevel);
+      const roleLevelValue = skillComparisonService.getLevelValue(roleLevel);
+      
+      return employeeLevelValue >= roleLevelValue;
     });
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
@@ -64,7 +63,8 @@ export class UnifiedBenchmarkCalculator {
     });
 
     const totalToggledSkills = toggledRoleSkills.length;
-    const calculatePercentage = (count: number) => (count / (totalToggledSkills || 1)) * 100;
+    const calculatePercentage = (count: number) => 
+      Math.round((count / (totalToggledSkills || 1)) * 100);
 
     const result = {
       matchingSkills,
@@ -77,15 +77,22 @@ export class UnifiedBenchmarkCalculator {
       averagePercentage: 0
     };
 
-    result.averagePercentage = (result.skillMatchPercentage + 
-      result.competencyMatchPercentage + 
-      result.skillGoalMatchPercentage) / 3;
+    result.averagePercentage = Math.round(
+      (result.skillMatchPercentage + 
+       result.competencyMatchPercentage + 
+       result.skillGoalMatchPercentage) / 3
+    );
 
     console.log('UnifiedBenchmarkCalculator: Calculation complete', {
       matchingSkillsCount: matchingSkills.length,
       competencyMatchCount: competencyMatchingSkills.length,
       skillGoalMatchCount: skillGoalMatchingSkills.length,
-      averagePercentage: result.averagePercentage
+      averagePercentage: result.averagePercentage,
+      competencyMatches: competencyMatchingSkills.map(s => ({
+        skill: s.title,
+        employeeLevel: getSkillState(s.title, employeeId).level,
+        roleLevel: s.level
+      }))
     });
 
     return result;
