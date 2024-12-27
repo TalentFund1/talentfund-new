@@ -4,7 +4,6 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { benchmarkingService } from "../../services/benchmarking";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
@@ -53,6 +52,7 @@ export const CompetencyMatchSection = ({
     const roleLevelValue = getLevelValue(roleSkillLevel);
 
     // Match if employee level is equal to or higher than role level
+    // OR if role level is unspecified and employee has any non-unspecified level
     return employeeLevelValue >= roleLevelValue;
   });
 
