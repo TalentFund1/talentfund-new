@@ -15,13 +15,15 @@ interface OrganizationFieldsProps {
 export const OrganizationFields = ({ formData, handleInputChange }: OrganizationFieldsProps) => {
   const employees = useEmployeeStore((state) => state.employees);
   
-  // Filter managers based on their role level (M3-M6)
+  // Filter managers based on their role containing 'Manager' or having M-level
   const managers = employees.filter(emp => {
     const level = getLevel(emp.role);
-    return level && level.startsWith('M');
+    const isManagerRole = emp.role.toLowerCase().includes('manager');
+    return isManagerRole || (level && level.startsWith('M'));
   }).map(emp => emp.name);
 
   console.log('Available managers:', managers);
+  console.log('Current manager value:', formData.manager);
 
   return (
     <>
@@ -60,11 +62,18 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Manager</label>
-        <Select value={formData.manager} onValueChange={(value) => handleInputChange('manager', value)}>
+        <Select 
+          value={formData.manager} 
+          onValueChange={(value) => {
+            console.log('Manager selected:', value);
+            handleInputChange('manager', value);
+          }}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select manager" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="">No Manager</SelectItem>
             {managers.map((manager) => (
               <SelectItem key={manager} value={manager}>
                 {manager}
