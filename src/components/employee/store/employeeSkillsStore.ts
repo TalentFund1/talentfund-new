@@ -15,25 +15,37 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       ...createInitializationActions(set, get),
       ...createSkillSelectors(get),
       ...createStoreActions(set, get),
-      ...createSkillActions(set, get)
+      ...createSkillActions(set, get),
+      
+      // Override initializeEmployeeSkills to force update
+      initializeEmployeeSkills: async (employeeId: string) => {
+        console.log('Initializing skills for employee:', employeeId);
+        const store = get();
+        
+        // Force a state update to trigger re-render
+        set(state => ({
+          ...state,
+          skillStates: {
+            ...state.skillStates,
+            [employeeId]: {
+              skills: {},
+              lastUpdated: new Date().toISOString()
+            }
+          }
+        }));
+
+        // Initialize skills after state reset
+        if (store.initializeSkills) {
+          await store.initializeSkills(employeeId);
+        }
+      }
     }),
     {
       name: 'employee-skills-storage',
       version: 8,
       partialize: (state: EmployeeSkillsStore) => ({
         skillStates: state.skillStates
-      }),
-      merge: (persistedState: any, currentState: EmployeeSkillsStore) => {
-        console.log('Merging states:', { 
-          hasPersistedState: !!persistedState,
-          currentStateKeys: Object.keys(currentState)
-        });
-        
-        return {
-          ...currentState,
-          skillStates: persistedState?.skillStates || {}
-        };
-      }
+      })
     }
   )
 );

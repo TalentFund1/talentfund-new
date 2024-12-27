@@ -6,10 +6,14 @@ import { getAllSkills } from '@/components/skills/data/skills/allSkills';
 import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
 import { SkillSearchSection } from "./components/SkillSearchSection";
 import { useSkillAddition } from "./hooks/useSkillAddition";
+import { useEmployeeSkillsStore } from "@/components/employee/store/employeeSkillsStore";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 
 export const AddEmployeeSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
+  const { initializeEmployeeSkills } = useEmployeeSkillsStore();
+  const { setToggledSkills, toggledSkills } = useToggledSkills();
 
   // Get all available skills from universal database
   const universalSkills = getAllSkills();
@@ -17,7 +21,15 @@ export const AddEmployeeSkillDialog = () => {
     universalSkills.map(s => normalizeSkillTitle(s.title))
   ));
 
-  const handleSuccess = () => {
+  const handleSuccess = async () => {
+    console.log('Skills added successfully, reinitializing...');
+    await initializeEmployeeSkills("123"); // Force reinitialization
+    
+    // Update toggled skills to include newly added ones
+    const newToggledSkills = new Set(toggledSkills);
+    selectedSkills.forEach(skill => newToggledSkills.add(skill));
+    setToggledSkills(newToggledSkills);
+    
     setSelectedSkills([]);
     setOpen(false);
   };

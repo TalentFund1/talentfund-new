@@ -29,54 +29,25 @@ export const useSkillAddition = (onSuccess: () => void) => {
     }
 
     try {
-      const existingRoleSkills = roleSkills[id] || {
-        title: "",
-        specialized: [],
-        common: [],
-        certifications: [],
-        skills: []
-      };
-
-      console.log('Current role skills before adding:', {
-        roleId: id,
-        specialized: existingRoleSkills.specialized.length,
-        common: existingRoleSkills.common.length,
-        certifications: existingRoleSkills.certifications.length
-      });
-
-      const track = getTrackForRole(id);
-      const newToggledSkills = new Set(toggledSkills);
-      const updatedRoleSkills = { ...existingRoleSkills };
+      console.log('Adding skills:', selectedSkills);
 
       // Process each selected skill
       for (const skillTitle of selectedSkills) {
-        const normalizedTitle = normalizeSkillTitle(skillTitle);
-        const skillData = getUnifiedSkillData(skillTitle);
+        console.log('Processing skill:', skillTitle);
         
+        // Add skill to employee skills store
+        await addSkill(id, skillTitle);
+        
+        // Get unified skill data
+        const skillData = getUnifiedSkillData(skillTitle);
         if (skillData) {
-          console.log('Processing skill:', skillData);
+          console.log('Skill data found:', skillData);
           
-          // Add to toggled skills
-          newToggledSkills.add(skillTitle);
-          
-          // Add skill to employee skills store
-          await addSkill(id, skillTitle);
-          
-          // Determine category and add to appropriate array
-          const category = skillData.category?.toLowerCase() || 'common';
-          
-          if (category === 'specialized' && !updatedRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-            updatedRoleSkills.specialized.push(skillData);
-          } else if (category === 'common' && !updatedRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-            updatedRoleSkills.common.push(skillData);
-          } else if (category === 'certification' && !updatedRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
-            updatedRoleSkills.certifications.push(skillData);
-          }
-
           // Generate and set progression
-          const progression = generateSkillProgression(skillTitle, category, track, id);
+          const track = getTrackForRole(id);
+          const progression = generateSkillProgression(skillTitle, skillData.category, track, id);
           if (progression) {
-            console.log('Generated progression for skill:', {
+            console.log('Setting progression for skill:', {
               skill: skillTitle,
               progression
             });
@@ -85,23 +56,11 @@ export const useSkillAddition = (onSuccess: () => void) => {
         }
       }
 
-      // Save updated skills
-      console.log('Saving updated role skills:', {
-        roleId: id,
-        specialized: updatedRoleSkills.specialized.length,
-        common: updatedRoleSkills.common.length,
-        certifications: updatedRoleSkills.certifications.length
-      });
-
-      roleSkills[id] = updatedRoleSkills;
-      saveRoleSkills(id, updatedRoleSkills);
-      
-      // Update toggled skills
-      setToggledSkills(newToggledSkills);
-      
       // Force re-initialization of employee skills
       await initializeEmployeeSkills(id);
 
+      console.log('Skills added successfully');
+      
       toast({
         title: "Skills Added",
         description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
