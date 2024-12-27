@@ -7,6 +7,7 @@ interface OrganizationFieldsProps {
     office: string;
     department: string;
     manager: string;
+    team: string;
   };
   handleInputChange: (field: string, value: string) => void;
 }
@@ -69,6 +70,20 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
                 {manager}
               </SelectItem>
             ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Team</label>
+        <Select value={formData.team} onValueChange={(value) => handleInputChange('team', value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select team" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="RnD">RnD</SelectItem>
+            <SelectItem value="Legacy">Legacy</SelectItem>
+            <SelectItem value="Mobile">Mobile</SelectItem>
           </SelectContent>
         </Select>
       </div>
