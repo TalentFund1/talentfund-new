@@ -5,15 +5,15 @@ import { SearchFilter } from "@/components/market/SearchFilter";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
-import { useToggledSkills } from "../context/ToggledSkillsContext";
+import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
-import { getUnifiedSkillData } from '../data/skillDatabaseService';
-import { Skills, getAllSkills } from '../data/skills/allSkills';
-import { roleSkills, saveRoleSkills } from '../data/roleSkills';
-import { normalizeSkillTitle } from '../utils/normalization';
-import { generateSkillProgression } from '../competency/autoFillUtils';
-import { useTrack } from "../context/TrackContext";
-import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
+import { getUnifiedSkillData } from '@/components/skills/data/skillDatabaseService';
+import { getAllSkills } from '@/components/skills/data/skills/allSkills';
+import { roleSkills, saveRoleSkills } from '@/components/skills/data/roleSkills';
+import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
+import { generateSkillProgression } from '@/components/skills/competency/autoFillUtils';
+import { useTrack } from "@/components/skills/context/TrackContext";
+import { useEmployeeSkillsStore } from "@/components/employee/store/employeeSkillsStore";
 
 export const AddEmployeeSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
