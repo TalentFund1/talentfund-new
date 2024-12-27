@@ -22,11 +22,11 @@ export const useEmployeeSkillsState = (baseEmployees: Employee[]) => {
   }, []);
 
   const employeesWithSkills = baseEmployees.map(emp => {
-    const skills = getEmployeeSkills(emp.id);
-    console.log(`Employee ${emp.id} skills:`, skills);
+    const employeeSkills = getEmployeeSkills(emp.id);
+    console.log(`Employee ${emp.id} skills:`, employeeSkills);
     return {
       ...emp,
-      skills
+      skills: employeeSkills
     };
   });
 
@@ -34,7 +34,7 @@ export const useEmployeeSkillsState = (baseEmployees: Employee[]) => {
     id: emp.id,
     name: emp.name,
     skillCount: emp.skills.length,
-    skills: skills.map(s => s.title)
+    skills: emp.skills.map(s => s.title)
   })));
 
   return { employeesWithSkills, skillsVersion };
