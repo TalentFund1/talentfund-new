@@ -23,15 +23,19 @@ export const AddEmployeeSkillDialog = () => {
 
   const handleSuccess = async () => {
     console.log('Skills added successfully, reinitializing...');
-    await initializeEmployeeSkills("123"); // Force reinitialization
     
-    // Update toggled skills to include newly added ones
-    const newToggledSkills = new Set(toggledSkills);
-    selectedSkills.forEach(skill => newToggledSkills.add(skill));
-    setToggledSkills(newToggledSkills);
-    
-    setSelectedSkills([]);
-    setOpen(false);
+    // Force reinitialization with a small delay to ensure state updates are processed
+    setTimeout(async () => {
+      await initializeEmployeeSkills("123"); // Force reinitialization
+      
+      // Update toggled skills to include newly added ones
+      const newToggledSkills = new Set(toggledSkills);
+      selectedSkills.forEach(skill => newToggledSkills.add(skill));
+      setToggledSkills(newToggledSkills);
+      
+      setSelectedSkills([]);
+      setOpen(false);
+    }, 100);
   };
 
   const { handleAddSkills } = useSkillAddition(handleSuccess);

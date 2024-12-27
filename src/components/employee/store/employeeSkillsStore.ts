@@ -37,6 +37,18 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         // Initialize skills after state reset
         const initActions = createInitializationActions(set, get);
         await initActions.initializeEmployeeSkills(employeeId);
+        
+        // Force another update to ensure UI reflects changes
+        set(state => ({
+          ...state,
+          skillStates: {
+            ...state.skillStates,
+            [employeeId]: {
+              ...state.skillStates[employeeId],
+              lastUpdated: new Date().toISOString()
+            }
+          }
+        }));
       }
     }),
     {
