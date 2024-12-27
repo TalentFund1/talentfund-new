@@ -62,7 +62,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             });
           }
 
-          set((state: EmployeeSkillsStoreState) => ({
+          set((state) => ({
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -168,7 +168,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     {
       name: 'employee-skills-storage',
       version: 2,
-      partialize: (state: EmployeeSkillsStore) => ({
+      partialize: (state) => ({
         skillStates: state.skillStates
       })
     }

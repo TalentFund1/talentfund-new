@@ -87,16 +87,23 @@ const EmployeeTableContent = ({
   
   // Force refresh when skills change
   useEffect(() => {
-    const unsubscribe = useEmployeeSkillsStore.subscribe((state) => {
-      console.log('Skills state changed, updating version');
-      setSkillsVersion(v => v + 1);
-    });
-    return () => unsubscribe();
+    console.log('Setting up skills state subscription');
+    const unsubscribe = useEmployeeSkillsStore.subscribe(
+      (state) => state.skillStates,
+      (skillStates) => {
+        console.log('Skills state changed, updating version');
+        setSkillsVersion(prev => prev + 1);
+      }
+    );
+    return () => {
+      console.log('Cleaning up skills state subscription');
+      unsubscribe();
+    };
   }, []);
   
   // Memoize employees with their skills to prevent infinite updates
   const employees = useMemo(() => {
-    console.log('Processing employees with skills');
+    console.log('Processing employees with skills, version:', skillsVersion);
     const employeesWithSkills = baseEmployees.map(emp => {
       const skills = getEmployeeSkills(emp.id);
       console.log(`Employee ${emp.id} skills:`, skills);
