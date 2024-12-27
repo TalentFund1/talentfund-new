@@ -17,16 +17,16 @@ interface ComparisonMetrics {
 }
 
 class SkillComparisonService {
-  private readonly MAX_LEVEL_VALUE = 3; // Maximum level value (advanced)
+  private readonly MAX_LEVEL_VALUE = 3;
+  private readonly LEVEL_VALUES: { [key: string]: number } = {
+    'advanced': 3,
+    'intermediate': 2,
+    'beginner': 1,
+    'unspecified': 0
+  };
 
-  private getLevelValue(level: string): number {
-    const levelValues: { [key: string]: number } = {
-      'advanced': 3,
-      'intermediate': 2,
-      'beginner': 1,
-      'unspecified': 0
-    };
-    return levelValues[level.toLowerCase()] || 0;
+  public getLevelValue(level: string): number {
+    return this.LEVEL_VALUES[level.toLowerCase()] || 0;
   }
 
   public getProgressColor(percentage: number): string {
@@ -96,7 +96,6 @@ class SkillComparisonService {
       }
     });
 
-    // Calculate average based on total skills
     metrics.averageMatchPercentage = metrics.totalSkills > 0 
       ? totalMatchPercentage / metrics.totalSkills 
       : 0;
