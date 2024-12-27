@@ -4,7 +4,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { unifiedBenchmarkCalculator } from "../../services/benchmarking/services/UnifiedBenchmarkCalculator";
+import { getCompetencyMatches } from "./utils/competencyMatching";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
@@ -21,9 +21,11 @@ export const CompetencyMatchSection = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRole } = useRoleStore();
 
-  const { competencyMatchingSkills } = unifiedBenchmarkCalculator.calculateMatchingSkills(
+  const matchingSkills = getCompetencyMatches(
     Array.from(skills),
-    Array.from(skills),
+    getSkillState,
+    getSkillCompetencyState,
+    employeeId,
     roleLevel.toLowerCase(),
     selectedRole
   );
@@ -33,12 +35,12 @@ export const CompetencyMatchSection = ({
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">Competency Match</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-          {competencyMatchingSkills.length}
+          {matchingSkills.length}
         </span>
       </div>
-      {competencyMatchingSkills.length > 0 && (
+      {matchingSkills.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {competencyMatchingSkills.map((skill) => (
+          {matchingSkills.map((skill) => (
             <Badge 
               key={skill.title}
               variant="outline" 
