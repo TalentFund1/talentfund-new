@@ -54,6 +54,7 @@ export class UnifiedBenchmarkCalculator {
         matches: employeeLevelValue >= roleLevelValue
       });
 
+      // Pure numerical comparison based on level values
       return employeeLevelValue >= roleLevelValue;
     });
 
@@ -63,6 +64,7 @@ export class UnifiedBenchmarkCalculator {
     });
 
     const totalToggledSkills = toggledRoleSkills.length;
+
     const calculatePercentage = (count: number) => 
       Math.round((count / (totalToggledSkills || 1)) * 100);
 
