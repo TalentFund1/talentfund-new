@@ -21,6 +21,16 @@ export const CompetencyMatchSection = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRole } = useRoleStore();
 
+  const getLevelValue = (level: string): number => {
+    const levelValues: { [key: string]: number } = {
+      'advanced': 3,
+      'intermediate': 2,
+      'beginner': 1,
+      'unspecified': 0
+    };
+    return levelValues[level.toLowerCase()] || 0;
+  };
+
   const matchingSkills = skills.filter(skill => {
     const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
     if (!roleSkillState) return false;
@@ -33,16 +43,17 @@ export const CompetencyMatchSection = ({
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
       roleLevel: roleSkillLevel,
+      employeeLevelValue: getLevelValue(employeeSkillLevel),
+      roleLevelValue: getLevelValue(roleSkillLevel),
       roleId: selectedRole
     });
 
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: employeeSkillLevel },
-      { title: skill.title, minimumLevel: roleSkillLevel }
-    );
+    // Compare numeric level values
+    const employeeLevelValue = getLevelValue(employeeSkillLevel);
+    const roleLevelValue = getLevelValue(roleSkillLevel);
 
-    // Only match if employee level is equal to or higher than role level
-    return comparison.matchPercentage >= 100;
+    // Match if employee level is equal to or higher than role level
+    return employeeLevelValue >= roleLevelValue;
   });
 
   return (
