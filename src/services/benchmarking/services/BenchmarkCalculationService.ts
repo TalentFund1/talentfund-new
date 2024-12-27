@@ -1,6 +1,6 @@
 import { EmployeeSkillData } from '../../../components/employee/types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../../../components/skills/types/roleSkillTypes';
-import { unifiedBenchmarkCalculator } from '../../../components/benchmark/analysis/UnifiedBenchmarkCalculator';
+import { skillComparisonService } from './SkillComparisonService';
 
 export class BenchmarkCalculationService {
   public calculateBenchmarkPercentage(
@@ -24,29 +24,21 @@ export class BenchmarkCalculationService {
       return 0;
     }
 
-    // Use the unified calculator for calculations
-    const result = unifiedBenchmarkCalculator.calculateBenchmark(
+    // Use the dedicated comparison service for calculations
+    const metrics = skillComparisonService.calculateOverallMatch(
       employeeSkills,
-      employeeSkills,
-      'unspecified', // Default level
-      'default', // Default role
-      'Professional', // Default track
-      (skillTitle: string) => employeeSkills.find(s => s.title === skillTitle) || {
-        title: skillTitle,
-        level: 'unspecified',
-        goalStatus: 'unknown'
-      },
-      'default'
+      filteredRoleRequirements
     );
 
     console.log('BenchmarkCalculationService: Calculation complete:', {
-      averageMatch: result.averagePercentage,
-      matchingSkills: result.matchingSkills.length,
-      totalSkills: result.totalToggledSkills,
-      competencyMatches: result.competencyMatchingSkills.length
+      averageMatch: metrics.averageMatchPercentage,
+      matchingSkills: metrics.matchingSkills,
+      totalSkills: metrics.totalSkills,
+      missingSkills: metrics.missingSkills.length,
+      exceedingSkills: metrics.exceedingSkills.length
     });
 
-    return result.averagePercentage;
+    return metrics.averageMatchPercentage;
   }
 }
 

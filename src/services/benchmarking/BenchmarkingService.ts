@@ -1,10 +1,10 @@
+import { skillComparisonService } from './services/SkillComparisonService';
 import { skillStateService } from './services/SkillStateService';
 import { skillEnrichmentService } from './services/SkillEnrichmentService';
 import { benchmarkCalculationService } from './services/BenchmarkCalculationService';
-import { unifiedBenchmarkCalculator } from '../../components/benchmark/analysis/UnifiedBenchmarkCalculator';
 
 class BenchmarkingService {
-  public compareSkillLevels = unifiedBenchmarkCalculator.compareSkillLevels.bind(unifiedBenchmarkCalculator);
+  public compareSkillLevels = skillComparisonService.compareSkillLevels.bind(skillComparisonService);
   public calculateBenchmarkPercentage = benchmarkCalculationService.calculateBenchmarkPercentage.bind(benchmarkCalculationService);
   public createSkillState = skillStateService.createSkillState.bind(skillStateService);
   public getDefaultSkillState = skillStateService.getDefaultSkillState.bind(skillStateService);
@@ -12,7 +12,7 @@ class BenchmarkingService {
   public matchesInterestFilter = skillStateService.matchesInterestFilter.bind(skillStateService);
   public enrichSkillData = skillEnrichmentService.enrichSkillData.bind(skillEnrichmentService);
   public initializeEmployeeSkillsData = skillEnrichmentService.initializeEmployeeSkillsData.bind(skillEnrichmentService);
-  public getProgressColor = unifiedBenchmarkCalculator.getProgressColor.bind(unifiedBenchmarkCalculator);
+  public getProgressColor = skillComparisonService.getProgressColor.bind(skillComparisonService);
 }
 
 export const benchmarkingService = new BenchmarkingService();

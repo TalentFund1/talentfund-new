@@ -1,8 +1,8 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { skillComparisonService } from "../../../services/benchmarking/services/SkillComparisonService";
 import { SkillLevel } from "../../skills/types/sharedSkillTypes";
 import { RoleSkillRequirement } from "../../skills/types/roleSkillTypes";
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
-import { EmployeeSkillAchievement } from "../../employee/types/employeeSkillTypes";
 
 export interface BenchmarkResult {
   matchingSkills: UnifiedSkill[];
@@ -15,136 +15,7 @@ export interface BenchmarkResult {
   averagePercentage: number;
 }
 
-interface SkillComparisonResult {
-  skillTitle: string;
-  employeeLevel: SkillLevel;
-  requiredLevel: SkillLevel;
-  matchPercentage: number;
-}
-
-interface ComparisonMetrics {
-  totalSkills: number;
-  matchingSkills: number;
-  averageMatchPercentage: number;
-  missingSkills: string[];
-  exceedingSkills: string[];
-}
-
 export class UnifiedBenchmarkCalculator {
-  private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
-    console.log('Comparing skill levels:', {
-      employeeLevel,
-      requiredLevel
-    });
-
-    // If role requirement is unspecified, any employee level is a match
-    if (requiredLevel === 'unspecified') {
-      console.log('Role level is unspecified - counting as match');
-      return true;
-    }
-
-    const levelValues = {
-      'advanced': 3,
-      'intermediate': 2,
-      'beginner': 1,
-      'unspecified': 0
-    };
-
-    const employeeValue = levelValues[employeeLevel] || 0;
-    const requiredValue = levelValues[requiredLevel] || 0;
-
-    console.log('Level comparison:', {
-      employeeLevel,
-      requiredLevel,
-      employeeValue,
-      requiredValue,
-      isMatch: employeeValue >= requiredValue
-    });
-
-    return employeeValue >= requiredValue;
-  }
-
-  public getProgressColor(percentage: number): string {
-    if (percentage >= 80) return 'bg-green-500';
-    if (percentage >= 60) return 'bg-yellow-500';
-    return 'bg-red-500';
-  }
-
-  public compareSkillLevels(
-    employeeSkill: EmployeeSkillData,
-    roleRequirement: RoleSkillRequirement
-  ): SkillComparisonResult {
-    console.log('Comparing skill levels:', {
-      skill: employeeSkill.title,
-      employeeLevel: employeeSkill.level,
-      requiredLevel: roleRequirement.minimumLevel
-    });
-
-    const isMatch = this.doesLevelMatch(
-      employeeSkill.level as SkillLevel, 
-      roleRequirement.minimumLevel as SkillLevel
-    );
-
-    const result = {
-      skillTitle: employeeSkill.title,
-      employeeLevel: employeeSkill.level as SkillLevel,
-      requiredLevel: roleRequirement.minimumLevel as SkillLevel,
-      matchPercentage: isMatch ? 100 : 0
-    };
-
-    console.log('Comparison result:', result);
-    return result;
-  }
-
-  public calculateOverallMatch(
-    employeeSkills: ReadonlyArray<EmployeeSkillData>,
-    roleRequirements: ReadonlyArray<RoleSkillRequirement>
-  ): ComparisonMetrics {
-    console.log('Calculating overall match:', {
-      employeeSkillCount: employeeSkills.length,
-      roleRequirementCount: roleRequirements.length
-    });
-
-    const metrics: ComparisonMetrics = {
-      totalSkills: roleRequirements.length,
-      matchingSkills: 0,
-      averageMatchPercentage: 0,
-      missingSkills: [],
-      exceedingSkills: []
-    };
-
-    if (roleRequirements.length === 0) {
-      console.log('No role requirements to compare against');
-      return metrics;
-    }
-
-    roleRequirements.forEach(requirement => {
-      const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
-      
-      if (employeeSkill) {
-        const comparison = this.compareSkillLevels(employeeSkill, requirement);
-        if (comparison.matchPercentage === 100) {
-          metrics.matchingSkills++;
-        }
-      } else {
-        metrics.missingSkills.push(requirement.title);
-      }
-    });
-
-    employeeSkills.forEach(skill => {
-      if (!roleRequirements.some(req => req.title === skill.title)) {
-        metrics.exceedingSkills.push(skill.title);
-      }
-    });
-
-    metrics.averageMatchPercentage = metrics.totalSkills > 0 
-      ? (metrics.matchingSkills / metrics.totalSkills) * 100 
-      : 0;
-
-    console.log('Comparison metrics:', metrics);
-    return metrics;
-  }
-
   calculateBenchmark(
     toggledRoleSkills: UnifiedSkill[],
     employeeSkills: UnifiedSkill[],
@@ -192,7 +63,7 @@ export class UnifiedBenchmarkCalculator {
       };
 
       // Use skillComparisonService for consistent level comparison
-      const comparison = this.compareSkillLevels(
+      const comparison = skillComparisonService.compareSkillLevels(
         {
           ...employeeSkill,
           level: employeeLevel as SkillLevel
