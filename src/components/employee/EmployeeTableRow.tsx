@@ -48,34 +48,38 @@ export const EmployeeTableRow = ({
     competencyReader
   );
 
-  const getSkillMatch = () => {
+  const getSkillMatches = () => {
     const employeeSkills = getEmployeeSkills(employee.id);
-    
-    if (selectedSkills.length > 0) {
-      const matchingSkills = selectedSkills.filter(skillName => 
-        employeeSkills.some(empSkill => empSkill.title === skillName)
-      );
-      return `${matchingSkills.length}/${selectedSkills.length}`;
-    }
+    const allRoleSkills = selectedSkills.length > 0 
+      ? selectedSkills 
+      : getRoleSkills(targetRoleId);
 
-    const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
-    if (!roleData) return "0/0";
-
-    const allRoleSkills = [
-      ...roleData.specialized,
-      ...roleData.common,
-      ...roleData.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    const matchingSkills = allRoleSkills.filter(roleSkill => 
-      employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
+    const matchingSkills = employeeSkills.filter(empSkill => 
+      allRoleSkills.some(roleSkill => 
+        typeof roleSkill === 'string' 
+          ? roleSkill === empSkill.title 
+          : roleSkill.title === empSkill.title
+      )
     );
 
-    return `${matchingSkills.length}/${allRoleSkills.length}`;
+    const competencyMatchingSkills = matchingSkills.filter(skill => {
+      const employeeSkillLevel = skill.level;
+      const roleSkillLevel = competencyReader.getSkillCompetencyState(
+        skill.title,
+        employeeLevel,
+        targetRoleId
+      )?.level?.toLowerCase() || 'unspecified';
+
+      return employeeSkillLevel !== 'unspecified';
+    });
+
+    return {
+      skillMatch: `${matchingSkills.length}/${allRoleSkills.length}`,
+      competencyMatch: `${competencyMatchingSkills.length}/${allRoleSkills.length}`
+    };
   };
 
-  const isExactMatch = selectedJobTitle.length > 0 && 
-    getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]);
+  const { skillMatch, competencyMatch } = getSkillMatches();
 
   return (
     <tr className={`group border-t border-border hover:bg-muted/50 transition-colors w-full ${
@@ -96,7 +100,13 @@ export const EmployeeTableRow = ({
       
       <td className="px-12 py-4 text-center w-[120px]">
         <span className="text-sm text-muted-foreground font-medium">
-          {getSkillMatch()}
+          {skillMatch}
+        </span>
+      </td>
+
+      <td className="px-12 py-4 text-center w-[120px]">
+        <span className="text-sm text-muted-foreground font-medium">
+          {competencyMatch}
         </span>
       </td>
 
@@ -118,4 +128,15 @@ export const EmployeeTableRow = ({
       )}
     </tr>
   );
+};
+
+const getRoleSkills = (roleId: string) => {
+  const roleData = roleSkills[roleId as keyof typeof roleSkills];
+  if (!roleData) return [];
+  
+  return [
+    ...roleData.specialized,
+    ...roleData.common,
+    ...roleData.certifications
+  ];
 };
