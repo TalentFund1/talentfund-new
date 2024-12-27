@@ -56,7 +56,9 @@ export class UnifiedBenchmarkCalculator {
         } as RoleSkillRequirement
       );
 
-      return comparison.matchPercentage === 100;
+      // Use pure numerical comparison
+      const matchPercentage = comparison.matchPercentage;
+      return matchPercentage >= 100;
     });
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {

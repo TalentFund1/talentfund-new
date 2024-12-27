@@ -1,11 +1,10 @@
 import { EmployeeSkillData } from '../../../components/employee/types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../../../components/skills/types/roleSkillTypes';
-import { SkillLevel } from '../../../components/skills/types/sharedSkillTypes';
 
 interface SkillComparisonResult {
   skillTitle: string;
-  employeeLevel: SkillLevel;
-  requiredLevel: SkillLevel;
+  employeeLevel: string;
+  requiredLevel: string;
   matchPercentage: number;
 }
 
@@ -18,14 +17,14 @@ interface ComparisonMetrics {
 }
 
 class SkillComparisonService {
-  private getLevelValue(level: SkillLevel): number {
+  private getLevelValue(level: string): number {
     const levelValues = {
       'advanced': 3,
       'intermediate': 2,
       'beginner': 1,
       'unspecified': 0
     };
-    return levelValues[level] || 0;
+    return levelValues[level.toLowerCase()] || 0;
   }
 
   public getProgressColor(percentage: number): string {
@@ -38,8 +37,8 @@ class SkillComparisonService {
     employeeSkill: EmployeeSkillData,
     roleRequirement: RoleSkillRequirement
   ): SkillComparisonResult {
-    const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
-    const requiredValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
+    const employeeValue = this.getLevelValue(employeeSkill.level);
+    const requiredValue = this.getLevelValue(roleRequirement.minimumLevel);
 
     console.log('Comparing skill levels:', {
       skill: employeeSkill.title,
@@ -53,8 +52,8 @@ class SkillComparisonService {
 
     return {
       skillTitle: employeeSkill.title,
-      employeeLevel: employeeSkill.level as SkillLevel,
-      requiredLevel: roleRequirement.minimumLevel as SkillLevel,
+      employeeLevel: employeeSkill.level,
+      requiredLevel: roleRequirement.minimumLevel,
       matchPercentage
     };
   }
