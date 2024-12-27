@@ -63,19 +63,26 @@ export const calculateMatchingSkills = (
     const employeeLevelValue = getLevelValue(employeeSkillLevel);
     const roleLevelValue = getLevelValue(roleSkillLevel);
 
-    // Special case: if role level is unspecified, any non-unspecified employee level is a match
-    if (roleSkillLevel === 'unspecified' && employeeSkillLevel !== 'unspecified') {
-      console.log(`Skill ${skill.title} matches due to unspecified role level`);
-      return true;
+    // Special case: if role level is unspecified
+    if (roleSkillLevel === 'unspecified') {
+      const isMatch = employeeSkillLevel !== 'unspecified';
+      console.log(`Skill ${skill.title} unspecified role level check:`, {
+        employeeLevel: employeeSkillLevel,
+        isMatch,
+        reason: isMatch ? 'Employee has specified level' : 'Employee level also unspecified'
+      });
+      return isMatch;
     }
 
     // Regular comparison: employee level must be equal or higher
     const isMatch = employeeLevelValue >= roleLevelValue;
-    console.log(`Skill ${skill.title} match result:`, {
-      isMatch,
+    console.log(`Skill ${skill.title} regular level comparison:`, {
+      employeeLevel: employeeSkillLevel,
+      roleLevel: roleSkillLevel,
       employeeLevelValue,
       roleLevelValue,
-      matchReason: isMatch ? 'Level meets or exceeds requirement' : 'Level below requirement'
+      isMatch,
+      reason: isMatch ? 'Level meets or exceeds requirement' : 'Level below requirement'
     });
 
     return isMatch;
@@ -91,7 +98,11 @@ export const calculateMatchingSkills = (
     matchingSkills: matchingSkills.length,
     competencyMatches: competencyMatchingSkills.length,
     skillGoalMatches: skillGoalMatchingSkills.length,
-    competencyMatchingSkills: competencyMatchingSkills.map(s => s.title)
+    competencyMatchingSkills: competencyMatchingSkills.map(s => ({
+      title: s.title,
+      employeeLevel: getSkillState(s.title, employeeId)?.level,
+      roleLevel: getSkillCompetencyState(s.title, comparisonLevel, selectedRole)?.level
+    }))
   });
 
   return {
