@@ -58,16 +58,12 @@ export class UnifiedBenchmarkCalculator {
         employeeLevel,
         roleLevel,
         employeeLevelValue,
-        roleLevelValue
+        roleLevelValue,
+        isMatch: employeeLevelValue >= roleLevelValue
       });
 
-      const isMatch = employeeLevelValue >= roleLevelValue;
-      console.log(`Competency comparison for ${skill.title}:`, {
-        isMatch,
-        reason: isMatch ? 'Employee level meets or exceeds role level' : 'Employee level below role level'
-      });
-
-      return isMatch;
+      // Employee level matches if it's equal to or higher than the role level
+      return employeeLevelValue >= roleLevelValue;
     });
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
