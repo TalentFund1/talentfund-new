@@ -4,6 +4,7 @@ import { SkillCell } from "./SkillCell";
 import { roleSkills } from "../data/roleSkills";
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 import { useParams } from "react-router-dom";
+import { skillComparisonService } from '../../../services/benchmarking/services/SkillComparisonService';
 
 interface CompetencyGraphTableProps {
   currentRoleId: string;
@@ -80,8 +81,10 @@ export const CompetencyGraphTable = ({
       levels.forEach(level => {
         const skillState = roleState[skillName][level.toLowerCase()];
         if (skillState && typeof skillState.level === 'string') {
-          const currentLevel = skillState.level.toLowerCase();
-          if (currentLevel === targetLevel.toLowerCase()) {
+          // Use skillComparisonService for numerical comparison
+          const currentLevelValue = skillComparisonService['getLevelValue'](skillState.level);
+          const targetLevelValue = skillComparisonService['getLevelValue'](targetLevel);
+          if (currentLevelValue === targetLevelValue) {
             count++;
           }
         }
@@ -102,21 +105,11 @@ export const CompetencyGraphTable = ({
       unspecifiedCount: countSkillLevels(skill.title, levels, 'unspecified')
     }))
     .sort((a, b) => {
-      const advancedDiff = b.advancedCount - a.advancedCount;
-      if (advancedDiff !== 0) return advancedDiff;
-      
-      const intermediateDiff = b.intermediateCount - a.intermediateCount;
-      if (intermediateDiff !== 0) return intermediateDiff;
-      
-      const beginnerDiff = b.beginnerCount - a.beginnerCount;
-      if (beginnerDiff !== 0) return beginnerDiff;
-      
-      const unspecifiedDiff = a.unspecifiedCount - b.unspecifiedCount;
-      if (unspecifiedDiff !== 0) return unspecifiedDiff;
-      
-      return a.title.localeCompare(b.title);
-    })
-    .map(skill => skill.title);
+      // Use numerical sorting based on level values
+      const aTotal = (a.advancedCount * 3) + (a.intermediateCount * 2) + (a.beginnerCount * 1);
+      const bTotal = (b.advancedCount * 3) + (b.intermediateCount * 2) + (b.beginnerCount * 1);
+      return bTotal - aTotal;
+    });
 
   console.log('Sorted skills with counts:', skills.map(skill => ({
     title: skill.title,
@@ -145,16 +138,16 @@ export const CompetencyGraphTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedSkills.map((skillName) => (
-            <TableRow key={skillName} className="hover:bg-background/30 transition-colors">
+          {sortedSkills.map(skillData => (
+            <TableRow key={skillData.title} className="hover:bg-background/30 transition-colors">
               <TableCell className="font-medium border-r border-border">
-                {skillName}
+                {skillData.title}
               </TableCell>
               {levels.map((level, index) => (
                 <SkillCell 
                   key={level}
-                  skillName={skillName}
-                  details={getSkillDetails(skillName, level)}
+                  skillName={skillData.title}
+                  details={getSkillDetails(skillData.title, level)}
                   isLastColumn={index === levels.length - 1}
                   levelKey={level.toLowerCase()}
                 />
