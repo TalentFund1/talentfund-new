@@ -13,6 +13,7 @@ import { CompetencyGraphTable } from "@/components/skills/competency/CompetencyG
 import { generateSkillProgression } from "@/components/skills/competency/autoFillUtils";
 import { Brain, RotateCcw } from "lucide-react";
 import { useTrack } from "@/components/skills/context/TrackContext";
+import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
 
 interface CompetencyGraphProps {
   track?: "Professional" | "Managerial";
@@ -31,6 +32,8 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const { id: urlRoleId } = useParams<{ id: string }>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getTrackForRole } = useTrack();
+  const { selectedLevel } = useRoleStore();
+
   const currentRoleId = propRoleId || urlRoleId || "123";
   const savedTrack = getTrackForRole(currentRoleId);
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);

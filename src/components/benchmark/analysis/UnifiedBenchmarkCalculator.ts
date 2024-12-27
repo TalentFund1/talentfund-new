@@ -14,6 +14,16 @@ export interface BenchmarkResult {
 }
 
 export class UnifiedBenchmarkCalculator {
+  private getLevelValue(level: string): number {
+    const values: { [key: string]: number } = {
+      'advanced': 4,
+      'intermediate': 3,
+      'beginner': 2,
+      'unspecified': 1
+    };
+    return values[level.toLowerCase()] ?? 1;
+  }
+
   calculateBenchmark(
     toggledRoleSkills: UnifiedSkill[],
     employeeSkills: UnifiedSkill[],
@@ -63,6 +73,7 @@ export class UnifiedBenchmarkCalculator {
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
+      if (!skillState) return false;
       return skillState.goalStatus === 'required' || skillState.goalStatus === 'skill_goal';
     });
 
@@ -101,16 +112,6 @@ export class UnifiedBenchmarkCalculator {
     });
 
     return result;
-  }
-
-  private getLevelValue(level: string): number {
-    const values: { [key: string]: number } = {
-      'advanced': 4,
-      'intermediate': 3,
-      'beginner': 2,
-      'unspecified': 1
-    };
-    return values[level.toLowerCase()] ?? 1;
   }
 }
 
