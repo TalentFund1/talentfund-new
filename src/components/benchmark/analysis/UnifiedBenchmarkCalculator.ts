@@ -61,7 +61,6 @@ export class UnifiedBenchmarkCalculator {
         roleLevelValue
       });
 
-      // Pure numerical comparison only
       const isMatch = employeeLevelValue >= roleLevelValue;
       console.log(`Competency comparison for ${skill.title}:`, {
         isMatch,

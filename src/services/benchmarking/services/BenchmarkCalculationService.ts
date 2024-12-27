@@ -25,7 +25,6 @@ class BenchmarkCalculationService {
       toggledSkillsCount: toggledSkills.size
     });
 
-    // Filter for toggled skills only
     const filteredRoleRequirements = roleRequirements.filter(skill => 
       toggledSkills.has(skill.title)
     );
@@ -35,7 +34,6 @@ class BenchmarkCalculationService {
       return 0;
     }
 
-    // Use the dedicated comparison service for calculations
     const metrics = skillComparisonService.calculateOverallMatch(
       employeeSkills,
       filteredRoleRequirements

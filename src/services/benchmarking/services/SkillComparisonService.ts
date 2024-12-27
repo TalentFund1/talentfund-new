@@ -26,7 +26,7 @@ class SkillComparisonService {
 
   public getLevelValue(level: string): number {
     console.log('Getting level value for:', level, 'Value:', this.LEVEL_VALUES[level.toLowerCase()] || 1);
-    return this.LEVEL_VALUES[level.toLowerCase()] || 1; // Default to 1 (unspecified) as base level
+    return this.LEVEL_VALUES[level.toLowerCase()] || 1;
   }
 
   public getProgressColor(percentage: number): string {
@@ -50,7 +50,6 @@ class SkillComparisonService {
       roleValue
     });
 
-    // Pure numerical comparison based on absolute skill level
     const matchPercentage = (employeeValue / Math.max(roleValue, 1)) * 100;
 
     return {
@@ -91,7 +90,6 @@ class SkillComparisonService {
       }
     });
 
-    // Find exceeding skills
     employeeSkills.forEach(skill => {
       if (!roleRequirements.some(req => req.title === skill.title)) {
         metrics.exceedingSkills.push(skill.title);
