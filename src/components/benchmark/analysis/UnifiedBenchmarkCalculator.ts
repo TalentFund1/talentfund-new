@@ -58,13 +58,16 @@ export class UnifiedBenchmarkCalculator {
         roleLevelValue
       });
 
-      // Simple direct comparison - employee level must be greater than or equal to role level
-      const isMatch = employeeLevelValue >= roleLevelValue;
+      // Updated matching logic: match if role level is unspecified OR employee level is sufficient
+      const isMatch = roleLevel.toLowerCase() === 'unspecified' || employeeLevelValue >= roleLevelValue;
       
       console.log(`Competency comparison result for ${skill.title}:`, {
         isMatch,
         employeeLevel,
-        roleLevel
+        roleLevel,
+        reason: roleLevel.toLowerCase() === 'unspecified' 
+          ? 'Role level is unspecified - any employee level matches'
+          : `Employee level (${employeeLevelValue}) ${isMatch ? '>=' : '<'} Role level (${roleLevelValue})`
       });
 
       return isMatch;
