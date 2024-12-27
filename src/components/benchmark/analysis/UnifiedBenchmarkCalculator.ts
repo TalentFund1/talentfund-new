@@ -42,18 +42,18 @@ export class UnifiedBenchmarkCalculator {
       const employeeLevel = skillState?.level || 'unspecified';
       const roleLevel = skill.level || 'unspecified';
 
-      console.log('Comparing competency levels numerically:', {
+      const employeeLevelValue = skillComparisonService.getLevelValue(employeeLevel);
+      const roleLevelValue = skillComparisonService.getLevelValue(roleLevel);
+
+      console.log('Comparing competency levels:', {
         skill: skill.title,
         employeeLevel,
         roleLevel,
-        employeeValue: skillComparisonService.getLevelValue(employeeLevel),
-        roleValue: skillComparisonService.getLevelValue(roleLevel)
+        employeeLevelValue,
+        roleLevelValue,
+        matches: employeeLevelValue >= roleLevelValue
       });
 
-      // Pure numerical comparison
-      const employeeLevelValue = skillComparisonService.getLevelValue(employeeLevel);
-      const roleLevelValue = skillComparisonService.getLevelValue(roleLevel);
-      
       return employeeLevelValue >= roleLevelValue;
     });
 
@@ -91,7 +91,9 @@ export class UnifiedBenchmarkCalculator {
       competencyMatches: competencyMatchingSkills.map(s => ({
         skill: s.title,
         employeeLevel: getSkillState(s.title, employeeId).level,
-        roleLevel: s.level
+        roleLevel: s.level,
+        employeeLevelValue: skillComparisonService.getLevelValue(getSkillState(s.title, employeeId).level),
+        roleLevelValue: skillComparisonService.getLevelValue(s.level)
       }))
     });
 
