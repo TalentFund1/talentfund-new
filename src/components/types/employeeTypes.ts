@@ -13,7 +13,6 @@ export interface Employee {
   startDate?: string;
   office: string;
   termDate: string;
-  team: 'RnD' | 'Legacy' | 'Mobile';
   skills: ReadonlyArray<{
     readonly title: string;
     readonly level: string;

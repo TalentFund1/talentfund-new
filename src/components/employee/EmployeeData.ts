@@ -39,7 +39,6 @@ export const employees = [
     startDate: "2023-05-16",
     office: "Toronto",
     termDate: "-",
-    team: "RnD" as const,
     skills: getRandomSkills()
   },
   {
@@ -57,7 +56,6 @@ export const employees = [
     startDate: "2024-01-10",
     office: "Toronto",
     termDate: "-",
-    team: "RnD" as const,
     skills: getRandomSkills()
   },
   {
@@ -75,7 +73,6 @@ export const employees = [
     startDate: "2024-06-01",
     office: "Toronto",
     termDate: "-",
-    team: "RnD" as const,
     skills: getRandomSkills()
   },
   {
@@ -93,7 +90,6 @@ export const employees = [
     startDate: "2022-11-01",
     office: "Toronto",
     termDate: "-",
-    team: "RnD" as const,
     skills: getRandomSkills()
   }
 ] as const;
