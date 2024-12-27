@@ -24,21 +24,26 @@ class SkillComparisonService {
       requiredLevel
     });
 
-    // Advanced matches everything
-    if (employeeLevel === 'advanced') return true;
-    
-    // Intermediate matches intermediate, beginner, and unspecified
-    if (employeeLevel === 'intermediate') {
-      return ['intermediate', 'beginner', 'unspecified'].includes(requiredLevel);
+    // Handle unspecified cases first
+    if (requiredLevel === 'unspecified') {
+      return true; // Any employee level matches unspecified requirement
     }
     
-    // Beginner matches beginner and unspecified
-    if (employeeLevel === 'beginner') {
-      return ['beginner', 'unspecified'].includes(requiredLevel);
+    if (employeeLevel === 'unspecified') {
+      return false; // Unspecified employee level doesn't match any specific requirement
     }
-    
-    // Unspecified only matches unspecified
-    return employeeLevel === requiredLevel;
+
+    // Level matching logic
+    const levelValues = {
+      'advanced': 3,
+      'intermediate': 2,
+      'beginner': 1
+    };
+
+    const employeeValue = levelValues[employeeLevel] || 0;
+    const requiredValue = levelValues[requiredLevel] || 0;
+
+    return employeeValue >= requiredValue;
   }
 
   public getProgressColor(percentage: number): string {
