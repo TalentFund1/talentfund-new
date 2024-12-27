@@ -17,6 +17,8 @@ interface ComparisonMetrics {
 }
 
 class SkillComparisonService {
+  private readonly MAX_LEVEL_VALUE = 3; // Maximum level value (advanced)
+
   private getLevelValue(level: string): number {
     const levelValues: { [key: string]: number } = {
       'advanced': 3,
@@ -38,19 +40,16 @@ class SkillComparisonService {
     roleRequirement: RoleSkillRequirement
   ): SkillComparisonResult {
     const employeeValue = this.getLevelValue(employeeSkill.level);
-    const requiredValue = this.getLevelValue(roleRequirement.minimumLevel);
-    const maxValue = 3; // Maximum level value (advanced)
 
     console.log('Comparing skill levels numerically:', {
       skill: employeeSkill.title,
       employeeLevel: employeeSkill.level,
       employeeValue,
-      requiredLevel: roleRequirement.minimumLevel,
-      requiredValue
+      maxValue: this.MAX_LEVEL_VALUE
     });
 
-    // Pure numerical comparison: (employeeValue / maxValue) * 100
-    const matchPercentage = (employeeValue / maxValue) * 100;
+    // Pure numerical comparison based on absolute skill level
+    const matchPercentage = (employeeValue / this.MAX_LEVEL_VALUE) * 100;
 
     return {
       skillTitle: employeeSkill.title,
@@ -90,13 +89,17 @@ class SkillComparisonService {
       }
     });
 
+    // Find exceeding skills
     employeeSkills.forEach(skill => {
       if (!roleRequirements.some(req => req.title === skill.title)) {
         metrics.exceedingSkills.push(skill.title);
       }
     });
 
-    metrics.averageMatchPercentage = totalMatchPercentage / (metrics.totalSkills || 1);
+    // Calculate average based on total skills
+    metrics.averageMatchPercentage = metrics.totalSkills > 0 
+      ? totalMatchPercentage / metrics.totalSkills 
+      : 0;
 
     return metrics;
   }
