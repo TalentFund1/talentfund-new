@@ -47,13 +47,6 @@ export const SkillsMatrix = () => {
           const skillData = getUnifiedSkillData(skill.title);
           const skillState = getSkillState(id, skill.title);
           
-          console.log('SkillsMatrix - Processing skill:', { 
-            employeeId: id, 
-            skillTitle: skill.title,
-            level: skillState.level,
-            originalLevel: skill.level 
-          });
-
           return {
             ...skill,
             id: skillData.id || `${id}-${skill.title}`,
@@ -76,19 +69,39 @@ export const SkillsMatrix = () => {
     }
   }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
 
-  // Apply basic filtering to employee skills
-  const filteredSkills = employeeSkillsData.filter(skill => {
-    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-    if (selectedInterest !== "all") {
-      const skillState = getSkillState(id || "", skill.title);
-      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
-      if (selectedInterest === "not_interested" && skillState.goalStatus !== "not_interested") return false;
-      if (selectedInterest === "unknown" && skillState.goalStatus !== "unknown") return false;
+  // Define level priority for sorting
+  const getLevelPriority = (level: string): number => {
+    switch (level.toLowerCase()) {
+      case 'advanced': return 1;
+      case 'intermediate': return 2;
+      case 'beginner': return 3;
+      case 'unspecified': return 4;
+      default: return 5;
     }
-    if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
-    if (selectedWeight !== "all" && skill.weight !== selectedWeight) return false;
-    return true;
-  });
+  };
+
+  // Apply filtering and sorting to employee skills
+  const filteredSkills = employeeSkillsData
+    .filter(skill => {
+      if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
+      if (selectedInterest !== "all") {
+        const skillState = getSkillState(id || "", skill.title);
+        if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
+        if (selectedInterest === "not_interested" && skillState.goalStatus !== "not_interested") return false;
+        if (selectedInterest === "unknown" && skillState.goalStatus !== "unknown") return false;
+      }
+      if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
+      if (selectedWeight !== "all" && skill.weight !== selectedWeight) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort by level priority
+      const levelDiff = getLevelPriority(a.level) - getLevelPriority(b.level);
+      if (levelDiff !== 0) return levelDiff;
+      
+      // If levels are the same, sort by title
+      return a.title.localeCompare(b.title);
+    });
 
   const handleSave = () => {
     console.log('Saving skill changes');
