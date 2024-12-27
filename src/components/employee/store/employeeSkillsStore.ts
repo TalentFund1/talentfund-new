@@ -62,7 +62,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             });
           }
 
-          set(state => ({
+          set((state: EmployeeSkillsStoreState) => ({
             skillStates: {
               ...state.skillStates,
               [employeeId]: {
@@ -170,18 +170,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       version: 2,
       partialize: (state: EmployeeSkillsStore) => ({
         skillStates: state.skillStates
-      }),
-      merge: (persistedState: any, currentState: EmployeeSkillsStore) => {
-        console.log('Merging states:', { 
-          hasPersistedState: !!persistedState,
-          currentStateKeys: Object.keys(currentState)
-        });
-        
-        return {
-          ...currentState,
-          skillStates: persistedState?.skillStates || {}
-        };
-      }
+      })
     }
   )
 );

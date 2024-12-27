@@ -87,10 +87,10 @@ const EmployeeTableContent = ({
   
   // Force refresh when skills change
   useEffect(() => {
-    const unsubscribe = useEmployeeSkillsStore.subscribe(
-      (state) => state.skillStates,
-      () => setSkillsVersion(v => v + 1)
-    );
+    const unsubscribe = useEmployeeSkillsStore.subscribe((state) => {
+      console.log('Skills state changed, updating version');
+      setSkillsVersion(v => v + 1);
+    });
     return () => unsubscribe();
   }, []);
   
