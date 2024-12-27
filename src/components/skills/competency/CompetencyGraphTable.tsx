@@ -76,14 +76,13 @@ export const CompetencyGraphTable = ({
   const countSkillLevels = (skillName: string, levels: string[], targetLevel: string) => {
     let count = 0;
     const roleState = roleStates[roleId || "123"];
+    const targetLevelValue = skillComparisonService.getLevelValue(targetLevel);
     
     if (roleState && roleState[skillName]) {
       levels.forEach(level => {
         const skillState = roleState[skillName][level.toLowerCase()];
         if (skillState && typeof skillState.level === 'string') {
-          // Use skillComparisonService for numerical comparison
-          const currentLevelValue = skillComparisonService['getLevelValue'](skillState.level);
-          const targetLevelValue = skillComparisonService['getLevelValue'](targetLevel);
+          const currentLevelValue = skillComparisonService.getLevelValue(skillState.level);
           if (currentLevelValue === targetLevelValue) {
             count++;
           }
@@ -99,19 +98,21 @@ export const CompetencyGraphTable = ({
   const sortedSkills = skills
     .map(skill => ({
       title: skill.title,
-      advancedCount: countSkillLevels(skill.title, levels, 'advanced'),
-      intermediateCount: countSkillLevels(skill.title, levels, 'intermediate'),
-      beginnerCount: countSkillLevels(skill.title, levels, 'beginner'),
-      unspecifiedCount: countSkillLevels(skill.title, levels, 'unspecified')
+      totalValue: levels.reduce((total, level) => {
+        const skillState = roleStates[roleId || "123"]?.[skill.title]?.[level.toLowerCase()];
+        return total + skillComparisonService.getLevelValue(skillState?.level || 'unspecified');
+      }, 0)
     }))
-    .sort((a, b) => {
-      // Use numerical sorting based on level values
-      const aTotal = (a.advancedCount * 3) + (a.intermediateCount * 2) + (a.beginnerCount * 1);
-      const bTotal = (b.advancedCount * 3) + (b.intermediateCount * 2) + (b.beginnerCount * 1);
-      return bTotal - aTotal;
-    });
+    .sort((a, b) => b.totalValue - a.totalValue)
+    .map(({ title }) => ({
+      title,
+      advancedCount: countSkillLevels(title, levels, 'advanced'),
+      intermediateCount: countSkillLevels(title, levels, 'intermediate'),
+      beginnerCount: countSkillLevels(title, levels, 'beginner'),
+      unspecifiedCount: countSkillLevels(title, levels, 'unspecified')
+    }));
 
-  console.log('Sorted skills with counts:', skills.map(skill => ({
+  console.log('Sorted skills with numerical values:', sortedSkills.map(skill => ({
     title: skill.title,
     advanced: countSkillLevels(skill.title, levels, 'advanced'),
     intermediate: countSkillLevels(skill.title, levels, 'intermediate'),
