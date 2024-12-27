@@ -44,11 +44,11 @@ export class UnifiedBenchmarkCalculator {
 
     const competencyMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
-      const employeeLevel = skillState?.level || 'unspecified';
-      const roleLevel = skill.level || 'unspecified';
-
-      const employeeLevelValue = this.LEVEL_VALUES[employeeLevel.toLowerCase()] || 1;
-      const roleLevelValue = this.LEVEL_VALUES[roleLevel.toLowerCase()] || 1;
+      const employeeLevel = (skillState?.level || skill.level || 'unspecified').toLowerCase();
+      const roleLevel = (skill.roleLevel || 'unspecified').toLowerCase();
+      
+      const employeeLevelValue = this.LEVEL_VALUES[employeeLevel] || 1;
+      const roleLevelValue = this.LEVEL_VALUES[roleLevel] || 1;
 
       console.log('Comparing competency levels:', {
         skill: skill.title,
@@ -58,8 +58,8 @@ export class UnifiedBenchmarkCalculator {
         roleLevelValue
       });
 
-      // First check if role level is unspecified - in this case, any employee level is valid
-      if (roleLevel.toLowerCase() === 'unspecified') {
+      // If role level is unspecified, ANY employee level is valid
+      if (roleLevel === 'unspecified') {
         console.log(`${skill.title}: Role level is unspecified - any employee level matches`);
         return true;
       }
@@ -79,8 +79,7 @@ export class UnifiedBenchmarkCalculator {
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
-      if (!skillState) return false;
-      return skillState.goalStatus === 'required' || skillState.goalStatus === 'skill_goal';
+      return skillState?.goalStatus === 'skill_goal';
     });
 
     const totalToggledSkills = toggledRoleSkills.length;
