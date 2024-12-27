@@ -11,7 +11,7 @@ import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { Skills, getAllSkills } from '../../../skills/data/skills/allSkills';
 import { roleSkills, saveRoleSkills } from '../../../skills/data/roleSkills';
 import { normalizeSkillTitle } from '../../../skills/utils/normalization';
-import { generateSkillProgression } from '../../../competency/autoFillUtils';
+import { generateSkillProgression } from '../../../skills/competency/autoFillUtils';
 import { useTrack } from "../../../skills/context/TrackContext";
 import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
 
