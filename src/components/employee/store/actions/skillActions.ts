@@ -42,6 +42,12 @@ export const createSkillActions = (set: any, get: any) => ({
         [skillTitle]: newSkill
       };
 
+      console.log('Updated skills state:', {
+        employeeId,
+        skillTitle,
+        totalSkills: Object.keys(updatedSkills).length
+      });
+
       // Return new state with updated skills
       return {
         skillStates: {

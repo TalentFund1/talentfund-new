@@ -23,7 +23,7 @@ export const AddEmployeeSkillDialog = () => {
   const { toggledSkills, setToggledSkills } = useToggledSkills();
   const { setSkillState, setSkillProgression } = useCompetencyStore();
   const { getTrackForRole } = useTrack();
-  const { addSkill } = useEmployeeSkillsStore();
+  const { addSkill, getEmployeeSkills } = useEmployeeSkillsStore();
 
   // Get all available skills from universal database
   const universalSkills = getAllSkills();
@@ -78,7 +78,7 @@ export const AddEmployeeSkillDialog = () => {
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Add skill to employee skills store - This is the new line
+        // Add skill to employee skills store and trigger UI update
         addSkill(id, skillTitle);
         
         // Determine category and add to appropriate array if not already present
