@@ -29,6 +29,34 @@ class SkillComparisonService {
     return levelValues[level] || 0;
   }
 
+  private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
+    const employeeLevelValue = this.getLevelValue(employeeLevel);
+    const requiredLevelValue = this.getLevelValue(requiredLevel);
+
+    console.log('Comparing skill levels:', {
+      employeeLevel,
+      requiredLevel,
+      employeeLevelValue,
+      requiredLevelValue
+    });
+
+    // Advanced matches everything
+    if (employeeLevelValue === 3) return true;
+    
+    // Intermediate matches intermediate, beginner, and unspecified
+    if (employeeLevelValue === 2) {
+      return requiredLevelValue <= 2;
+    }
+    
+    // Beginner matches beginner and unspecified
+    if (employeeLevelValue === 1) {
+      return requiredLevelValue <= 1;
+    }
+    
+    // Unspecified only matches unspecified
+    return employeeLevelValue === requiredLevelValue;
+  }
+
   public compareSkillLevels(
     employeeSkill: EmployeeSkillData,
     roleRequirement: RoleSkillRequirement
@@ -39,18 +67,23 @@ class SkillComparisonService {
       requiredLevel: roleRequirement.minimumLevel
     });
 
+    const isMatch = this.doesLevelMatch(
+      employeeSkill.level, 
+      roleRequirement.minimumLevel as SkillLevel
+    );
+
     const employeeLevelValue = this.getLevelValue(employeeSkill.level);
-    const requiredLevelValue = this.getLevelValue(roleRequirement.minimumLevel);
+    const requiredLevelValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
     
-    const gapLevel = Math.max(0, requiredLevelValue - employeeLevelValue);
-    const matchPercentage = Math.min(100, (employeeLevelValue / requiredLevelValue) * 100);
+    const matchPercentage = isMatch ? 100 : 
+      (employeeLevelValue / Math.max(requiredLevelValue, 1)) * 100;
 
     const result = {
       skillTitle: employeeSkill.title,
       employeeLevel: employeeSkill.level,
-      requiredLevel: roleRequirement.minimumLevel,
-      matchPercentage: requiredLevelValue === 0 ? 100 : matchPercentage,
-      gapLevel
+      requiredLevel: roleRequirement.minimumLevel as SkillLevel,
+      matchPercentage,
+      gapLevel: employeeLevelValue - requiredLevelValue
     };
 
     console.log('SkillComparisonService: Comparison result:', result);
@@ -81,7 +114,6 @@ class SkillComparisonService {
 
     let totalMatchPercentage = 0;
 
-    // Find matching and missing skills
     roleRequirements.forEach(requirement => {
       const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
       
@@ -96,7 +128,6 @@ class SkillComparisonService {
       }
     });
 
-    // Find exceeding skills
     employeeSkills.forEach(skill => {
       if (!roleRequirements.some(req => req.title === skill.title)) {
         metrics.exceedingSkills.push(skill.title);
