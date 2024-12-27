@@ -46,12 +46,13 @@ class SkillComparisonService {
 
     const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
     const requiredValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
+    const matchPercentage = employeeValue >= requiredValue ? 100 : 0;
 
     const result = {
       skillTitle: employeeSkill.title,
       employeeLevel: employeeSkill.level as SkillLevel,
       requiredLevel: roleRequirement.minimumLevel as SkillLevel,
-      matchPercentage: employeeValue >= requiredValue ? 100 : 0
+      matchPercentage
     };
 
     console.log('SkillComparisonService: Comparison result:', result);
