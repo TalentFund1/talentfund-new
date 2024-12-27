@@ -34,31 +34,6 @@ class SkillComparisonService {
     return 'bg-red-500';
   }
 
-  public compareSkillLevels(
-    employeeSkill: EmployeeSkillData,
-    roleRequirement: RoleSkillRequirement
-  ): SkillComparisonResult {
-    console.log('SkillComparisonService: Comparing skill levels:', {
-      skill: employeeSkill.title,
-      employeeLevel: employeeSkill.level,
-      requiredLevel: roleRequirement.minimumLevel
-    });
-
-    const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
-    const requiredValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
-    const matchPercentage = employeeValue >= requiredValue ? 100 : 0;
-
-    const result = {
-      skillTitle: employeeSkill.title,
-      employeeLevel: employeeSkill.level as SkillLevel,
-      requiredLevel: roleRequirement.minimumLevel as SkillLevel,
-      matchPercentage
-    };
-
-    console.log('SkillComparisonService: Comparison result:', result);
-    return result;
-  }
-
   public calculateOverallMatch(
     employeeSkills: ReadonlyArray<EmployeeSkillData>,
     roleRequirements: ReadonlyArray<RoleSkillRequirement>
@@ -85,8 +60,10 @@ class SkillComparisonService {
       const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
       
       if (employeeSkill) {
-        const comparison = this.compareSkillLevels(employeeSkill, requirement);
-        if (comparison.matchPercentage === 100) {
+        const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
+        const requiredValue = this.getLevelValue(requirement.minimumLevel as SkillLevel);
+        
+        if (employeeValue >= requiredValue) {
           metrics.matchingSkills++;
         }
       } else {
