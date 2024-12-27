@@ -1,6 +1,6 @@
-import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
-import { useCompetencyStateReader } from "../../skills/competency/CompetencyStateReader";
+import { UnifiedSkill } from '../../skills/types/SkillTypes';
+import { EmployeeSkillData } from '../../employee/types/employeeSkillTypes';
+import { useCompetencyStateReader } from '../../skills/competency/CompetencyStateReader';
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
