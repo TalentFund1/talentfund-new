@@ -5,6 +5,7 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { unifiedBenchmarkCalculator } from "./analysis/UnifiedBenchmarkCalculator";
+import { useTrack } from "../skills/context/TrackContext"; // Added missing import
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
