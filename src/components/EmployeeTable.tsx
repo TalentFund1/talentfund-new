@@ -6,6 +6,24 @@ import { TrackProvider } from "./skills/context/TrackContext";
 import { useEmployeeSkillsState } from "../hooks/useEmployeeSkillsState";
 import { EmployeeTableContent } from "./employee/table/EmployeeTableContent";
 
+// Helper functions that were missing exports
+export const getSkillProfileId = (role: string): string => {
+  const baseRole = role.split(':')[0].trim();
+  return baseRole === 'Engineering Manager' ? '789' :
+         baseRole === 'Frontend Developer' ? '456' :
+         baseRole === 'Backend Engineer' ? '123' :
+         baseRole === 'AI Engineer' ? '101' : '123';
+};
+
+export const getBaseRole = (role: string): string => {
+  return role.split(':')[0].trim();
+};
+
+export const getLevel = (role: string): string => {
+  const parts = role.split(':');
+  return parts.length > 1 ? parts[1].trim().toLowerCase() : 'p4';
+};
+
 interface EmployeeTableProps {
   readonly selectedDepartment?: ReadonlyArray<string>;
   readonly selectedLevel?: ReadonlyArray<string>;

@@ -9,8 +9,7 @@ export const useEmployeeSkillsState = (baseEmployees: Employee[]) => {
   useEffect(() => {
     console.log('Setting up skills state subscription');
     const unsubscribe = useEmployeeSkillsStore.subscribe(
-      state => state.skillStates,
-      () => {
+      (state) => {
         console.log('Skills state changed, updating version');
         setSkillsVersion(prev => prev + 1);
       }
@@ -35,7 +34,7 @@ export const useEmployeeSkillsState = (baseEmployees: Employee[]) => {
     id: emp.id,
     name: emp.name,
     skillCount: emp.skills.length,
-    skills: emp.skills.map(s => s.title)
+    skills: skills.map(s => s.title)
   })));
 
   return { employeesWithSkills, skillsVersion };
