@@ -1,11 +1,11 @@
 export const getLevelPriority = (level: string = 'unspecified') => {
   const priorities: { [key: string]: number } = {
-    'advanced': 3,
-    'intermediate': 2,
-    'beginner': 1,
-    'unspecified': 0
+    'advanced': 4,
+    'intermediate': 3,
+    'beginner': 2,
+    'unspecified': 1
   };
-  return priorities[level.toLowerCase()] ?? 0;
+  return priorities[level.toLowerCase()] ?? 1;
 };
 
 export const normalizeLevel = (levelKey: string, roleId: string, track: string): string => {
