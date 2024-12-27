@@ -7,6 +7,7 @@ import { createStoreActions } from './actions/storeActions';
 import { EmployeeSkillsStore, EmployeeSkillsStoreState } from './types/storeTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { benchmarkingService } from '../../../services/benchmarking';
+import { EmployeeSkillData } from '../types/employeeSkillTypes';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -46,14 +47,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Getting skills for employee:', employeeId);
         const state = get().skillStates[employeeId];
         
-        // If no state exists, initialize it
-        if (!state) {
-          get().initializeEmployeeSkills(employeeId);
+        if (!state?.skills) {
           return [];
         }
 
         // Get all skills from the universal database and merge with current state
-        const allSkills = Object.values(state.skills || {}).map(skill => {
+        const allSkills = Object.values(state.skills as Record<string, EmployeeSkillData>).map(skill => {
           const unifiedData = getUnifiedSkillData(skill.title);
           return {
             ...unifiedData,
@@ -61,7 +60,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             id: `${employeeId}-${skill.title}`,
             employeeId,
             skillId: `${employeeId}-${skill.title}`
-          };
+          } as EmployeeSkillData;
         });
 
         console.log('Retrieved employee skills:', {
