@@ -2,6 +2,7 @@ import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
 import { skillComparisonService } from "../../../services/benchmarking/services/SkillComparisonService";
 import { SkillLevel } from "../../skills/types/sharedSkillTypes";
+import { RoleSkillRequirement } from "../../skills/types/roleSkillTypes";
 
 export interface BenchmarkResult {
   matchingSkills: UnifiedSkill[];
@@ -38,9 +39,26 @@ export class UnifiedBenchmarkCalculator {
 
     const competencyMatchingSkills = matchingSkills.filter(skill => {
       const skillState = getSkillState(skill.title, employeeId);
+      const roleRequirement: RoleSkillRequirement = {
+        id: `${selectedRole}-${skill.title}`,
+        title: skill.title,
+        minimumLevel: skill.level as SkillLevel,
+        requirementLevel: 'required',
+        subcategory: skill.subcategory,
+        category: skill.category,
+        businessCategory: skill.businessCategory,
+        weight: skill.weight,
+        benchmarks: skill.benchmarks,
+        metrics: {
+          growth: skill.growth,
+          salary: skill.salary,
+          confidence: 'medium'
+        }
+      };
+      
       const comparison = skillComparisonService.compareSkillLevels(
         skillState,
-        { ...skill, minimumLevel: skill.level as SkillLevel }
+        roleRequirement
       );
       return comparison.matchPercentage === 100;
     });
