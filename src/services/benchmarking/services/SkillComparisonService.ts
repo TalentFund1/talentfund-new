@@ -24,24 +24,23 @@ class SkillComparisonService {
       requiredLevel
     });
 
-    // Handle unspecified cases first
-    if (requiredLevel === 'unspecified') {
-      return true; // Any employee level matches unspecified requirement
-    }
-    
-    if (employeeLevel === 'unspecified') {
-      return false; // Unspecified employee level doesn't match any specific requirement
-    }
-
-    // Level matching logic
     const levelValues = {
       'advanced': 3,
       'intermediate': 2,
-      'beginner': 1
+      'beginner': 1,
+      'unspecified': 0
     };
 
     const employeeValue = levelValues[employeeLevel] || 0;
     const requiredValue = levelValues[requiredLevel] || 0;
+
+    console.log('Level comparison:', {
+      employeeLevel,
+      requiredLevel,
+      employeeValue,
+      requiredValue,
+      isMatch: employeeValue >= requiredValue
+    });
 
     return employeeValue >= requiredValue;
   }
