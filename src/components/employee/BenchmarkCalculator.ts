@@ -1,83 +1,86 @@
-import { SkillLevel } from "./types/employeeSkillTypes";
-import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { CompetencyStateReader } from "../skills/competency/types/competencyTypes";
-
-interface SkillComparison {
-  employeeLevel: SkillLevel;
-  requiredLevel: SkillLevel;
-}
+import { EmployeeSkillData } from './types/employeeSkillTypes';
+import { RoleSkillRequirement } from '../skills/types/roleSkillTypes';
+import { skillComparisonService } from '../../services/benchmarking';
+import { CompetencyStateReader } from '../skills/competency/types/competencyTypes';
 
 export const calculateBenchmarkPercentage = (
   employeeId: string,
   roleId: string,
   baseRole: string,
-  employeeSkills: UnifiedSkill[] | Record<string, any>,
+  employeeSkills: EmployeeSkillData[],
   toggledSkills: Set<string>,
   competencyReader: CompetencyStateReader
 ): number => {
-  console.log('Calculating benchmark percentage:', {
+  console.log('BenchmarkCalculator: Starting calculation:', {
     employeeId,
     roleId,
     baseRole,
-    skillsCount: Array.isArray(employeeSkills) ? employeeSkills.length : Object.keys(employeeSkills).length,
+    skillsCount: employeeSkills.length,
     toggledCount: toggledSkills.size
   });
 
-  // Ensure employeeSkills is an array
-  const skillsArray = Array.isArray(employeeSkills) 
-    ? employeeSkills 
-    : Object.values(employeeSkills);
-
-  if (skillsArray.length === 0 || toggledSkills.size === 0) {
+  if (employeeSkills.length === 0 || toggledSkills.size === 0) {
     return 0;
   }
 
-  const matchingSkills = skillsArray.filter(skill => 
+  // Filter for toggled skills only
+  const relevantSkills = employeeSkills.filter(skill => 
     toggledSkills.has(skill.title)
   );
 
-  if (matchingSkills.length === 0) {
-    return 0;
-  }
+  // Calculate skill match percentage (basic presence)
+  const skillMatchCount = relevantSkills.length;
+  const skillMatchPercentage = (skillMatchCount / toggledSkills.size) * 100;
 
-  const comparisons: SkillComparison[] = matchingSkills.map(skill => {
-    const employeeLevel = skill.level as SkillLevel;
-    const competencyState = competencyReader.getSkillCompetencyState(skill.title, baseRole, roleId);
-    const requiredLevel = (competencyState?.level || 'beginner') as SkillLevel;
-
-    console.log('Comparing skill levels:', {
-      skill: skill.title,
-      employeeLevel,
-      requiredLevel,
-      competencyState
-    });
-
-    return {
-      employeeLevel,
-      requiredLevel
-    };
-  });
-
-  const levelValues: Record<SkillLevel, number> = {
-    'advanced': 3,
-    'intermediate': 2,
-    'beginner': 1,
-    'unspecified': 0
-  };
-
-  const matchCount = comparisons.reduce((count, comparison) => {
-    const employeeLevelValue = levelValues[comparison.employeeLevel] || 0;
-    const requiredLevelValue = levelValues[comparison.requiredLevel] || 0;
-    return count + (employeeLevelValue >= requiredLevelValue ? 1 : 0);
-  }, 0);
-
-  const percentage = (matchCount / toggledSkills.size) * 100;
-  
-  console.log('Benchmark calculation result:', {
-    matchCount,
+  console.log('Skill match calculation:', {
+    matchingSkills: skillMatchCount,
     totalSkills: toggledSkills.size,
-    percentage: Math.round(percentage)
+    percentage: skillMatchPercentage
   });
-  
-  return Math.round(percentage);
+
+  // Calculate competency match percentage
+  const competencyMatchCount = relevantSkills.filter(skill => {
+    const roleSkillState = competencyReader.getSkillCompetencyState(skill.title, baseRole, roleId);
+    if (!roleSkillState) return false;
+
+    return skill.level === roleSkillState.level ||
+           (skill.level === 'advanced' && roleSkillState.level === 'intermediate') ||
+           (skill.level === 'advanced' && roleSkillState.level === 'beginner') ||
+           (skill.level === 'intermediate' && roleSkillState.level === 'beginner');
+  }).length;
+
+  const competencyMatchPercentage = (competencyMatchCount / toggledSkills.size) * 100;
+
+  console.log('Competency match calculation:', {
+    matchingCompetencies: competencyMatchCount,
+    totalSkills: toggledSkills.size,
+    percentage: competencyMatchPercentage
+  });
+
+  // Calculate skill goal match percentage
+  const skillGoalMatchCount = relevantSkills.filter(skill => 
+    skill.goalStatus === 'required' || skill.goalStatus === 'skill_goal'
+  ).length;
+
+  const skillGoalMatchPercentage = (skillGoalMatchCount / toggledSkills.size) * 100;
+
+  console.log('Skill goal match calculation:', {
+    matchingGoals: skillGoalMatchCount,
+    totalSkills: toggledSkills.size,
+    percentage: skillGoalMatchPercentage
+  });
+
+  // Calculate average percentage
+  const averagePercentage = Math.round(
+    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3
+  );
+
+  console.log('Final benchmark calculation:', {
+    skillMatch: skillMatchPercentage,
+    competencyMatch: competencyMatchPercentage,
+    goalMatch: skillGoalMatchPercentage,
+    average: averagePercentage
+  });
+
+  return averagePercentage;
 };
