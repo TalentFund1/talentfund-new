@@ -38,9 +38,8 @@ export const calculateMatchingSkills = (
 
   const { getSkillCompetencyState } = useCompetencyStateReader();
 
-  const matchingSkills = toggledRoleSkills.filter(roleSkill => {
-    const employeeSkill = employeeSkills.find(empSkill => empSkill.title === roleSkill.title);
-    return employeeSkill !== undefined;
+  const matchingSkills = toggledRoleSkills.filter(skill => {
+    return employeeSkills.some(empSkill => empSkill.title === skill.title);
   });
 
   const competencyMatchingSkills = matchingSkills.filter(skill => {
@@ -51,38 +50,26 @@ export const calculateMatchingSkills = (
     const employeeSkillLevel = skillState?.level || 'unspecified';
     const roleSkillLevel = roleSkillState.level;
 
-    console.log('Comparing competency levels for skill:', {
+    console.log('Comparing competency levels:', {
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      employeeLevelValue: getLevelValue(employeeSkillLevel),
-      roleLevelValue: getLevelValue(roleSkillLevel)
+      roleLevel: roleSkillLevel
     });
 
-    // Compare numeric level values
     const employeeLevelValue = getLevelValue(employeeSkillLevel);
     const roleLevelValue = getLevelValue(roleSkillLevel);
 
-    // Special case: if role level is unspecified
-    if (roleSkillLevel === 'unspecified') {
-      const isMatch = employeeSkillLevel !== 'unspecified';
-      console.log(`Skill ${skill.title} unspecified role level check:`, {
-        employeeLevel: employeeSkillLevel,
-        isMatch,
-        reason: isMatch ? 'Employee has specified level' : 'Employee level also unspecified'
-      });
-      return isMatch;
-    }
+    // Simple comparison: levels must match if unspecified, otherwise employee level must be equal or higher
+    const isMatch = (employeeSkillLevel === 'unspecified' && roleSkillLevel === 'unspecified') || 
+                   (employeeSkillLevel !== 'unspecified' && employeeLevelValue >= roleLevelValue);
 
-    // Regular comparison: employee level must be equal or higher
-    const isMatch = employeeLevelValue >= roleLevelValue;
-    console.log(`Skill ${skill.title} regular level comparison:`, {
+    console.log(`Skill ${skill.title} level comparison:`, {
       employeeLevel: employeeSkillLevel,
       roleLevel: roleSkillLevel,
       employeeLevelValue,
       roleLevelValue,
       isMatch,
-      reason: isMatch ? 'Level meets or exceeds requirement' : 'Level below requirement'
+      reason: isMatch ? 'Levels match or employee level exceeds requirement' : 'Levels do not match requirements'
     });
 
     return isMatch;
