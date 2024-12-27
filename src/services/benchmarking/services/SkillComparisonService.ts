@@ -28,10 +28,51 @@ class SkillComparisonService {
     return levelValues[level] || 0;
   }
 
+  private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
+    const employeeValue = this.getLevelValue(employeeLevel);
+    const requiredValue = this.getLevelValue(requiredLevel);
+
+    console.log('Level comparison:', {
+      employeeLevel,
+      requiredLevel,
+      employeeValue,
+      requiredValue,
+      isMatch: employeeValue >= requiredValue
+    });
+
+    return employeeValue >= requiredValue;
+  }
+
   public getProgressColor(percentage: number): string {
     if (percentage >= 80) return 'bg-green-500';
     if (percentage >= 60) return 'bg-yellow-500';
     return 'bg-red-500';
+  }
+
+  public compareSkillLevels(
+    employeeSkill: EmployeeSkillData,
+    roleRequirement: RoleSkillRequirement
+  ): SkillComparisonResult {
+    console.log('SkillComparisonService: Comparing skill levels:', {
+      skill: employeeSkill.title,
+      employeeLevel: employeeSkill.level,
+      requiredLevel: roleRequirement.minimumLevel
+    });
+
+    const isMatch = this.doesLevelMatch(
+      employeeSkill.level as SkillLevel, 
+      roleRequirement.minimumLevel as SkillLevel
+    );
+
+    const result = {
+      skillTitle: employeeSkill.title,
+      employeeLevel: employeeSkill.level as SkillLevel,
+      requiredLevel: roleRequirement.minimumLevel as SkillLevel,
+      matchPercentage: isMatch ? 100 : 0
+    };
+
+    console.log('SkillComparisonService: Comparison result:', result);
+    return result;
   }
 
   public calculateOverallMatch(
@@ -60,10 +101,8 @@ class SkillComparisonService {
       const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
       
       if (employeeSkill) {
-        const employeeValue = this.getLevelValue(employeeSkill.level as SkillLevel);
-        const requiredValue = this.getLevelValue(requirement.minimumLevel as SkillLevel);
-        
-        if (employeeValue >= requiredValue) {
+        const comparison = this.compareSkillLevels(employeeSkill, requirement);
+        if (comparison.matchPercentage === 100) {
           metrics.matchingSkills++;
         }
       } else {
