@@ -1,6 +1,7 @@
 import { Employee } from "../types/employeeTypes";
-import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
+import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 
 export const calculateEmployeeBenchmarks = (
   employees: Employee[],
@@ -9,35 +10,42 @@ export const calculateEmployeeBenchmarks = (
   toggledSkills: Set<string>,
   getSkillCompetencyState: any
 ): Employee[] => {
+  console.log('Calculating employee benchmarks:', {
+    employeeCount: employees.length,
+    selectedJobTitle,
+    toggledSkillsCount: toggledSkills.size
+  });
+
   return employees.map(employee => {
-    let benchmark = 0;
-    
-    if (selectedJobTitle.length > 0) {
-      // Calculate benchmark against selected job title
-      const roleId = getSkillProfileId(selectedJobTitle[0]);
-      const level = getLevel(employee.role);
-      benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        roleId,
-        level,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-    } else {
-      // Calculate benchmark against employee's current role
-      const roleId = getSkillProfileId(employee.role);
-      const level = getLevel(employee.role);
-      benchmark = calculateBenchmarkPercentage(
-        employee.id,
-        roleId,
-        level,
-        currentStates,
-        toggledSkills,
-        getSkillCompetencyState
-      );
-    }
-    
+    const roleId = selectedJobTitle.length > 0 
+      ? getSkillProfileId(selectedJobTitle[0])
+      : getSkillProfileId(employee.role);
+      
+    const level = getLevel(employee.role);
+    const employeeSkills = getEmployeeSkills(employee.id);
+
+    console.log('Processing employee benchmark:', {
+      employeeId: employee.id,
+      roleId,
+      level,
+      skillCount: employeeSkills.length
+    });
+
+    const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
+      employeeSkills,
+      employeeSkills,
+      level,
+      roleId,
+      'Professional', // Default track, should be retrieved from context if needed
+      currentStates,
+      employee.id
+    );
+
+    console.log('Employee benchmark result:', {
+      employeeId: employee.id,
+      benchmark
+    });
+
     return { ...employee, benchmark };
   });
 };
