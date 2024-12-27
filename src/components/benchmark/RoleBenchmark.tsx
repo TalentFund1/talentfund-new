@@ -15,6 +15,7 @@ import { getEmployeeTrack } from "../employee/utils/employeeTrackUtils";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { RoleSelectionSection } from "./role-selection/RoleSelectionSection";
 import { getRoleSkills } from "../skills/data/roles/roleDataReader";
+import { CompetencyMatch2 } from "./CompetencyMatch2";
 
 interface RoleStore {
   selectedRole: string;
@@ -103,6 +104,14 @@ const RoleBenchmarkContent = () => {
           roleLevel={selectedLevel}
           employeeId={id}
         />}
+
+        {id && <div className="mt-4">
+          <CompetencyMatch2
+            selectedRole={selectedRole}
+            roleLevel={selectedLevel}
+            employeeId={id}
+          />
+        </div>}
       </div>
     </div>
   );
