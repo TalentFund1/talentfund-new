@@ -5,10 +5,14 @@ import { SearchFilter } from "@/components/market/SearchFilter";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useParams } from 'react-router-dom';
-import { useEmployeeStore } from "@/components/employee/store/employeeStore";
-import { getUnifiedSkillData } from '@/components/skills/data/skillDatabaseService';
-import { universalSkillsDatabase } from '@/components/skills/data/skills/universalSkillsDatabase';
-import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
+import { useToggledSkills } from "../../../skills/context/ToggledSkillsContext";
+import { useCompetencyStore } from "@/components/skills/competency/CompetencyState";
+import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
+import { Skills, getAllSkills } from '../../../skills/data/skills/allSkills';
+import { roleSkills, saveRoleSkills } from '../../../skills/data/roleSkills';
+import { normalizeSkillTitle } from '../../../skills/utils/normalization';
+import { generateSkillProgression } from '../../../skills/competency/autoFillUtils';
+import { useTrack } from "../../../skills/context/TrackContext";
 import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
 
 export const AddEmployeeSkillDialog = () => {
@@ -16,66 +20,107 @@ export const AddEmployeeSkillDialog = () => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const { setEmployeeSkills, getEmployeeSkills } = useEmployeeStore();
-  const { initializeEmployeeSkills, setSkillLevel, setSkillGoalStatus } = useEmployeeSkillsStore();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { setSkillState, setSkillProgression } = useCompetencyStore();
+  const { getTrackForRole } = useTrack();
+  const { addSkill } = useEmployeeSkillsStore();
 
   // Get all available skills from universal database
+  const universalSkills = getAllSkills();
   const allSkills = Array.from(new Set(
-    universalSkillsDatabase.map(skill => normalizeSkillTitle(skill.title))
+    universalSkills.map(s => normalizeSkillTitle(s.title))
   ));
 
   console.log('Available skills for selection:', {
     totalSkills: allSkills.length,
-    sampleSkills: allSkills.slice(0, 5)
+    sampleSkills: allSkills.slice(0, 5),
+    roleId: id
   });
 
   const handleAddSkills = () => {
     if (!id) {
       toast({
         title: "Error",
-        description: "Could not find the employee.",
+        description: "Could not find the current role profile.",
         variant: "destructive",
       });
       return;
     }
 
-    // Initialize employee skills if needed
-    initializeEmployeeSkills(id);
+    // Get existing role skills or initialize if not exists
+    const existingRoleSkills = roleSkills[id] || {
+      title: "",
+      specialized: [],
+      common: [],
+      certifications: [],
+      skills: []
+    };
 
-    const currentSkills = getEmployeeSkills(id);
-    const newSkills = selectedSkills.map(skillTitle => {
-      console.log('Processing new skill:', skillTitle);
+    console.log('Current role skills before adding:', {
+      roleId: id,
+      specialized: existingRoleSkills.specialized.length,
+      common: existingRoleSkills.common.length,
+      certifications: existingRoleSkills.certifications.length
+    });
+
+    const track = getTrackForRole(id);
+    const newToggledSkills = new Set(toggledSkills);
+    const updatedRoleSkills = { ...existingRoleSkills };
+
+    selectedSkills.forEach(skillTitle => {
+      const normalizedTitle = normalizeSkillTitle(skillTitle);
+      console.log('Finding skill by title:', skillTitle);
       const skillData = getUnifiedSkillData(skillTitle);
       
-      // Initialize skill state in employee store
-      setSkillLevel(id, skillTitle, 'beginner');
-      setSkillGoalStatus(id, skillTitle, 'unknown');
-      
-      return skillData;
+      if (skillData) {
+        console.log('Processing skill:', skillData);
+        
+        // Add to toggled skills
+        newToggledSkills.add(skillTitle);
+        
+        // Add skill to employee skills store
+        addSkill(id, skillTitle);
+        
+        // Determine category and add to appropriate array if not already present
+        const category = skillData.category?.toLowerCase() || 'common';
+        
+        if (category === 'specialized' && !updatedRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+          updatedRoleSkills.specialized.push(skillData);
+        } else if (category === 'common' && !updatedRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+          updatedRoleSkills.common.push(skillData);
+        } else if (category === 'certification' && !updatedRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+          updatedRoleSkills.certifications.push(skillData);
+        }
+
+        // Generate and set progression
+        const progression = generateSkillProgression(skillTitle, category, track, id);
+        if (progression) {
+          console.log('Generated progression for skill:', {
+            skill: skillTitle,
+            progression
+          });
+          setSkillProgression(skillTitle, progression, id);
+        }
+      } else {
+        console.warn('Skill not found in universal database:', skillTitle);
+      }
     });
 
-    // Combine existing and new skills, avoiding duplicates
-    const updatedSkills = [
-      ...currentSkills,
-      ...newSkills.filter(newSkill => 
-        !currentSkills.some(existingSkill => 
-          normalizeSkillTitle(existingSkill.title) === normalizeSkillTitle(newSkill.title)
-        )
-      )
-    ];
-
-    console.log('Updating employee skills:', {
-      employeeId: id,
-      currentSkillCount: currentSkills.length,
-      newSkillCount: newSkills.length,
-      totalSkillCount: updatedSkills.length
+    // Save updated skills to localStorage and update state
+    console.log('Saving updated role skills:', {
+      roleId: id,
+      specialized: updatedRoleSkills.specialized.length,
+      common: updatedRoleSkills.common.length,
+      certifications: updatedRoleSkills.certifications.length
     });
 
-    setEmployeeSkills(id, updatedSkills);
+    roleSkills[id] = updatedRoleSkills;
+    saveRoleSkills(id, updatedRoleSkills);
+    setToggledSkills(newToggledSkills);
 
     toast({
       title: "Skills Added",
-      description: `Added ${newSkills.length} skill${newSkills.length === 1 ? '' : 's'} to your profile.`,
+      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
     });
 
     setSelectedSkills([]);

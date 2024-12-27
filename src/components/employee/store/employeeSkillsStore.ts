@@ -73,16 +73,16 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           }));
-        }
 
-        // Force refresh of skill states
-        const store = get();
-        const skills = store.getEmployeeSkills(employeeId);
-        console.log('Refreshed employee skills:', {
-          employeeId,
-          skillCount: skills.length,
-          skills: skills.map(s => s.title)
-        });
+          // Force refresh of skill states
+          const store = get();
+          const skills = store.getEmployeeSkills(employeeId);
+          console.log('Initialized employee skills:', {
+            employeeId,
+            skillCount: skills.length,
+            skills: skills.map(s => s.title)
+          });
+        }
       },
 
       getEmployeeSkills: (employeeId: string) => {
@@ -148,6 +148,55 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         }
         
         return state;
+      },
+
+      addSkill: (employeeId: string, skillTitle: string) => {
+        console.log('Adding new skill:', { employeeId, skillTitle });
+        
+        set(state => {
+          const currentState = state.skillStates[employeeId] || {
+            skills: {},
+            lastUpdated: new Date().toISOString()
+          };
+
+          const unifiedData = getUnifiedSkillData(skillTitle);
+          const newSkill: EmployeeSkillData = {
+            id: `${employeeId}-${skillTitle}`,
+            employeeId,
+            skillId: `${employeeId}-${skillTitle}`,
+            title: skillTitle,
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString(),
+            confidence: 'medium',
+            subcategory: unifiedData.subcategory || 'General',
+            category: unifiedData.category || 'specialized',
+            businessCategory: unifiedData.businessCategory || 'Technical Skills',
+            weight: unifiedData.weight || 'technical',
+            growth: unifiedData.growth || '0%',
+            salary: unifiedData.salary || 'market',
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
+          };
+
+          return {
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                ...currentState,
+                skills: {
+                  ...currentState.skills,
+                  [skillTitle]: newSkill
+                },
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          };
+        });
       },
 
       ...createSkillStateActions(set, get),
