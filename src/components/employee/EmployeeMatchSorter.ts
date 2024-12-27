@@ -51,7 +51,7 @@ export const sortEmployeesByRoleMatch = (
     // Compare role IDs directly for exact matches
     const isExactMatch = employeeRoleId === selectedRoleId;
 
-    // Calculate benchmark for all employees
+    // Calculate comprehensive benchmark using the same method as benchmark analysis
     const benchmark = calculateBenchmarkPercentage(
       employee.id,
       selectedRoleId,
