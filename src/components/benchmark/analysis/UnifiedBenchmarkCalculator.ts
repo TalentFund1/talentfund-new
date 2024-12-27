@@ -47,8 +47,7 @@ class UnifiedBenchmarkCalculator {
       });
 
       // If employee has the skill, count it as a competency match
-      // This matches the "Skill Match" count since we're comparing against unspecified role level
-      return true;
+      return employeeLevel !== 'unspecified';
     });
 
     console.log('Competency matching skills:', competencyMatchingSkills.map(s => s.title));

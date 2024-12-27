@@ -5,6 +5,7 @@ import { getLevelPriority, normalizeLevel } from "./utils/levelUtils";
 import { determineRequirement } from "./utils/requirementUtils";
 import { useRoleSkillsStore } from "../store/roleSkillsStore";
 import { roleSkills } from "../data/roleSkills";
+import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
 
 interface SkillCompetencyState {
   level: string;
@@ -31,6 +32,7 @@ export const useCompetencyStateReader = () => {
   const { toggledSkills } = useToggledSkills();
   const { getTrackForRole } = useTrack();
   const { getRoleSkills, getSkillRequirement } = useRoleSkillsStore();
+  const employeeSkillsStore = useEmployeeSkillsStore();
 
   const findSavedState = (skillName: string, levelKey: string, roleId: string): SkillCompetencyState | null => {
     const roleStates = currentStates[roleId];
@@ -56,7 +58,6 @@ export const useCompetencyStateReader = () => {
   };
 
   const validateRoleId = (roleId: string): boolean => {
-    // Updated validation to check against roleSkills
     if (!roleId || !roleSkills[roleId as keyof typeof roleSkills]) {
       console.error('Invalid role ID or role skills not found:', roleId);
       return false;
@@ -81,7 +82,8 @@ export const useCompetencyStateReader = () => {
   const getSkillCompetencyState = (
     skillName: string, 
     levelKey: string = 'p4',
-    roleId: string
+    roleId: string,
+    employeeId?: string
   ): SkillCompetencyState => {
     if (!validateRoleId(roleId)) {
       console.log('Using default state due to invalid role:', roleId);
@@ -111,6 +113,29 @@ export const useCompetencyStateReader = () => {
     const skillRequirement = getSkillRequirement(roleId, skillName);
     if (skillRequirement) {
       console.log('Using role requirement:', skillRequirement);
+      
+      // If we have an employeeId, check if they have this skill
+      if (employeeId) {
+        const employeeSkills = employeeSkillsStore.getEmployeeSkills(employeeId);
+        const hasSkill = employeeSkills.some(skill => skill.title === skillName);
+        
+        console.log('Checking employee skill:', {
+          employeeId,
+          skillName,
+          hasSkill,
+          employeeSkillCount: employeeSkills.length
+        });
+
+        if (hasSkill) {
+          // If employee has the skill, use their level
+          const employeeSkill = employeeSkills.find(skill => skill.title === skillName);
+          return {
+            level: employeeSkill?.level || 'unspecified',
+            required: skillRequirement.requirementLevel
+          };
+        }
+      }
+
       return {
         level: skillRequirement.minimumLevel,
         required: skillRequirement.requirementLevel
