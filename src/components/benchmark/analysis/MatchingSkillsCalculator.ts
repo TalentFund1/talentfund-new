@@ -63,12 +63,19 @@ export const calculateMatchingSkills = (
     const employeeLevelValue = getLevelValue(employeeSkillLevel);
     const roleLevelValue = getLevelValue(roleSkillLevel);
 
-    // Match if employee level is equal to or higher than role level
+    // Special case: if role level is unspecified, any non-unspecified employee level is a match
+    if (roleSkillLevel === 'unspecified' && employeeSkillLevel !== 'unspecified') {
+      console.log(`Skill ${skill.title} matches due to unspecified role level`);
+      return true;
+    }
+
+    // Regular comparison: employee level must be equal or higher
     const isMatch = employeeLevelValue >= roleLevelValue;
     console.log(`Skill ${skill.title} match result:`, {
       isMatch,
       employeeLevelValue,
-      roleLevelValue
+      roleLevelValue,
+      matchReason: isMatch ? 'Level meets or exceeds requirement' : 'Level below requirement'
     });
 
     return isMatch;
