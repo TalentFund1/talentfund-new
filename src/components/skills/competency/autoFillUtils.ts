@@ -2,16 +2,6 @@ import { getSkillImportance } from './utils/skillImportance';
 import { generateProgressionForTrack } from './utils/progressionGenerator';
 import { professionalLevels, managerialLevels } from "../../benchmark/data/levelData";
 
-const getLevelForTrack = (level: string): number => {
-  const values: { [key: string]: number } = {
-    'advanced': 4,
-    'intermediate': 3,
-    'beginner': 2,
-    'unspecified': 1
-  };
-  return values[level.toLowerCase()] ?? 1;
-};
-
 interface SkillState {
   level: string;
   required: string;

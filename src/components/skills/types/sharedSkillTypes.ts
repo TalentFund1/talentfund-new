@@ -2,6 +2,7 @@
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
+export type Track = "Professional" | "Managerial";
 
 // Base skill interface shared between roles and employees
 export interface BaseSkill {
@@ -31,5 +32,3 @@ export interface SkillMetrics {
   salary: string;
   confidence: 'low' | 'medium' | 'high';
 }
-
-console.log('Shared skill types established for consistent typing across stores');

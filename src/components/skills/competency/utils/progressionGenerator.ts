@@ -1,6 +1,6 @@
-import { Track } from './skillImportance';
+import { Track } from '../../types/sharedSkillTypes';
 
-interface SkillState {
+interface ProgressionResult {
   level: string;
   required: string;
 }
@@ -9,75 +9,32 @@ export const generateProgressionForTrack = (
   progressionPoint: number,
   importance: number,
   track: Track
-): SkillState => {
+): ProgressionResult => {
+  // Determine level based on progression point and importance
   let level: string;
-  let required: string;
-
-  // For managerial track, start with intermediate baseline
-  if (track === "Managerial") {
-    if (importance >= 3) { // Critical skills
-      if (progressionPoint <= 0.3) {
-        level = "intermediate";
-        required = "required";
-      } else {
-        level = "advanced";
-        required = "required";
-      }
-    } else { // Other skills
-      if (progressionPoint <= 0.3) {
-        level = "beginner";
-        required = "preferred";
-      } else if (progressionPoint <= 0.6) {
-        level = "intermediate";
-        required = "required";
-      } else {
-        level = "advanced";
-        required = "required";
-      }
-    }
+  if (progressionPoint >= 0.75) {
+    level = 'advanced';
+  } else if (progressionPoint >= 0.5) {
+    level = 'intermediate';
+  } else if (progressionPoint >= 0.25) {
+    level = 'beginner';
   } else {
-    // Professional track progression with more granular levels
-    if (importance >= 3) { // Core or critical skills
-      if (progressionPoint <= 0.2) {
-        level = "beginner";
-        required = "required";
-      } else if (progressionPoint <= 0.4) {
-        level = "intermediate";
-        required = "required";
-      } else {
-        level = "advanced";
-        required = "required";
-      }
-    } else if (importance === 2) { // Specialized skills
-      if (progressionPoint <= 0.2) {
-        level = "unspecified";
-        required = "preferred";
-      } else if (progressionPoint <= 0.4) {
-        level = "beginner";
-        required = "preferred";
-      } else if (progressionPoint <= 0.6) {
-        level = "intermediate";
-        required = "required";
-      } else {
-        level = "advanced";
-        required = "required";
-      }
-    } else { // Common skills and others
-      if (progressionPoint <= 0.2) {
-        level = "unspecified";
-        required = "preferred";
-      } else if (progressionPoint <= 0.4) {
-        level = "beginner";
-        required = "preferred";
-      } else if (progressionPoint <= 0.7) {
-        level = "intermediate";
-        required = "preferred";
-      } else {
-        level = "advanced";
-        required = "required";
-      }
-    }
+    level = 'unspecified';
   }
+
+  // Determine requirement based on track and importance
+  let required = 'preferred';
+  if (track === "Managerial" && importance > 2) {
+    required = 'required';
+  }
+
+  console.log('Generated progression:', {
+    progressionPoint,
+    importance,
+    track,
+    level,
+    required
+  });
 
   return { level, required };
 };
