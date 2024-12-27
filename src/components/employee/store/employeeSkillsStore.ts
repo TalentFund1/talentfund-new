@@ -35,9 +35,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         }));
 
         // Initialize skills after state reset
-        if (store.initializeSkills) {
-          await store.initializeSkills(employeeId);
-        }
+        const initActions = createInitializationActions(set, get);
+        await initActions.initializeEmployeeSkills(employeeId);
       }
     }),
     {
