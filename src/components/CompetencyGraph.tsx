@@ -62,14 +62,18 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
         ...(currentRoleSkills.certifications || [])
       ].filter(skill => toggledSkills.has(skill.title));
 
+      if (allSkills.length === 0) {
+        throw new Error('No skills selected for generation');
+      }
+
       console.log('Processing skills generation for:', allSkills.map(s => s.title));
 
       // Generate progression for each skill
       allSkills.forEach(skill => {
         let category = "specialized";
-        if (currentRoleSkills.common.some(s => s.title === skill.title)) {
+        if (currentRoleSkills.common?.some(s => s.title === skill.title)) {
           category = "common";
-        } else if (currentRoleSkills.certifications.some(s => s.title === skill.title)) {
+        } else if (currentRoleSkills.certifications?.some(s => s.title === skill.title)) {
           category = "certification";
         }
 
@@ -99,7 +103,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       console.error("Error generating skills:", error);
       toast({
         title: "Generation Failed",
-        description: "There was an error generating the skill levels. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error generating the skill levels. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -126,6 +130,7 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const handleResetLevels = () => {
     console.log('Resetting levels for role:', currentRoleId);
     resetLevels(currentRoleId);
+    saveChanges(currentRoleId); // Save the reset state
     toast({
       title: "Levels reset",
       description: "All skill levels have been reset to their default values.",
