@@ -1,5 +1,5 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
-import { skillComparisonService } from "../../../services/benchmarking/services/SkillComparisonService";
+import { skillComparisonService } from '../../../services/benchmarking/services/SkillComparisonService';
 import { SkillLevel } from "../../skills/types/sharedSkillTypes";
 import { RoleSkillRequirement } from "../../skills/types/roleSkillTypes";
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
@@ -57,7 +57,7 @@ export class UnifiedBenchmarkCalculator {
       );
 
       const matchPercentage = comparison.matchPercentage;
-      return (matchPercentage / 100) >= 1;
+      return matchPercentage >= 100;
     });
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
@@ -68,7 +68,7 @@ export class UnifiedBenchmarkCalculator {
     const totalToggledSkills = toggledRoleSkills.length;
 
     const calculatePercentage = (count: number) => 
-      totalToggledSkills > 0 ? Math.round((count / totalToggledSkills) * 100) : 0;
+      totalToggledSkills > 0 ? (count / totalToggledSkills) * 100 : 0;
 
     const result = {
       matchingSkills,
@@ -81,9 +81,9 @@ export class UnifiedBenchmarkCalculator {
       averagePercentage: 0
     };
 
-    result.averagePercentage = Math.round(
-      (result.skillMatchPercentage + result.competencyMatchPercentage + result.skillGoalMatchPercentage) / 3
-    );
+    result.averagePercentage = (result.skillMatchPercentage + 
+      result.competencyMatchPercentage + 
+      result.skillGoalMatchPercentage) / 3;
 
     console.log('UnifiedBenchmarkCalculator: Calculation complete', {
       matchingSkillsCount: matchingSkills.length,

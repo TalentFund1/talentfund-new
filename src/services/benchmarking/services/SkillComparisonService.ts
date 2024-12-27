@@ -48,10 +48,7 @@ class SkillComparisonService {
       requiredValue
     });
 
-    // Pure numerical comparison using division
-    const matchPercentage = requiredValue === 0 ? 
-      (employeeValue > 0 ? 100 : 0) : 
-      Math.min(100, (employeeValue / requiredValue) * 100);
+    const matchPercentage = (employeeValue / (requiredValue || 1)) * 100;
 
     return {
       skillTitle: employeeSkill.title,
@@ -97,8 +94,7 @@ class SkillComparisonService {
       }
     });
 
-    metrics.averageMatchPercentage = metrics.totalSkills > 0 ? 
-      totalMatchPercentage / metrics.totalSkills : 0;
+    metrics.averageMatchPercentage = totalMatchPercentage / (metrics.totalSkills || 1);
 
     return metrics;
   }
