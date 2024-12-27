@@ -32,7 +32,8 @@ export const AddEmployeeDialog = () => {
     termDate: "",
     sex: "",
     category: "",
-    skills: ""
+    skills: "",
+    team: "RnD" // Added team field with default value
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,7 +85,8 @@ export const AddEmployeeDialog = () => {
         termDate: "",
         sex: "",
         category: "",
-        skills: ""
+        skills: "",
+        team: "RnD"
       });
     } catch (error) {
       console.error('Error creating employee:', error);

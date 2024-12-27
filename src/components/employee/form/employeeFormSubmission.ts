@@ -20,7 +20,11 @@ export const validateFormData = (formData: any, existingEmployees: Employee[]) =
     return { isValid: false, error: "An employee with this name already exists" };
   }
 
-  const employee: Employee = {
+  return { isValid: true };
+};
+
+export const processEmployeeData = (formData: any): Employee => {
+  return {
     id: formData.id,
     name: formData.name,
     role: formData.level ? `${formData.role}: ${formData.level}` : formData.role,
@@ -38,6 +42,4 @@ export const validateFormData = (formData: any, existingEmployees: Employee[]) =
     team: formData.team || "RnD",
     skills: []
   };
-
-  return { isValid: true, employee };
 };
