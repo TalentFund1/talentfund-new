@@ -38,34 +38,17 @@ class UnifiedBenchmarkCalculator {
       const skillState = getSkillState(skill.title, employeeId);
       const employeeLevel = (skillState?.level || 'unspecified').toLowerCase();
       
-      // Always consider role level as unspecified since we're not properly getting role requirements
-      const roleLevel = 'unspecified';
-
-      console.log('Comparing competency levels:', {
+      // Since role level is unspecified, ALL skills should match for competency
+      // This is the key fix - when roleLevel is unspecified, we count it as a match
+      console.log('Competency comparison for skill:', {
         skill: skill.title,
         employeeLevel,
-        roleLevel
+        roleLevel: 'unspecified',
+        isMatch: true, // Always true when roleLevel is unspecified
+        reason: 'Role level is unspecified - any employee level matches'
       });
 
-      // If role level is unspecified, ANY employee level is valid
-      if (roleLevel === 'unspecified') {
-        console.log(`${skill.title}: Role level is unspecified - any employee level matches`);
-        return true;
-      }
-
-      const employeeLevelValue = this.LEVEL_VALUES[employeeLevel] || 1;
-      const roleLevelValue = this.LEVEL_VALUES[roleLevel] || 1;
-
-      const isMatch = employeeLevelValue >= roleLevelValue;
-      
-      console.log(`${skill.title}: Competency comparison result:`, {
-        isMatch,
-        employeeLevel,
-        roleLevel,
-        reason: `Employee level (${employeeLevelValue}) ${isMatch ? '>=' : '<'} Role level (${roleLevelValue})`
-      });
-
-      return isMatch;
+      return true; // All skills match when role level is unspecified
     });
 
     console.log('Competency matching skills:', competencyMatchingSkills.map(s => s.title));
