@@ -7,7 +7,6 @@ interface SkillComparisonResult {
   employeeLevel: SkillLevel;
   requiredLevel: SkillLevel;
   matchPercentage: number;
-  gapLevel: number;
 }
 
 interface ComparisonMetrics {
@@ -19,42 +18,27 @@ interface ComparisonMetrics {
 }
 
 class SkillComparisonService {
-  private getLevelValue(level: SkillLevel): number {
-    const levelValues: Record<SkillLevel, number> = {
-      'advanced': 3,
-      'intermediate': 2,
-      'beginner': 1,
-      'unspecified': 0
-    };
-    return levelValues[level] || 0;
-  }
-
   private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
-    const employeeLevelValue = this.getLevelValue(employeeLevel);
-    const requiredLevelValue = this.getLevelValue(requiredLevel);
-
     console.log('Comparing skill levels:', {
       employeeLevel,
-      requiredLevel,
-      employeeLevelValue,
-      requiredLevelValue
+      requiredLevel
     });
 
     // Advanced matches everything
-    if (employeeLevelValue === 3) return true;
+    if (employeeLevel === 'advanced') return true;
     
     // Intermediate matches intermediate, beginner, and unspecified
-    if (employeeLevelValue === 2) {
-      return requiredLevelValue <= 2;
+    if (employeeLevel === 'intermediate') {
+      return ['intermediate', 'beginner', 'unspecified'].includes(requiredLevel);
     }
     
     // Beginner matches beginner and unspecified
-    if (employeeLevelValue === 1) {
-      return requiredLevelValue <= 1;
+    if (employeeLevel === 'beginner') {
+      return ['beginner', 'unspecified'].includes(requiredLevel);
     }
     
     // Unspecified only matches unspecified
-    return employeeLevelValue === requiredLevelValue;
+    return employeeLevel === requiredLevel;
   }
 
   public compareSkillLevels(
@@ -72,18 +56,11 @@ class SkillComparisonService {
       roleRequirement.minimumLevel as SkillLevel
     );
 
-    const employeeLevelValue = this.getLevelValue(employeeSkill.level);
-    const requiredLevelValue = this.getLevelValue(roleRequirement.minimumLevel as SkillLevel);
-    
-    const matchPercentage = isMatch ? 100 : 
-      (employeeLevelValue / Math.max(requiredLevelValue, 1)) * 100;
-
     const result = {
       skillTitle: employeeSkill.title,
       employeeLevel: employeeSkill.level,
       requiredLevel: roleRequirement.minimumLevel as SkillLevel,
-      matchPercentage,
-      gapLevel: employeeLevelValue - requiredLevelValue
+      matchPercentage: isMatch ? 100 : 0
     };
 
     console.log('SkillComparisonService: Comparison result:', result);
@@ -112,15 +89,12 @@ class SkillComparisonService {
       return metrics;
     }
 
-    let totalMatchPercentage = 0;
-
     roleRequirements.forEach(requirement => {
       const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
       
       if (employeeSkill) {
         const comparison = this.compareSkillLevels(employeeSkill, requirement);
-        totalMatchPercentage += comparison.matchPercentage;
-        if (comparison.matchPercentage >= 100) {
+        if (comparison.matchPercentage === 100) {
           metrics.matchingSkills++;
         }
       } else {
@@ -134,7 +108,9 @@ class SkillComparisonService {
       }
     });
 
-    metrics.averageMatchPercentage = Math.round(totalMatchPercentage / roleRequirements.length);
+    metrics.averageMatchPercentage = metrics.totalSkills > 0 
+      ? (metrics.matchingSkills / metrics.totalSkills) * 100 
+      : 0;
 
     console.log('SkillComparisonService: Comparison metrics:', metrics);
     return metrics;
