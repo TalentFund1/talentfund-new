@@ -4,6 +4,7 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
+import { getCompetencyMatches } from "./utils/competencyMatching";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
@@ -20,41 +21,14 @@ export const CompetencyMatchSection = ({
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const { selectedRole } = useRoleStore();
 
-  const getLevelValue = (level: string): number => {
-    const levelValues: { [key: string]: number } = {
-      'advanced': 3,
-      'intermediate': 2,
-      'beginner': 1,
-      'unspecified': 0
-    };
-    return levelValues[level.toLowerCase()] || 0;
-  };
-
-  const matchingSkills = skills.filter(skill => {
-    const roleSkillState = getSkillCompetencyState(skill.title, roleLevel.toLowerCase(), selectedRole);
-    if (!roleSkillState) return false;
-
-    const skillState = getSkillState(skill.title, employeeId);
-    const employeeSkillLevel = skillState?.level || 'unspecified';
-    const roleSkillLevel = roleSkillState.level;
-
-    console.log(`Analyzing skill match:`, {
-      skill: skill.title,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      employeeLevelValue: getLevelValue(employeeSkillLevel),
-      roleLevelValue: getLevelValue(roleSkillLevel),
-      roleId: selectedRole
-    });
-
-    // Compare numeric level values
-    const employeeLevelValue = getLevelValue(employeeSkillLevel);
-    const roleLevelValue = getLevelValue(roleSkillLevel);
-
-    // Match if employee level is equal to or higher than role level
-    // OR if role level is unspecified and employee has any non-unspecified level
-    return employeeLevelValue >= roleLevelValue;
-  });
+  const matchingSkills = getCompetencyMatches(
+    Array.from(skills),
+    getSkillState,
+    getSkillCompetencyState,
+    employeeId,
+    roleLevel.toLowerCase(),
+    selectedRole
+  );
 
   return (
     <Card className="p-6 space-y-4">
