@@ -21,7 +21,7 @@ export class UnifiedBenchmarkCalculator {
       'beginner': 2,
       'unspecified': 1
     };
-    return values[level.toLowerCase()] ?? 1;
+    return values[level.toLowerCase()] || 1;
   }
 
   calculateBenchmark(

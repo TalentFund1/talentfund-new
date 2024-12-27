@@ -7,7 +7,7 @@ export const getLevelImportance = (level: SkillLevel = 'unspecified'): number =>
     'beginner': 2,
     'unspecified': 1
   };
-  return values[level.toLowerCase()] ?? 1;
+  return values[level.toLowerCase()] || 1;
 };
 
 export const getSkillImportance = (

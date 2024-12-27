@@ -150,6 +150,18 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return state;
       },
 
+      setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
+        console.log('Setting skill level:', { employeeId, skillTitle, level });
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { level });
+      },
+
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
+        console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { goalStatus });
+      },
+
       ...createSkillStateActions(set, get),
       ...createInitializationActions(set, get),
       ...createSkillSelectors(get),
