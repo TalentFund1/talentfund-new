@@ -35,15 +35,13 @@ export const CompetencyMatch2 = ({ employeeId, selectedRole, roleLevel }: Compet
 
       const employeeLevel = skill.level || 'unspecified';
       const roleSkillState = getSkillCompetencyState(skill.title, roleLevel, selectedRole);
-      const roleLevel = roleSkillState?.level || 'unspecified';
-
+      const roleLevelValue = getLevelValue(roleSkillState?.level || 'unspecified');
       const employeeLevelValue = getLevelValue(employeeLevel);
-      const roleLevelValue = getLevelValue(roleLevel);
 
       console.log('CompetencyMatch2 - Comparing levels:', {
         skill: skill.title,
         employeeLevel,
-        roleLevel,
+        roleLevel: roleSkillState?.level,
         employeeLevelValue,
         roleLevelValue,
         isMatch: employeeLevelValue >= roleLevelValue
