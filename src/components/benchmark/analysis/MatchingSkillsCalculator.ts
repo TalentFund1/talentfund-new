@@ -1,6 +1,7 @@
 import { UnifiedSkill } from '../../skills/types/SkillTypes';
 import { EmployeeSkillState } from '../../employee/types/employeeSkillTypes';
-import { CompetencyStateReader } from '../../skills/competency/CompetencyStateReader';
+import { StaticCompetencyReader } from '../../skills/competency/state/StaticCompetencyReader';
+import { compareSkillLevels } from '../../skills/competency/utils/competencyUtils';
 
 interface MatchingSkillsResult {
   matchingSkills: UnifiedSkill[];
@@ -8,19 +9,6 @@ interface MatchingSkillsResult {
   skillGoalMatchingSkills: UnifiedSkill[];
   totalToggledSkills: number;
 }
-
-const getLevelValue = (level: string): number => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return 3;
-    case 'intermediate':
-      return 2;
-    case 'beginner':
-      return 1;
-    default:
-      return 0; // unspecified
-  }
-};
 
 export const calculateMatchingSkills = (
   toggledRoleSkills: UnifiedSkill[],
@@ -45,7 +33,7 @@ export const calculateMatchingSkills = (
 
   const competencyMatchingSkills = toggledRoleSkills.filter(skill => {
     const employeeSkillLevel = getSkillState(skill.title, employeeId)?.level || 'unspecified';
-    const roleSkillState = CompetencyStateReader.getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
+    const roleSkillState = StaticCompetencyReader.getSkillCompetencyState(skill.title, comparisonLevel, selectedRole);
     const roleSkillLevel = roleSkillState?.level || 'unspecified';
 
     console.log('Comparing skill levels:', {
@@ -54,33 +42,7 @@ export const calculateMatchingSkills = (
       roleLevel: roleSkillLevel
     });
 
-    // Both unspecified is a match
-    if (employeeSkillLevel === 'unspecified' && roleSkillLevel === 'unspecified') {
-      console.log(`Skill ${skill.title} matches: Both levels are unspecified`);
-      return true;
-    }
-
-    // If role is unspecified but employee has any level, it's a match
-    if (roleSkillLevel === 'unspecified' && employeeSkillLevel !== 'unspecified') {
-      console.log(`Skill ${skill.title} matches: Role unspecified, employee has level ${employeeSkillLevel}`);
-      return true;
-    }
-
-    // For all other cases, employee level must be >= role level
-    const employeeLevelValue = getLevelValue(employeeSkillLevel);
-    const roleLevelValue = getLevelValue(roleSkillLevel);
-    const isMatch = employeeLevelValue >= roleLevelValue;
-
-    console.log(`Skill ${skill.title} comparison:`, {
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      employeeLevelValue,
-      roleLevelValue,
-      isMatch,
-      reason: isMatch ? 'Employee level meets or exceeds requirement' : 'Employee level below requirement'
-    });
-
-    return isMatch;
+    return compareSkillLevels(employeeSkillLevel, roleSkillLevel);
   });
 
   const skillGoalMatchingSkills = toggledRoleSkills.filter(skill => {
