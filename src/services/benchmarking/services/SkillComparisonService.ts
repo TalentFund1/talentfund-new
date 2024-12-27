@@ -49,7 +49,6 @@ class SkillComparisonService {
       requiredValue
     });
 
-    // Pure numerical comparison - no special cases
     const matchPercentage = (employeeValue / Math.max(1, requiredValue)) * 100;
 
     return {
@@ -76,14 +75,15 @@ class SkillComparisonService {
       return metrics;
     }
 
+    let totalMatchPercentage = 0;
+
     roleRequirements.forEach(requirement => {
       const employeeSkill = employeeSkills.find(skill => skill.title === requirement.title);
       
       if (employeeSkill) {
         const comparison = this.compareSkillLevels(employeeSkill, requirement);
-        if (comparison.matchPercentage >= 100) {
-          metrics.matchingSkills++;
-        }
+        totalMatchPercentage += comparison.matchPercentage;
+        metrics.matchingSkills++;
       } else {
         metrics.missingSkills.push(requirement.title);
       }
@@ -96,7 +96,7 @@ class SkillComparisonService {
     });
 
     metrics.averageMatchPercentage = metrics.totalSkills > 0 
-      ? (metrics.matchingSkills / metrics.totalSkills) * 100 
+      ? totalMatchPercentage / metrics.totalSkills
       : 0;
 
     return metrics;
