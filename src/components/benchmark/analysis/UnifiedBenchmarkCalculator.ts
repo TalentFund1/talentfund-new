@@ -44,43 +44,52 @@ export class UnifiedBenchmarkCalculator {
       // Get the role's required level for this skill
       const roleLevel = skill.level || 'unspecified';
       
-      // Create role requirement object
-      const roleRequirement: RoleSkillRequirement = {
-        id: `${selectedRole}-${skill.title}`,
-        title: skill.title,
-        minimumLevel: roleLevel as SkillLevel,
-        requirementLevel: 'required',
-        subcategory: skill.subcategory,
-        category: skill.category,
-        businessCategory: skill.businessCategory,
-        weight: skill.weight,
-        benchmarks: skill.benchmarks,
-        metrics: {
-          growth: skill.growth,
-          salary: skill.salary,
-          confidence: 'medium'
-        }
-      };
-
-      // Use skillComparisonService for consistent level comparison
-      const comparison = skillComparisonService.compareSkillLevels(
-        {
-          ...employeeSkill,
-          level: employeeLevel as SkillLevel
-        },
-        roleRequirement
-      );
-
-      console.log('Competency comparison result:', {
+      console.log('Comparing competency levels:', {
         skill: skill.title,
         employeeLevel,
         roleLevel,
-        matchPercentage: comparison.matchPercentage,
-        employeeSkillDetails: employeeSkill,
-        roleRequirementDetails: roleRequirement
+        track
       });
 
-      return comparison.matchPercentage === 100;
+      // Handle unspecified levels
+      if (roleLevel === 'unspecified' && employeeLevel === 'unspecified') {
+        console.log('Both levels are unspecified, considering it a match');
+        return true;
+      }
+
+      if (roleLevel === 'unspecified') {
+        console.log('Role level is unspecified, considering any employee level as matching');
+        return true;
+      }
+
+      if (employeeLevel === 'unspecified') {
+        console.log('Employee level is unspecified, considering it as not matching');
+        return false;
+      }
+
+      // Level comparison logic
+      const levelValues = {
+        'advanced': 3,
+        'intermediate': 2,
+        'beginner': 1,
+        'unspecified': 0
+      };
+
+      const employeeValue = levelValues[employeeLevel as keyof typeof levelValues];
+      const roleValue = levelValues[roleLevel as keyof typeof levelValues];
+
+      const isMatch = employeeValue >= roleValue;
+
+      console.log('Level comparison result:', {
+        skill: skill.title,
+        employeeLevel,
+        roleLevel,
+        employeeValue,
+        roleValue,
+        isMatch
+      });
+
+      return isMatch;
     });
 
     const skillGoalMatchingSkills = matchingSkills.filter(skill => {
@@ -112,12 +121,7 @@ export class UnifiedBenchmarkCalculator {
       matchingSkillsCount: matchingSkills.length,
       competencyMatchCount: competencyMatchingSkills.length,
       skillGoalMatchCount: skillGoalMatchingSkills.length,
-      averagePercentage: result.averagePercentage,
-      competencyMatches: competencyMatchingSkills.map(s => ({
-        title: s.title,
-        employeeLevel: getSkillState(s.title, employeeId)?.level,
-        roleLevel: s.level
-      }))
+      averagePercentage: result.averagePercentage
     });
 
     return result;
