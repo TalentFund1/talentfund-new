@@ -46,7 +46,7 @@ class UnifiedBenchmarkCalculator {
         hasSkill: true
       });
 
-      // If employee has the skill, count it as a competency match
+      // If employee has the skill and it's not unspecified, count it as a match
       return employeeLevel !== 'unspecified';
     });
 
@@ -59,16 +59,26 @@ class UnifiedBenchmarkCalculator {
 
     const totalToggledSkills = toggledRoleSkills.length;
 
-    const {
-      skillMatchPercentage,
-      competencyMatchPercentage,
-      skillGoalMatchPercentage,
-      averagePercentage
-    } = calculateMatchPercentages(
-      matchingSkills.length,
-      competencyMatchingSkills.length,
-      skillGoalMatchingSkills.length,
-      totalToggledSkills
+    // Calculate individual percentages
+    const skillMatchPercentage = Math.min(
+      (matchingSkills.length / Math.max(totalToggledSkills, 1)) * 100,
+      100
+    );
+
+    const competencyMatchPercentage = Math.min(
+      (competencyMatchingSkills.length / Math.max(totalToggledSkills, 1)) * 100,
+      100
+    );
+
+    const skillGoalMatchPercentage = Math.min(
+      (skillGoalMatchingSkills.length / Math.max(totalToggledSkills, 1)) * 100,
+      100
+    );
+
+    // Calculate average percentage, ensuring it doesn't exceed 100%
+    const averagePercentage = Math.min(
+      (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3,
+      100
     );
 
     console.log('Benchmark calculation complete:', {
