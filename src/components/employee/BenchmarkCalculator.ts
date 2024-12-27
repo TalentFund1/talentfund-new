@@ -60,7 +60,7 @@ export const calculateBenchmarkPercentage = (
       skill.title,
       employeeLevel,
       roleId
-    )?.level || 'unspecified';
+    )?.level?.toLowerCase() as SkillLevel || 'unspecified';
 
     console.log('Processing skill levels:', {
       skill: skill.title,
