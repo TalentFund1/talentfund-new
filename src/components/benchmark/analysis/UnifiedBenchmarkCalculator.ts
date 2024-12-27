@@ -41,11 +41,14 @@ export class UnifiedBenchmarkCalculator {
       const employeeSkill = getSkillState(skill.title, employeeId);
       const employeeLevel = employeeSkill?.level || 'unspecified';
       
+      // Get the role's required level for this skill
+      const roleLevel = skill.level || 'unspecified';
+      
       // Create role requirement object
       const roleRequirement: RoleSkillRequirement = {
         id: `${selectedRole}-${skill.title}`,
         title: skill.title,
-        minimumLevel: skill.level as SkillLevel,
+        minimumLevel: roleLevel as SkillLevel,
         requirementLevel: 'required',
         subcategory: skill.subcategory,
         category: skill.category,
@@ -71,8 +74,10 @@ export class UnifiedBenchmarkCalculator {
       console.log('Competency comparison result:', {
         skill: skill.title,
         employeeLevel,
-        roleLevel: skill.level,
-        matchPercentage: comparison.matchPercentage
+        roleLevel,
+        matchPercentage: comparison.matchPercentage,
+        employeeSkillDetails: employeeSkill,
+        roleRequirementDetails: roleRequirement
       });
 
       return comparison.matchPercentage === 100;
@@ -110,7 +115,8 @@ export class UnifiedBenchmarkCalculator {
       averagePercentage: result.averagePercentage,
       competencyMatches: competencyMatchingSkills.map(s => ({
         title: s.title,
-        level: getSkillState(s.title, employeeId)?.level
+        employeeLevel: getSkillState(s.title, employeeId)?.level,
+        roleLevel: s.level
       }))
     });
 
