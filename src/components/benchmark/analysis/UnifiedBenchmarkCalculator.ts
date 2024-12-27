@@ -1,6 +1,7 @@
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
 import { skillComparisonService } from "../../../services/benchmarking/services/SkillComparisonService";
+import { SkillLevel } from "../../skills/types/sharedSkillTypes";
 
 export interface BenchmarkResult {
   matchingSkills: UnifiedSkill[];
@@ -39,7 +40,7 @@ export class UnifiedBenchmarkCalculator {
       const skillState = getSkillState(skill.title, employeeId);
       const comparison = skillComparisonService.compareSkillLevels(
         skillState,
-        { ...skill, minimumLevel: skill.level }
+        { ...skill, minimumLevel: skill.level as SkillLevel }
       );
       return comparison.matchPercentage === 100;
     });

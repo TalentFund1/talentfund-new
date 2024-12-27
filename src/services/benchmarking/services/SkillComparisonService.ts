@@ -41,6 +41,12 @@ class SkillComparisonService {
     return employeeLevel === requiredLevel;
   }
 
+  public getProgressColor(percentage: number): string {
+    if (percentage >= 80) return 'bg-green-500';
+    if (percentage >= 60) return 'bg-yellow-500';
+    return 'bg-red-500';
+  }
+
   public compareSkillLevels(
     employeeSkill: EmployeeSkillData,
     roleRequirement: RoleSkillRequirement
@@ -52,13 +58,13 @@ class SkillComparisonService {
     });
 
     const isMatch = this.doesLevelMatch(
-      employeeSkill.level, 
+      employeeSkill.level as SkillLevel, 
       roleRequirement.minimumLevel as SkillLevel
     );
 
     const result = {
       skillTitle: employeeSkill.title,
-      employeeLevel: employeeSkill.level,
+      employeeLevel: employeeSkill.level as SkillLevel,
       requiredLevel: roleRequirement.minimumLevel as SkillLevel,
       matchPercentage: isMatch ? 100 : 0
     };
