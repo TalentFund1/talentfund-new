@@ -95,13 +95,33 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         // Get all skills from the universal database and merge with current state
         const allSkills = Object.entries(state.skills).map(([title, skill]) => {
           const unifiedData = getUnifiedSkillData(title);
-          const skillData = {
-            ...unifiedData,
-            ...skill,
+          const baseSkill: Partial<EmployeeSkillData> = {
             id: `${employeeId}-${title}`,
             employeeId,
             skillId: `${employeeId}-${title}`,
-            title
+            title,
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString(),
+            confidence: 'medium',
+            subcategory: 'General',
+            category: 'specialized',
+            businessCategory: 'Technical Skills',
+            weight: 'technical',
+            growth: '0%',
+            salary: 'market',
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
+          };
+
+          const skillData = {
+            ...baseSkill,
+            ...unifiedData,
+            ...skill
           } as EmployeeSkillData;
 
           return skillData;
