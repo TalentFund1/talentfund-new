@@ -4,13 +4,22 @@ import { useCompetencyStateReader } from "../skills/competency/CompetencyStateRe
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { benchmarkingService } from "../../services/benchmarking";
 
 interface CompetencyMatchSectionProps {
   skills: ReadonlyArray<UnifiedSkill>;
   roleLevel: string;
   employeeId: string;
 }
+
+const getLevelValue = (level: string): number => {
+  switch (level?.toLowerCase()) {
+    case 'advanced': return 3;
+    case 'intermediate': return 2;
+    case 'beginner': return 1;
+    case 'unspecified': return 0;
+    default: return 0;
+  }
+};
 
 export const CompetencyMatchSection = ({ 
   skills, 
@@ -36,12 +45,14 @@ export const CompetencyMatchSection = ({
       roleId: selectedRole
     });
 
-    const comparison = benchmarkingService.compareSkillLevels(
-      { title: skill.title, level: employeeSkillLevel },
-      { title: skill.title, minimumLevel: roleSkillLevel }
-    );
+    // If role level is unspecified, any employee level is considered a match
+    if (roleSkillLevel === 'unspecified') return true;
 
-    return comparison.matchPercentage >= 100;
+    const employeeLevelValue = getLevelValue(employeeSkillLevel);
+    const roleLevelValue = getLevelValue(roleSkillLevel);
+
+    // Employee level should be equal to or higher than role level
+    return employeeLevelValue >= roleLevelValue;
   });
 
   return (
