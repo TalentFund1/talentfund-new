@@ -1,61 +1,57 @@
-import { StateCreator } from 'zustand';
-import { EmployeeSkillsStore } from '../types/storeTypes';
-import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
+import { SkillLevel, SkillGoalStatus } from '../types/skillStoreTypes';
+import { EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export const createSkillActions = (set: any, get: any) => ({
-  addSkill: (employeeId: string, skillTitle: string) => {
-    console.log('Adding new skill:', { employeeId, skillTitle });
-    
-    set((state: EmployeeSkillsStore) => {
-      const currentState = state.skillStates[employeeId] || {
-        skills: {},
-        lastUpdated: new Date().toISOString()
+  setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
+    console.log('Setting skill level:', { employeeId, skillTitle, level });
+    set(state => {
+      const employeeData = state.employeeSkills[employeeId] || {
+        employeeId,
+        skills: [],
+        states: {}
       };
 
-      const unifiedData = getUnifiedSkillData(skillTitle);
-      const newSkill = {
-        id: `${employeeId}-${skillTitle}`,
-        employeeId,
-        skillId: `${employeeId}-${skillTitle}`,
-        title: skillTitle,
-        level: 'unspecified',
-        goalStatus: 'unknown',
-        lastUpdated: new Date().toISOString(),
-        confidence: 'medium',
-        subcategory: unifiedData.subcategory || 'General',
-        category: unifiedData.category || 'specialized',
-        businessCategory: unifiedData.businessCategory || 'Technical Skills',
-        weight: unifiedData.weight || 'technical',
-        growth: unifiedData.growth || '0%',
-        salary: unifiedData.salary || 'market',
-        benchmarks: {
-          B: false,
-          R: false,
-          M: false,
-          O: false
+      return {
+        employeeSkills: {
+          ...state.employeeSkills,
+          [employeeId]: {
+            ...employeeData,
+            states: {
+              ...employeeData.states,
+              [skillTitle]: {
+                ...employeeData.states[skillTitle],
+                level,
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          }
         }
       };
+    });
+  },
 
-      // Create a new skills object with the added skill
-      const updatedSkills = {
-        ...currentState.skills,
-        [skillTitle]: newSkill
+  setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => {
+    console.log('Setting skill goal status:', { employeeId, skillTitle, status });
+    set(state => {
+      const employeeData = state.employeeSkills[employeeId] || {
+        employeeId,
+        skills: [],
+        states: {}
       };
 
-      console.log('Updated skills state:', {
-        employeeId,
-        skillTitle,
-        totalSkills: Object.keys(updatedSkills).length
-      });
-
-      // Return new state with updated skills
       return {
-        skillStates: {
-          ...state.skillStates,
+        employeeSkills: {
+          ...state.employeeSkills,
           [employeeId]: {
-            ...currentState,
-            skills: updatedSkills,
-            lastUpdated: new Date().toISOString()
+            ...employeeData,
+            states: {
+              ...employeeData.states,
+              [skillTitle]: {
+                ...employeeData.states[skillTitle],
+                requirement: status,
+                lastUpdated: new Date().toISOString()
+              }
+            }
           }
         }
       };

@@ -12,7 +12,6 @@ export interface EmployeeSkillsStoreMethods {
   initializeEmployeeSkills: (employeeId: string) => void;
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
-  addSkill: (employeeId: string, skillTitle: string) => void;
 }
 
 export type EmployeeSkillsStore = EmployeeSkillsStoreState & EmployeeSkillsStoreMethods;

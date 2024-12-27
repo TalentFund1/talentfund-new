@@ -1,67 +1,85 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { SearchFilter } from "@/components/market/SearchFilter";
 import { useState } from "react";
-import { getAllSkills } from '@/components/skills/data/skills/allSkills';
-import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
-import { SkillSearchSection } from "./components/SkillSearchSection";
-import { useSkillAddition } from "./hooks/useSkillAddition";
-import { useEmployeeSkillsStore } from "@/components/employee/store/employeeSkillsStore";
-import { useToggledSkills } from "@/components/skills/context/ToggledSkillsContext";
 import { useToast } from "@/hooks/use-toast";
+import { useParams } from 'react-router-dom';
+import { useEmployeeStore } from "@/components/employee/store/employeeStore";
+import { getUnifiedSkillData } from '@/components/skills/data/skillDatabaseService';
+import { universalSkillsDatabase } from '@/components/skills/data/skills/universalSkillsDatabase';
+import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
+import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
 
 export const AddEmployeeSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { initializeEmployeeSkills } = useEmployeeSkillsStore();
-  const { setToggledSkills, toggledSkills } = useToggledSkills();
   const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const { setEmployeeSkills, getEmployeeSkills } = useEmployeeStore();
+  const { initializeEmployeeSkills, setSkillLevel, setSkillGoalStatus } = useEmployeeSkillsStore();
 
   // Get all available skills from universal database
-  const universalSkills = getAllSkills();
   const allSkills = Array.from(new Set(
-    universalSkills.map(s => normalizeSkillTitle(s.title))
+    universalSkillsDatabase.map(skill => normalizeSkillTitle(skill.title))
   ));
 
-  const handleSuccess = async () => {
-    try {
-      setIsLoading(true);
-      console.log('Skills added successfully, reinitializing...');
-      
-      await initializeEmployeeSkills("123"); // Force reinitialization
-      
-      // Update toggled skills to include newly added ones
-      const newToggledSkills = new Set(toggledSkills);
-      selectedSkills.forEach(skill => newToggledSkills.add(skill));
-      setToggledSkills(newToggledSkills);
-      
-      toast({
-        title: "Success",
-        description: "Skills added successfully",
-      });
+  console.log('Available skills for selection:', {
+    totalSkills: allSkills.length,
+    sampleSkills: allSkills.slice(0, 5)
+  });
 
-      setSelectedSkills([]);
-      setOpen(false);
-    } catch (error) {
-      console.error('Error adding skills:', error);
+  const handleAddSkills = () => {
+    if (!id) {
       toast({
         title: "Error",
-        description: "Failed to add skills. Please try again.",
-        variant: "destructive"
+        description: "Could not find the employee.",
+        variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
+      return;
     }
-  };
 
-  const { handleAddSkills } = useSkillAddition(handleSuccess);
+    // Initialize employee skills if needed
+    initializeEmployeeSkills(id);
 
-  const handleCancel = () => {
-    if (!isLoading) {
-      setSelectedSkills([]);
-      setOpen(false);
-    }
+    const currentSkills = getEmployeeSkills(id);
+    const newSkills = selectedSkills.map(skillTitle => {
+      console.log('Processing new skill:', skillTitle);
+      const skillData = getUnifiedSkillData(skillTitle);
+      
+      // Initialize skill state in employee store
+      setSkillLevel(id, skillTitle, 'beginner');
+      setSkillGoalStatus(id, skillTitle, 'unknown');
+      
+      return skillData;
+    });
+
+    // Combine existing and new skills, avoiding duplicates
+    const updatedSkills = [
+      ...currentSkills,
+      ...newSkills.filter(newSkill => 
+        !currentSkills.some(existingSkill => 
+          normalizeSkillTitle(existingSkill.title) === normalizeSkillTitle(newSkill.title)
+        )
+      )
+    ];
+
+    console.log('Updating employee skills:', {
+      employeeId: id,
+      currentSkillCount: currentSkills.length,
+      newSkillCount: newSkills.length,
+      totalSkillCount: updatedSkills.length
+    });
+
+    setEmployeeSkills(id, updatedSkills);
+
+    toast({
+      title: "Skills Added",
+      description: `Added ${newSkills.length} skill${newSkills.length === 1 ? '' : 's'} to your profile.`,
+    });
+
+    setSelectedSkills([]);
+    setOpen(false);
   };
 
   return (
@@ -69,7 +87,6 @@ export const AddEmployeeSkillDialog = () => {
       <DialogTrigger asChild>
         <Button 
           className="bg-[#1F2144] hover:bg-[#1F2144]/90 text-white rounded-lg px-4 py-2 flex items-center gap-2"
-          disabled={isLoading}
         >
           <div className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
             <Plus className="h-3 w-3 stroke-[2]" />
@@ -82,14 +99,34 @@ export const AddEmployeeSkillDialog = () => {
           <DialogTitle>Add Skills to Profile</DialogTitle>
         </DialogHeader>
         
-        <SkillSearchSection
-          allSkills={allSkills}
-          selectedSkills={selectedSkills}
-          setSelectedSkills={setSelectedSkills}
-          onCancel={handleCancel}
-          onAdd={() => handleAddSkills(selectedSkills)}
-          isLoading={isLoading}
-        />
+        <div className="space-y-6 py-4">
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={allSkills}
+            selectedItems={selectedSkills}
+            onItemsChange={setSelectedSkills}
+            singleSelect={false}
+          />
+
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSelectedSkills([]);
+                setOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleAddSkills}
+              disabled={selectedSkills.length === 0}
+            >
+              Add Selected Skills
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
