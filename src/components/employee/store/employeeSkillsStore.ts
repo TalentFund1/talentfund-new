@@ -98,19 +98,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         // Get all skills from the universal database and merge with current state
         const allSkills = Object.entries(state.skills).map(([title, skill]) => {
           const unifiedData = getUnifiedSkillData(title);
-          const baseSkill = {
+          const skillState = skill as EmployeeSkillData;
+
+          const baseSkill: EmployeeSkillData = {
             id: `${employeeId}-${title}`,
             employeeId,
             skillId: `${employeeId}-${title}`,
             title,
-            level: skill.level || 'unspecified',
-            goalStatus: skill.goalStatus || 'unknown',
-            lastUpdated: skill.lastUpdated || new Date().toISOString(),
-            confidence: skill.confidence || 'medium',
-          };
-
-          const skillData: EmployeeSkillData = {
-            ...baseSkill,
+            level: skillState.level || 'unspecified',
+            goalStatus: skillState.goalStatus || 'unknown',
+            lastUpdated: skillState.lastUpdated || new Date().toISOString(),
+            confidence: skillState.confidence || 'medium',
             subcategory: unifiedData.subcategory || 'General',
             category: unifiedData.category || 'specialized',
             businessCategory: unifiedData.businessCategory || 'Technical Skills',
@@ -125,7 +123,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             }
           };
           
-          return skillData;
+          return baseSkill;
         });
 
         console.log('Retrieved employee skills:', {
@@ -177,7 +175,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }),
     {
       name: 'employee-skills-storage',
-      version: 9, // Incrementing version to ensure clean state
+      version: 10, // Incrementing version to ensure clean state
       partialize: (state: EmployeeSkillsStore) => ({
         skillStates: state.skillStates
       }),
