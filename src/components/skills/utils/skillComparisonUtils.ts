@@ -1,4 +1,4 @@
-import { EmployeeSkillAchievement, SkillLevel } from '../../employee/types/employeeSkillTypes';
+import { EmployeeSkillAchievement } from '../../employee/types/employeeSkillTypes';
 import { RoleSkillRequirement } from '../types/roleSkillTypes';
 import { SkillComparison } from '../types/skillComparison';
 
@@ -9,7 +9,7 @@ export const getLevelPriority = (level: string = 'unspecified'): number => {
     'beginner': 2,
     'unspecified': 1
   };
-  return priorities[level.toLowerCase()] ?? 1;
+  return priorities[level.toLowerCase()] || 1;
 };
 
 export const compareSkillLevels = (
