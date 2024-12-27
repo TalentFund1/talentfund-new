@@ -12,7 +12,6 @@ import { getSkillProfileId } from "../EmployeeTable";
 import { useEffect } from "react";
 import { ProgressBar } from "./analysis/ProgressBar";
 import { unifiedBenchmarkCalculator } from "./analysis/UnifiedBenchmarkCalculator";
-import { CompetencyMatch2 } from "./CompetencyMatch2";
 
 export const BenchmarkAnalysis = () => {
   const { id } = useParams<{ id: string }>();
@@ -117,10 +116,11 @@ export const BenchmarkAnalysis = () => {
             total={totalToggledSkills}
             label="Skill Match"
           />
-          <CompetencyMatch2
-            employeeId={id || ""}
-            roleId={selectedRole}
-            roleLevel={selectedLevel}
+          <ProgressBar
+            percentage={competencyMatchPercentage}
+            matchCount={competencyMatchingSkills.length}
+            total={totalToggledSkills}
+            label="Competency Match"
           />
           <ProgressBar
             percentage={skillGoalMatchPercentage}
