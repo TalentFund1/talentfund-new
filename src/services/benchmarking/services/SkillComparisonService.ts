@@ -24,6 +24,12 @@ class SkillComparisonService {
       requiredLevel
     });
 
+    // If role requirement is unspecified, any employee level is a match
+    if (requiredLevel === 'unspecified') {
+      console.log('Role level is unspecified - counting as match');
+      return true;
+    }
+
     const levelValues = {
       'advanced': 3,
       'intermediate': 2,
