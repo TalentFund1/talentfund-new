@@ -19,11 +19,6 @@ interface ComparisonMetrics {
 
 class SkillComparisonService {
   private doesLevelMatch(employeeLevel: SkillLevel, requiredLevel: SkillLevel): boolean {
-    console.log('Comparing skill levels:', {
-      employeeLevel,
-      requiredLevel
-    });
-
     const levelValues = {
       'advanced': 3,
       'intermediate': 2,
