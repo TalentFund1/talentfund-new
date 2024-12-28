@@ -73,6 +73,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             handleInputChange('role', value);
             // Reset level when role changes to ensure track compatibility
             handleInputChange('level', '');
+            console.log('Role changed, reset level');
           }}
         >
           <SelectTrigger>
