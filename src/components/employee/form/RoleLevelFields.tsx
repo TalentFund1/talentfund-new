@@ -53,6 +53,13 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
     isManagerial: isManagerialRole
   });
 
+  const managerialLevels = {
+    'M3': 'M3 - Manager',
+    'M4': 'M4 - Senior Manager',
+    'M5': 'M5 - Director',
+    'M6': 'M6 - Senior Director'
+  };
+
   const professionalLevels = {
     'P1': 'P1 - Entry',
     'P2': 'P2 - Developing',
@@ -60,13 +67,6 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
     'P4': 'P4 - Senior',
     'P5': 'P5 - Expert',
     'P6': 'P6 - Principal'
-  };
-
-  const managerialLevels = {
-    'M3': 'M3 - Manager',
-    'M4': 'M4 - Senior Manager',
-    'M5': 'M5 - Director',
-    'M6': 'M6 - Senior Director'
   };
 
   const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;

@@ -11,7 +11,20 @@ export const roleSkills: { [key: string]: RoleSkillData } = {
     mappedTitle: "Engineering Manager",
     occupation: "Engineering Manager",
     description: "Lead and manage engineering teams",
-    roleTrack: "Managerial", // Explicitly set Managerial track
+    roleTrack: "Managerial",
+    specialized: [],
+    common: [],
+    certifications: [],
+    skills: []
+  },
+  "128": {
+    title: "Product Manager",
+    soc: "15-2031",
+    function: "Product",
+    mappedTitle: "Product Manager",
+    occupation: "Product Manager",
+    description: "Lead product development and strategy",
+    roleTrack: "Managerial", // Updated to Managerial track
     specialized: [],
     common: [],
     certifications: [],
