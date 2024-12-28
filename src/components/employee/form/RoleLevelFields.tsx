@@ -35,9 +35,6 @@ export const RoleLevelFields = ({
     track: getRoleDefaultTrack(roleId)
   });
 
-  // Use the appropriate levels based on the role track
-  const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
-
   const handleRoleChange = (value: string) => {
     console.log('Role selected:', value);
     handleInputChange('role', value);
@@ -76,6 +73,9 @@ export const RoleLevelFields = ({
       default: return '';
     }
   };
+
+  // Use the appropriate levels based on the role track
+  const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
 
   return (
     <>
