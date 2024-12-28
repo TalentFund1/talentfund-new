@@ -1,5 +1,6 @@
 import { roleSkills } from '../../skills/data/roleSkills';
 import { getSkillProfileId } from '../../EmployeeTable';
+import { normalizeLevel } from '../../skills/competency/utils/levelUtils';
 
 export type EmployeeTrack = "Professional" | "Managerial";
 
@@ -32,6 +33,26 @@ export const getEmployeeTrack = (role: string): EmployeeTrack => {
     return "Managerial";
   }
   
-  // Default to Professional track (P1-P6)
+  // For P4 and above in Professional track, map to Managerial
+  const levelNumber = parseInt(level.replace(/[pP]/, ''));
+  if (levelNumber >= 4) {
+    return "Managerial";
+  }
+  
+  // Default to Professional track (P1-P3)
   return "Professional";
+};
+
+export const getConvertedLevel = (level: string, targetTrack: EmployeeTrack): string => {
+  if (!level) return targetTrack === "Managerial" ? "M3" : "P1";
+
+  const normalizedLevel = normalizeLevel(level, "", targetTrack);
+  
+  console.log('Converting level:', {
+    originalLevel: level,
+    targetTrack,
+    normalizedLevel
+  });
+  
+  return normalizedLevel.toUpperCase();
 };
