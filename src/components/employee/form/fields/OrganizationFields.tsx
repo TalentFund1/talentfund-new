@@ -15,10 +15,15 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
   const employees = useEmployeeStore((state) => state.employees);
   
   // Filter managers based on their role level (M3-M6)
-  const managers = employees.filter(emp => {
-    const level = getLevel(emp.role);
-    return level && level.startsWith('M');
-  }).map(emp => emp.name);
+  // Ensure unique managers and exclude duplicates
+  const managers = Array.from(new Set(
+    employees
+      .filter(emp => {
+        const level = getLevel(emp.role);
+        return level && level.startsWith('M');
+      })
+      .map(emp => emp.name)
+  ));
 
   console.log('Available managers:', managers);
 
