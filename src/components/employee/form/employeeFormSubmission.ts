@@ -65,9 +65,8 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
     }
   }
 
-  // Check for duplicate ID when adding new employee (not editing)
-  const isEditing = existingEmployees.some(emp => emp.id === formData.id);
-  if (!isEditing && existingEmployees.some(emp => emp.id === formData.id)) {
+  // Check for duplicate ID
+  if (existingEmployees.some(emp => emp.id === formData.id)) {
     console.log('Validation failed: Duplicate ID found');
     return {
       isValid: false,
@@ -104,22 +103,13 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   }
 
   // Validate role and level combination
-  const managerialRoles = ['Engineering Manager', 'Product Manager', 'Technical Manager'];
-  const isManagerialRole = managerialRoles.some(role => formData.role.includes(role));
-  const isManagerialLevel = formData.level.startsWith('M');
-
+  const isManagerialRole = formData.role.toLowerCase().includes('manager');
+  const isManagerialLevel = formData.level.toLowerCase().startsWith('m');
   if (isManagerialRole !== isManagerialLevel) {
-    console.log('Role/level validation:', {
-      role: formData.role,
-      level: formData.level,
-      isManagerialRole,
-      isManagerialLevel
-    });
+    console.log('Validation failed: Role and level mismatch');
     return {
       isValid: false,
-      error: isManagerialRole 
-        ? "Managerial roles require M-level designation (M3-M6)"
-        : "Professional roles require P-level designation (P1-P6)"
+      error: "Selected level does not match the role type (managerial/professional)"
     };
   }
 
