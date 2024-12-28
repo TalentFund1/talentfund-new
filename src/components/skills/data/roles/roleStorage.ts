@@ -21,20 +21,23 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
         parsedSkills
       });
       
-      // Convert all skills to unified format while preserving categories
+      // Convert all skills to unified format while preserving categories and track
       const unifiedSpecialized = (parsedSkills.specialized || []).map((skill: any) => ({
         ...getUnifiedSkillData(skill.title),
-        category: 'specialized'
+        category: 'specialized',
+        roleTrack
       }));
       
       const unifiedCommon = (parsedSkills.common || []).map((skill: any) => ({
         ...getUnifiedSkillData(skill.title),
-        category: 'common'
+        category: 'common',
+        roleTrack
       }));
       
       const unifiedCertifications = (parsedSkills.certifications || []).map((skill: any) => ({
         ...getUnifiedSkillData(skill.title),
-        category: 'certification'
+        category: 'certification',
+        roleTrack
       }));
       
       // Combine all skills for the skills array
@@ -80,20 +83,23 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
   });
   
   try {
-    // Ensure all skills are in unified format while preserving categories
+    // Ensure all skills are in unified format while preserving categories and track
     const unifiedSpecialized = skills.specialized.map(skill => ({
       ...getUnifiedSkillData(skill.title),
-      category: 'specialized'
+      category: 'specialized',
+      roleTrack: skills.roleTrack
     }));
     
     const unifiedCommon = skills.common.map(skill => ({
       ...getUnifiedSkillData(skill.title),
-      category: 'common'
+      category: 'common',
+      roleTrack: skills.roleTrack
     }));
     
     const unifiedCertifications = skills.certifications.map(skill => ({
       ...getUnifiedSkillData(skill.title),
-      category: 'certification'
+      category: 'certification',
+      roleTrack: skills.roleTrack
     }));
     
     // Combine all skills for the skills array

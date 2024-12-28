@@ -28,12 +28,6 @@ export const AddSkillToProfileDialog = () => {
     universalSkills.map(s => normalizeSkillTitle(s.title))
   ));
 
-  console.log('Available skills for selection:', {
-    totalSkills: allSkills.length,
-    sampleSkills: allSkills.slice(0, 5),
-    roleId: id
-  });
-
   const handleAddSkills = async () => {
     if (!id) {
       toast({
@@ -45,70 +39,68 @@ export const AddSkillToProfileDialog = () => {
     }
 
     const track = getTrackForRole(id);
-    console.log('Adding skills for track:', track);
+    console.log('Adding skills for track:', { id, track });
 
-    // Get existing role skills or initialize if not exists
-    const existingRoleSkills = roleSkills[id] || {
-      title: roleSkills[id]?.title || "",
-      soc: roleSkills[id]?.soc || "",
-      function: roleSkills[id]?.function || "Engineering",
-      mappedTitle: roleSkills[id]?.mappedTitle || "",
-      occupation: roleSkills[id]?.occupation || "",
-      description: roleSkills[id]?.description || "",
-      roleTrack: track, // Ensure track is set
-      specialized: [],
-      common: [],
-      certifications: [],
-      skills: []
-    };
+    // Get existing role skills
+    const existingRoleSkills = roleSkills[id];
+    if (!existingRoleSkills) {
+      console.error('No existing role skills found for:', id);
+      return;
+    }
 
     console.log('Current role skills before adding:', {
       roleId: id,
+      track,
       specialized: existingRoleSkills.specialized.length,
       common: existingRoleSkills.common.length,
       certifications: existingRoleSkills.certifications.length,
-      track: existingRoleSkills.roleTrack
+      roleTrack: existingRoleSkills.roleTrack
     });
 
     const newToggledSkills = new Set(toggledSkills);
     const updatedRoleSkills = { 
       ...existingRoleSkills,
-      roleTrack: track,
+      roleTrack: track, // Ensure track is preserved
+      specialized: [...existingRoleSkills.specialized],
+      common: [...existingRoleSkills.common],
+      certifications: [...existingRoleSkills.certifications],
       skills: [...existingRoleSkills.skills]
     };
 
     const addedSkills = [];
 
-    selectedSkills.forEach(skillTitle => {
+    for (const skillTitle of selectedSkills) {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
-      console.log('Finding skill by title:', skillTitle);
+      console.log('Processing skill:', { skillTitle, normalizedTitle, track });
+      
       const skillData = getUnifiedSkillData(skillTitle);
       
       if (skillData) {
-        console.log('Processing skill:', {
-          skill: skillData,
-          track,
-          roleId: id
-        });
-        
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
-        // Determine category and add to appropriate array if not already present
+        // Determine category and add to appropriate array
         const category = skillData.category?.toLowerCase() || 'common';
         const skillExists = (array: any[]) => array.some(s => normalizeSkillTitle(s.title) === normalizedTitle);
         
+        const enrichedSkillData = {
+          ...skillData,
+          category,
+          roleTrack: track // Ensure track is set on the skill level
+        };
+
         if (!skillExists(updatedRoleSkills.skills)) {
-          updatedRoleSkills.skills.push(skillData);
-          addedSkills.push(skillData);
-        }
-        
-        if (category === 'specialized' && !skillExists(updatedRoleSkills.specialized)) {
-          updatedRoleSkills.specialized.push(skillData);
-        } else if (category === 'common' && !skillExists(updatedRoleSkills.common)) {
-          updatedRoleSkills.common.push(skillData);
-        } else if (category === 'certification' && !skillExists(updatedRoleSkills.certifications)) {
-          updatedRoleSkills.certifications.push(skillData);
+          updatedRoleSkills.skills.push(enrichedSkillData);
+          addedSkills.push(enrichedSkillData);
+          
+          // Add to specific category array
+          if (category === 'specialized' && !skillExists(updatedRoleSkills.specialized)) {
+            updatedRoleSkills.specialized.push(enrichedSkillData);
+          } else if (category === 'common' && !skillExists(updatedRoleSkills.common)) {
+            updatedRoleSkills.common.push(enrichedSkillData);
+          } else if (category === 'certification' && !skillExists(updatedRoleSkills.certifications)) {
+            updatedRoleSkills.certifications.push(enrichedSkillData);
+          }
         }
 
         // Generate and set progression
@@ -116,20 +108,22 @@ export const AddSkillToProfileDialog = () => {
         if (progression) {
           console.log('Generated progression for skill:', {
             skill: skillTitle,
-            progression
+            progression,
+            track
           });
           setSkillProgression(skillTitle, progression, id);
         }
       }
-    });
+    }
 
     console.log('Saving updated role skills:', {
       roleId: id,
+      track,
       specialized: updatedRoleSkills.specialized.length,
       common: updatedRoleSkills.common.length,
       certifications: updatedRoleSkills.certifications.length,
       totalSkills: updatedRoleSkills.skills.length,
-      track: updatedRoleSkills.roleTrack
+      roleTrack: updatedRoleSkills.roleTrack
     });
 
     // Update roleSkills and save to storage
