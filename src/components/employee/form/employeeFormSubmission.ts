@@ -23,7 +23,7 @@ interface FormData {
 export const processEmployeeData = (formData: FormData): Employee => {
   console.log('Processing employee data:', formData);
   
-  const formattedRole = formData.level ? `${formData.role}: ${formData.level}` : formData.role;
+  const formattedRole = formData.level ? `${formData.role}: ${formData.level.toUpperCase()}` : formData.role;
   console.log('Formatted role:', formattedRole);
 
   const lastUpdated = new Date().toLocaleDateString();

@@ -103,7 +103,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           <SelectContent>
             {Object.entries(levelOptions).map(([key, label]) => (
               <SelectItem key={key} value={key.toLowerCase()}>
-                {`${label} - ${getLevelDescription(key)}`}
+                {`${key} - ${getLevelDescription(key)}`}
               </SelectItem>
             ))}
           </SelectContent>
