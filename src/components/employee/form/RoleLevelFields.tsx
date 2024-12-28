@@ -1,6 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { roleSkills } from '../../skills/data/roleSkills';
 import { professionalLevels, managerialLevels } from '../../benchmark/data/levelData';
+import { formatLevel } from '../utils/employeeTrackUtils';
 
 interface RoleLevelFieldsProps {
   formData: {
@@ -19,6 +20,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   console.log('RoleLevelFields rendering with:', {
     currentRole: formData.role,
     currentLevel: formData.level,
+    formattedLevel: formatLevel(formData.level),
     availableRoles: Object.values(roleSkills).map(role => role.title)
   });
 
@@ -33,12 +35,6 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   };
 
   const isManagerialRole = getRoleTrack(formData.role) === "Managerial";
-
-  console.log('Role track determination:', {
-    role: formData.role,
-    track: getRoleTrack(formData.role),
-    isManagerial: isManagerialRole
-  });
 
   // Get available roles from roleSkills
   const availableRoles = Object.values(roleSkills).map(role => role.title);
@@ -71,9 +67,6 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           onValueChange={(value) => {
             console.log('Role selected:', value, 'Role ID:', roleMapping[value]);
             handleInputChange('role', value);
-            // Reset level when role changes to ensure track compatibility
-            handleInputChange('level', '');
-            console.log('Role changed, reset level');
           }}
         >
           <SelectTrigger>
@@ -92,10 +85,10 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
       <div className="space-y-2">
         <label className="text-sm font-medium">Level</label>
         <Select 
-          value={formData.level} 
+          value={formData.level.toLowerCase()} 
           onValueChange={(value) => {
-            console.log('Level selected:', value);
-            handleInputChange('level', value);
+            console.log('Level selected:', value, 'Formatted:', formatLevel(value));
+            handleInputChange('level', value.toLowerCase());
           }}
         >
           <SelectTrigger>
@@ -104,7 +97,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           <SelectContent>
             {Object.entries(levelOptions).map(([key, label]) => (
               <SelectItem key={key} value={key.toLowerCase()}>
-                {`${label} - ${getLevelDescription(key)}`}
+                {`${formatLevel(key)} - ${getLevelDescription(key)}`}
               </SelectItem>
             ))}
           </SelectContent>

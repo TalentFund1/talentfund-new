@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { getSkillProfileId } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
-import { getEmployeeTrack } from "./utils/employeeTrackUtils";
+import { getEmployeeTrack, formatLevel } from "./utils/employeeTrackUtils";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 
 interface EmployeeDetailsProps {
@@ -43,11 +43,16 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const employeeSkills = getEmployeeSkills(id);
   const skillCount = employeeSkills.length;
 
+  // Format the role parts
+  const [roleName, levelPart] = employee.role.split(':').map(part => part.trim());
+  const formattedRole = levelPart ? `${roleName}: ${formatLevel(levelPart)}` : roleName;
+
   console.log(`Employee ${id} details:`, {
     roleId,
     roleTrack,
     employeeTrack,
     role: employee.role,
+    formattedRole,
     skillCount,
     skills: employeeSkills.map(s => s.title)
   });
