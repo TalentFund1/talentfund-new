@@ -17,14 +17,14 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
   const employees = useEmployeeStore((state) => state.employees);
   const { getTrackForRole } = useTrack();
   
-  // Filter managers based on both role level (M3-M6) and track being managerial
+  // Filter managers based on both role track and employee track being managerial
   const managers = employees.filter(emp => {
     const level = getLevel(emp.role);
     const isManagerialLevel = level && level.startsWith('M');
     
     // Get both employee's current track and their role's track
     const employeeTrack = getEmployeeTrack(emp.role);
-    const roleTrack = getTrackForRole(emp.role);
+    const roleTrack = getTrackForRole(emp.role.split(':')[0].trim());
     
     // Both tracks must be managerial for the employee to be eligible
     const isManagerialTrack = employeeTrack === "Managerial" && roleTrack === "Managerial";
