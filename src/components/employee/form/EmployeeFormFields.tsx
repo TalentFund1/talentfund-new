@@ -20,6 +20,7 @@ interface EmployeeFormFieldsProps {
     termDate: string;
     sex: string;
     category: string;
+    team: string;
   };
   handleInputChange: (field: string, value: string) => void;
 }

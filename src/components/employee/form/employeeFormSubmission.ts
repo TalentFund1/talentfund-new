@@ -18,6 +18,7 @@ interface FormData {
   termDate: string;
   sex: string;
   category: string;
+  team: string;
 }
 
 export const processEmployeeData = (formData: FormData): Employee => {
@@ -46,6 +47,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
     startDate: formData.startDate,
     office: formData.office,
     termDate: formData.termDate || "-",
+    team: formData.team || "RnD",
     skills: []
   };
 
