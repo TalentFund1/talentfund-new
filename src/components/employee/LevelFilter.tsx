@@ -41,7 +41,7 @@ export const LevelFilter = ({
     console.log('Getting levels for track:', {
       isManagerial,
       selectedJobTitle,
-      availableLevels: isManagerial ? Object.keys(managerialLevels) : Object.keys(professionalLevels)
+      availableLevels: isManagerial ? Object.entries(managerialLevels).map(([key]) => key) : Object.entries(professionalLevels).map(([key]) => key)
     });
 
     if (isManagerial) {
