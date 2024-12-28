@@ -1,5 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { roleSkills } from '../../skills/data/roleSkills';
+import { professionalLevels, managerialLevels } from '../../benchmark/data/levelData';
 
 interface RoleLevelFieldsProps {
   formData: {
@@ -39,26 +40,27 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
     isManagerial: isManagerialRole
   });
 
-  const professionalLevels = {
-    'P1': 'P1 - Entry',
-    'P2': 'P2 - Developing',
-    'P3': 'P3 - Career',
-    'P4': 'P4 - Senior',
-    'P5': 'P5 - Expert',
-    'P6': 'P6 - Principal'
-  };
-
-  const managerialLevels = {
-    'M3': 'M3 - Manager',
-    'M4': 'M4 - Senior Manager',
-    'M5': 'M5 - Director',
-    'M6': 'M6 - Senior Director'
-  };
-
-  const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
-
   // Get available roles from roleSkills
   const availableRoles = Object.values(roleSkills).map(role => role.title);
+
+  // Use the appropriate levels based on the role track
+  const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
+
+  const getLevelDescription = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'p1': return 'Entry';
+      case 'p2': return 'Developing';
+      case 'p3': return 'Career';
+      case 'p4': return 'Senior';
+      case 'p5': return 'Expert';
+      case 'p6': return 'Principal';
+      case 'm3': return 'Manager';
+      case 'm4': return 'Senior Manager';
+      case 'm5': return 'Director';
+      case 'm6': return 'Senior Director';
+      default: return '';
+    }
+  };
 
   return (
     <>
@@ -100,8 +102,8 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           </SelectTrigger>
           <SelectContent>
             {Object.entries(levelOptions).map(([key, label]) => (
-              <SelectItem key={key} value={key}>
-                {label}
+              <SelectItem key={key} value={key.toLowerCase()}>
+                {`${label} - ${getLevelDescription(key)}`}
               </SelectItem>
             ))}
           </SelectContent>
