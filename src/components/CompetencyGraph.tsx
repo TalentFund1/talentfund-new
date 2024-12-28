@@ -21,7 +21,7 @@ interface CompetencyGraphProps {
 }
 
 export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: CompetencyGraphProps) => {
-  const { toggledSkills } = useToggledSkills();
+  const { toggledSkills, setToggledSkills } = useToggledSkills();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     const savedCategory = localStorage.getItem('selectedCategory');
     return savedCategory || "all";
@@ -37,6 +37,32 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
   const currentRoleId = propRoleId || urlRoleId || "123";
   const savedTrack = getTrackForRole(currentRoleId);
   const [track, setTrack] = useState<"Professional" | "Managerial">(savedTrack);
+
+  // Load persisted toggled skills for the current track
+  useEffect(() => {
+    const storageKey = `toggled-skills-${currentRoleId}-${track}`;
+    const savedToggledSkills = localStorage.getItem(storageKey);
+    
+    if (savedToggledSkills) {
+      console.log('Loading persisted toggled skills for track:', {
+        roleId: currentRoleId,
+        track,
+        skills: JSON.parse(savedToggledSkills)
+      });
+      setToggledSkills(new Set(JSON.parse(savedToggledSkills)));
+    }
+  }, [currentRoleId, track, setToggledSkills]);
+
+  // Save toggled skills when they change
+  useEffect(() => {
+    const storageKey = `toggled-skills-${currentRoleId}-${track}`;
+    console.log('Saving toggled skills for track:', {
+      roleId: currentRoleId,
+      track,
+      skills: Array.from(toggledSkills)
+    });
+    localStorage.setItem(storageKey, JSON.stringify(Array.from(toggledSkills)));
+  }, [toggledSkills, currentRoleId, track]);
 
   useEffect(() => {
     setTrack(savedTrack);
@@ -133,16 +159,6 @@ export const CompetencyGraph = ({ track: initialTrack, roleId: propRoleId }: Com
       title: "Levels reset",
       description: "All skill levels have been reset to their default values.",
     });
-  };
-
-  const getLevelValue = (level: string): number => {
-    const values: { [key: string]: number } = {
-      'advanced': 4,
-      'intermediate': 3,
-      'beginner': 2,
-      'unspecified': 1
-    };
-    return values[level.toLowerCase()] || 1;
   };
 
   return (
