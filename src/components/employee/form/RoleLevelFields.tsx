@@ -21,7 +21,23 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
     availableRoles: Object.values(roleSkills).map(role => role.title)
   });
 
-  const isManagerialRole = formData.role.toLowerCase().includes('manager');
+  // Determine if the selected role is managerial
+  const getRoleTrack = (roleTitle: string) => {
+    const roleId = roleMapping[roleTitle];
+    if (roleId) {
+      const roleData = roleSkills[roleId as keyof typeof roleSkills];
+      return roleData?.roleTrack || "Professional";
+    }
+    return "Professional"; // Default to Professional track
+  };
+
+  const isManagerialRole = getRoleTrack(formData.role) === "Managerial";
+
+  console.log('Role track determination:', {
+    role: formData.role,
+    track: getRoleTrack(formData.role),
+    isManagerial: isManagerialRole
+  });
 
   const professionalLevels = {
     'P1': 'P1 - Entry',
@@ -53,7 +69,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           onValueChange={(value) => {
             console.log('Role selected:', value, 'Role ID:', roleMapping[value]);
             handleInputChange('role', value);
-            // Reset level when role changes
+            // Reset level when role changes to ensure track compatibility
             handleInputChange('level', '');
           }}
         >
