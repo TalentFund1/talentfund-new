@@ -3,6 +3,7 @@ import { getSkillProfileId } from "../../EmployeeTable";
 import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
 import { categorizeSkills } from "../../skills/competency/skillCategories";
 import { roleMapping } from "./RoleLevelFields";
+import { roleSkills } from "../../skills/data/roleSkills";
 
 interface FormData {
   id: string;
@@ -48,6 +49,15 @@ export const processEmployeeData = (formData: FormData): Employee => {
 
   console.log('Created new employee:', newEmployee);
   return newEmployee;
+};
+
+const getRoleTrack = (roleTitle: string) => {
+  const roleId = roleMapping[roleTitle];
+  if (roleId) {
+    const roleData = roleSkills[roleId as keyof typeof roleSkills];
+    return roleData?.roleTrack || "Professional";
+  }
+  return "Professional"; // Default to Professional track
 };
 
 export const validateFormData = (formData: FormData, existingEmployees: Employee[]) => {
@@ -102,11 +112,20 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
     }
   }
 
-  // Validate role and level combination
-  const isManagerialRole = formData.role.toLowerCase().includes('manager');
+  // Validate role and level combination using roleTrack
+  const isManagerialRole = getRoleTrack(formData.role) === "Managerial";
   const isManagerialLevel = formData.level.toLowerCase().startsWith('m');
+  
+  console.log('Role and level validation:', {
+    role: formData.role,
+    level: formData.level,
+    roleTrack: getRoleTrack(formData.role),
+    isManagerialRole,
+    isManagerialLevel
+  });
+
   if (isManagerialRole !== isManagerialLevel) {
-    console.log('Validation failed: Role and level mismatch');
+    console.log('Validation failed: Role and level track mismatch');
     return {
       isValid: false,
       error: "Selected level does not match the role type (managerial/professional)"
