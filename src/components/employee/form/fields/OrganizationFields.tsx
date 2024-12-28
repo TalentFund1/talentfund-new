@@ -1,8 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEmployeeStore } from "../../store/employeeStore";
 import { getLevel } from "../../../EmployeeTable";
-import { useTrack } from "../../../skills/context/TrackContext";
-import { getEmployeeTrack } from "../../utils/employeeTrackUtils";
 
 interface OrganizationFieldsProps {
   formData: {
@@ -15,32 +13,11 @@ interface OrganizationFieldsProps {
 
 export const OrganizationFields = ({ formData, handleInputChange }: OrganizationFieldsProps) => {
   const employees = useEmployeeStore((state) => state.employees);
-  const { getTrackForRole } = useTrack();
   
-  // Filter managers based on both role track and employee track being managerial
+  // Filter managers based on their role level (M3-M6)
   const managers = employees.filter(emp => {
     const level = getLevel(emp.role);
-    const isManagerialLevel = level && level.startsWith('M');
-    
-    // Get both employee's current track and their role's track
-    const employeeTrack = getEmployeeTrack(emp.role);
-    const roleTrack = getTrackForRole(emp.role.split(':')[0].trim());
-    
-    // Both tracks must be managerial for the employee to be eligible
-    const isManagerialTrack = employeeTrack === "Managerial" && roleTrack === "Managerial";
-    
-    console.log('Checking manager eligibility:', {
-      employee: emp.name,
-      role: emp.role,
-      level,
-      isManagerialLevel,
-      employeeTrack,
-      roleTrack,
-      isManagerialTrack,
-      isEligible: isManagerialLevel && isManagerialTrack
-    });
-
-    return isManagerialLevel && isManagerialTrack;
+    return level && level.startsWith('M');
   }).map(emp => emp.name);
 
   console.log('Available managers:', managers);
