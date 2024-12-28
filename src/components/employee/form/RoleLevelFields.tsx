@@ -11,7 +11,7 @@ interface RoleLevelFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
-// Create a mapping of role titles to IDs and export it
+// Create a mapping of role titles to IDs
 export const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
   acc[data.title] = id;
   return acc;
@@ -28,7 +28,7 @@ export const RoleLevelFields = ({
   const roleId = roleMapping[formData.role];
   const isManagerialRole = getRoleDefaultTrack(roleId) === "Managerial";
 
-  console.log('Role track determination:', {
+  console.log('Role track determination in form:', {
     role: formData.role,
     roleId,
     isManagerialRole,
