@@ -22,20 +22,20 @@ export const normalizeLevel = (levelKey: string, roleId: string, track: string):
   // Convert between tracks
   const levelMap: { [key: string]: { [key: string]: string } } = {
     "Managerial": {
-      // Map Professional levels to Managerial
+      // All Professional levels (P1-P6) map to M3
       "p1": "m3",
       "p2": "m3",
       "p3": "m3",
       "p4": "m3",
-      "p5": "m4",
-      "p6": "m5"
+      "p5": "m3",
+      "p6": "m3"
     },
     "Professional": {
-      // Map Managerial levels to Professional
+      // All Managerial levels (M3-M6) map to P4
       "m3": "p4",
       "m4": "p4",
-      "m5": "p5",
-      "m6": "p6"
+      "m5": "p4",
+      "m6": "p4"
     }
   };
 

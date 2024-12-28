@@ -33,13 +33,7 @@ export const getEmployeeTrack = (role: string): EmployeeTrack => {
     return "Managerial";
   }
   
-  // For P4 and above in Professional track, map to Managerial
-  const levelNumber = parseInt(level.replace(/[pP]/, ''));
-  if (levelNumber >= 4) {
-    return "Managerial";
-  }
-  
-  // Default to Professional track (P1-P3)
+  // Default to Professional track
   return "Professional";
 };
 
