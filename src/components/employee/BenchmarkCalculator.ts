@@ -53,18 +53,13 @@ export const calculateBenchmarkPercentage = (
     return 0;
   }
 
+  // Basic skill match - employee has the skill
   const matchingSkills = employeeSkills.filter(empSkill => 
     allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title)
   );
 
-  console.log('Matching skills found:', {
-    count: matchingSkills.length,
-    skills: matchingSkills.map(s => s.title)
-  });
-
-  let totalPercentage = 0;
-
-  matchingSkills.forEach(skill => {
+  // Competency match - employee has the skill at required level or higher
+  const competencyMatchingSkills = matchingSkills.filter(skill => {
     const employeeSkillLevel = skill.level;
     const roleSkillLevel = competencyReader.getSkillCompetencyState(
       skill.title,
@@ -72,50 +67,46 @@ export const calculateBenchmarkPercentage = (
       roleId
     )?.level?.toLowerCase() as SkillLevel || 'unspecified';
 
-    console.log('Processing skill levels:', {
-      skill: skill.title,
-      employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel
-    });
-
-    // Create a complete RoleSkillRequirement object for comparison
-    const roleSkillRequirement: RoleSkillRequirement = {
-      id: `${roleId}-${skill.title}`,
-      title: skill.title,
-      minimumLevel: roleSkillLevel,
-      requirementLevel: 'required',
-      subcategory: skill.subcategory,
-      category: skill.category,
-      businessCategory: skill.businessCategory,
-      weight: skill.weight,
-      benchmarks: {
-        B: false,
-        R: false,
-        M: false,
-        O: false
-      },
-      metrics: {
-        growth: skill.growth,
-        salary: skill.salary,
-        confidence: skill.confidence
-      }
-    };
-
-    const comparison = benchmarkingService.compareSkillLevels(
-      skill,
-      roleSkillRequirement
-    );
-
-    totalPercentage += comparison.matchPercentage;
+    return employeeSkillLevel !== 'unspecified';
   });
 
-  const averagePercentage = matchingSkills.length > 0
-    ? totalPercentage / matchingSkills.length
-    : 0;
+  // Skill goal match - employee has set this as a goal
+  const skillGoalMatchingSkills = matchingSkills.filter(skill => 
+    skill.goalStatus === 'skill_goal'
+  );
+
+  const totalSkills = Math.max(allRoleSkills.length, 1); // Prevent division by zero
+
+  // Calculate individual percentages with proper normalization
+  const skillMatchPercentage = Math.min(
+    (matchingSkills.length / totalSkills) * 100,
+    100
+  );
+
+  const competencyMatchPercentage = Math.min(
+    (competencyMatchingSkills.length / totalSkills) * 100,
+    100
+  );
+
+  const skillGoalMatchPercentage = Math.min(
+    (skillGoalMatchingSkills.length / totalSkills) * 100,
+    100
+  );
+
+  // Calculate average percentage, ensuring it doesn't exceed 100%
+  const averagePercentage = Math.min(
+    (skillMatchPercentage + competencyMatchPercentage + skillGoalMatchPercentage) / 3,
+    100
+  );
 
   console.log('Final benchmark calculation:', {
-    totalPercentage,
-    matchingSkillsCount: matchingSkills.length,
+    totalSkills,
+    matchingSkills: matchingSkills.length,
+    competencyMatches: competencyMatchingSkills.length,
+    goalMatches: skillGoalMatchingSkills.length,
+    skillMatchPercentage,
+    competencyMatchPercentage,
+    skillGoalMatchPercentage,
     averagePercentage
   });
 

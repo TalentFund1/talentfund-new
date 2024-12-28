@@ -8,29 +8,15 @@ export interface DetailedSkill {
   isSkillGoal: boolean;
 }
 
-export interface SimpleSkill {
+export interface Skill {
+  id: string;
   title: string;
   subcategory: string;
-  category?: SkillCategory;
-  businessCategory?: string;
-  level: string;
-  growth: string;
-  weight?: SkillWeight;
-  salary?: string;
-  confidence?: 'low' | 'medium' | 'high';
-  benchmarks?: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
-}
-
-export interface Skill extends Required<SimpleSkill> {
-  id: string;
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
+  level: string;
+  growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
   benchmarks: {
@@ -59,4 +45,13 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
   skills: UnifiedSkill[];
+}
+
+export interface SimpleSkill {
+  title: string;
+  subcategory: string;
+  category?: SkillCategory;
+  businessCategory?: string;
+  level: string;
+  growth: string;
 }

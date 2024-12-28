@@ -3,33 +3,18 @@ import { SkillsTableHeader } from "./skills/table/SkillsTableHeader";
 import { SkillsTableContent } from "./skills/table/SkillsTableContent";
 import { SkillsTableFooter } from "./skills/table/SkillsTableFooter";
 import { getAllSkills } from "./skills/data/skills/allSkills";
-import { useToast } from "@/hooks/use-toast";
 
 export const SkillsTable = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const { toast } = useToast();
 
-  // Get skills directly from local data with error handling
-  const skills = (() => {
-    try {
-      console.log('Loading skills from local data...');
-      const allSkills = getAllSkills();
-      console.log('Successfully loaded skills:', {
-        count: allSkills.length,
-        sample: allSkills[0]
-      });
-      return allSkills;
-    } catch (error) {
-      console.error('Error loading skills:', error);
-      toast({
-        title: "Error loading skills",
-        description: "There was an error loading the skills data. Please try again.",
-        variant: "destructive",
-      });
-      return [];
-    }
-  })();
+  // Get skills directly from universal database
+  const skills = getAllSkills();
+
+  console.log('Loading skills from universal database:', {
+    totalSkills: skills.length,
+    sample: skills[0]
+  });
 
   return (
     <div className="space-y-6 bg-white rounded-lg shadow-sm">
