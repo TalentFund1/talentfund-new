@@ -9,25 +9,39 @@ interface LevelFilterProps {
   selectedJobTitle: string[];
 }
 
-export const LevelFilter = ({ onLevelChange, selectedLevel, selectedJobTitle }: LevelFilterProps) => {
+export const LevelFilter = ({ 
+  onLevelChange, 
+  selectedLevel,
+  selectedJobTitle 
+}: LevelFilterProps) => {
   const { getTrackForRole } = useTrack();
   
-  const getTrackForJobTitle = () => {
-    if (selectedJobTitle.length === 0) return "Professional";
+  const isManagerialTrack = () => {
+    if (selectedJobTitle.length === 0) return false;
+    
     const roleId = getSkillProfileId(selectedJobTitle[0]);
-    return getTrackForRole(roleId);
+    const track = getTrackForRole(roleId);
+    
+    console.log('Determining track for level filter:', {
+      roleId,
+      selectedTitle: selectedJobTitle[0],
+      track,
+      isManagerial: track === "Managerial"
+    });
+    
+    return track === "Managerial";
   };
 
-  const isManagerialTrack = getTrackForJobTitle() === "Managerial";
-
-  console.log('LevelFilter - Track info:', {
-    selectedJobTitle,
-    track: getTrackForJobTitle(),
-    isManagerialTrack
-  });
-
   const getLevelsForTrack = () => {
-    if (isManagerialTrack) {
+    const isManagerial = isManagerialTrack();
+    
+    console.log('Getting levels for track:', {
+      isManagerial,
+      selectedJobTitle,
+      availableLevels: isManagerial ? Object.keys(managerialLevels) : Object.keys(professionalLevels)
+    });
+
+    if (isManagerial) {
       return Object.entries(managerialLevels).map(([key, value]) => 
         `${value} - ${getLevelDescription(key)}`
       );
