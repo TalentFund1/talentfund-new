@@ -34,7 +34,7 @@ export const AddSkillToProfileDialog = () => {
     roleId: id
   });
 
-  const handleAddSkills = () => {
+  const handleAddSkills = async () => {
     if (!id) {
       toast({
         title: "Error",
@@ -44,14 +44,22 @@ export const AddSkillToProfileDialog = () => {
       return;
     }
 
+    const track = getTrackForRole(id);
+    console.log('Adding skills for track:', track);
+
     // Get existing role skills or initialize if not exists
     const existingRoleSkills = roleSkills[id] || {
-      title: "",
+      title: roleSkills[id]?.title || "",
+      soc: roleSkills[id]?.soc || "",
+      function: roleSkills[id]?.function || "Engineering",
+      mappedTitle: roleSkills[id]?.mappedTitle || "",
+      occupation: roleSkills[id]?.occupation || "",
+      description: roleSkills[id]?.description || "",
+      roleTrack: track, // Ensure track is set
       specialized: [],
       common: [],
       certifications: [],
-      skills: [],
-      roleTrack: getTrackForRole(id)
+      skills: []
     };
 
     console.log('Current role skills before adding:', {
@@ -62,12 +70,11 @@ export const AddSkillToProfileDialog = () => {
       track: existingRoleSkills.roleTrack
     });
 
-    const track = getTrackForRole(id);
     const newToggledSkills = new Set(toggledSkills);
     const updatedRoleSkills = { 
       ...existingRoleSkills,
-      roleTrack: track, // Ensure roleTrack is set
-      skills: [...existingRoleSkills.skills] // Initialize skills array
+      roleTrack: track,
+      skills: [...existingRoleSkills.skills]
     };
 
     const addedSkills = [];
@@ -113,22 +120,21 @@ export const AddSkillToProfileDialog = () => {
           });
           setSkillProgression(skillTitle, progression, id);
         }
-      } else {
-        console.warn('Skill not found in universal database:', skillTitle);
       }
     });
 
-    // Save updated skills to localStorage and update state
     console.log('Saving updated role skills:', {
       roleId: id,
       specialized: updatedRoleSkills.specialized.length,
       common: updatedRoleSkills.common.length,
       certifications: updatedRoleSkills.certifications.length,
-      totalSkills: updatedRoleSkills.skills.length
+      totalSkills: updatedRoleSkills.skills.length,
+      track: updatedRoleSkills.roleTrack
     });
 
+    // Update roleSkills and save to storage
     roleSkills[id] = updatedRoleSkills;
-    saveRoleSkills(id, updatedRoleSkills);
+    await saveRoleSkills(id, updatedRoleSkills);
     setToggledSkills(newToggledSkills);
 
     toast({
