@@ -29,7 +29,14 @@ const getBusinessCategory = (skillTitle: string): string => {
 };
 
 // Use the consolidated skills directly
-export const skillsDatabase = getAllSkills();
+const skillsDatabase = getAllSkills().map(skill => ({
+  ...skill,
+  id: `SKILL_${skill.title.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}`,
+  weight: skill.weight || determineWeight(skill.growth, skill.category || 'common'),
+  salary: skill.salary || '$0',
+  confidence: skill.confidence || 'medium',
+  benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false }
+})) as Skill[];
 
 // Helper functions
 export const getSkillByTitle = (title: string): Skill | undefined => {
@@ -43,3 +50,5 @@ export const getSkillsByWeight = (weight: SkillWeight): Skill[] => {
 export const getSkillsByCategory = (category: SkillCategory): Skill[] => {
   return skillsDatabase.filter(skill => skill.category === category);
 };
+
+export { skillsDatabase };
