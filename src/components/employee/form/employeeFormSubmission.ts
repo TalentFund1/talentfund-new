@@ -44,7 +44,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
     startDate: formData.startDate,
     office: formData.office,
     termDate: formData.termDate || "-",
-    skills: [] // Initialize with empty skills array
+    skills: []
   };
 
   console.log('Created new employee:', newEmployee);
@@ -53,11 +53,24 @@ export const processEmployeeData = (formData: FormData): Employee => {
 
 const getRoleTrack = (roleTitle: string) => {
   const roleId = roleMapping[roleTitle];
-  if (roleId) {
-    const roleData = roleSkills[roleId as keyof typeof roleSkills];
-    return roleData?.roleTrack || "Professional";
+  if (!roleId) {
+    console.warn('Role ID not found for title:', roleTitle);
+    return "Professional"; // Default to Professional track
   }
-  return "Professional"; // Default to Professional track
+  
+  const roleData = roleSkills[roleId as keyof typeof roleSkills];
+  if (!roleData) {
+    console.warn('Role data not found for ID:', roleId);
+    return "Professional";
+  }
+
+  console.log('Determined role track:', {
+    roleTitle,
+    roleId,
+    track: roleData.roleTrack || "Professional"
+  });
+
+  return roleData.roleTrack || "Professional";
 };
 
 export const validateFormData = (formData: FormData, existingEmployees: Employee[]) => {
@@ -75,7 +88,7 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
     }
   }
 
-  // Check for duplicate ID
+  // Check for duplicate ID for new employees
   if (existingEmployees.some(emp => emp.id === formData.id)) {
     console.log('Validation failed: Duplicate ID found');
     return {
@@ -113,18 +126,19 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   }
 
   // Validate role and level combination using roleTrack
-  const isManagerialRole = getRoleTrack(formData.role) === "Managerial";
+  const track = getRoleTrack(formData.role);
   const isManagerialLevel = formData.level.toLowerCase().startsWith('m');
+  const isManagerialTrack = track === "Managerial";
   
   console.log('Role and level validation:', {
     role: formData.role,
     level: formData.level,
-    roleTrack: getRoleTrack(formData.role),
-    isManagerialRole,
+    track,
+    isManagerialTrack,
     isManagerialLevel
   });
 
-  if (isManagerialRole !== isManagerialLevel) {
+  if (isManagerialTrack !== isManagerialLevel) {
     console.log('Validation failed: Role and level track mismatch');
     return {
       isValid: false,
