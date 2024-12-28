@@ -12,8 +12,8 @@ interface RoleLevelFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
-// Create a mapping of role titles to IDs
-const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
+// Create a mapping of role titles to IDs and export it for other components
+export const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
   acc[data.title] = id;
   return acc;
 }, {} as { [key: string]: string });
