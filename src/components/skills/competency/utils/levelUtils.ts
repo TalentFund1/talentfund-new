@@ -19,23 +19,21 @@ export const normalizeLevel = (levelKey: string, roleId: string, track: string):
     return key;
   }
 
-  // Convert between tracks
+  // Convert between tracks if needed
   const levelMap: { [key: string]: { [key: string]: string } } = {
     "Managerial": {
-      // All Professional levels (P1-P6) map to M3
       "p1": "m3",
       "p2": "m3",
-      "p3": "m3",
-      "p4": "m3",
-      "p5": "m3",
-      "p6": "m3"
+      "p3": "m4",
+      "p4": "m4",
+      "p5": "m5",
+      "p6": "m6"
     },
     "Professional": {
-      // All Managerial levels (M3-M6) map to P4
       "m3": "p4",
-      "m4": "p4",
-      "m5": "p4",
-      "m6": "p4"
+      "m4": "p5",
+      "m5": "p5",
+      "m6": "p6"
     }
   };
 
@@ -47,14 +45,4 @@ export const normalizeLevel = (levelKey: string, roleId: string, track: string):
   });
 
   return levelMap[track]?.[key] || key;
-};
-
-// Helper function to check if a level is managerial
-export const isManagerialLevel = (level: string): boolean => {
-  return level.toLowerCase().startsWith('m');
-};
-
-// Helper function to check if a level is professional
-export const isProfessionalLevel = (level: string): boolean => {
-  return level.toLowerCase().startsWith('p');
 };

@@ -1,7 +1,6 @@
 import { RoleSkillData } from '../../types/SkillTypes';
 import { getUnifiedSkillData } from '../skillDatabaseService';
 import { getRoleTitle, getRoleSoc, getRoleDefaultTrack } from './roleDefinitions';
-import { SkillCategory } from '../../types/sharedSkillTypes';
 
 const getStorageKey = (roleId: string) => `role-skills-${roleId}`;
 
@@ -13,71 +12,19 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
     if (savedSkills) {
       const parsedSkills = JSON.parse(savedSkills);
       
-      // Ensure roleTrack is preserved from storage
-      const roleTrack = parsedSkills.roleTrack || getRoleDefaultTrack(roleId);
-      console.log('Loading role skills with track:', {
-        roleId,
-        roleTrack,
-        hasSkills: parsedSkills.skills?.length > 0,
-        parsedSkills
-      });
-
-      const determineCategory = (category: string): SkillCategory => {
-        switch (category.toLowerCase()) {
-          case 'specialized':
-            return 'specialized';
-          case 'common':
-            return 'common';
-          case 'certification':
-            return 'certification';
-          default:
-            return 'common';
-        }
-      };
-      
-      // Convert all skills to unified format while preserving categories and track
-      const unifiedSpecialized = (parsedSkills.specialized || []).map((skill: any) => ({
-        ...getUnifiedSkillData(skill.title),
-        category: determineCategory('specialized'),
-        roleTrack
-      }));
-      
-      const unifiedCommon = (parsedSkills.common || []).map((skill: any) => ({
-        ...getUnifiedSkillData(skill.title),
-        category: determineCategory('common'),
-        roleTrack
-      }));
-      
-      const unifiedCertifications = (parsedSkills.certifications || []).map((skill: any) => ({
-        ...getUnifiedSkillData(skill.title),
-        category: determineCategory('certification'),
-        roleTrack
-      }));
-      
-      // Combine all skills for the skills array
-      const allSkills = [
-        ...unifiedSpecialized,
-        ...unifiedCommon,
-        ...unifiedCertifications
-      ];
+      // Convert all skills to unified format
+      const unifiedSkills = parsedSkills.skills.map((skill: any) => 
+        getUnifiedSkillData(skill.title)
+      );
       
       const roleData = {
         ...parsedSkills,
-        roleTrack,
-        specialized: unifiedSpecialized,
-        common: unifiedCommon,
-        certifications: unifiedCertifications,
-        skills: allSkills
+        skills: unifiedSkills
       };
       
       console.log('Loaded and unified skills:', {
         roleId,
-        roleTrack,
-        skillsCount: roleData.skills.length,
-        specializedCount: roleData.specialized.length,
-        commonCount: roleData.common.length,
-        certificationsCount: roleData.certifications.length,
-        roleData
+        skillsCount: roleData.skills.length
       });
       
       return roleData;
@@ -89,78 +36,22 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
 };
 
 export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
-  console.log('Saving role skills:', { 
-    roleId, 
-    roleTrack: skills.roleTrack,
-    skillsCount: skills.skills.length,
-    skills 
-  });
+  console.log('Saving role skills:', { roleId, skills });
   
   try {
-    const determineCategory = (category: string): SkillCategory => {
-      switch (category.toLowerCase()) {
-        case 'specialized':
-          return 'specialized';
-        case 'common':
-          return 'common';
-        case 'certification':
-          return 'certification';
-        default:
-          return 'common';
-      }
-    };
-
-    // Ensure all skills are in unified format while preserving categories and track
-    const unifiedSpecialized = skills.specialized.map(skill => ({
-      ...getUnifiedSkillData(skill.title),
-      category: determineCategory('specialized'),
-      roleTrack: skills.roleTrack
-    }));
-    
-    const unifiedCommon = skills.common.map(skill => ({
-      ...getUnifiedSkillData(skill.title),
-      category: determineCategory('common'),
-      roleTrack: skills.roleTrack
-    }));
-    
-    const unifiedCertifications = skills.certifications.map(skill => ({
-      ...getUnifiedSkillData(skill.title),
-      category: determineCategory('certification'),
-      roleTrack: skills.roleTrack
-    }));
-    
-    // Combine all skills for the skills array
-    const allSkills = [
-      ...unifiedSpecialized,
-      ...unifiedCommon,
-      ...unifiedCertifications
-    ];
+    // Ensure all skills are in unified format
+    const unifiedSkills = skills.skills.map(skill => 
+      getUnifiedSkillData(skill.title)
+    );
     
     const roleData = {
       ...skills,
-      roleTrack: skills.roleTrack || getRoleDefaultTrack(roleId),
-      specialized: unifiedSpecialized,
-      common: unifiedCommon,
-      certifications: unifiedCertifications,
-      skills: allSkills
+      skills: unifiedSkills
     };
     
-    const storageKey = getStorageKey(roleId);
-    console.log('Saving role data to storage:', {
-      key: storageKey,
-      roleData
-    });
+    localStorage.setItem(getStorageKey(roleId), JSON.stringify(roleData));
     
-    localStorage.setItem(storageKey, JSON.stringify(roleData));
-    
-    console.log('Saved role skills with track:', {
-      roleId,
-      roleTrack: roleData.roleTrack,
-      totalSkills: roleData.skills.length,
-      specialized: roleData.specialized.length,
-      common: roleData.common.length,
-      certifications: roleData.certifications.length
-    });
+    console.log('Updated role skills with unified data:', roleData);
     
     window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 
       detail: { roleId } 
@@ -176,12 +67,6 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
 export const initializeRoleSkills = (roleId: string): RoleSkillData => {
   console.log('Initializing new role skills:', roleId);
   
-  const roleTrack = getRoleDefaultTrack(roleId);
-  console.log('Using default track for new role:', {
-    roleId,
-    roleTrack
-  });
-  
   return {
     title: getRoleTitle(roleId),
     soc: getRoleSoc(roleId),
@@ -189,10 +74,10 @@ export const initializeRoleSkills = (roleId: string): RoleSkillData => {
     mappedTitle: "",
     occupation: getRoleTitle(roleId),
     description: "",
-    roleTrack,
+    roleTrack: getRoleDefaultTrack(roleId),
     skills: [],
-    specialized: [],
-    common: [],
-    certifications: []
+    specialized: [],  // Added missing property
+    common: [],      // Added missing property
+    certifications: [] // Added missing property
   };
 };

@@ -17,15 +17,3 @@ export const determineRequirement = (levelKey: string, track: string): string =>
   // Lower level skills are preferred
   return "preferred";
 };
-
-// Helper function to get the numeric value of a level
-export const getLevelValue = (level: string): number => {
-  const match = level.toLowerCase().match(/[mp](\d+)/);
-  return match ? parseInt(match[1]) : 0;
-};
-
-// Helper function to determine if a level should be mapped to managerial
-export const shouldMapToManagerial = (level: string): boolean => {
-  const value = getLevelValue(level);
-  return value >= 4; // P4 and above map to managerial
-};

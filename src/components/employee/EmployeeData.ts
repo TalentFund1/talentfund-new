@@ -1,3 +1,7 @@
+import { getAllSkills } from '../skills/data/skills/allSkills';
+import { UnifiedSkill } from '../skills/types/SkillTypes';
+import { SkillLevel } from './types/employeeSkillTypes';
+
 export const EMPLOYEE_IMAGES = [
   "photo-1488590528505-98d2b5aba04b",
   "photo-1518770660439-4636190af475",
@@ -5,105 +9,87 @@ export const EMPLOYEE_IMAGES = [
   "photo-1486312338219-ce68d2c6f44d"
 ];
 
+// Helper function to get random skills from universal database
+const getRandomSkills = () => {
+  const allSkills = getAllSkills();
+  const shuffled = [...allSkills].sort(() => 0.5 - Math.random());
+  const selectedSkills = shuffled.slice(0, 5);
+  
+  const levels: SkillLevel[] = ['beginner', 'intermediate', 'advanced'];
+  
+  return selectedSkills.map(skill => ({
+    title: skill.title,
+    level: levels[Math.floor(Math.random() * levels.length)]
+  }));
+};
+
 export const employees = [
   {
     id: "123",
-    name: "John Smith",
-    role: "AI Engineer: P4",
+    name: "Ronald Dahl",
+    role: "AI Engineer: P4",  
     department: "Engineering",
-    skillCount: 12,
-    benchmark: 85,
-    lastUpdated: "2024-01-15",
-    location: "Toronto, ON",
+    skillCount: 5,
+    benchmark: 0,
+    lastUpdated: "12/19/2024",
+    location: "Vancouver, BC",
     sex: "male" as const,
-    category: "Full-time",
+    category: "Contract",
     manager: "Sus Manu",
-    startDate: "2024-01-01",
+    startDate: "2023-05-16",
     office: "Toronto",
     termDate: "-",
-    skills: [
-      { title: "Python", level: "expert" },
-      { title: "Machine Learning", level: "advanced" }
-    ]
+    skills: getRandomSkills()
   },
   {
     id: "124",
-    name: "Jane Doe",
-    role: "Backend Engineer: P3",
+    name: "Jennie Richards",
+    role: "Backend Engineer: P4",
     department: "Engineering",
-    skillCount: 8,
-    benchmark: 75,
-    lastUpdated: "2024-01-14",
-    location: "Vancouver, BC",
+    skillCount: 5,
+    benchmark: 0,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
     sex: "female" as const,
-    category: "Full-time",
+    category: "Contract",
     manager: "Sus Manu",
-    startDate: "2024-01-02",
-    office: "Vancouver",
+    startDate: "2024-01-10",
+    office: "Toronto",
     termDate: "-",
-    skills: [
-      { title: "Node.js", level: "advanced" },
-      { title: "TypeScript", level: "intermediate" }
-    ]
+    skills: getRandomSkills()
   },
   {
     id: "125",
-    name: "Alice Johnson",
-    role: "Frontend Developer: P2",
+    name: "Anna Vyselva",
+    role: "Frontend Engineer: P5",
     department: "Engineering",
-    skillCount: 6,
-    benchmark: 65,
-    lastUpdated: "2024-01-13",
-    location: "Montreal, QC",
+    skillCount: 5,
+    benchmark: 0,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
     sex: "female" as const,
-    category: "Full-time",
+    category: "Part-time",
     manager: "Sus Manu",
-    startDate: "2024-01-03",
-    office: "Montreal",
+    startDate: "2024-06-01",
+    office: "Toronto",
     termDate: "-",
-    skills: [
-      { title: "React", level: "intermediate" },
-      { title: "TypeScript", level: "beginner" }
-    ]
+    skills: getRandomSkills()
   },
   {
     id: "126",
-    name: "Ricky Martin",
+    name: "Sus Manu",
     role: "Engineering Manager: M3",
-    department: "Product",
-    skillCount: 4,
-    benchmark: 90,
-    lastUpdated: "2024-01-12",
-    location: "Montreal, QC",
+    department: "Engineering",
+    skillCount: 5,
+    benchmark: 0,
+    lastUpdated: "10/20/24",
+    location: "Toronto, ON",
     sex: "male" as const,
-    category: "Full-time",
-    manager: "Sus Manu",
-    startDate: "2024-12-08",
-    office: "New York",
+    category: "Contract",
+    manager: "",
+    startDate: "2022-11-01",
+    office: "Toronto",
     termDate: "-",
-    skills: [
-      { title: "Team Leadership", level: "expert" },
-      { title: "System Architecture", level: "advanced" }
-    ]
-  },
-  {
-    id: "127",
-    name: "Sarah Williams",
-    role: "Product Manager: P3",
-    department: "Product",
-    skillCount: 7,
-    benchmark: 80,
-    lastUpdated: "2024-01-11",
-    location: "Ottawa, ON",
-    sex: "female" as const,
-    category: "Full-time",
-    manager: "Sus Manu",
-    startDate: "2024-01-05",
-    office: "Ottawa",
-    termDate: "-",
-    skills: [
-      { title: "Product Strategy", level: "advanced" },
-      { title: "User Research", level: "intermediate" }
-    ]
+    skills: getRandomSkills()
   }
-];
+] as const;
