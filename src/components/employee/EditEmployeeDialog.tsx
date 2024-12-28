@@ -61,6 +61,10 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     }
 
     try {
+      // Get the role ID from the mapping
+      const roleId = Object.entries(roleMapping).find(([title]) => title === formData.role)?.[1];
+      console.log('Mapped role ID:', roleId);
+
       // Format the role string correctly
       const formattedRole = formData.level ? `${formData.role}: ${formData.level}` : formData.role;
       console.log('Formatted role:', formattedRole);
