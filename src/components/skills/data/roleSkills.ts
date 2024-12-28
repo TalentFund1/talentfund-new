@@ -5,15 +5,24 @@ import { getUnifiedSkillData } from './skillDatabaseService';
 // Initialize roleSkills object
 export const roleSkills: { [key: string]: RoleSkillData } = {};
 
-// Initialize all roles
+// Initialize all roles with their correct tracks
 const roleIds = ["123", "124", "125", "126", "127", "128"];
 
 roleIds.forEach(id => {
   const savedSkills = loadRoleSkills(id);
-  roleSkills[id] = savedSkills || initializeRoleSkills(id);
+  const baseSkills = savedSkills || initializeRoleSkills(id);
+  
+  // Set managerial track for specific roles
+  const isManagerial = id === "126" || id === "128"; // Engineering Manager and Product Leader
+  
+  roleSkills[id] = {
+    ...baseSkills,
+    roleTrack: isManagerial ? "Managerial" : "Professional"
+  };
   
   console.log(`Initialized role ${id}:`, {
     title: roleSkills[id].title,
+    track: roleSkills[id].roleTrack,
     skillsCount: roleSkills[id].skills.length
   });
 });
