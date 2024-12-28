@@ -23,7 +23,6 @@ export const AddSkillToProfileDialog = () => {
   const { setSkillState, setSkillProgression } = useCompetencyStore();
   const { getTrackForRole } = useTrack();
 
-  // Get all available skills from the universal database
   const universalSkills = getAllSkills();
   const allSkills = Array.from(new Set(
     universalSkills.map(s => normalizeSkillTitle(s.title))
@@ -51,19 +50,27 @@ export const AddSkillToProfileDialog = () => {
       specialized: [],
       common: [],
       certifications: [],
-      skills: []
+      skills: [],
+      roleTrack: getTrackForRole(id)
     };
 
     console.log('Current role skills before adding:', {
       roleId: id,
       specialized: existingRoleSkills.specialized.length,
       common: existingRoleSkills.common.length,
-      certifications: existingRoleSkills.certifications.length
+      certifications: existingRoleSkills.certifications.length,
+      track: existingRoleSkills.roleTrack
     });
 
     const track = getTrackForRole(id);
     const newToggledSkills = new Set(toggledSkills);
-    const updatedRoleSkills = { ...existingRoleSkills };
+    const updatedRoleSkills = { 
+      ...existingRoleSkills,
+      roleTrack: track, // Ensure roleTrack is set
+      skills: [...existingRoleSkills.skills] // Initialize skills array
+    };
+
+    const addedSkills = [];
 
     selectedSkills.forEach(skillTitle => {
       const normalizedTitle = normalizeSkillTitle(skillTitle);
@@ -71,19 +78,29 @@ export const AddSkillToProfileDialog = () => {
       const skillData = getUnifiedSkillData(skillTitle);
       
       if (skillData) {
-        console.log('Processing skill:', skillData);
+        console.log('Processing skill:', {
+          skill: skillData,
+          track,
+          roleId: id
+        });
         
         // Add to toggled skills
         newToggledSkills.add(skillTitle);
         
         // Determine category and add to appropriate array if not already present
         const category = skillData.category?.toLowerCase() || 'common';
+        const skillExists = (array: any[]) => array.some(s => normalizeSkillTitle(s.title) === normalizedTitle);
         
-        if (category === 'specialized' && !updatedRoleSkills.specialized.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+        if (!skillExists(updatedRoleSkills.skills)) {
+          updatedRoleSkills.skills.push(skillData);
+          addedSkills.push(skillData);
+        }
+        
+        if (category === 'specialized' && !skillExists(updatedRoleSkills.specialized)) {
           updatedRoleSkills.specialized.push(skillData);
-        } else if (category === 'common' && !updatedRoleSkills.common.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+        } else if (category === 'common' && !skillExists(updatedRoleSkills.common)) {
           updatedRoleSkills.common.push(skillData);
-        } else if (category === 'certification' && !updatedRoleSkills.certifications.some(s => normalizeSkillTitle(s.title) === normalizedTitle)) {
+        } else if (category === 'certification' && !skillExists(updatedRoleSkills.certifications)) {
           updatedRoleSkills.certifications.push(skillData);
         }
 
@@ -106,7 +123,8 @@ export const AddSkillToProfileDialog = () => {
       roleId: id,
       specialized: updatedRoleSkills.specialized.length,
       common: updatedRoleSkills.common.length,
-      certifications: updatedRoleSkills.certifications.length
+      certifications: updatedRoleSkills.certifications.length,
+      totalSkills: updatedRoleSkills.skills.length
     });
 
     roleSkills[id] = updatedRoleSkills;
@@ -115,7 +133,7 @@ export const AddSkillToProfileDialog = () => {
 
     toast({
       title: "Skills Added",
-      description: `Added ${selectedSkills.length} skill${selectedSkills.length === 1 ? '' : 's'} to the profile.`,
+      description: `Added ${addedSkills.length} skill${addedSkills.length === 1 ? '' : 's'} to the profile.`,
     });
 
     setSelectedSkills([]);
