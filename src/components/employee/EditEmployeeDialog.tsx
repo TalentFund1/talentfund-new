@@ -1,16 +1,15 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { useEmployeeStore } from "./store/employeeStore";
-import { validateFormData } from "./form/employeeFormSubmission";
+import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
 import { Employee } from "../types/employeeTypes";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { roleMapping } from "./form/RoleLevelFields";
 import { useNavigate } from "react-router-dom";
 import { getRoleDefaultTrack } from "../skills/data/roles/roleDefinitions";
-import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
 
 interface EditEmployeeDialogProps {
   employee: Employee;
@@ -51,30 +50,6 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     
     console.log('Edit form submission started - Form data:', formData);
 
-    // Get role track
-    const roleId = Object.entries(roleMapping).find(([title]) => title === formData.role)?.[1];
-    const roleTrack = roleId ? getRoleDefaultTrack(roleId) : "Professional";
-    
-    // Validate level format based on track
-    const isValidLevel = roleTrack === "Managerial" 
-      ? Object.keys(managerialLevels).includes(formData.level.toLowerCase())
-      : Object.keys(professionalLevels).includes(formData.level.toLowerCase());
-
-    if (!isValidLevel) {
-      console.error('Invalid level for role track:', {
-        level: formData.level,
-        roleTrack,
-        validLevels: roleTrack === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels)
-      });
-      
-      toast({
-        title: "Validation Error",
-        description: `Invalid level for ${roleTrack} track. Please select a valid level.`,
-        variant: "destructive"
-      });
-      return;
-    }
-    
     // Validate form data
     const validation = validateFormData(formData, employees.filter(emp => emp.id !== employee.id));
     if (!validation.isValid) {
@@ -88,28 +63,16 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     }
 
     try {
-      // Format the role string correctly
-      const formattedRole = formData.level ? `${formData.role}: ${formData.level}` : formData.role;
-      console.log('Formatted role:', formattedRole);
+      // Process and update employee data
+      const updatedEmployee = processEmployeeData({
+        ...formData,
+        id: employee.id // Ensure we keep the original ID
+      });
 
-      // Update employee with all form fields
-      const updatedEmployee: Employee = {
-        ...employee,
-        name: formData.name,
-        department: formData.department,
-        office: formData.office,
-        category: formData.category,
-        manager: formData.manager,
-        startDate: formData.startDate,
-        termDate: formData.termDate || "-",
-        role: formattedRole,
-        location: formData.location,
-        sex: formData.sex as 'male' | 'female',
-        // Preserve existing values that shouldn't change during edit
-        skillCount: employee.skillCount,
-        benchmark: employee.benchmark,
-        lastUpdated: new Date().toLocaleDateString()
-      };
+      // Preserve existing values that shouldn't change during edit
+      updatedEmployee.skillCount = employee.skillCount;
+      updatedEmployee.benchmark = employee.benchmark;
+      updatedEmployee.skills = employee.skills;
 
       console.log('Updating employee with:', updatedEmployee);
       
@@ -150,35 +113,10 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => {
-      const newData = {
-        ...prev,
-        [field]: value
-      };
-
-      // If changing role, validate and potentially reset level
-      if (field === 'role') {
-        const roleId = Object.entries(roleMapping).find(([title]) => title === value)?.[1];
-        const roleTrack = roleId ? getRoleDefaultTrack(roleId) : "Professional";
-        
-        // Reset level if current level doesn't match new role track
-        const currentLevelPrefix = newData.level.charAt(0).toLowerCase();
-        const isCurrentLevelManagerial = currentLevelPrefix === 'm';
-        const shouldResetLevel = (roleTrack === "Managerial") !== isCurrentLevelManagerial;
-        
-        if (shouldResetLevel) {
-          newData.level = roleTrack === "Managerial" ? "m3" : "p1";
-          console.log('Reset level due to role track change:', {
-            newRole: value,
-            roleTrack,
-            newLevel: newData.level
-          });
-        }
-      }
-
-      console.log(`Field ${field} updated to:`, value);
-      return newData;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   return (
