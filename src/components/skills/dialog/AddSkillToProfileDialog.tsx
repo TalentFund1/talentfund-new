@@ -13,6 +13,7 @@ import { roleSkills, saveRoleSkills } from '../data/roleSkills';
 import { normalizeSkillTitle } from '../utils/normalization';
 import { generateSkillProgression } from '../competency/autoFillUtils';
 import { useTrack } from "../context/TrackContext";
+import { SkillCategory } from '../types/sharedSkillTypes';
 
 export const AddSkillToProfileDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -60,7 +61,7 @@ export const AddSkillToProfileDialog = () => {
     const newToggledSkills = new Set(toggledSkills);
     const updatedRoleSkills = { 
       ...existingRoleSkills,
-      roleTrack: track, // Ensure track is preserved
+      roleTrack: track,
       specialized: [...existingRoleSkills.specialized],
       common: [...existingRoleSkills.common],
       certifications: [...existingRoleSkills.certifications],
@@ -80,20 +81,33 @@ export const AddSkillToProfileDialog = () => {
         newToggledSkills.add(skillTitle);
         
         // Determine category and add to appropriate array
-        const category = skillData.category?.toLowerCase() || 'common';
+        const determineCategory = (category: string): SkillCategory => {
+          switch (category.toLowerCase()) {
+            case 'specialized':
+              return 'specialized';
+            case 'common':
+              return 'common';
+            case 'certification':
+              return 'certification';
+            default:
+              return 'common';
+          }
+        };
+
+        const category = determineCategory(skillData.category?.toLowerCase() || 'common');
         const skillExists = (array: any[]) => array.some(s => normalizeSkillTitle(s.title) === normalizedTitle);
         
         const enrichedSkillData = {
           ...skillData,
           category,
-          roleTrack: track // Ensure track is set on the skill level
+          roleTrack: track
         };
 
         if (!skillExists(updatedRoleSkills.skills)) {
           updatedRoleSkills.skills.push(enrichedSkillData);
           addedSkills.push(enrichedSkillData);
           
-          // Add to specific category array
+          // Add to specific category array based on the determined category
           if (category === 'specialized' && !skillExists(updatedRoleSkills.specialized)) {
             updatedRoleSkills.specialized.push(enrichedSkillData);
           } else if (category === 'common' && !skillExists(updatedRoleSkills.common)) {
