@@ -4,6 +4,7 @@ import { getSkillProfileId } from "../EmployeeTable";
 import { useTrack } from "../skills/context/TrackContext";
 import { getEmployeeTrack, formatLevel } from "./utils/employeeTrackUtils";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
+import { useEmployeeStore } from "./store/employeeStore";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -42,6 +43,10 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const { getEmployeeSkills } = useEmployeeSkillsStore();
   const employeeSkills = getEmployeeSkills(id);
   const skillCount = employeeSkills.length;
+  const employees = useEmployeeStore(state => state.employees);
+
+  // Get the manager's ID by finding the employee with matching name
+  const managerId = employees.find(emp => emp.name === employee.manager)?.id || "126";
 
   // Format the role parts
   const [roleName, levelPart] = employee.role.split(':').map(part => part.trim());
@@ -54,7 +59,9 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
     role: employee.role,
     formattedRole,
     skillCount,
-    skills: employeeSkills.map(s => s.title)
+    skills: employeeSkills.map(s => s.title),
+    manager: employee.manager,
+    managerId
   });
 
   return (
@@ -75,12 +82,16 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Manager</span>
-          <Link 
-            to="/employee/126" 
-            className="font-medium text-primary hover:text-primary-accent transition-colors block"
-          >
-            Sus Manu
-          </Link>
+          {employee.manager ? (
+            <Link 
+              to={`/employee/${managerId}`}
+              className="font-medium text-primary hover:text-primary-accent transition-colors block"
+            >
+              {employee.manager}
+            </Link>
+          ) : (
+            <p className="font-medium text-gray-900">—</p>
+          )}
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Start Date</span>
