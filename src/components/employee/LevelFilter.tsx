@@ -2,7 +2,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useTrack } from '../skills/context/TrackContext';
 import { getSkillProfileId } from '../EmployeeTable';
 import { professionalLevels, managerialLevels } from '../benchmark/data/levelData';
-import { roleSkills } from '../skills/data/roleSkills';
+import { roleSkills, getRoleIdFromTitle, isManagerialRole } from '../skills/data/roleSkills';
 
 interface LevelFilterProps {
   onLevelChange: (level: string[]) => void;
@@ -20,19 +20,16 @@ export const LevelFilter = ({
   const isManagerialTrack = () => {
     if (selectedJobTitle.length === 0) return false;
     
-    const roleId = getSkillProfileId(selectedJobTitle[0]);
-    const roleData = roleSkills[roleId as keyof typeof roleSkills];
-    const track = roleData?.roleTrack || "Professional";
+    const roleTitle = selectedJobTitle[0];
+    const roleId = getRoleIdFromTitle(roleTitle);
     
     console.log('Determining track for level filter:', {
+      roleTitle,
       roleId,
-      selectedTitle: selectedJobTitle[0],
-      roleTrack: roleData?.roleTrack,
-      track,
-      isManagerial: track === "Managerial"
+      isManagerial: roleId ? isManagerialRole(roleId) : false
     });
     
-    return track === "Managerial";
+    return roleId ? isManagerialRole(roleId) : false;
   };
 
   const getLevelsForTrack = () => {
