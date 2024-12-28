@@ -1,6 +1,7 @@
 import { EmployeeSkillData } from '../../types/employeeSkillTypes';
 import { employees } from '../../EmployeeData';
 import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
+import { SkillLevel } from '../../types/employeeSkillTypes';
 
 export const createInitializationActions = (set: any, get: any) => ({
   initializeEmployeeSkills: (employeeId: string) => {
@@ -27,12 +28,14 @@ export const createInitializationActions = (set: any, get: any) => ({
       
       employee.skills.forEach(skill => {
         const skillData = getUnifiedSkillData(skill.title);
+        const normalizedLevel = normalizeSkillLevel(skill.level);
+        
         updates[skill.title] = {
           id: `${employeeId}-${skill.title}`,
           employeeId,
           skillId: `${employeeId}-${skill.title}`,
           title: skill.title,
-          level: skill.level || 'unspecified',
+          level: normalizedLevel,
           goalStatus: 'unknown',
           lastUpdated: new Date().toISOString(),
           confidence: 'medium',
@@ -75,3 +78,17 @@ export const createInitializationActions = (set: any, get: any) => ({
     }
   }
 });
+
+// Helper function to normalize skill levels
+const normalizeSkillLevel = (level: string): SkillLevel => {
+  switch (level?.toLowerCase()) {
+    case 'advanced':
+      return 'advanced';
+    case 'intermediate':
+      return 'intermediate';
+    case 'beginner':
+      return 'beginner';
+    default:
+      return 'unspecified';
+  }
+};

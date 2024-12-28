@@ -38,12 +38,14 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             employee.skills.forEach(skill => {
               if (typeof skill === 'object' && skill !== null && 'title' in skill) {
                 const unifiedData = getUnifiedSkillData(skill.title);
+                const normalizedLevel = normalizeSkillLevel(skill.level || 'unspecified');
+                
                 initialSkills[skill.title] = {
                   id: `${employeeId}-${skill.title}`,
                   employeeId,
                   skillId: `${employeeId}-${skill.title}`,
                   title: skill.title,
-                  level: skill.level || 'unspecified',
+                  level: normalizedLevel,
                   goalStatus: 'unknown',
                   lastUpdated: new Date().toISOString(),
                   confidence: 'medium',
@@ -187,3 +189,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     }
   )
 );
+
+// Helper function to normalize skill levels
+const normalizeSkillLevel = (level: string): SkillLevel => {
+  switch (level?.toLowerCase()) {
+    case 'advanced':
+      return 'advanced';
+    case 'intermediate':
+      return 'intermediate';
+    case 'beginner':
+      return 'beginner';
+    default:
+      return 'unspecified';
+  }
+};
