@@ -57,7 +57,7 @@ const SkillsProfileInner = () => {
       <div className="flex-1 p-6 ml-16 transition-all duration-300">
         <div className="max-w-7xl mx-auto space-y-6 bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-foreground">Skill Profiles</h1>
+            <h1 className="text-3xl font-bold text-foreground">Roles</h1>
             <div className="space-x-2">
               <Button variant="outline">Export Data</Button>
               <TrackProvider>
