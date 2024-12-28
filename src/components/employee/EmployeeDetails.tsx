@@ -62,7 +62,8 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
     skillCount,
     skills: employeeSkills.map(s => s.title),
     manager: employee.manager,
-    managerId
+    managerId,
+    team: employee.team
   });
 
   return (
