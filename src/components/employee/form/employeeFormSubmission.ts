@@ -55,7 +55,7 @@ const getRoleTrack = (roleTitle: string) => {
   const roleId = roleMapping[roleTitle];
   if (!roleId) {
     console.warn('Role ID not found for title:', roleTitle);
-    return "Professional"; // Default to Professional track
+    return "Professional";
   }
   
   const roleData = roleSkills[roleId as keyof typeof roleSkills];
@@ -64,9 +64,16 @@ const getRoleTrack = (roleTitle: string) => {
     return "Professional";
   }
 
+  // Special case for Product Manager
+  if (roleTitle === "Product Manager") {
+    console.log('Product Manager role detected - setting Professional track');
+    return "Professional";
+  }
+
   console.log('Determined role track:', {
     roleTitle,
     roleId,
+    roleData,
     track: roleData.roleTrack || "Professional"
   });
 
@@ -77,7 +84,7 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
   console.log('Validating form data:', formData);
   
   // Required fields validation
-  const requiredFields = ['id', 'name', 'office', 'department', 'role', 'level', 'startDate', 'sex', 'category'];
+  const requiredFields = ['name', 'office', 'department', 'role', 'level', 'startDate', 'sex', 'category'];
   for (const field of requiredFields) {
     if (!formData[field as keyof FormData]) {
       console.log(`Validation failed: ${field} is required`);
@@ -86,15 +93,6 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
         error: `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
       };
     }
-  }
-
-  // Check for duplicate ID for new employees
-  if (existingEmployees.some(emp => emp.id === formData.id)) {
-    console.log('Validation failed: Duplicate ID found');
-    return {
-      isValid: false,
-      error: "An employee with this ID already exists"
-    };
   }
 
   // Validate dates
@@ -138,7 +136,16 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
     isManagerialLevel
   });
 
-  if (isManagerialTrack !== isManagerialLevel) {
+  // Special handling for Product Manager role
+  if (formData.role === "Product Manager" && isManagerialLevel) {
+    console.log('Validation failed: Product Manager cannot have managerial level');
+    return {
+      isValid: false,
+      error: "Product Manager role requires professional levels (P1-P6)"
+    };
+  }
+
+  if (isManagerialTrack !== isManagerialLevel && formData.role !== "Product Manager") {
     console.log('Validation failed: Role and level track mismatch');
     return {
       isValid: false,
