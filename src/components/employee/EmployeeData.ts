@@ -1,3 +1,10 @@
+export const EMPLOYEE_IMAGES = [
+  "photo-1488590528505-98d2b5aba04b",
+  "photo-1518770660439-4636190af475",
+  "photo-1461749280684-dccba630e2f6",
+  "photo-1486312338219-ce68d2c6f44d"
+];
+
 export const employees = [
   {
     id: "123",
