@@ -9,6 +9,8 @@ import { Employee } from "../types/employeeTypes";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { roleMapping } from "./form/RoleLevelFields";
 import { useNavigate } from "react-router-dom";
+import { getRoleDefaultTrack } from "../skills/data/roles/roleDefinitions";
+import { professionalLevels, managerialLevels } from "../benchmark/data/levelData";
 
 interface EditEmployeeDialogProps {
   employee: Employee;
@@ -30,7 +32,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     department: employee.department,
     manager: employee.manager || "",
     role: employee.role.split(':')[0].trim(),
-    level: employee.role.split(':')[1]?.trim() || "",
+    level: employee.role.split(':')[1]?.trim().toLowerCase() || "",
     startDate: employee.startDate || "",
     termDate: employee.termDate === "-" ? "" : employee.termDate,
     sex: employee.sex,
@@ -40,13 +42,38 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
   console.log('EditEmployeeDialog - Initial form data:', {
     employeeRole: employee.role,
     parsedLevel: employee.role.split(':')[1]?.trim(),
-    formData
+    formData,
+    roleTrack: getRoleDefaultTrack(roleMapping[formData.role])
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     console.log('Edit form submission started - Form data:', formData);
+
+    // Get role track
+    const roleId = Object.entries(roleMapping).find(([title]) => title === formData.role)?.[1];
+    const roleTrack = roleId ? getRoleDefaultTrack(roleId) : "Professional";
+    
+    // Validate level format based on track
+    const isValidLevel = roleTrack === "Managerial" 
+      ? Object.keys(managerialLevels).includes(formData.level.toLowerCase())
+      : Object.keys(professionalLevels).includes(formData.level.toLowerCase());
+
+    if (!isValidLevel) {
+      console.error('Invalid level for role track:', {
+        level: formData.level,
+        roleTrack,
+        validLevels: roleTrack === "Managerial" ? Object.keys(managerialLevels) : Object.keys(professionalLevels)
+      });
+      
+      toast({
+        title: "Validation Error",
+        description: `Invalid level for ${roleTrack} track. Please select a valid level.`,
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Validate form data
     const validation = validateFormData(formData, employees.filter(emp => emp.id !== employee.id));
@@ -61,10 +88,6 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     }
 
     try {
-      // Get the role ID from the mapping
-      const roleId = Object.entries(roleMapping).find(([title]) => title === formData.role)?.[1];
-      console.log('Mapped role ID:', roleId);
-
       // Format the role string correctly
       const formattedRole = formData.level ? `${formData.role}: ${formData.level}` : formData.role;
       console.log('Formatted role:', formattedRole);
@@ -133,10 +156,24 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
         [field]: value
       };
 
-      // Reset level when role changes
+      // If changing role, validate and potentially reset level
       if (field === 'role') {
-        newData.level = '';
-        console.log('Role changed, reset level');
+        const roleId = Object.entries(roleMapping).find(([title]) => title === value)?.[1];
+        const roleTrack = roleId ? getRoleDefaultTrack(roleId) : "Professional";
+        
+        // Reset level if current level doesn't match new role track
+        const currentLevelPrefix = newData.level.charAt(0).toLowerCase();
+        const isCurrentLevelManagerial = currentLevelPrefix === 'm';
+        const shouldResetLevel = (roleTrack === "Managerial") !== isCurrentLevelManagerial;
+        
+        if (shouldResetLevel) {
+          newData.level = roleTrack === "Managerial" ? "m3" : "p1";
+          console.log('Reset level due to role track change:', {
+            newRole: value,
+            roleTrack,
+            newLevel: newData.level
+          });
+        }
       }
 
       console.log(`Field ${field} updated to:`, value);
