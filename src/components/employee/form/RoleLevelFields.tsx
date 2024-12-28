@@ -1,7 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { roleSkills } from '../../skills/data/roleSkills';
 import { professionalLevels, managerialLevels } from '../../benchmark/data/levelData';
-import { formatLevel } from '../utils/employeeTrackUtils';
 import { getRoleDefaultTrack } from '../../skills/data/roles/roleDefinitions';
 
 interface RoleLevelFieldsProps {
@@ -12,7 +11,7 @@ interface RoleLevelFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
-// Create a mapping of role titles to IDs and export it for other components
+// Create a mapping of role titles to IDs and export it
 export const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
   acc[data.title] = id;
   return acc;
@@ -22,25 +21,45 @@ export const RoleLevelFields = ({
   formData,
   handleInputChange
 }: RoleLevelFieldsProps) => {
-  // Get available roles from roleSkills
+  // Get all available roles from roleSkills
   const availableRoles = Object.values(roleSkills).map(role => role.title);
 
   // Determine if the selected role is managerial
-  const getRoleTrack = (roleTitle: string) => {
-    const roleId = roleMapping[roleTitle];
-    return getRoleDefaultTrack(roleId);
-  };
+  const roleId = roleMapping[formData.role];
+  const isManagerialRole = getRoleDefaultTrack(roleId) === "Managerial";
 
-  const isManagerialRole = getRoleTrack(formData.role) === "Managerial";
   console.log('Role track determination:', {
     role: formData.role,
-    roleId: roleMapping[formData.role],
+    roleId,
     isManagerialRole,
-    track: getRoleTrack(formData.role)
+    track: getRoleDefaultTrack(roleId)
   });
 
   // Use the appropriate levels based on the role track
   const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
+
+  const handleRoleChange = (value: string) => {
+    console.log('Role selected:', value);
+    handleInputChange('role', value);
+    
+    // Reset level when role changes to ensure track compatibility
+    const newRoleId = roleMapping[value];
+    const newRoleTrack = getRoleDefaultTrack(newRoleId);
+    const defaultLevel = newRoleTrack === "Managerial" ? "m3" : "p1";
+    
+    console.log('Role changed, reset level', {
+      newRole: value,
+      track: newRoleTrack,
+      defaultLevel
+    });
+    
+    handleInputChange('level', defaultLevel);
+  };
+
+  const handleLevelChange = (value: string) => {
+    console.log('Level selected:', value);
+    handleInputChange('level', value);
+  };
 
   const getLevelDescription = (level: string) => {
     switch (level.toLowerCase()) {
@@ -56,21 +75,6 @@ export const RoleLevelFields = ({
       case 'm6': return 'Senior Director';
       default: return '';
     }
-  };
-
-  const handleRoleChange = (value: string) => {
-    console.log('Role selected:', value);
-    handleInputChange('role', value);
-    
-    // Reset level when role changes to ensure track compatibility
-    const newRoleTrack = getRoleTrack(value);
-    const defaultLevel = newRoleTrack === "Managerial" ? "m3" : "p1";
-    console.log('Resetting level for new role:', {
-      newRole: value,
-      track: newRoleTrack,
-      defaultLevel
-    });
-    handleInputChange('level', defaultLevel);
   };
 
   return (
@@ -98,10 +102,7 @@ export const RoleLevelFields = ({
         <label className="text-sm font-medium">Level</label>
         <Select 
           value={formData.level.toLowerCase()} 
-          onValueChange={(value) => {
-            console.log('Level selected:', value);
-            handleInputChange('level', value.toLowerCase());
-          }}
+          onValueChange={handleLevelChange}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select level" />
