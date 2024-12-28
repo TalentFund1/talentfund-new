@@ -12,18 +12,18 @@ interface RoleLevelFieldsProps {
   handleInputChange: (field: string, value: string) => void;
 }
 
-export const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
+// Create a mapping of role titles to IDs
+const roleMapping = Object.entries(roleSkills).reduce((acc, [id, data]) => {
   acc[data.title] = id;
   return acc;
 }, {} as { [key: string]: string });
 
-export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFieldsProps) => {
-  console.log('RoleLevelFields rendering with:', {
-    currentRole: formData.role,
-    currentLevel: formData.level,
-    formattedLevel: formatLevel(formData.level),
-    availableRoles: Object.values(roleSkills).map(role => role.title)
-  });
+export const RoleLevelFields = ({
+  formData,
+  handleInputChange
+}: RoleLevelFieldsProps) => {
+  // Get available roles from roleSkills
+  const availableRoles = Object.values(roleSkills).map(role => role.title);
 
   // Determine if the selected role is managerial
   const getRoleTrack = (roleTitle: string) => {
@@ -34,12 +34,10 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   const isManagerialRole = getRoleTrack(formData.role) === "Managerial";
   console.log('Role track determination:', {
     role: formData.role,
+    roleId: roleMapping[formData.role],
     isManagerialRole,
     track: getRoleTrack(formData.role)
   });
-
-  // Get available roles from roleSkills
-  const availableRoles = Object.values(roleSkills).map(role => role.title);
 
   // Use the appropriate levels based on the role track
   const levelOptions = isManagerialRole ? managerialLevels : professionalLevels;
@@ -67,6 +65,11 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
     // Reset level when role changes to ensure track compatibility
     const newRoleTrack = getRoleTrack(value);
     const defaultLevel = newRoleTrack === "Managerial" ? "m3" : "p1";
+    console.log('Resetting level for new role:', {
+      newRole: value,
+      track: newRoleTrack,
+      defaultLevel
+    });
     handleInputChange('level', defaultLevel);
   };
 
@@ -106,7 +109,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           <SelectContent>
             {Object.entries(levelOptions).map(([key, label]) => (
               <SelectItem key={key} value={key.toLowerCase()}>
-                {`${formatLevel(key)} - ${getLevelDescription(key)}`}
+                {`${label} - ${getLevelDescription(key)}`}
               </SelectItem>
             ))}
           </SelectContent>
