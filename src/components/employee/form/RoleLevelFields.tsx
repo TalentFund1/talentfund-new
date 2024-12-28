@@ -24,25 +24,11 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   // Determine if the selected role is managerial
   const getRoleTrack = (roleTitle: string) => {
     const roleId = roleMapping[roleTitle];
-    if (!roleId) {
-      console.warn('Role ID not found for title:', roleTitle);
-      return "Professional";
+    if (roleId) {
+      const roleData = roleSkills[roleId as keyof typeof roleSkills];
+      return roleData?.roleTrack || "Professional";
     }
-    
-    const roleData = roleSkills[roleId as keyof typeof roleSkills];
-    if (!roleData) {
-      console.warn('Role data not found for ID:', roleId);
-      return "Professional";
-    }
-
-    console.log('Role track determination:', {
-      roleTitle,
-      roleId,
-      roleData,
-      track: roleData.roleTrack || "Professional"
-    });
-
-    return roleData.roleTrack || "Professional";
+    return "Professional"; // Default to Professional track
   };
 
   const isManagerialRole = getRoleTrack(formData.role) === "Managerial";
@@ -84,9 +70,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             console.log('Role selected:', value, 'Role ID:', roleMapping[value]);
             handleInputChange('role', value);
             // Reset level when role changes to ensure track compatibility
-            const newTrack = getRoleTrack(value);
-            const defaultLevel = newTrack === "Managerial" ? "M3" : "P1";
-            handleInputChange('level', defaultLevel);
+            handleInputChange('level', '');
           }}
         >
           <SelectTrigger>
