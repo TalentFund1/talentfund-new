@@ -1,5 +1,5 @@
 import { StatCard } from "@/components/StatCard";
-import { Users, UserPlus, Equal, Clock } from "lucide-react";
+import { Briefcase, UserPlus, Equal, Clock } from "lucide-react";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { filterEmployees } from "@/components/employee/EmployeeFilters";
 import { getSkillProfileId } from "@/components/EmployeeTable";
@@ -66,9 +66,9 @@ export const SkillProfileStats = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
-        title="Total Number of Employees"
+        title="Total Number of Roles"
         value={filteredEmployees.length}
-        icon={<Users className="h-6 w-6 text-primary-icon" />}
+        icon={<Briefcase className="h-6 w-6 text-primary-icon" />}
       />
       <StatCard
         title="Added in Past 1 Year"
