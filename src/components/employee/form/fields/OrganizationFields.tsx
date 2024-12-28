@@ -19,10 +19,16 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
   
   // Filter managers based on both role level (M3-M6) and track being managerial
   const managers = employees.filter(emp => {
+    // Skip if the employee is the same as the one being edited
+    if (emp.name === formData.manager && !emp.role.includes('M')) {
+      return false;
+    }
+
     const level = getLevel(emp.role);
     const isManagerialLevel = level && level.startsWith('M');
     const employeeTrack = getEmployeeTrack(emp.role);
-    const isManagerialTrack = employeeTrack === "Managerial";
+    const roleTrack = getTrackForRole(emp.role);
+    const isManagerialTrack = employeeTrack === "Managerial" && roleTrack === "Managerial";
     
     console.log('Checking manager eligibility:', {
       employee: emp.name,
@@ -30,6 +36,7 @@ export const OrganizationFields = ({ formData, handleInputChange }: Organization
       level,
       isManagerialLevel,
       employeeTrack,
+      roleTrack,
       isManagerialTrack,
       isEligible: isManagerialLevel && isManagerialTrack
     });
