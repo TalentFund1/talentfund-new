@@ -29,7 +29,7 @@ export const RoleLevelFields = ({
   
   // Determine if the role is managerial based on its track
   const roleTrack = getRoleDefaultTrack(roleId);
-  const isManagerialRole = roleTrack === "Managerial";
+  const isManagerialRole = roleId === "126" || roleId === "128"; // Engineering Manager and Product Leader
 
   console.log('Role track determination in form:', {
     role: formData.role,
@@ -44,12 +44,13 @@ export const RoleLevelFields = ({
     
     // Reset level when role changes to ensure track compatibility
     const newRoleId = roleMapping[value];
-    const newRoleTrack = getRoleDefaultTrack(newRoleId);
-    const defaultLevel = newRoleTrack === "Managerial" ? "m3" : "p1";
+    const isNewRoleManagerial = newRoleId === "126" || newRoleId === "128";
+    const defaultLevel = isNewRoleManagerial ? "m3" : "p1";
     
     console.log('Role changed, reset level', {
       newRole: value,
-      track: newRoleTrack,
+      newRoleId,
+      isManagerial: isNewRoleManagerial,
       defaultLevel
     });
     
