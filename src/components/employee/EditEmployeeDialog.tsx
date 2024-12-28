@@ -50,8 +50,27 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     
     console.log('Edit form submission started - Form data:', formData);
 
+    // Format the level to uppercase for managerial roles (M3-M6)
+    const roleId = roleMapping[formData.role];
+    const isManagerialRole = roleId === "126" || roleId === "128";
+    const formattedLevel = isManagerialRole ? formData.level.toUpperCase() : formData.level.toLowerCase();
+    
+    // Create a copy of formData with the formatted level
+    const submissionData = {
+      ...formData,
+      level: formattedLevel
+    };
+
+    console.log('Submitting with formatted data:', {
+      roleId,
+      isManagerialRole,
+      originalLevel: formData.level,
+      formattedLevel,
+      submissionData
+    });
+
     // Validate form data
-    const validation = validateFormData(formData, employees.filter(emp => emp.id !== employee.id));
+    const validation = validateFormData(submissionData, employees.filter(emp => emp.id !== employee.id));
     if (!validation.isValid) {
       console.log('Validation failed:', validation.error);
       toast({
@@ -65,7 +84,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     try {
       // Process and update employee data
       const updatedEmployee = processEmployeeData({
-        ...formData,
+        ...submissionData,
         id: employee.id // Ensure we keep the original ID
       });
 
