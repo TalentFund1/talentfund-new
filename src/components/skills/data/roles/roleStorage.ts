@@ -14,24 +14,28 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
       
       // Ensure roleTrack is preserved from storage
       const roleTrack = parsedSkills.roleTrack || getRoleDefaultTrack(roleId);
-      console.log('Loaded role track from storage:', {
+      console.log('Loading role skills with track:', {
         roleId,
         roleTrack,
-        hasSkills: parsedSkills.skills?.length > 0
+        hasSkills: parsedSkills.skills?.length > 0,
+        parsedSkills
       });
       
       // Convert all skills to unified format while preserving categories
-      const unifiedSpecialized = (parsedSkills.specialized || []).map((skill: any) => 
-        getUnifiedSkillData(skill.title)
-      );
+      const unifiedSpecialized = (parsedSkills.specialized || []).map((skill: any) => ({
+        ...getUnifiedSkillData(skill.title),
+        category: 'specialized'
+      }));
       
-      const unifiedCommon = (parsedSkills.common || []).map((skill: any) => 
-        getUnifiedSkillData(skill.title)
-      );
+      const unifiedCommon = (parsedSkills.common || []).map((skill: any) => ({
+        ...getUnifiedSkillData(skill.title),
+        category: 'common'
+      }));
       
-      const unifiedCertifications = (parsedSkills.certifications || []).map((skill: any) => 
-        getUnifiedSkillData(skill.title)
-      );
+      const unifiedCertifications = (parsedSkills.certifications || []).map((skill: any) => ({
+        ...getUnifiedSkillData(skill.title),
+        category: 'certification'
+      }));
       
       // Combine all skills for the skills array
       const allSkills = [
@@ -55,7 +59,8 @@ export const loadRoleSkills = (roleId: string): RoleSkillData | null => {
         skillsCount: roleData.skills.length,
         specializedCount: roleData.specialized.length,
         commonCount: roleData.common.length,
-        certificationsCount: roleData.certifications.length
+        certificationsCount: roleData.certifications.length,
+        roleData
       });
       
       return roleData;
@@ -70,22 +75,26 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
   console.log('Saving role skills:', { 
     roleId, 
     roleTrack: skills.roleTrack,
-    skillsCount: skills.skills.length 
+    skillsCount: skills.skills.length,
+    skills 
   });
   
   try {
     // Ensure all skills are in unified format while preserving categories
-    const unifiedSpecialized = skills.specialized.map(skill => 
-      getUnifiedSkillData(skill.title)
-    );
+    const unifiedSpecialized = skills.specialized.map(skill => ({
+      ...getUnifiedSkillData(skill.title),
+      category: 'specialized'
+    }));
     
-    const unifiedCommon = skills.common.map(skill => 
-      getUnifiedSkillData(skill.title)
-    );
+    const unifiedCommon = skills.common.map(skill => ({
+      ...getUnifiedSkillData(skill.title),
+      category: 'common'
+    }));
     
-    const unifiedCertifications = skills.certifications.map(skill => 
-      getUnifiedSkillData(skill.title)
-    );
+    const unifiedCertifications = skills.certifications.map(skill => ({
+      ...getUnifiedSkillData(skill.title),
+      category: 'certification'
+    }));
     
     // Combine all skills for the skills array
     const allSkills = [
@@ -103,7 +112,13 @@ export const saveRoleSkills = async (roleId: string, skills: RoleSkillData) => {
       skills: allSkills
     };
     
-    localStorage.setItem(getStorageKey(roleId), JSON.stringify(roleData));
+    const storageKey = getStorageKey(roleId);
+    console.log('Saving role data to storage:', {
+      key: storageKey,
+      roleData
+    });
+    
+    localStorage.setItem(storageKey, JSON.stringify(roleData));
     
     console.log('Saved role skills with track:', {
       roleId,
