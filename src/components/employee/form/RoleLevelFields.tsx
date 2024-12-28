@@ -1,6 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { roleSkills } from '../../skills/data/roleSkills';
 import { professionalLevels, managerialLevels } from '../../benchmark/data/levelData';
+import { getRoleDefaultTrack } from '../../skills/data/roles/roleDefinitions';
 
 interface RoleLevelFieldsProps {
   formData: {
@@ -26,8 +27,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   const getRoleTrack = (roleTitle: string) => {
     const roleId = roleMapping[roleTitle];
     if (roleId) {
-      const roleData = roleSkills[roleId as keyof typeof roleSkills];
-      return roleData?.roleTrack || "Professional";
+      return getRoleDefaultTrack(roleId);
     }
     return "Professional"; // Default to Professional track
   };

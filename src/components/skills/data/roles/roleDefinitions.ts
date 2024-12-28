@@ -24,5 +24,6 @@ export const getRoleSoc = (id: string): string => {
 
 export const getRoleDefaultTrack = (roleId: string): "Professional" | "Managerial" => {
   console.log('Determining default track for role:', roleId);
+  // Only Engineering Manager (126) is managerial
   return roleId === "126" ? "Managerial" : "Professional";
 };
