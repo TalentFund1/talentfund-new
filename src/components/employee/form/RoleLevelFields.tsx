@@ -1,7 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { roleSkills } from '../../skills/data/roleSkills';
 import { professionalLevels, managerialLevels } from '../../benchmark/data/levelData';
-import { getRoleDefaultTrack } from '../../skills/data/roles/roleDefinitions';
 
 interface RoleLevelFieldsProps {
   formData: {
@@ -27,7 +26,8 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
   const getRoleTrack = (roleTitle: string) => {
     const roleId = roleMapping[roleTitle];
     if (roleId) {
-      return getRoleDefaultTrack(roleId);
+      const roleData = roleSkills[roleId as keyof typeof roleSkills];
+      return roleData?.roleTrack || "Professional";
     }
     return "Professional"; // Default to Professional track
   };
@@ -73,6 +73,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
             handleInputChange('role', value);
             // Reset level when role changes to ensure track compatibility
             handleInputChange('level', '');
+            console.log('Role changed, reset level');
           }}
         >
           <SelectTrigger>
@@ -103,7 +104,7 @@ export const RoleLevelFields = ({ formData, handleInputChange }: RoleLevelFields
           <SelectContent>
             {Object.entries(levelOptions).map(([key, label]) => (
               <SelectItem key={key} value={key.toLowerCase()}>
-                {`${key} - ${getLevelDescription(key)}`}
+                {`${label} - ${getLevelDescription(key)}`}
               </SelectItem>
             ))}
           </SelectContent>

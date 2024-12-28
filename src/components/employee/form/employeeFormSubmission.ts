@@ -3,7 +3,6 @@ import { getSkillProfileId } from "../../EmployeeTable";
 import { getEmployeeSkills } from "../../benchmark/skills-matrix/initialSkills";
 import { categorizeSkills } from "../../skills/competency/skillCategories";
 import { roleMapping } from "./RoleLevelFields";
-import { getRoleDefaultTrack } from "../../skills/data/roles/roleDefinitions";
 
 interface FormData {
   id: string;
@@ -23,7 +22,7 @@ interface FormData {
 export const processEmployeeData = (formData: FormData): Employee => {
   console.log('Processing employee data:', formData);
   
-  const formattedRole = formData.level ? `${formData.role}: ${formData.level.toUpperCase()}` : formData.role;
+  const formattedRole = `${formData.role}: ${formData.level}`;
   console.log('Formatted role:', formattedRole);
 
   const lastUpdated = new Date().toLocaleDateString();
@@ -103,30 +102,14 @@ export const validateFormData = (formData: FormData, existingEmployees: Employee
     }
   }
 
-  // Get role track
-  const roleId = Object.entries(roleMapping).find(([title]) => title === formData.role)?.[1];
-  const roleTrack = roleId ? getRoleDefaultTrack(roleId) : "Professional";
-  
-  console.log('Role validation:', {
-    roleId,
-    roleTrack,
-    level: formData.level
-  });
-
   // Validate role and level combination
+  const isManagerialRole = formData.role.toLowerCase().includes('manager');
   const isManagerialLevel = formData.level.toLowerCase().startsWith('m');
-  const isManagerialTrack = roleTrack === "Managerial";
-  
-  if (isManagerialLevel !== isManagerialTrack) {
-    console.log('Validation failed: Role track and level mismatch', {
-      roleTrack,
-      level: formData.level,
-      isManagerialLevel,
-      isManagerialTrack
-    });
+  if (isManagerialRole !== isManagerialLevel) {
+    console.log('Validation failed: Role and level mismatch');
     return {
       isValid: false,
-      error: `Invalid level for ${roleTrack} role. ${roleTrack === "Professional" ? "Use P1-P6" : "Use M3-M6"}`
+      error: "Selected level does not match the role type (managerial/professional)"
     };
   }
 
