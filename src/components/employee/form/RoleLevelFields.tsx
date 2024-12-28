@@ -24,15 +24,18 @@ export const RoleLevelFields = ({
   // Get all available roles from roleSkills
   const availableRoles = Object.values(roleSkills).map(role => role.title);
 
-  // Determine if the selected role is managerial
+  // Get roleId from the selected role title
   const roleId = roleMapping[formData.role];
-  const isManagerialRole = getRoleDefaultTrack(roleId) === "Managerial";
+  
+  // Determine if the role is managerial based on its track
+  const roleTrack = getRoleDefaultTrack(roleId);
+  const isManagerialRole = roleTrack === "Managerial";
 
   console.log('Role track determination in form:', {
     role: formData.role,
     roleId,
     isManagerialRole,
-    track: getRoleDefaultTrack(roleId)
+    track: roleTrack
   });
 
   const handleRoleChange = (value: string) => {
