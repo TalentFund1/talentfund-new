@@ -32,6 +32,7 @@ export const AddEmployeeDialog = () => {
     termDate: "",
     sex: "",
     category: "",
+    team: "RnD",
     skills: ""
   });
 
@@ -84,6 +85,7 @@ export const AddEmployeeDialog = () => {
         termDate: "",
         sex: "",
         category: "",
+        team: "RnD",
         skills: ""
       });
     } catch (error) {

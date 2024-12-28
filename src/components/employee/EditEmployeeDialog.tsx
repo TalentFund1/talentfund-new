@@ -36,6 +36,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     termDate: employee.termDate === "-" ? "" : employee.termDate,
     sex: employee.sex,
     category: employee.category,
+    team: employee.team || "RnD"
   });
 
   console.log('EditEmployeeDialog - Initial form data:', {
