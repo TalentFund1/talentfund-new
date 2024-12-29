@@ -28,32 +28,53 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
     employeeId,
     skillCount: employeeSkills.length,
     skills: employeeSkills.map(s => ({ title: s.title, level: s.level })),
-    selectedLevel
+    selectedLevel,
+    selectedCategory
   });
 
   // Get current role skills
   const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
-  const allRoleSkills = [
-    ...currentRoleSkills.specialized,
-    ...currentRoleSkills.common,
-    ...currentRoleSkills.certifications
-  ];
 
-  // Filter skills by category and toggled state
-  const filteredSkills = allRoleSkills
-    .filter(skill => toggledSkills.has(skill.title))
-    .map(skill => {
-      const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
-      return {
-        ...skill,
-        level: competencyState.level,
-        required: competencyState.required
-      };
-    });
+  // Filter skills based on category and toggled state
+  const getSkillsByCategory = () => {
+    let skillsToFilter = [];
+    
+    switch (selectedCategory) {
+      case "specialized":
+        skillsToFilter = currentRoleSkills.specialized;
+        break;
+      case "common":
+        skillsToFilter = currentRoleSkills.common;
+        break;
+      case "certification":
+        skillsToFilter = currentRoleSkills.certifications;
+        break;
+      default:
+        skillsToFilter = [
+          ...currentRoleSkills.specialized,
+          ...currentRoleSkills.common,
+          ...currentRoleSkills.certifications
+        ];
+    }
+
+    return skillsToFilter
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => {
+        const competencyState = getSkillCompetencyState(skill.title, selectedLevel.toLowerCase(), roleId);
+        return {
+          ...skill,
+          level: competencyState.level,
+          required: competencyState.required
+        };
+      });
+  };
+
+  const filteredSkills = getSkillsByCategory();
 
   console.log('Filtered skills with competency states:', {
     roleId,
     level: selectedLevel,
+    category: selectedCategory,
     totalSkills: filteredSkills.length,
     skills: filteredSkills.map(s => ({
       title: s.title,
@@ -74,10 +95,8 @@ export const CategorizedSkills = ({ roleId, employeeId }: CategorizedSkillsProps
   });
 
   // Update missing skills logic to include all skills that are in role requirements but not in employee skills
-  const missingSkills = allRoleSkills.filter(roleSkill => {
-    const hasSkill = employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
-    const isToggled = toggledSkills.has(roleSkill.title);
-    return !hasSkill && isToggled;
+  const missingSkills = filteredSkills.filter(roleSkill => {
+    return !employeeSkills.some(empSkill => empSkill.title === roleSkill.title);
   });
 
   const getLevelColor = (level: string) => {
