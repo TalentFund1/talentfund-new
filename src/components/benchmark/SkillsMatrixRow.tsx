@@ -1,143 +1,102 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check } from "lucide-react";
-import { SkillLevelCell } from "./SkillLevelCell";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
-import { RoleSkillLevelCell } from "./RoleSkillLevelCell";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { useParams } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { Checkbox } from "../ui/checkbox";
+import { roleSkills } from "../skills/data/roleSkills";
+import { useParams } from "react-router-dom";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { SkillLevelCell } from "./SkillLevelCell";
+import { Badge } from "../ui/badge";
 
 interface SkillsMatrixRowProps {
-  skill: {
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
-    requirement?: string;
-    category?: string;
-  };
+  skill: UnifiedSkill;
   isRoleBenchmark?: boolean;
 }
 
-const getSkillScore = (level: string): number => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return Math.floor(Math.random() * 26) + 75; // 75-100
-    case 'intermediate':
-      return Math.floor(Math.random() * 26) + 50; // 50-75
-    case 'beginner':
-      return Math.floor(Math.random() * 26) + 25; // 25-50
-    default:
-      return Math.floor(Math.random() * 26); // 0-25
-  }
-};
-
 export const SkillsMatrixRow = ({ 
-  skill, 
+  skill,
   isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
-  const { getSkillState, updateSkillState } = useEmployeeSkillsStore();
-  const unifiedSkillData = getUnifiedSkillData(skill.title);
+  const { getEmployeeSkills } = useEmployeeSkillsStore();
   
-  console.log('SkillsMatrixRow rendering:', {
+  // Check if employee has this skill
+  const employeeSkills = employeeId ? getEmployeeSkills(employeeId) : [];
+  const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+
+  console.log('Rendering SkillsMatrixRow:', {
     skillTitle: skill.title,
-    skillId: unifiedSkillData.id,
-    originalSubcategory: skill.subcategory,
-    unifiedSubcategory: unifiedSkillData.subcategory,
-    isRoleBenchmark,
-    originalGrowth: skill.growth,
-    unifiedGrowth: unifiedSkillData.growth,
-    salary: unifiedSkillData.salary
+    hasSkill,
+    employeeSkillCount: employeeSkills.length,
+    isRoleBenchmark
   });
 
-  const skillScore = getSkillScore(skill.level);
-  const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
-
-  const handleDevelopmentPlanChange = (checked: boolean) => {
-    if (!employeeId) return;
-    
-    console.log('Updating development plan:', {
-      employeeId,
-      skillTitle: skill.title,
-      inDevelopmentPlan: checked
-    });
-
-    updateSkillState(employeeId, skill.title, {
-      inDevelopmentPlan: checked
-    });
-  };
-
-  const getScoreColor = (score: number): string => {
-    if (score >= 75) return 'bg-[#8073ec20] text-[#8073ec] shadow-sm font-semibold';
-    if (score >= 50) return 'bg-[#ff825620] text-[#ff8256] shadow-sm font-semibold';
-    if (score >= 25) return 'bg-[#00800020] text-[#008000] shadow-sm font-semibold';
-    return 'bg-[#8E919620] text-[#8E9196] shadow-sm font-semibold';
+  const getTypeColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'specialized':
+        return 'bg-blue-100 text-blue-800';
+      case 'certification':
+        return 'bg-purple-100 text-purple-800';
+      case 'common':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
-    <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{unifiedSkillData.subcategory}</TableCell>
+    <TableRow className="group border-t border-border hover:bg-muted/50 transition-colors">
+      <TableCell className="py-3 px-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">{skill.title}</span>
+        </div>
+      </TableCell>
+      <TableCell className="py-3 px-4">
+        <span className="text-sm block truncate" title={skill.subcategory}>
+          {skill.subcategory}
+        </span>
+      </TableCell>
+      <TableCell className="py-3 px-4">
+        <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(skill.category)}`}>
+          {skill.category}
+        </span>
+      </TableCell>
       {isRoleBenchmark ? (
         <>
-          <RoleSkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
-          />
-          <StaticSkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
-            employeeId={employeeId || ''}
-          />
+          <TableCell className="py-3 px-4">
+            <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm">
+              ↗ {skill.growth}
+            </span>
+          </TableCell>
+          <TableCell className="py-3 px-2 text-sm">{skill.salary}</TableCell>
+          {hasSkill ? (
+            <SkillLevelCell 
+              initialLevel={skill.level}
+              skillTitle={skill.title}
+              isRoleBenchmark={true}
+            />
+          ) : (
+            <TableCell className="text-center py-3 px-4">
+              <Badge 
+                variant="outline"
+                className="bg-red-50 text-red-700 border-red-200 hover:bg-red-100 hover:text-red-800"
+              >
+                Missing Skill
+              </Badge>
+            </TableCell>
+          )}
         </>
       ) : (
-        <>
-          <TableCell className="text-center border-r border-blue-200 py-2">
-            <div className="flex justify-center">
-              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
-              </div>
-            </div>
-          </TableCell>
-          <SkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
-          />
-        </>
-      )}
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm ${getScoreColor(skillScore)}`}>
-          {skillScore}
-        </span>
-      </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
-          unifiedSkillData.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-        }`}>
-          ↗ {unifiedSkillData.growth}
-        </span>
-      </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className="text-sm text-gray-900">{unifiedSkillData.salary}</span>
-      </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <Checkbox
-          checked={skillState?.inDevelopmentPlan || false}
-          onCheckedChange={handleDevelopmentPlanChange}
-          className="data-[state=checked]:bg-gray-800 data-[state=checked]:border-gray-800"
+        <SkillLevelCell 
+          initialLevel={skill.level}
+          skillTitle={skill.title}
         />
-      </TableCell>
-      <TableCell className="text-center py-2">
-        <div className="flex items-center justify-center space-x-1">
-          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
-          <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
-          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">D</span>
+      )}
+      <TableCell className="text-center py-3 px-8">
+        <div className="flex justify-center gap-1">
+          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
+          <span className="w-6 h-6 rounded-full bg-red-100 text-red-800 flex items-center justify-center text-sm font-medium">R</span>
+          <span className="w-6 h-6 rounded-full bg-[#E5DEFF] text-[#6E59A5] flex items-center justify-center text-sm font-medium">M</span>
+          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">O</span>
         </div>
       </TableCell>
     </TableRow>
