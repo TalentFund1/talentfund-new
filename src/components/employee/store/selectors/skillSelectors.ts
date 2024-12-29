@@ -1,43 +1,48 @@
-import { EmployeeSkillAchievement, EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { EmployeeSkillData, EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export const createSkillSelectors = (get: any) => ({
-  getEmployeeSkills: (employeeId: string): EmployeeSkillAchievement[] => {
-    console.log('Getting employee skills:', { employeeId });
-    const state = get();
-    if (!state.employeeSkills[employeeId]) {
-      state.initializeEmployeeSkills(employeeId);
-    }
-    return state.employeeSkills[employeeId]?.skills || [];
-  },
-
-  getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
+  getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
     console.log('Getting skill state:', { employeeId, skillTitle });
-    const state = get();
-    const skillState = state.employeeSkills[employeeId]?.states[skillTitle];
-    const defaultState: EmployeeSkillState = {
-      level: 'unspecified',
-      goalStatus: 'unknown',
-      lastUpdated: new Date().toISOString(),
-      confidence: 'medium',
-      skillScore: 0,
-      inDevelopmentPlan: false
-    };
-
-    if (!skillState) {
-      console.log('No existing skill state found:', {
+    const state = get().skillStates[employeeId]?.skills[skillTitle];
+    
+    if (!state) {
+      const defaultState: EmployeeSkillData = {
+        id: `${employeeId}-${skillTitle}`,
         employeeId,
-        skillTitle,
-        usingDefault: true
-      });
+        skillId: `${employeeId}-${skillTitle}`,
+        title: skillTitle,
+        level: 'unspecified',
+        goalStatus: 'unknown',
+        lastUpdated: new Date().toISOString(),
+        confidence: 'medium',
+        subcategory: 'General',
+        category: 'specialized',
+        businessCategory: 'Technical Skills',
+        weight: 'technical',
+        growth: '0%',
+        salary: 'market',
+        skillScore: 0,
+        benchmarks: {
+          B: false,
+          R: false,
+          M: false,
+          O: false
+        }
+      };
       return defaultState;
     }
-
-    console.log('Retrieved employee skill state:', {
-      employeeId,
-      skillTitle,
-      state: skillState
-    });
     
-    return skillState;
+    return state;
+  },
+
+  getEmployeeSkills: (employeeId: string): EmployeeSkillData[] => {
+    console.log('Getting skills for employee:', employeeId);
+    const employeeState = get().skillStates[employeeId];
+    
+    if (!employeeState?.skills) {
+      return [];
+    }
+
+    return Object.values(employeeState.skills);
   }
 });

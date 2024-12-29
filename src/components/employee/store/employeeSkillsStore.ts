@@ -43,18 +43,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   employeeId,
                   skillId: `${employeeId}-${skill.title}`,
                   title: skill.title,
-                  level: skill.level as SkillLevel || 'unspecified',
+                  level: skill.level || 'unspecified',
                   goalStatus: 'unknown',
                   lastUpdated: new Date().toISOString(),
                   confidence: 'medium',
+                  skillScore: 0,
                   subcategory: unifiedData.subcategory || 'General',
                   category: unifiedData.category || 'specialized',
                   businessCategory: unifiedData.businessCategory || 'Technical Skills',
                   weight: unifiedData.weight || 'technical',
                   growth: unifiedData.growth || '0%',
                   salary: unifiedData.salary || 'market',
-                  skillScore: 0,
-                  inDevelopmentPlan: false,
                   benchmarks: {
                     B: false,
                     R: false,
@@ -105,8 +104,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             id: `${employeeId}-${title}`,
             employeeId,
             skillId: `${employeeId}-${title}`,
-            title,
-            inDevelopmentPlan: (skill as EmployeeSkillData).inDevelopmentPlan || false
+            title
           } as EmployeeSkillData;
           return skillData;
         });
@@ -120,7 +118,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return allSkills;
       },
 
-      getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
+      getSkillState: (employeeId: string, skillTitle: string) => {
         console.log('Getting skill state:', { employeeId, skillTitle });
         const state = get().skillStates[employeeId]?.skills[skillTitle];
         
@@ -140,8 +138,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             weight: 'technical',
             growth: '0%',
             salary: 'market',
-            skillScore: 0,
-            inDevelopmentPlan: false,
             benchmarks: {
               B: false,
               R: false,
@@ -165,12 +161,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
         const store = get();
         store.updateSkillState(employeeId, skillTitle, { goalStatus });
-      },
-
-      setSkillDevelopmentPlan: (employeeId: string, skillTitle: string, inDevelopmentPlan: boolean) => {
-        console.log('Setting skill development plan:', { employeeId, skillTitle, inDevelopmentPlan });
-        const store = get();
-        store.updateSkillState(employeeId, skillTitle, { inDevelopmentPlan });
       },
 
       ...createSkillStateActions(set, get),

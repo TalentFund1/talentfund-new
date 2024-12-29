@@ -9,7 +9,6 @@ export interface EmployeeSkillState {
   lastUpdated: string;
   confidence: 'low' | 'medium' | 'high';
   skillScore: number;
-  inDevelopmentPlan?: boolean;
 }
 
 // Single skill update
@@ -18,7 +17,6 @@ export interface EmployeeSkillUpdate {
   goalStatus?: SkillGoalStatus;
   confidence?: 'low' | 'medium' | 'high';
   skillScore?: number;
-  inDevelopmentPlan?: boolean;
 }
 
 // Complete employee skill data
@@ -38,7 +36,6 @@ export interface EmployeeSkillData {
   salary: string;
   confidence: 'low' | 'medium' | 'high';
   skillScore: number;
-  inDevelopmentPlan: boolean;
   benchmarks: {
     B: boolean;
     R: boolean;

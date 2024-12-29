@@ -12,7 +12,6 @@ export interface EmployeeSkillsStoreMethods {
   getEmployeeSkills: (employeeId: string) => EmployeeSkillData[];
   setSkillLevel: (employeeId: string, skillTitle: string, level: string) => void;
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: string) => void;
-  setSkillDevelopmentPlan: (employeeId: string, skillTitle: string, inDevelopmentPlan: boolean) => void;
   initializeEmployeeSkills: (employeeId: string) => void;
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;

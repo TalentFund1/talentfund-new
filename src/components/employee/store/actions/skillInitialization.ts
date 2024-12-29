@@ -1,82 +1,78 @@
+import { EmployeeSkillData } from '../../types/employeeSkillTypes';
+import { employees } from '../../EmployeeData';
 import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
-import { 
-  EmployeeSkillAchievement, 
-  SkillLevel, 
-  SkillGoalStatus 
-} from '../../types/employeeSkillTypes';
-
-export const initializeSkill = (employeeId: string, skillTitle: string): EmployeeSkillAchievement => {
-  const unifiedData = getUnifiedSkillData(skillTitle);
-  
-  return {
-    id: `${employeeId}-${skillTitle}`,
-    employeeId,
-    skillId: `${employeeId}-${skillTitle}`,
-    title: skillTitle,
-    level: 'unspecified' as SkillLevel,
-    goalStatus: 'unknown' as SkillGoalStatus,
-    lastUpdated: new Date().toISOString(),
-    confidence: 'medium',
-    subcategory: unifiedData.subcategory || 'General',
-    category: unifiedData.category || 'specialized',
-    businessCategory: unifiedData.businessCategory || 'Technical Skills',
-    weight: unifiedData.weight || 'technical',
-    growth: unifiedData.growth || '0%',
-    salary: unifiedData.salary || 'market',
-    skillScore: 0,
-    inDevelopmentPlan: false,
-    benchmarks: {
-      B: false,
-      R: false,
-      M: false,
-      O: false
-    }
-  };
-};
 
 export const createInitializationActions = (set: any, get: any) => ({
-  initializeEmployeeSkills: (employeeId: string, initialSkills: Array<{ name: string, level: SkillLevel }> = []) => {
-    console.log('Initializing skills for employee:', { 
-      employeeId, 
-      initialSkillCount: initialSkills.length 
-    });
+  initializeEmployeeSkills: (employeeId: string) => {
+    console.log('Initializing skills for employee:', employeeId);
     
-    const processedSkills: EmployeeSkillAchievement[] = initialSkills.map(skill => {
-      const unifiedData = getUnifiedSkillData(skill.name);
-      const skillId = `${employeeId}-${skill.name}`;
-      
-      return {
-        id: skillId,
+    const employee = employees.find(emp => emp.id === employeeId);
+    if (!employee) {
+      console.warn('No employee found for initialization:', employeeId);
+      return;
+    }
+
+    // Get current state from store
+    const currentState = get().skillStates[employeeId];
+    
+    if (!currentState) {
+      console.log('No existing state found, initializing from employee data:', {
         employeeId,
-        skillId,
-        title: skill.name,
-        subcategory: unifiedData.subcategory || 'General',
-        level: skill.level,
-        goalStatus: 'unknown' as SkillGoalStatus,
-        lastUpdated: new Date().toISOString(),
-        category: unifiedData.category || 'specialized',
-        businessCategory: unifiedData.businessCategory || 'Technical Skills',
-        weight: unifiedData.weight || 'technical',
-        growth: unifiedData.growth || '0%',
-        salary: unifiedData.salary || 'market',
-        confidence: 'medium',
-        skillScore: 0,
-        inDevelopmentPlan: false,
-        benchmarks: unifiedData.benchmarks || {
-          B: false,
-          R: false,
-          M: false,
-          O: false
+        skillCount: employee.skills.length,
+        skills: employee.skills.map(s => s.title)
+      });
+
+      // Initialize each skill with default state
+      const updates: Record<string, EmployeeSkillData> = {};
+      
+      employee.skills.forEach(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        updates[skill.title] = {
+          id: `${employeeId}-${skill.title}`,
+          employeeId,
+          skillId: `${employeeId}-${skill.title}`,
+          title: skill.title,
+          level: skill.level || 'unspecified',
+          goalStatus: 'unknown',
+          lastUpdated: new Date().toISOString(),
+          confidence: 'medium',
+          subcategory: skillData.subcategory || 'General',
+          category: skillData.category || 'specialized',
+          businessCategory: skillData.businessCategory || 'Technical Skills',
+          weight: skillData.weight || 'technical',
+          growth: skillData.growth || '0%',
+          salary: skillData.salary || 'market',
+          skillScore: 0,
+          benchmarks: {
+            B: false,
+            R: false,
+            M: false,
+            O: false
+          }
+        };
+      });
+
+      set(state => ({
+        skillStates: {
+          ...state.skillStates,
+          [employeeId]: {
+            skills: updates,
+            lastUpdated: new Date().toISOString()
+          }
         }
-      };
-    });
+      }));
 
-    console.log('Created initial skills:', {
-      employeeId,
-      skillCount: processedSkills.length,
-      skills: processedSkills.map(s => s.title)
-    });
-
-    return processedSkills;
+      console.log('Initialized employee skills:', {
+        employeeId,
+        skillCount: Object.keys(updates).length,
+        skills: Object.keys(updates)
+      });
+    } else {
+      console.log('Found existing skill state:', {
+        employeeId,
+        skillCount: Object.keys(currentState.skills).length,
+        skills: Object.keys(currentState.skills)
+      });
+    }
   }
 });

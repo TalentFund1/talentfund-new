@@ -30,11 +30,7 @@ const formSchema = z.object({
   roleTrack: z.enum(["Professional", "Managerial"]).optional(),
 });
 
-interface EditSkillProfileFormProps {
-  profile: RoleSkillData;
-}
-
-export const EditSkillProfileForm = ({ profile }: EditSkillProfileFormProps) => {
+export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 

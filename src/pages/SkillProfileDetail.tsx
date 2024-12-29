@@ -25,16 +25,8 @@ const SkillProfileDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [track, setTrack] = useState<"Professional" | "Managerial">("Professional");
 
-  const currentRole = roleSkills.find(role => role.roleId === id) || {
-    roleId: id || '123',
-    title: "AI Engineer",
-    function: '',
-    track: "Professional" as const,
-    specialized: [],
-    common: [],
-    certifications: [],
-    skills: []
-  };
+  const currentRole = roleSkills[id as keyof typeof roleSkills];
+  const jobTitle = currentRole ? currentRole.title : "AI Engineer";
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
@@ -88,7 +80,7 @@ const SkillProfileDetail = () => {
                   </div>
 
                   <Card className="p-8 bg-white">
-                    <SkillProfileHeader profile={currentRole} />
+                    <SkillProfileHeader jobTitle={jobTitle} />
                   </Card>
 
                   <EmployeeOverview />

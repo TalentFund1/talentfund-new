@@ -1,27 +1,40 @@
-import { EmployeeSkillData, EmployeeSkillAchievement } from "../../types/employeeSkillTypes";
-import { getUnifiedSkillData } from "../../../skills/data/skillDatabaseService";
+import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
+import { 
+  EmployeeSkillAchievement, 
+  SkillLevel, 
+  SkillGoalStatus 
+} from '../../types/employeeSkillTypes';
 
-export const initializeEmployeeSkills = (employeeId: string, skills: any[]): EmployeeSkillAchievement[] => {
-  return skills.map(skill => {
-    const unifiedData = getUnifiedSkillData(skill.title);
+export const initializeEmployeeSkills = (
+  employeeId: string, 
+  initialSkills: Array<{ name: string, level: SkillLevel }> = []
+): EmployeeSkillAchievement[] => {
+  console.log('Initializing skills for employee:', { 
+    employeeId, 
+    initialSkillCount: initialSkills.length 
+  });
+  
+  const processedSkills: EmployeeSkillAchievement[] = initialSkills.map(skill => {
+    const unifiedData = getUnifiedSkillData(skill.name);
+    const skillId = `${employeeId}-${skill.name}`;
+    
     return {
-      id: `${employeeId}-${skill.title}`,
+      id: skillId,
       employeeId,
-      skillId: `${employeeId}-${skill.title}`,
-      title: skill.title,
+      skillId,
+      title: skill.name,
       subcategory: unifiedData.subcategory || 'General',
-      level: skill.level || 'unspecified',
-      goalStatus: skill.goalStatus || 'unknown',
+      level: skill.level,
+      goalStatus: 'unknown' as SkillGoalStatus,
       lastUpdated: new Date().toISOString(),
-      category: unifiedData.category || 'specialized',
-      weight: unifiedData.weight || 'technical',
-      businessCategory: unifiedData.businessCategory || 'Technical Skills',
-      growth: unifiedData.growth || '0%',
-      salary: unifiedData.salary || 'market',
+      category: unifiedData.category,
+      businessCategory: unifiedData.businessCategory,
+      weight: unifiedData.weight,
+      growth: unifiedData.growth,
+      salary: unifiedData.salary,
       confidence: 'medium',
       skillScore: 0,
-      inDevelopmentPlan: false,
-      benchmarks: {
+      benchmarks: unifiedData.benchmarks || {
         B: false,
         R: false,
         M: false,
@@ -29,4 +42,12 @@ export const initializeEmployeeSkills = (employeeId: string, skills: any[]): Emp
       }
     };
   });
+
+  console.log('Created initial skills:', {
+    employeeId,
+    skillCount: processedSkills.length,
+    skills: processedSkills.map(s => s.title)
+  });
+
+  return processedSkills;
 };
