@@ -9,7 +9,6 @@ import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
 import { getAllSkills } from './data/skills/allSkills';
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -88,7 +87,6 @@ export const SkillsSummary = () => {
             onClick={handleCancelSelection}
             className="flex items-center gap-2"
           >
-            <X className="h-4 w-4" />
             Cancel
           </Button>
         )}
