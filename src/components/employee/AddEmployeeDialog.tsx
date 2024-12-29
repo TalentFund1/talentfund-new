@@ -1,21 +1,20 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { useEmployeeStore } from "./store/employeeStore";
 import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
-import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { useNavigate } from "react-router-dom";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsProvider";
+import { roleMapping } from "./form/RoleLevelFields";
 
-export const AddEmployeeDialog = () => {
+interface AddEmployeeDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const AddEmployeeDialog = ({ open, onOpenChange }: AddEmployeeDialogProps) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const employees = useEmployeeStore((state) => state.employees);
   
@@ -39,9 +38,8 @@ export const AddEmployeeDialog = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     console.log('Form submission started - Form data:', formData);
-    
+
     // Validate form data
     const validation = validateFormData(formData, employees);
     if (!validation.isValid) {
@@ -55,45 +53,23 @@ export const AddEmployeeDialog = () => {
     }
 
     try {
-      // Process employee data
+      // Process and add employee data
       const newEmployee = processEmployeeData(formData);
-      console.log('Processed employee data:', newEmployee);
+      console.log('Adding new employee:', newEmployee);
       
-      // Add employee to store
       addEmployee(newEmployee);
-      console.log('Employee added to store:', newEmployee);
 
       toast({
         title: "Success",
-        description: "Employee profile created successfully",
+        description: "Employee added successfully",
       });
       
-      setOpen(false);
-      // Navigate to the new employee's profile
-      navigate(`/employee/${newEmployee.id}`);
-      
-      // Reset form
-      setFormData({
-        id: "",
-        name: "",
-        location: "",
-        office: "",
-        department: "",
-        manager: "",
-        role: "",
-        level: "",
-        startDate: "",
-        termDate: "",
-        sex: "",
-        category: "",
-        team: "RnD",
-        skills: ""
-      });
+      onOpenChange(false);
     } catch (error) {
-      console.error('Error creating employee:', error);
+      console.error('Error adding employee:', error);
       toast({
         title: "Error",
-        description: "Failed to create employee profile. Please try again.",
+        description: "Failed to add employee. Please try again.",
         variant: "destructive"
       });
     }
@@ -101,36 +77,45 @@ export const AddEmployeeDialog = () => {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => {
-      const newData = {
-        ...prev,
-        [field]: value
-      };
-
-      // Reset level when role changes
+      // If changing role, check if we need to adjust the level based on track
       if (field === 'role') {
-        newData.level = '';
-        console.log('Role changed, reset level');
+        const roleId = roleMapping[value];
+        const isManagerialRole = roleId === "126" || roleId === "128";
+        
+        // Set default level based on track
+        const newLevel = isManagerialRole ? "m3" : "p1";
+        
+        console.log('Adjusting level for role change:', {
+          newRole: value,
+          roleId,
+          isManagerial: isManagerialRole,
+          newLevel
+        });
+
+        return {
+          ...prev,
+          [field]: value,
+          level: newLevel,
+          type: prev.type
+        };
       }
 
-      console.log(`Field ${field} updated to:`, value);
-      return newData;
+      return {
+        ...prev,
+        [field]: value,
+        type: prev.type
+      };
     });
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Add Employee</Button>
-      </DialogTrigger>
-      <ToggledSkillsProvider>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Create Employee Profile</DialogTitle>
-            <DialogDescription>
-              Fill in the employee details below to create a new profile.
-            </DialogDescription>
-          </DialogHeader>
-          
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Add New Employee</DialogTitle>
+        </DialogHeader>
+        
+        <ToggledSkillsProvider>
           <form onSubmit={handleSubmit} className="space-y-4">
             <EmployeeFormFields 
               formData={formData}
@@ -138,11 +123,11 @@ export const AddEmployeeDialog = () => {
             />
 
             <div className="flex justify-end">
-              <Button type="submit">Create Profile</Button>
+              <Button type="submit">Add Employee</Button>
             </div>
           </form>
-        </DialogContent>
-      </ToggledSkillsProvider>
+        </ToggledSkillsProvider>
+      </DialogContent>
     </Dialog>
   );
 };

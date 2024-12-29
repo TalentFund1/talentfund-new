@@ -1,12 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { useEmployeeStore } from "./store/employeeStore";
 import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
 import { Employee } from "../types/employeeTypes";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsProvider";
 import { roleMapping } from "./form/RoleLevelFields";
 import { useNavigate } from "react-router-dom";
 import { getRoleDefaultTrack } from "../skills/data/roles/roleDefinitions";
@@ -37,7 +37,7 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
     sex: employee.sex,
     category: employee.category,
     team: employee.team || "RnD",
-    type: employee.type || "On-site"
+    type: employee.type || "On-site" as const
   });
 
   console.log('EditEmployeeDialog - Initial form data:', {
@@ -134,10 +134,34 @@ export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmploye
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setFormData(prev => {
+      // If changing role, check if we need to adjust the level based on track
+      if (field === 'role') {
+        const roleId = roleMapping[value];
+        const isManagerialRole = roleId === "126" || roleId === "128";
+        
+        // Set default level based on track
+        const newLevel = isManagerialRole ? "m3" : "p1";
+        
+        console.log('Adjusting level for role change:', {
+          newRole: value,
+          roleId,
+          isManagerial: isManagerialRole,
+          newLevel
+        });
+
+        return {
+          ...prev,
+          [field]: value,
+          level: newLevel
+        };
+      }
+
+      return {
+        ...prev,
+        [field]: value
+      };
+    });
   };
 
   return (
