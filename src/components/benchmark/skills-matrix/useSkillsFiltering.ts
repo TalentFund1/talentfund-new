@@ -7,6 +7,17 @@ import { useRoleStore } from "../RoleBenchmark";
 import { useMemo } from "react";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
+const getLevelPriority = (level: string, hasSkill: boolean): number => {
+  if (!hasSkill) return 5; // Missing skills go last
+  switch (level?.toLowerCase()) {
+    case 'advanced': return 1;
+    case 'intermediate': return 2;
+    case 'beginner': return 3;
+    case 'unspecified': return 4;
+    default: return 5;
+  }
+};
+
 export const useSkillsFiltering = (
   employeeId: string,
   selectedRole: string,
@@ -58,11 +69,12 @@ export const useSkillsFiltering = (
     ];
 
     // Get all toggled skills from role skills
-    const toggledRoleSkills = allRoleSkills
+    let toggledRoleSkills = allRoleSkills
       .filter(skill => toggledSkills.has(skill.title))
       .map(skill => {
         const unifiedData = getUnifiedSkillData(skill.title);
         const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+        const employeeSkill = employeeSkills.find(empSkill => empSkill.title === skill.title);
         
         return {
           ...skill,
@@ -71,6 +83,7 @@ export const useSkillsFiltering = (
           weight: unifiedData.weight || 'technical',
           subcategory: unifiedData.subcategory || 'General',
           hasSkill,
+          level: employeeSkill?.level || 'unspecified',
           minimumLevel: 'beginner',
           requirementLevel: 'required',
           metrics: {
@@ -87,13 +100,37 @@ export const useSkillsFiltering = (
       presentSkills: toggledRoleSkills.filter(s => s.hasSkill).length
     });
 
+    // Apply category and weight filters
     if (selectedCategory !== 'all') {
-      return toggledRoleSkills.filter(skill => skill.category === selectedCategory);
+      toggledRoleSkills = toggledRoleSkills.filter(skill => skill.category === selectedCategory);
     }
 
     if (selectedWeight !== 'all') {
-      return toggledRoleSkills.filter(skill => skill.weight === selectedWeight.toLowerCase());
+      toggledRoleSkills = toggledRoleSkills.filter(skill => skill.weight === selectedWeight.toLowerCase());
     }
+
+    // Sort skills by level priority
+    toggledRoleSkills.sort((a, b) => {
+      const levelPriorityA = getLevelPriority(a.level, a.hasSkill);
+      const levelPriorityB = getLevelPriority(b.level, b.hasSkill);
+      
+      if (levelPriorityA !== levelPriorityB) {
+        return levelPriorityA - levelPriorityB;
+      }
+      
+      // If levels are the same, sort alphabetically by title
+      return a.title.localeCompare(b.title);
+    });
+
+    console.log('Final sorted skills:', {
+      totalSkills: toggledRoleSkills.length,
+      sortedSkills: toggledRoleSkills.map(s => ({
+        title: s.title,
+        level: s.level,
+        hasSkill: s.hasSkill,
+        priority: getLevelPriority(s.level, s.hasSkill)
+      }))
+    });
 
     return toggledRoleSkills;
   }, [
