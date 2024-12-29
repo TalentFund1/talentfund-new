@@ -27,6 +27,7 @@ export const AddSkillToProfileDialog = () => {
         metrics: {
           growth: skill.growth,
           salary: skill.salary,
+          confidence: skill.confidence,
           skillScore: skill.skillScore || 0
         }
       }],
@@ -94,14 +95,8 @@ export const AddSkillToProfileDialog = () => {
                   level: "beginner",
                   growth: "0%",
                   salary: "market",
+                  confidence: "medium",
                   skillScore: 0,
-                  minimumLevel: "beginner",
-                  requirementLevel: "required",
-                  metrics: {
-                    growth: "0%",
-                    salary: "market",
-                    skillScore: 0
-                  },
                   benchmarks: {
                     B: false,
                     R: false,

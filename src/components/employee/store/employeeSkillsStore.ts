@@ -7,13 +7,7 @@ import { createStoreActions } from './actions/storeActions';
 import { EmployeeSkillsStore, EmployeeSkillsStoreState } from './types/storeTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { benchmarkingService } from '../../../services/benchmarking';
-import { 
-  EmployeeSkillData, 
-  EmployeeSkillState, 
-  SkillLevel, 
-  SkillGoalStatus, 
-  EmployeeSkillAchievement 
-} from '../types/employeeSkillTypes';
+import { EmployeeSkillData, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 import { employees } from '../EmployeeData';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
@@ -49,21 +43,15 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   level: skill.level || 'unspecified',
                   goalStatus: 'unknown',
                   lastUpdated: new Date().toISOString(),
+                  confidence: 'medium',
                   skillScore: 0,
+                  inDevelopmentPlan: false,
                   subcategory: unifiedData.subcategory || 'General',
                   category: unifiedData.category || 'specialized',
                   businessCategory: unifiedData.businessCategory || 'Technical Skills',
                   weight: unifiedData.weight || 'technical',
                   growth: unifiedData.growth || '0%',
                   salary: unifiedData.salary || 'market',
-                  minimumLevel: 'beginner',
-                  requirementLevel: 'required',
-                  metrics: {
-                    growth: unifiedData.growth || '0%',
-                    salary: unifiedData.salary || 'market',
-                    skillScore: 0
-                  },
-                  inDevelopmentPlan: false,
                   benchmarks: {
                     B: false,
                     R: false,
@@ -97,34 +85,69 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       getEmployeeSkills: (employeeId: string) => {
         console.log('Getting skills for employee:', employeeId);
-        const state = get();
-        if (!state.skillStates[employeeId]) {
-          state.initializeEmployeeSkills(employeeId);
+        const state = get().skillStates[employeeId];
+        
+        if (!state?.skills) {
+          get().initializeEmployeeSkills(employeeId);
+          return [];
         }
-        return state.skillStates[employeeId]?.skills || [];
+
+        // Get all skills from the universal database and merge with current state
+        const allSkills = Object.entries(state.skills).map(([title, skill]) => {
+          const unifiedData = getUnifiedSkillData(title);
+          const skillData: EmployeeSkillData = {
+            ...unifiedData as object,
+            ...skill as object,
+            id: `${employeeId}-${title}`,
+            employeeId,
+            skillId: `${employeeId}-${title}`,
+            title
+          } as EmployeeSkillData;
+          return skillData;
+        });
+
+        console.log('Retrieved employee skills:', {
+          employeeId,
+          skillCount: allSkills.length,
+          skills: allSkills.map(s => s.title)
+        });
+
+        return allSkills;
       },
 
-      getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
-        const state = get();
-        const skillState = state.skillStates[employeeId]?.skills[skillTitle];
+      getSkillState: (employeeId: string, skillTitle: string) => {
+        console.log('Getting skill state:', { employeeId, skillTitle });
+        const state = get().skillStates[employeeId]?.skills[skillTitle];
         
-        if (!skillState) {
-          console.log('No existing skill state found:', {
+        if (!state) {
+          const defaultState: EmployeeSkillData = {
+            id: `${employeeId}-${skillTitle}`,
             employeeId,
-            skillTitle,
-            usingDefault: true
-          });
-          
-          return benchmarkingService.getDefaultSkillState() as EmployeeSkillState;
+            skillId: `${employeeId}-${skillTitle}`,
+            title: skillTitle,
+            level: 'unspecified',
+            goalStatus: 'unknown',
+            lastUpdated: new Date().toISOString(),
+            confidence: 'medium',
+            subcategory: 'General',
+            category: 'specialized',
+            businessCategory: 'Technical Skills',
+            weight: 'technical',
+            growth: '0%',
+            salary: 'market',
+            skillScore: 0,
+            inDevelopmentPlan: false,
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
+          };
+          return defaultState;
         }
-
-        console.log('Retrieved employee skill state:', {
-          employeeId,
-          skillTitle,
-          state: skillState
-        });
         
-        return skillState;
+        return state;
       },
 
       setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
@@ -147,7 +170,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
     {
       name: 'employee-skills-storage',
       version: 8,
-      partialize: (state) => ({
+      partialize: (state: EmployeeSkillsStore) => ({
         skillStates: state.skillStates
       }),
       merge: (persistedState: any, currentState: EmployeeSkillsStore) => {

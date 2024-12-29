@@ -15,6 +15,7 @@ export class SkillEnrichmentService {
       weight: skillData.weight,
       growth: skillData.growth,
       salary: skillData.salary,
+      confidence: 'medium',
       benchmarks: skillData.benchmarks || {
         B: false,
         R: false,

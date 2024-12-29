@@ -1,5 +1,7 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
-import { universalSkillsDatabase, getAllSkills as getUniversalSkills } from './universalSkillsDatabase';
+import { technicalSkills } from './categories/technicalSkills';
+import { professionalSkills } from './categories/professionalSkills';
+import { communicationSkills } from './categories/communicationSkills';
 
 // Memoize the skills array to prevent unnecessary recalculations
 let memoizedSkills: UnifiedSkill[] | null = null;
@@ -12,15 +14,31 @@ const generateSkillId = (title: string, category: string): string => {
   return `SKILL_${prefix}_${cleanTitle}_${randomNum}`;
 };
 
-// Get all skills from universal database
-export const getAllSkills = (): UnifiedSkill[] => {
+// Combine all skills from different categories with memoization
+const getAllSkillsInternal = (): UnifiedSkill[] => {
   if (memoizedSkills) {
     return memoizedSkills;
   }
 
-  console.log('Initializing skills from universal database...');
-  memoizedSkills = getUniversalSkills();
-  return memoizedSkills;
+  console.log('Initializing skills database...');
+  
+  const allSkills: UnifiedSkill[] = [
+    ...technicalSkills,
+    ...professionalSkills,
+    ...communicationSkills
+  ].map(skill => ({
+    ...skill,
+    id: skill.id || generateSkillId(skill.title, skill.category)
+  }));
+
+  memoizedSkills = allSkills;
+  console.log('Skills database initialized with', allSkills.length, 'skills');
+  return allSkills;
+};
+
+// Helper function to get all skills
+export const getAllSkills = (): UnifiedSkill[] => {
+  return getAllSkillsInternal();
 };
 
 // Helper function to get skills by category with memoization
@@ -31,7 +49,7 @@ export const getSkillsByCategory = (category: string): UnifiedSkill[] => {
   }
 
   console.log(`Getting skills for category: ${category}`);
-  const skills = getAllSkills().filter(skill => skill.category === category);
+  const skills = getAllSkillsInternal().filter(skill => skill.category === category);
   categoryCache[category] = skills;
   return skills;
 };
@@ -44,7 +62,7 @@ export const getSkillById = (id: string): UnifiedSkill | undefined => {
   }
 
   console.log(`Finding skill by ID: ${id}`);
-  const skill = getAllSkills().find(skill => skill.id === id);
+  const skill = getAllSkillsInternal().find(skill => skill.id === id);
   idCache[id] = skill;
   return skill;
 };
@@ -58,7 +76,7 @@ export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
   }
 
   console.log(`Finding skill by title: ${title}`);
-  const skill = getAllSkills().find(skill => skill.title.toLowerCase() === lowerTitle);
+  const skill = getAllSkillsInternal().find(skill => skill.title.toLowerCase() === lowerTitle);
   titleCache[lowerTitle] = skill;
   
   if (!skill) {
@@ -71,19 +89,19 @@ export const getSkillByTitle = (title: string): UnifiedSkill | undefined => {
 const specializedCache: UnifiedSkill[] | null = null;
 export const getSpecializedSkills = (): UnifiedSkill[] => {
   if (specializedCache) return specializedCache;
-  return getAllSkills().filter(skill => skill.category === 'specialized');
+  return getAllSkillsInternal().filter(skill => skill.category === 'specialized');
 };
 
 const commonCache: UnifiedSkill[] | null = null;
 export const getCommonSkills = (): UnifiedSkill[] => {
   if (commonCache) return commonCache;
-  return getAllSkills().filter(skill => skill.category === 'common');
+  return getAllSkillsInternal().filter(skill => skill.category === 'common');
 };
 
 const certificationCache: UnifiedSkill[] | null = null;
 export const getCertificationSkills = (): UnifiedSkill[] => {
   if (certificationCache) return certificationCache;
-  return getAllSkills().filter(skill => skill.category === 'certification');
+  return getAllSkillsInternal().filter(skill => skill.category === 'certification');
 };
 
 // Export Skills object for backward compatibility
@@ -94,6 +112,7 @@ export const Skills = {
   certification: getCertificationSkills()
 };
 
+// Log initial skills data for debugging
 console.log('Skills database loaded:', {
   total: getAllSkills().length,
   byCategory: {

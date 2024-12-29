@@ -11,16 +11,14 @@ export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  skillScore: number;
-  inDevelopmentPlan: boolean;
+  confidence: 'low' | 'medium' | 'high';
 }
 
 // Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
-  skillScore?: number;
-  inDevelopmentPlan?: boolean;
+  confidence?: 'low' | 'medium' | 'high';
 }
 
 // Complete employee skill data
@@ -30,13 +28,8 @@ export interface EmployeeSkillData extends BaseSkill {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
-  metrics: SkillMetrics;
-  growth: string;
-  salary: string;
-  inDevelopmentPlan: boolean;
   benchmarks: SkillBenchmark;
+  metrics: SkillMetrics;
 }
 
 // Achievement tracking

@@ -18,7 +18,6 @@ export interface BaseSkill {
 // Common types
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillConfidence = 'low' | 'medium' | 'high';
 
 // Skill benchmarking data
 export interface SkillBenchmark {
@@ -32,5 +31,6 @@ export interface SkillBenchmark {
 export interface SkillMetrics {
   growth: string;
   salary: string;
-  skillScore: number;
+  confidence: 'low' | 'medium' | 'high';
+  skillScore?: number;
 }
