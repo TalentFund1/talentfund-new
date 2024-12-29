@@ -7,7 +7,7 @@ export const createSkillState = (
   level,
   goalStatus,
   lastUpdated: new Date().toISOString(),
-  confidence: 'medium'
+  skillScore: getSkillScore(level)
 });
 
 export const updateSkillState = (
@@ -18,3 +18,16 @@ export const updateSkillState = (
   ...updates,
   lastUpdated: new Date().toISOString()
 });
+
+const getSkillScore = (level: SkillLevel): number => {
+  switch (level) {
+    case 'advanced':
+      return Math.floor(Math.random() * 26) + 75; // 75-100
+    case 'intermediate':
+      return Math.floor(Math.random() * 26) + 50; // 50-75
+    case 'beginner':
+      return Math.floor(Math.random() * 26) + 25; // 25-50
+    default:
+      return Math.floor(Math.random() * 26); // 0-25
+  }
+};

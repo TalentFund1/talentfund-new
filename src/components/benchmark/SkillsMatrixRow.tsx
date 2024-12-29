@@ -8,22 +8,8 @@ interface SkillsTableRowProps {
   isEven: boolean;
 }
 
-const getSkillScore = (level: string): number => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return Math.floor(Math.random() * 26) + 75; // 75-100
-    case 'intermediate':
-      return Math.floor(Math.random() * 26) + 50; // 50-75
-    case 'beginner':
-      return Math.floor(Math.random() * 26) + 25; // 25-50
-    default:
-      return Math.floor(Math.random() * 26); // 0-25
-  }
-};
-
 export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
   const { id } = useParams();
-  const skillScore = skill.skillScore || getSkillScore(skill.level);
   
   const getSkillType = (skillTitle: string): string => {
     const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
@@ -45,19 +31,6 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
     if (score >= 50) return 'bg-[#ff8256]/10 text-[#ff8256]';
     if (score >= 25) return 'bg-[#008000]/10 text-[#008000]';
     return 'bg-[#8E9196]/10 text-[#8E9196]';
-  };
-
-  const getLevelBackgroundColor = (level: string) => {
-    switch (level) {
-      case "Advanced":
-        return "bg-primary-accent/5";
-      case "Intermediate":
-        return "bg-primary-icon/5";
-      case "Beginner":
-        return "bg-[#008000]/5";
-      default:
-        return "bg-[#F7F9FF]";
-    }
   };
 
   const getTypeColor = (type: string) => {
@@ -83,14 +56,17 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
         {skill.subcategory}
       </TableCell>
+      <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4 text-muted-foreground">
+        {skill.businessCategory || 'Information Technology'}
+      </TableCell>
       <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4">
         <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm font-medium ${getTypeColor(skillType)}`}>
           {skillType}
         </span>
       </TableCell>
       <TableCell className="text-center border-r border-blue-200/60 group-hover:bg-transparent py-4">
-        <span className={`inline-flex items-center justify-center px-3 py-1.5 rounded-full text-sm ${getScoreColor(skillScore)}`}>
-          {skillScore}
+        <span className={`inline-flex items-center justify-center px-3 py-1.5 rounded-full text-sm ${getScoreColor(skill.skillScore)}`}>
+          {skill.skillScore}
         </span>
       </TableCell>
       <TableCell className="text-center border-r border-blue-200/60 group-hover:bg-transparent py-4">
@@ -103,3 +79,5 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
     </TableRow>
   );
 };
+
+export { SkillsTableRow as SkillsMatrixRow };
