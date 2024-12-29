@@ -2,9 +2,9 @@ import { Card } from "@/components/ui/card";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { SkillBadge } from "./SkillBadge";
 import { useParams } from "react-router-dom";
-import { filterSkillsByCategory } from "../benchmark/skills-matrix/skillCategories";
 import { UnifiedSkill } from "./types/SkillTypes";
 import { useEffect } from "react";
+import { getUnifiedSkillData } from "./data/skillDatabaseService";
 
 export const SkillsSummaryTwo = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,17 +20,35 @@ export const SkillsSummaryTwo = () => {
 
   const employeeSkills = id ? getEmployeeSkills(id) : [];
 
-  console.log('SkillsSummaryTwo - Loading skills:', {
+  console.log('SkillsSummaryTwo - Loading employee skills:', {
     employeeId: id,
     skillCount: employeeSkills.length,
     skills: employeeSkills.map(s => s.title)
   });
 
-  const specializedSkills = filterSkillsByCategory(employeeSkills, "specialized") as UnifiedSkill[];
-  const commonSkills = filterSkillsByCategory(employeeSkills, "common") as UnifiedSkill[];
-  const certificationSkills = filterSkillsByCategory(employeeSkills, "certification") as UnifiedSkill[];
+  // Categorize employee skills using their actual categories from unified data
+  const categorizedSkills = employeeSkills.reduce((acc, skill) => {
+    const unifiedData = getUnifiedSkillData(skill.title);
+    const category = unifiedData.category || 'common';
+    
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    
+    acc[category].push({
+      ...skill,
+      category: unifiedData.category,
+      subcategory: unifiedData.subcategory
+    });
+    
+    return acc;
+  }, {} as Record<string, UnifiedSkill[]>);
 
-  console.log('SkillsSummaryTwo - Categorized skills:', {
+  const specializedSkills = categorizedSkills['specialized'] || [];
+  const commonSkills = categorizedSkills['common'] || [];
+  const certificationSkills = categorizedSkills['certification'] || [];
+
+  console.log('SkillsSummaryTwo - Categorized employee skills:', {
     specialized: specializedSkills.length,
     common: commonSkills.length,
     certifications: certificationSkills.length
