@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../employee/utils/profileUtils";
 import { roleSkills } from "./data/roleSkills";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
