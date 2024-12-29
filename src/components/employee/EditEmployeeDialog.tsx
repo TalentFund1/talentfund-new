@@ -10,11 +10,13 @@ import { useToast } from "@/hooks/use-toast";
 interface EditEmployeeDialogProps {
   employee: Employee;
   onClose: () => void;
+  open: boolean;
 }
 
 export const EditEmployeeDialog = ({ 
   employee,
-  onClose 
+  onClose,
+  open 
 }: EditEmployeeDialogProps) => {
   const [formData, setFormData] = useState({
     id: employee.id,
@@ -22,15 +24,14 @@ export const EditEmployeeDialog = ({
     location: employee.location,
     office: employee.office,
     department: employee.department,
-    manager: employee.manager,
+    manager: employee.manager || '',
     role: employee.role,
-    level: employee.level || '',
-    startDate: employee.startDate,
+    startDate: employee.startDate || '',
     termDate: employee.termDate,
     sex: employee.sex,
     category: employee.category,
     team: employee.team,
-    type: employee.type || 'On-site'
+    type: employee.type
   });
 
   const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
@@ -47,9 +48,13 @@ export const EditEmployeeDialog = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const updatedEmployee = {
+    const updatedEmployee: Employee = {
       ...employee,
-      ...formData
+      ...formData,
+      skillCount: employee.skillCount,
+      benchmark: employee.benchmark,
+      lastUpdated: new Date().toLocaleDateString(),
+      skills: employee.skills
     };
 
     updateEmployee(updatedEmployee);
@@ -63,7 +68,7 @@ export const EditEmployeeDialog = ({
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Employee</DialogTitle>

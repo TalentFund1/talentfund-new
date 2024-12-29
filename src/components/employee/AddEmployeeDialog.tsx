@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
@@ -15,13 +15,12 @@ export const AddEmployeeDialog = () => {
     department: '',
     manager: '',
     role: '',
-    level: '',
     startDate: '',
     termDate: '',
     sex: '',
     category: '',
     team: '',
-    type: 'On-site', // Add default type
+    type: 'On-site' as const,
     skills: ''
   });
 
@@ -34,12 +33,22 @@ export const AddEmployeeDialog = () => {
   };
 
   const handleSubmit = () => {
-    addEmployee(formData as Employee);
+    const newEmployee: Employee = {
+      ...formData,
+      skillCount: 0,
+      benchmark: 0,
+      lastUpdated: new Date().toLocaleDateString(),
+      sex: formData.sex as 'male' | 'female',
+      type: formData.type,
+      skills: []
+    };
+
+    addEmployee(newEmployee);
     toast({
       title: "Employee Added",
       description: `${formData.name} has been added successfully.`,
     });
-    // Reset form
+    
     setFormData({
       id: '',
       name: '',
@@ -48,7 +57,6 @@ export const AddEmployeeDialog = () => {
       department: '',
       manager: '',
       role: '',
-      level: '',
       startDate: '',
       termDate: '',
       sex: '',
@@ -61,14 +69,14 @@ export const AddEmployeeDialog = () => {
 
   return (
     <Dialog>
-      <Dialog.Trigger asChild>
+      <DialogTrigger asChild>
         <Button variant="outline">Add Employee</Button>
-      </Dialog.Trigger>
-      <Dialog.Content>
-        <Dialog.Title>Add New Employee</Dialog.Title>
-        <Dialog.Description>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle>Add New Employee</DialogTitle>
+        <DialogDescription>
           Fill in the details of the new employee.
-        </Dialog.Description>
+        </DialogDescription>
         <div className="space-y-4">
           <Input name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
           <Input name="role" placeholder="Role" value={formData.role} onChange={handleChange} />
@@ -83,11 +91,11 @@ export const AddEmployeeDialog = () => {
           <Input name="team" placeholder="Team" value={formData.team} onChange={handleChange} />
           <Input name="skills" placeholder="Skills" value={formData.skills} onChange={handleChange} />
         </div>
-        <div className="flex justify-end mt-4">
-          <Button variant="outline" onClick={() => {}}>Cancel</Button>
-          <Button variant="primary" onClick={handleSubmit}>Add Employee</Button>
+        <div className="flex justify-end mt-4 gap-2">
+          <Button variant="outline">Cancel</Button>
+          <Button onClick={handleSubmit}>Add Employee</Button>
         </div>
-      </Dialog.Content>
+      </DialogContent>
     </Dialog>
   );
 };
