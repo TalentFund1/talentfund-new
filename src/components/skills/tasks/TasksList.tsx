@@ -22,14 +22,14 @@ export const TasksList = () => {
   console.log('Rendering TasksList component');
 
   return (
-    <Card className="p-6 space-y-6 bg-white">
+    <Card className="p-4 space-y-4 bg-white">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold text-foreground">Tasks</h2>
+          <h2 className="text-lg font-semibold text-foreground">Tasks</h2>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <div className="bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center text-xs text-gray-500">?</div>
+                <div className="bg-gray-100 rounded-full w-4 h-4 flex items-center justify-center text-xs text-gray-500">?</div>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Tasks associated with this role</p>
@@ -37,26 +37,26 @@ export const TasksList = () => {
             </Tooltip>
           </TooltipProvider>
         </div>
-        <Button className="bg-[#1A1F2C] text-white hover:bg-[#2A2F3C] flex items-center gap-2">
-          <Plus className="h-4 w-4" /> Add Task
+        <Button className="bg-[#1A1F2C] text-white hover:bg-[#2A2F3C] flex items-center gap-2 py-1.5 h-8 text-sm">
+          <Plus className="h-3.5 w-3.5" /> Add Task
         </Button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {tasks.map((task) => (
           <div 
             key={task.id} 
-            className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 transition-colors"
+            className="flex items-center justify-between py-2.5 px-3 border rounded-lg hover:bg-gray-50 transition-colors"
           >
             <div className="flex-1">
-              <p className="text-sm font-medium text-foreground">{task.title}</p>
+              <p className="text-sm text-foreground">{task.title}</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {task.aiPotential && (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Zap className="h-4 w-4 text-[#F97316]" />
+                      <Zap className="h-3.5 w-3.5 text-[#F97316]" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>AI Potential</p>
@@ -65,11 +65,11 @@ export const TasksList = () => {
                 </TooltipProvider>
               )}
               <div className="flex items-center gap-1">
-                <PieChart className="h-4 w-4 text-[#8073ec]" />
-                <span className="text-sm text-[#8073ec]">{task.percentage}%</span>
+                <PieChart className="h-3.5 w-3.5 text-[#8073ec]" />
+                <span className="text-xs text-[#8073ec]">{task.percentage}%</span>
               </div>
-              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-gray-100">
-                <Pencil className="h-4 w-4 text-gray-500" />
+              <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-gray-100">
+                <Pencil className="h-3.5 w-3.5 text-gray-500" />
               </Button>
             </div>
           </div>
