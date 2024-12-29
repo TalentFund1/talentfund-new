@@ -9,6 +9,16 @@ interface SkillSectionProps {
 }
 
 export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
+  console.log('Rendering SkillSection:', {
+    title,
+    count,
+    skills: skills.map(s => ({
+      title: s.title,
+      level: s.level,
+      goalStatus: s.goalStatus
+    }))
+  });
+
   return (
     <div className="rounded-2xl border border-border bg-white p-6 w-full">
       <div className="flex items-center justify-between mb-4">
@@ -25,6 +35,7 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
             key={skill.title}
             skillName={skill.title}
             level={skill.level}
+            isSkillGoal={skill.goalStatus === 'skill_goal'}
           />
         ))}
       </div>
