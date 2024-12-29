@@ -6,7 +6,6 @@ export const useSkillLevelState = (skillTitle: string) => {
       level: 'unspecified' as SkillLevel,
       goalStatus: 'unknown' as SkillGoalStatus,
       lastUpdated: new Date().toISOString(),
-      confidence: 'medium',
       skillScore: 0,
       inDevelopmentPlan: false
     };

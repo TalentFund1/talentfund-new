@@ -1,6 +1,5 @@
-import { SkillCategory, SkillWeight } from './SkillTypes';
+import { SkillLevel, SkillCategory, SkillWeight, SkillMetrics } from './sharedSkillTypes';
 
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
 export interface RoleSkillRequirement {
@@ -12,14 +11,17 @@ export interface RoleSkillRequirement {
   weight: SkillWeight;
   minimumLevel: SkillLevel;
   requirementLevel: SkillRequirementLevel;
+  level: SkillLevel;
   growth: string;
   salary: string;
-  metrics: {
-    growth: string;
-    salary: string;
-    confidence: 'low' | 'medium' | 'high';
-    skillScore: number;
+  skillScore: number;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
   };
+  metrics: SkillMetrics;
 }
 
 export interface RoleSkillData {
