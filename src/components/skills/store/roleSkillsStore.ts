@@ -48,7 +48,6 @@ export const useRoleSkillsStore = create<RoleSkillsStore>((set, get) => ({
         metrics: {
           growth: unifiedData.growth || '0%',
           salary: unifiedData.salary || 'market',
-          confidence: unifiedData.confidence || 'medium',
           skillScore: skill.skillScore || 0
         }
       } as RoleSkillRequirement;

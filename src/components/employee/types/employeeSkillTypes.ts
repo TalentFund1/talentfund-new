@@ -1,10 +1,9 @@
-import { 
-  SkillLevel, 
-  SkillGoalStatus, 
-  BaseSkill, 
-  SkillBenchmark, 
-  SkillMetrics 
-} from '../../skills/types/sharedSkillTypes';
+export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
+export type SkillConfidence = 'low' | 'medium' | 'high';
 
 // Employee skill state
 export interface EmployeeSkillState {
@@ -32,10 +31,11 @@ export interface EmployeeSkillData extends BaseSkill {
   lastUpdated: string;
   skillScore: number;
   minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
+  requirementLevel: SkillRequirementLevel;
   metrics: SkillMetrics;
   growth: string;
   salary: string;
+  confidence: SkillConfidence;
   inDevelopmentPlan: boolean;
   benchmarks: SkillBenchmark;
 }
