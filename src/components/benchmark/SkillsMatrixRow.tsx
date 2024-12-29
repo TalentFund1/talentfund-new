@@ -8,6 +8,7 @@ import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { useParams } from "react-router-dom";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { Badge } from "../ui/badge";
 import { useToast } from "../ui/use-toast";
 
@@ -22,7 +23,7 @@ export const SkillsMatrixRow = ({
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
   const { toast } = useToast();
-  const { getSkillState, updateSkillState, removeEmployeeSkill } = useSkillsMatrixStore();
+  const { getSkillState, updateSkillState, removeEmployeeSkill } = useEmployeeSkillsStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -38,7 +39,7 @@ export const SkillsMatrixRow = ({
   });
 
   const skillScore = Math.floor(Math.random() * 26) + (skill.hasSkill ? 50 : 25);
-  const skillState = employeeId ? getSkillState(skill.title, employeeId) : null;
+  const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
 
   const handleDevelopmentPlanChange = async (checked: boolean) => {
     if (!employeeId) return;
@@ -100,10 +101,7 @@ export const SkillsMatrixRow = ({
             />
           ) : (
             <TableCell className="text-center border-r border-blue-200 py-2">
-              <Badge 
-                variant="outline" 
-                className="bg-[#FDE1D3] text-[#F97316] border-[#F97316] hover:bg-[#FDE1D3]/80 transition-colors font-medium px-3 py-1"
-              >
+              <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
                 Missing Skill
               </Badge>
             </TableCell>
