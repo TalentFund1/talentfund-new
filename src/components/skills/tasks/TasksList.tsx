@@ -24,11 +24,11 @@ export const TasksList = () => {
   return (
     <Card className="p-6 space-y-6 bg-white">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-          Tasks
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground">Tasks</h2>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className="cursor-help">
+              <TooltipTrigger>
                 <div className="bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center text-xs text-gray-500">?</div>
               </TooltipTrigger>
               <TooltipContent>
@@ -36,28 +36,40 @@ export const TasksList = () => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </h2>
-        <Button className="bg-[#1A1F2C] text-white hover:bg-[#2A2F3C]">
-          <Plus className="h-4 w-4 mr-2" /> Add Task
+        </div>
+        <Button className="bg-[#1A1F2C] text-white hover:bg-[#2A2F3C] flex items-center gap-2">
+          <Plus className="h-4 w-4" /> Add Task
         </Button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {tasks.map((task) => (
-          <div key={task.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+          <div 
+            key={task.id} 
+            className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 transition-colors"
+          >
             <div className="flex-1">
-              <p className="text-sm text-foreground">{task.title}</p>
+              <p className="text-sm font-medium text-foreground">{task.title}</p>
             </div>
             <div className="flex items-center gap-4">
               {task.aiPotential && (
-                <Zap className="h-4 w-4 text-primary" />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Zap className="h-4 w-4 text-[#F97316]" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>AI Potential</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
               <div className="flex items-center gap-1">
-                <PieChart className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">{task.percentage}%</span>
+                <PieChart className="h-4 w-4 text-[#8073ec]" />
+                <span className="text-sm text-[#8073ec]">{task.percentage}%</span>
               </div>
-              <Button variant="ghost" size="icon">
-                <Pencil className="h-4 w-4 text-muted-foreground" />
+              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-gray-100">
+                <Pencil className="h-4 w-4 text-gray-500" />
               </Button>
             </div>
           </div>
