@@ -31,6 +31,5 @@ export interface SkillBenchmark {
 export interface SkillMetrics {
   growth: string;
   salary: string;
-  confidence: 'low' | 'medium' | 'high';
   skillScore?: number;
 }

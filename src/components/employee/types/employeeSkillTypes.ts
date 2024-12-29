@@ -1,5 +1,10 @@
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+import { 
+  SkillLevel, 
+  SkillGoalStatus, 
+  BaseSkill, 
+  SkillBenchmark, 
+  SkillMetrics 
+} from './sharedSkillTypes';
 
 // Employee skill state
 export interface EmployeeSkillState {
@@ -19,20 +24,13 @@ export interface EmployeeSkillUpdate {
 }
 
 // Complete employee skill data
-export interface EmployeeSkillData {
-  id: string;
+export interface EmployeeSkillData extends BaseSkill {
   employeeId: string;
   skillId: string;
-  title: string;
-  subcategory: string;
-  category: 'specialized' | 'common' | 'certification';
-  businessCategory: string;
-  weight: 'critical' | 'technical' | 'necessary';
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
   skillScore: number;
-  inDevelopmentPlan: boolean;
   minimumLevel: SkillLevel;
   requirementLevel: 'required' | 'preferred' | 'optional';
   metrics: {
@@ -42,12 +40,8 @@ export interface EmployeeSkillData {
   };
   growth: string;
   salary: string;
-  benchmarks: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
+  inDevelopmentPlan: boolean;
+  benchmarks: SkillBenchmark;
 }
 
 // Achievement tracking
@@ -61,4 +55,4 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-console.log('Employee skill types defined with complete interfaces');
+console.log('Employee skill types defined with clear separation from role requirements');
