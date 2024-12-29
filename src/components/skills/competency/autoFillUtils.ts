@@ -27,33 +27,48 @@ export const generateSkillProgression = (
       let skillLevel: string;
       let required: string;
 
-      // Determine skill level based on professional level progression
-      if (levelNumber <= 2) {
-        skillLevel = 'beginner';
-      } else if (levelNumber <= 4) {
-        skillLevel = 'intermediate';
-      } else {
-        skillLevel = 'advanced';
-      }
+      // Base progression for all skills starts at unspecified
+      skillLevel = 'unspecified';
+      required = 'preferred';
 
-      // Adjust based on skill importance
+      // Critical skills (importance >= 3)
       if (importance >= 3) {
-        // Critical skills progress faster
         if (levelNumber >= 5) {
           skillLevel = 'advanced';
+          required = 'required';
         } else if (levelNumber >= 3) {
           skillLevel = 'intermediate';
+          required = 'required';
+        } else if (levelNumber >= 1) {
+          skillLevel = 'beginner';
+          required = 'preferred';
         }
-        required = 'required';
-      } else if (importance >= 2) {
-        // Important skills
+      }
+      // Important skills (importance >= 2)
+      else if (importance >= 2) {
         if (levelNumber >= 5) {
           skillLevel = 'advanced';
+          required = 'required';
+        } else if (levelNumber >= 4) {
+          skillLevel = 'intermediate';
+          required = 'required';
+        } else if (levelNumber >= 2) {
+          skillLevel = 'beginner';
+          required = 'preferred';
         }
-        required = levelNumber >= 4 ? 'required' : 'preferred';
-      } else {
-        // Regular skills
-        required = 'preferred';
+      }
+      // Regular skills (importance < 2)
+      else {
+        if (levelNumber >= 6) {
+          skillLevel = 'advanced';
+          required = 'preferred';
+        } else if (levelNumber >= 4) {
+          skillLevel = 'intermediate';
+          required = 'preferred';
+        } else if (levelNumber >= 2) {
+          skillLevel = 'beginner';
+          required = 'preferred';
+        }
       }
 
       console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${required})`);
@@ -64,21 +79,51 @@ export const generateSkillProgression = (
       };
     });
   } else {
-    // For Managerial track, maintain existing logic
-    levels.forEach((level, index) => {
+    // For Managerial track
+    levels.forEach((level) => {
       const levelNumber = parseInt(level.replace('m', ''));
       let skillLevel: string;
       let required: string;
 
-      if (levelNumber >= 5) {
-        skillLevel = 'advanced';
-        required = importance >= 2 ? 'required' : 'preferred';
-      } else if (levelNumber >= 4) {
-        skillLevel = 'intermediate';
-        required = 'preferred';
-      } else {
-        skillLevel = 'beginner';
-        required = 'preferred';
+      // Base state
+      skillLevel = 'unspecified';
+      required = 'preferred';
+
+      // Critical skills (importance >= 3)
+      if (importance >= 3) {
+        if (levelNumber >= 5) {
+          skillLevel = 'advanced';
+          required = 'required';
+        } else if (levelNumber >= 4) {
+          skillLevel = 'intermediate';
+          required = 'required';
+        } else {
+          skillLevel = 'beginner';
+          required = 'preferred';
+        }
+      }
+      // Important skills (importance >= 2)
+      else if (importance >= 2) {
+        if (levelNumber >= 6) {
+          skillLevel = 'advanced';
+          required = 'required';
+        } else if (levelNumber >= 4) {
+          skillLevel = 'intermediate';
+          required = 'preferred';
+        } else {
+          skillLevel = 'beginner';
+          required = 'preferred';
+        }
+      }
+      // Regular skills
+      else {
+        if (levelNumber >= 6) {
+          skillLevel = 'intermediate';
+          required = 'preferred';
+        } else if (levelNumber >= 4) {
+          skillLevel = 'beginner';
+          required = 'preferred';
+        }
       }
 
       console.log(`Generated level for ${skillName} at ${level}: ${skillLevel} (${required})`);
