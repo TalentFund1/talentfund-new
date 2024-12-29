@@ -57,3 +57,11 @@ export interface RoleSkillData {
   certifications: UnifiedSkill[];
   skills: UnifiedSkill[];
 }
+
+export interface SimpleSkill {
+  title: string;
+  subcategory: string;
+  businessCategory?: string;
+  level: string;
+  growth: string;
+}

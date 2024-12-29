@@ -1,21 +1,48 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
-import { technicalSkills } from './categories/technicalSkills';
-import { commonSkills } from './categories/commonSkills';
-import { certificationSkills } from './categories/certificationSkills';
 
-// Combine all skills from different categories
+// Combine all skills into a single database
 const allSkills: UnifiedSkill[] = [
-  ...technicalSkills,
-  ...commonSkills,
-  ...certificationSkills
+  {
+    id: 'SKILL_ML_031',
+    title: "Machine Learning",
+    subcategory: "AI & ML",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "35%",
+    salary: "$160,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "35%",
+      salary: "$160,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_REA_873',
+    title: "React",
+    subcategory: "Frontend Frameworks",
+    category: "specialized",
+    businessCategory: "Software Development",
+    weight: "technical",
+    level: "intermediate",
+    growth: "25%",
+    salary: "$130,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "25%",
+      salary: "$130,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  }
 ];
-
-// Helper functions to get skills by category
-export const getSkillsByCategory = (category: string) => {
-  return allSkills.filter(skill => skill.category === category);
-};
-
-export const getAllSkills = () => allSkills;
 
 export const getSkillByTitle = (title: string | undefined) => {
   if (!title) {
@@ -33,6 +60,8 @@ export const getSkillByTitle = (title: string | undefined) => {
 
   return skill;
 };
+
+export const getAllSkills = () => allSkills;
 
 console.log('Universal skills database initialized with', allSkills.length, 'skills');
 

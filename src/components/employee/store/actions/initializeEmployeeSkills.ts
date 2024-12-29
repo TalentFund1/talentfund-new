@@ -34,6 +34,13 @@ export const initializeEmployeeSkills = (
       salary: unifiedData.salary,
       confidence: 'medium',
       skillScore: 0,
+      minimumLevel: 'beginner',
+      requirementLevel: 'required',
+      metrics: {
+        growth: unifiedData.growth || '0%',
+        salary: unifiedData.salary || 'market',
+        skillScore: 0
+      },
       inDevelopmentPlan: false,
       benchmarks: unifiedData.benchmarks || {
         B: false,
