@@ -1,12 +1,6 @@
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ChevronUp, HelpCircle } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ChevronUp } from "lucide-react";
 
 interface SkillProfileMatrixHeaderProps {
   sortField: 'growth' | 'salary' | null;
