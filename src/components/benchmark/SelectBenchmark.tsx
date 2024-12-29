@@ -1,68 +1,61 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useParams } from "react-router-dom";
-import { roleSkills } from "../skills/data/roleSkills";
-import { RoleSkillData } from "../skills/types/SkillTypes";
+import { PlayCircle } from "lucide-react";
 
 export const SelectBenchmark = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const { id } = useParams<{ id: string }>();
-  
-  const currentRoleSkills: RoleSkillData = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
-
   return (
-    <Card className="p-6 bg-white">
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium">Market Benchmark</h3>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-9 p-0">
-              {isOpen ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
-            </Button>
-          </CollapsibleTrigger>
+    <Card className="p-6 space-y-6 bg-white mb-6">
+      <h2 className="text-lg font-semibold text-foreground">Market Benchmark</h2>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm text-muted-foreground">Saved Benchmarks</label>
+            <Select defaultValue="nationwide">
+              <SelectTrigger className="w-full bg-white">
+                <SelectValue placeholder="Select benchmark" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="nationwide">Nationwide / All Companies (default)</SelectItem>
+                <SelectItem value="core">Core Competitors</SelectItem>
+                <SelectItem value="finance">Finance/Banking</SelectItem>
+                <SelectItem value="healthcare">Healthcare</SelectItem>
+                <SelectItem value="retail">Large Retailers</SelectItem>
+                <SelectItem value="tech">Technology</SelectItem>
+                <SelectItem value="custom">Custom Benchmark</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <CollapsibleContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Role</p>
-                <p className="text-sm text-muted-foreground">{currentRoleSkills.title}</p>
-              </div>
-              <Button variant="outline" size="sm">
-                Change
-              </Button>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Location</p>
-                <p className="text-sm text-muted-foreground">United States</p>
-              </div>
-              <Button variant="outline" size="sm">
-                Change
-              </Button>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Experience Level</p>
-                <p className="text-sm text-muted-foreground">Mid-Level</p>
-              </div>
-              <Button variant="outline" size="sm">
-                Change
-              </Button>
-            </div>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm text-muted-foreground">Locations</label>
+            <Input placeholder="Add a Location" className="bg-white" />
           </div>
-        </CollapsibleContent>
-      </Collapsible>
+
+          <div className="space-y-2">
+            <label className="text-sm text-muted-foreground">Companies</label>
+            <Input placeholder="Add a Company" className="bg-white" />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm text-muted-foreground">Industries</label>
+            <Input placeholder="Add a Industry" className="bg-white" />
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button variant="outline">Clear All</Button>
+            <Button variant="outline">Save To Role</Button>
+            <Button className="gap-2">
+              <PlayCircle className="h-4 w-4" />
+              Run
+            </Button>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 };
