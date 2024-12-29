@@ -9,12 +9,32 @@ import { useParams } from "react-router-dom";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
-import { MissingSkillIndicator } from "./skills-matrix/MissingSkillIndicator";
 
 interface SkillsMatrixRowProps {
-  skill: UnifiedSkill;
+  skill: {
+    title: string;
+    subcategory: string;
+    level: string;
+    growth: string;
+    confidence: string;
+    requirement?: string;
+    category?: string;
+  };
   isRoleBenchmark?: boolean;
 }
+
+const getSkillScore = (level: string): number => {
+  switch (level.toLowerCase()) {
+    case 'advanced':
+      return Math.floor(Math.random() * 26) + 75; // 75-100
+    case 'intermediate':
+      return Math.floor(Math.random() * 26) + 50; // 50-75
+    case 'beginner':
+      return Math.floor(Math.random() * 26) + 25; // 25-50
+    default:
+      return Math.floor(Math.random() * 26); // 0-25
+  }
+};
 
 export const SkillsMatrixRow = ({ 
   skill, 
@@ -37,8 +57,6 @@ export const SkillsMatrixRow = ({
 
   const skillScore = getSkillScore(skill.level);
   const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
-  const employeeSkills = employeeId ? useEmployeeSkillsStore(state => state.getEmployeeSkills(employeeId)) : [];
-  const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
 
   const handleDevelopmentPlanChange = (checked: boolean) => {
     if (!employeeId) return;
@@ -86,16 +104,10 @@ export const SkillsMatrixRow = ({
               </div>
             </div>
           </TableCell>
-          {hasSkill ? (
-            <SkillLevelCell 
-              initialLevel={skill.level || 'unspecified'}
-              skillTitle={skill.title}
-            />
-          ) : (
-            <TableCell className="text-center border-r border-blue-200 py-2">
-              <MissingSkillIndicator />
-            </TableCell>
-          )}
+          <SkillLevelCell 
+            initialLevel={skill.level || 'unspecified'}
+            skillTitle={skill.title}
+          />
         </>
       )}
       <TableCell className="text-center border-r border-blue-200 py-2">
@@ -117,7 +129,7 @@ export const SkillsMatrixRow = ({
         <Checkbox
           checked={skillState?.inDevelopmentPlan || false}
           onCheckedChange={handleDevelopmentPlanChange}
-          className="data-[state=checked]:bg-[#1F2144] data-[state=checked]:border-[#1F2144]"
+          className="data-[state=checked]:bg-gray-800 data-[state=checked]:border-gray-800"
         />
       </TableCell>
       <TableCell className="text-center py-2">
@@ -130,17 +142,4 @@ export const SkillsMatrixRow = ({
       </TableCell>
     </TableRow>
   );
-};
-
-const getSkillScore = (level: string): number => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return Math.floor(Math.random() * 26) + 75; // 75-100
-    case 'intermediate':
-      return Math.floor(Math.random() * 26) + 50; // 50-75
-    case 'beginner':
-      return Math.floor(Math.random() * 26) + 25; // 25-50
-    default:
-      return Math.floor(Math.random() * 26); // 0-25
-  }
 };
