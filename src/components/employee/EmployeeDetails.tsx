@@ -38,10 +38,6 @@ const calculateTenure = (startDate: string, termDate: string | null): string => 
 
 export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const tenure = calculateTenure(employee.startDate, employee.termDate === "-" ? null : employee.termDate);
-  const roleId = getSkillProfileId(employee.role);
-  const { getTrackForRole } = useTrack();
-  const roleTrack = getTrackForRole(roleId);
-  const employeeTrack = getEmployeeTrack(employee.role);
   const { getEmployeeSkills } = useEmployeeSkillsStore();
   const employeeSkills = getEmployeeSkills(id);
   const skillCount = employeeSkills.length;
@@ -50,16 +46,8 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   // Get the manager's ID by finding the employee with matching name
   const managerId = employees.find(emp => emp.name === employee.manager)?.id || "126";
 
-  // Format the role parts
-  const [roleName, levelPart] = employee.role.split(':').map(part => part.trim());
-  const formattedRole = levelPart ? `${roleName}: ${formatLevel(levelPart)}` : roleName;
-
   console.log(`Employee ${id} details:`, {
-    roleId,
-    roleTrack,
-    employeeTrack,
     role: employee.role,
-    formattedRole,
     skillCount,
     skills: employeeSkills.map(s => s.title),
     manager: employee.manager,
@@ -115,18 +103,6 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Skill Count</span>
           <p className="font-medium text-gray-900">{skillCount}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Role ID</span>
-          <p className="font-medium text-gray-900">{roleId}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Role Track</span>
-          <p className="font-medium text-gray-900">{roleTrack}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Employee Track</span>
-          <p className="font-medium text-gray-900">{employeeTrack}</p>
         </div>
       </div>
     </>
