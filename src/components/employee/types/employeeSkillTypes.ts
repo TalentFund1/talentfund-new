@@ -1,10 +1,12 @@
 import { 
-  SkillLevel, 
-  SkillGoalStatus, 
   BaseSkill, 
   SkillBenchmark, 
   SkillMetrics 
 } from '../../skills/types/sharedSkillTypes';
+
+// Basic types that need to be exported
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
+export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
 // Employee skill state
 export interface EmployeeSkillState {
