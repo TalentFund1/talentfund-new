@@ -65,8 +65,7 @@ export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) =>
         metrics: {
           growth: skill.growth,
           salary: skill.salary,
-          confidence: skill.confidence,
-          skillScore: skill.skillScore
+          skillScore: skill.skillScore || 0
         }
       })),
       common: profile.common.map(skill => ({
@@ -76,8 +75,7 @@ export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) =>
         metrics: {
           growth: skill.growth,
           salary: skill.salary,
-          confidence: skill.confidence,
-          skillScore: skill.skillScore
+          skillScore: skill.skillScore || 0
         }
       })),
       certifications: profile.certifications.map(skill => ({
@@ -87,8 +85,7 @@ export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) =>
         metrics: {
           growth: skill.growth,
           salary: skill.salary,
-          confidence: skill.confidence,
-          skillScore: skill.skillScore
+          skillScore: skill.skillScore || 0
         }
       })),
       skills: profile.skills.map(skill => ({
@@ -98,8 +95,7 @@ export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) =>
         metrics: {
           growth: skill.growth,
           salary: skill.salary,
-          confidence: skill.confidence,
-          skillScore: skill.skillScore
+          skillScore: skill.skillScore || 0
         }
       }))
     };

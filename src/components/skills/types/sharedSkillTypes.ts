@@ -31,5 +31,5 @@ export interface SkillBenchmark {
 export interface SkillMetrics {
   growth: string;
   salary: string;
-  skillScore?: number;
+  skillScore: number;
 }
