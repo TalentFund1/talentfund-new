@@ -11,6 +11,7 @@ export interface BaseSkill {
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
+  skillScore: number;
 }
 
 // Employee skill state
@@ -48,6 +49,7 @@ export interface EmployeeSkillData extends BaseSkill {
   inDevelopmentPlan: boolean;
   benchmarks: SkillBenchmark;
   removed?: boolean;
+  skillScore: number;
 }
 
 // Skill metrics interface
