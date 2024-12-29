@@ -3,7 +3,7 @@ import { SkillLevel, SkillGoalStatus } from '../types/sharedSkillTypes';
 export const getSkillLevelColor = (level: SkillLevel) => {
   switch (level) {
     case 'expert':
-      return 'text-purple-600 bg-purple-100/80 border-purple-600';
+      return 'text-[#4A90E2] bg-[#4A90E2]/10 border-[#4A90E2]';
     case 'advanced':
       return 'text-primary-accent bg-primary-accent/10 border-primary-accent';
     case 'intermediate':
