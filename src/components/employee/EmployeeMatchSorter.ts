@@ -1,6 +1,6 @@
 import { Employee } from "../types/employeeTypes";
 import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
-import { getSkillProfileId, getLevel } from "./utils/profileUtils";
+import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { roleSkills } from "../skills/data/roleSkills";
 
 export const sortEmployeesByRoleMatch = (

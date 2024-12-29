@@ -10,7 +10,7 @@ import { useEmployeeStore } from "../employee/store/employeeStore";
 import { BenchmarkAnalysis } from "./analysis/BenchmarkAnalysis";
 import { Separator } from "@/components/ui/separator";
 import { useTrack } from "../skills/context/TrackContext";
-import { getSkillProfileId } from "../employee/utils/profileUtils";
+import { getSkillProfileId } from "../EmployeeTable";
 import { getEmployeeTrack } from "../employee/utils/employeeTrackUtils";
 import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 import { RoleSelectionSection } from "./role-selection/RoleSelectionSection";

@@ -1,8 +1,4 @@
 import { TableRow } from "@/components/ui/table";
-import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle2 } from "lucide-react";
-import { getSkillProfileId } from "./utils/profileUtils";
 import { EmployeeTableRowProps } from "./types/tableTypes";
 import { EmployeeBasicInfo } from "./table/EmployeeBasicInfo";
 
@@ -13,7 +9,7 @@ export const EmployeeTableRow = ({
   imageUrl,
   selectedSkills,
   selectedJobTitle
-}: Readonly<EmployeeTableRowProps>) => {
+}: EmployeeTableRowProps) => {
   return (
     <TableRow>
       <EmployeeBasicInfo

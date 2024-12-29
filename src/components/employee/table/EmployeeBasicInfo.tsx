@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
-import { getSkillProfileId } from "../utils/profileUtils";
+import { getSkillProfileId } from "../../EmployeeTable";
 
 interface EmployeeBasicInfoProps {
   id: string;
@@ -9,7 +9,7 @@ interface EmployeeBasicInfoProps {
   role: string;
   imageUrl: string;
   isExactMatch: boolean;
-  selectedJobTitle: ReadonlyArray<string>;
+  selectedJobTitle: string[];
 }
 
 export const EmployeeBasicInfo = ({ 

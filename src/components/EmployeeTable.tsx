@@ -16,7 +16,6 @@ import { TrackProvider } from "./skills/context/TrackContext";
 import { roleSkills } from "./skills/data/roleSkills";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
 import { useMemo } from "react";
-import { getSkillProfileId } from "./employee/utils/profileUtils";
 
 interface EmployeeTableProps {
   readonly selectedDepartment?: ReadonlyArray<string>;
@@ -28,6 +27,46 @@ interface EmployeeTableProps {
   readonly selectedManager?: ReadonlyArray<string>;
   readonly selectedRole?: ReadonlyArray<string>;
 }
+
+export const getSkillProfileId = (role?: string): string => {
+  const validProfileIds = Object.keys(roleSkills);
+  if (validProfileIds.includes(role || '')) {
+    console.log('Using direct role ID:', role);
+    return role || '';
+  }
+
+  const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
+    acc[data.title] = id;
+    return acc;
+  }, {} as { [key: string]: string });
+  
+  if (!role) {
+    console.warn('No role provided to getSkillProfileId');
+    return '';
+  }
+
+  const baseRole = role.split(":")[0].trim();
+  const mappedId = roleMap[baseRole];
+  
+  console.log('Role mapping:', { 
+    originalRole: role,
+    baseRole,
+    mappedId
+  });
+  
+  return mappedId || '';
+};
+
+export const getBaseRole = (role?: string): string => {
+  if (!role) return "";
+  return role.split(":")[0].trim();
+};
+
+export const getLevel = (role?: string): string => {
+  if (!role) return "";
+  const parts = role.split(":");
+  return parts.length > 1 ? parts[1].trim() : "";
+};
 
 const EmployeeTableContent = ({ 
   selectedDepartment = [], 
@@ -44,7 +83,8 @@ const EmployeeTableContent = ({
   const { selectedRows, handleSelectAll, handleSelectEmployee } = useEmployeeTableState();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
   const baseEmployees = useEmployeeStore((state) => state.employees);
-
+  
+  // Memoize employees with their skills to prevent infinite updates
   const employees = useMemo(() => {
     console.log('Processing employees with skills');
     const employeesWithSkills = baseEmployees.map(emp => {

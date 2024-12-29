@@ -10,7 +10,7 @@ import { EmployeeList } from "./overview/EmployeeList";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { calculateBenchmarkPercentage } from "../employee/BenchmarkCalculator";
 import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId } from "../employee/utils/profileUtils";
+import { getSkillProfileId } from "../EmployeeTable";
 
 const EmployeeOverviewContent = () => {
   const { id: roleId } = useParams();

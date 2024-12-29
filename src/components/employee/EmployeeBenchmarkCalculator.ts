@@ -1,5 +1,5 @@
 import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getLevel } from "../utils/profileUtils";
+import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
 

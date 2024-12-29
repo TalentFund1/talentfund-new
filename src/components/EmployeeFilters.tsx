@@ -2,7 +2,7 @@ import { SearchFilter } from '@/components/market/SearchFilter';
 import { useState, useEffect } from "react";
 import { getAllSkills } from './skills/data/skills/allSkills';
 import { Button } from '@/components/ui/button';
-import { getBaseRole } from './employee/utils/profileUtils';
+import { getBaseRole } from './EmployeeTable';
 import { EmployeeSearch } from './employee/EmployeeSearch';
 import { LevelFilter } from './employee/LevelFilter';
 import { useEmployeeStore } from './employee/store/employeeStore';
