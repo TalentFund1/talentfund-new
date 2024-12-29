@@ -8,7 +8,7 @@ interface SkillsTableHeaderProps {
 export const SkillsTableHeader = ({ selectedFilter, setSelectedFilter }: SkillsTableHeaderProps) => {
   return (
     <div className="flex justify-between items-center px-6 py-4 border-b border-border">
-      <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+      <h2 className="text-xl font-semibold text-foreground">Skills Intelligence</h2>
       <Select value={selectedFilter} onValueChange={setSelectedFilter}>
         <SelectTrigger className="w-[180px] bg-white">
           <SelectValue placeholder="All Skills" />

@@ -15,7 +15,7 @@ export const SkillsMatrixHeader = ({
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-4">
-        <h2 className="text-xl font-semibold text-foreground">Skills Matrix</h2>
+        <h2 className="text-xl font-semibold text-foreground">Skills Intelligence</h2>
         <Select defaultValue="modify">
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="Modify As" />
