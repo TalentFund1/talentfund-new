@@ -1,161 +1,253 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { RoleSkillData } from "../types/roleSkillTypes";
 import { useToast } from "@/hooks/use-toast";
-import { BasicProfileFields } from "./fields/BasicProfileFields";
-import { DescriptionFields } from "./fields/DescriptionFields";
-import { roleSkills, saveRoleSkills } from '../data/roleSkills';
+import { useNavigate } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
-interface FormData {
-  roleId: string;
-  roleTitle: string;
-  function: string;
-  mappedTitle: string;
-  occupation: string;
-  jobDescription: string;
-  roleTrack: "Professional" | "Managerial";
-  soc: string;
-}
+const formSchema = z.object({
+  title: z.string().min(2, {
+    message: "Title must be at least 2 characters.",
+  }),
+  soc: z.string().optional(),
+  function: z.string().optional(),
+  mappedTitle: z.string().optional(),
+  occupation: z.string().optional(),
+  description: z.string().optional(),
+  roleTrack: z.enum(["Professional", "Managerial"]).optional(),
+});
 
-interface EditSkillProfileFormProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  initialData: {
-    id: string;
-    title: string;
-    function?: string;
-    mappedTitle?: string;
-    occupation?: string;
-    description?: string;
-    roleTrack?: "Professional" | "Managerial";
-    soc?: string;
-  };
-}
-
-export const EditSkillProfileForm = ({
-  open,
-  onOpenChange,
-  initialData
-}: EditSkillProfileFormProps) => {
+export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState<FormData>({
-    roleId: initialData.id || "",
-    roleTitle: initialData.title || "",
-    function: initialData.function || "Engineering",
-    mappedTitle: initialData.mappedTitle || "",
-    occupation: initialData.occupation || "",
-    jobDescription: initialData.description || "",
-    roleTrack: initialData.roleTrack || "Professional",
-    soc: initialData.soc || ""
+  const navigate = useNavigate();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: profile.title || "",
+      soc: profile.soc || "",
+      function: profile.function || "",
+      mappedTitle: profile.mappedTitle || "",
+      occupation: profile.occupation || "",
+      description: profile.description || "",
+      roleTrack: profile.roleTrack || "Professional",
+    },
   });
 
-  useEffect(() => {
-    if (open) {
-      console.log('Loading current role data for editing:', initialData);
-      const currentRole = roleSkills[initialData.id];
-      
-      setFormData({
-        roleId: initialData.id,
-        roleTitle: currentRole?.title || initialData.title,
-        function: currentRole?.function || initialData.function || "Engineering",
-        mappedTitle: currentRole?.mappedTitle || initialData.mappedTitle || "",
-        occupation: currentRole?.occupation || initialData.occupation || "",
-        jobDescription: currentRole?.description || initialData.description || "",
-        roleTrack: currentRole?.roleTrack || initialData.roleTrack || "Professional",
-        soc: currentRole?.soc || initialData.soc || ""
-      });
-    }
-  }, [initialData, open]);
+  const handleSubmit = (data: z.infer<typeof formSchema>) => {
+    const updatedProfile: RoleSkillData = {
+      ...profile,
+      title: data.title,
+      soc: data.soc,
+      function: data.function,
+      mappedTitle: data.mappedTitle,
+      occupation: data.occupation,
+      description: data.description,
+      roleTrack: data.roleTrack,
+      track: data.roleTrack || "Professional",
+      specialized: profile.specialized.map(skill => ({
+        ...skill,
+        minimumLevel: 'beginner',
+        requirementLevel: 'required',
+        metrics: {
+          growth: skill.growth,
+          salary: skill.salary,
+          confidence: skill.confidence,
+          skillScore: skill.skillScore
+        }
+      })),
+      common: profile.common.map(skill => ({
+        ...skill,
+        minimumLevel: 'beginner',
+        requirementLevel: 'required',
+        metrics: {
+          growth: skill.growth,
+          salary: skill.salary,
+          confidence: skill.confidence,
+          skillScore: skill.skillScore
+        }
+      })),
+      certifications: profile.certifications.map(skill => ({
+        ...skill,
+        minimumLevel: 'beginner',
+        requirementLevel: 'required',
+        metrics: {
+          growth: skill.growth,
+          salary: skill.salary,
+          confidence: skill.confidence,
+          skillScore: skill.skillScore
+        }
+      })),
+      skills: profile.skills.map(skill => ({
+        ...skill,
+        minimumLevel: 'beginner',
+        requirementLevel: 'required',
+        metrics: {
+          growth: skill.growth,
+          salary: skill.salary,
+          confidence: skill.confidence,
+          skillScore: skill.skillScore
+        }
+      }))
+    };
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    console.log(`Updating ${field} with value:`, value);
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+    toast({
+      title: "Profile updated",
+      description: "Your skill profile has been updated successfully.",
+    });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submission started - Form data:', formData);
-
-    try {
-      const existingRole = roleSkills[formData.roleId];
-      console.log('Existing role data:', existingRole);
-      
-      const updatedRole = {
-        ...existingRole,
-        title: formData.roleTitle,
-        soc: formData.soc,
-        function: formData.function,
-        mappedTitle: formData.mappedTitle,
-        occupation: formData.occupation,
-        description: formData.jobDescription,
-        roleTrack: formData.roleTrack,
-        specialized: existingRole?.specialized || [],
-        common: existingRole?.common || [],
-        certifications: existingRole?.certifications || [],
-        skills: existingRole?.skills || []
-      };
-
-      console.log('Saving updated role:', updatedRole);
-
-      // Save to localStorage and update global state
-      await saveRoleSkills(formData.roleId, updatedRole);
-
-      // Update roleSkills object directly
-      roleSkills[formData.roleId] = updatedRole;
-
-      toast({
-        title: "Success",
-        description: "Skill profile updated successfully",
-      });
-      
-      // Force a re-render of components using roleSkills
-      window.dispatchEvent(new CustomEvent('roleSkillsUpdated', { 
-        detail: { roleId: formData.roleId } 
-      }));
-
-      onOpenChange(false);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update skill profile",
-        variant: "destructive"
-      });
-    }
+    navigate("/skills/profiles");
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Edit Skill Profile</DialogTitle>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2 grid grid-cols-2 gap-4">
-              <BasicProfileFields 
-                formData={formData}
-                handleInputChange={handleInputChange}
-                roleSkills={roleSkills}
-                isEditing={true}
-              />
-            </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Role title" {...field} />
+              </FormControl>
+              <FormDescription>
+                The title of the role or skill profile.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <DescriptionFields 
-              formData={formData}
-              handleInputChange={handleInputChange}
-            />
-          </div>
+        <FormField
+          control={form.control}
+          name="soc"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>SOC Code</FormLabel>
+              <FormControl>
+                <Input placeholder="SOC code" {...field} />
+              </FormControl>
+              <FormDescription>
+                Standard Occupational Classification code.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="flex justify-end">
-            <Button type="submit">Save Changes</Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+        <FormField
+          control={form.control}
+          name="function"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Function</FormLabel>
+              <FormControl>
+                <Input placeholder="Function" {...field} />
+              </FormControl>
+              <FormDescription>
+                The business function this role belongs to.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="mappedTitle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mapped Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Mapped title" {...field} />
+              </FormControl>
+              <FormDescription>
+                Alternative or mapped title for this role.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="occupation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Occupation</FormLabel>
+              <FormControl>
+                <Input placeholder="Occupation" {...field} />
+              </FormControl>
+              <FormDescription>
+                The general occupation category.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Role description"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                A brief description of the role and its responsibilities.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="roleTrack"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role Track</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a track" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Professional">Professional</SelectItem>
+                  <SelectItem value="Managerial">Managerial</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                The career track for this role.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit">Update profile</Button>
+      </form>
+    </Form>
   );
 };

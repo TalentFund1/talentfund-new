@@ -53,6 +53,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   weight: unifiedData.weight || 'technical',
                   growth: unifiedData.growth || '0%',
                   salary: unifiedData.salary || 'market',
+                  skillScore: 0,
                   benchmarks: {
                     B: false,
                     R: false,

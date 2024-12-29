@@ -1,103 +1,78 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { RoleSkillData, RoleSkillRequirement, RoleSkillsStore } from '../types/roleSkillTypes';
-import { roleSkills } from '../data/roleSkills';
-import { SkillLevel } from '../types/sharedSkillTypes';
-import { UnifiedSkill } from '../types/SkillTypes';
+import { RoleSkillData, RoleSkillRequirement } from '../types/roleSkillTypes';
+import { getUnifiedSkillData } from '../data/skillDatabaseService';
+import { roleSkills as defaultRoleSkills } from '../data/roleSkills';
 
-const normalizeSkillLevel = (level: string | undefined): SkillLevel => {
-  switch (level?.toLowerCase()) {
-    case 'advanced':
-      return 'advanced';
-    case 'intermediate':
-      return 'intermediate';
-    case 'beginner':
-      return 'beginner';
-    default:
-      return 'unspecified';
-  }
-};
+interface RoleSkillsStore {
+  roleSkills: Record<string, RoleSkillData>;
+  getRoleSkills: (roleId: string) => RoleSkillData | undefined;
+  getSkillRequirement: (roleId: string, skillTitle: string) => RoleSkillRequirement | undefined;
+  initializeRoleSkills: (roleId: string) => void;
+}
 
-const transformToRoleSkillRequirement = (skill: UnifiedSkill): RoleSkillRequirement => {
-  return {
-    ...skill,
-    minimumLevel: normalizeSkillLevel(skill.level),
-    requirementLevel: 'required',
-    benchmarks: skill.benchmarks || { B: false, R: false, M: false, O: false },
-    metrics: {
-      growth: skill.growth || '0%',
-      salary: skill.salary || 'market',
-      confidence: skill.confidence || 'medium'
+export const useRoleSkillsStore = create<RoleSkillsStore>((set, get) => ({
+  roleSkills: {},
+  
+  getRoleSkills: (roleId: string) => {
+    return get().roleSkills[roleId];
+  },
+  
+  getSkillRequirement: (roleId: string, skillTitle: string) => {
+    const roleSkills = get().roleSkills[roleId];
+    if (!roleSkills) return undefined;
+    
+    return [...roleSkills.specialized, ...roleSkills.common, ...roleSkills.certifications]
+      .find(skill => skill.title === skillTitle);
+  },
+  
+  initializeRoleSkills: (roleId: string) => {
+    const existingRole = get().roleSkills[roleId];
+    if (existingRole) {
+      console.log('Role skills already initialized:', roleId);
+      return;
     }
-  };
-};
 
-export const useRoleSkillsStore = create<RoleSkillsStore>()(
-  persist(
-    (set, get) => ({
-      roleSkills: {},
+    const defaultRole = defaultRoleSkills.find(role => role.roleId === roleId);
+    if (!defaultRole) {
+      console.warn('No default role skills found for:', roleId);
+      return;
+    }
 
-      getRoleSkills: (roleId: string) => {
-        console.log('Getting role skills:', roleId);
-        return get().roleSkills[roleId];
-      },
-
-      getSkillRequirement: (roleId: string, skillTitle: string) => {
-        console.log('Getting skill requirement:', { roleId, skillTitle });
-        const roleData = get().roleSkills[roleId];
-        if (!roleData) return undefined;
-
-        const findInCategory = (skills: RoleSkillRequirement[]) => 
-          skills.find(s => s.title === skillTitle);
-
-        return findInCategory(roleData.specialized) || 
-               findInCategory(roleData.common) || 
-               findInCategory(roleData.certifications);
-      },
-
-      initializeRoleSkills: (roleId: string) => {
-        console.log('Initializing role skills:', roleId);
-        const existingRole = get().roleSkills[roleId];
-        if (!existingRole) {
-          const roleData = roleSkills[roleId as keyof typeof roleSkills];
-          if (roleData) {
-            const initializedRole: RoleSkillData = {
-              roleId,
-              title: roleData.title,
-              track: roleData.roleTrack || "Professional",
-              specialized: roleData.specialized.map(transformToRoleSkillRequirement),
-              common: roleData.common.map(transformToRoleSkillRequirement),
-              certifications: roleData.certifications.map(transformToRoleSkillRequirement),
-              skills: [
-                ...roleData.specialized.map(transformToRoleSkillRequirement),
-                ...roleData.common.map(transformToRoleSkillRequirement),
-                ...roleData.certifications.map(transformToRoleSkillRequirement)
-              ]
-            };
-            
-            set(state => ({
-              roleSkills: {
-                ...state.roleSkills,
-                [roleId]: initializedRole
-              }
-            }));
-            console.log('Initialized role skills:', {
-              roleId,
-              skillCount: initializedRole.skills.length,
-              specialized: initializedRole.specialized.length,
-              common: initializedRole.common.length,
-              certifications: initializedRole.certifications.length
-            });
-          }
+    const processedSkills = defaultRole.skills.map(skill => {
+      const unifiedData = getUnifiedSkillData(skill.title);
+      return {
+        ...unifiedData,
+        ...skill,
+        minimumLevel: skill.minimumLevel || 'beginner',
+        requirementLevel: skill.requirementLevel || 'required',
+        metrics: {
+          growth: unifiedData.growth || '0%',
+          salary: unifiedData.salary || 'market',
+          confidence: unifiedData.confidence || 'medium',
+          skillScore: skill.skillScore || 0
         }
+      } as RoleSkillRequirement;
+    });
+
+    const roleData: RoleSkillData = {
+      ...defaultRole,
+      specialized: processedSkills.filter(skill => skill.category === 'specialized'),
+      common: processedSkills.filter(skill => skill.category === 'common'),
+      certifications: processedSkills.filter(skill => skill.category === 'certification'),
+      skills: processedSkills
+    };
+
+    set(state => ({
+      roleSkills: {
+        ...state.roleSkills,
+        [roleId]: roleData
       }
-    }),
-    {
-      name: 'role-skills-storage',
-      version: 1,
-      partialize: (state) => ({
-        roleSkills: state.roleSkills
-      })
-    }
-  )
-);
+    }));
+
+    console.log('Initialized role skills:', {
+      roleId,
+      skillCount: processedSkills.length,
+      skills: processedSkills.map(s => s.title)
+    });
+  }
+}));

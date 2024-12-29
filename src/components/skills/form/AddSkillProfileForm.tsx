@@ -1,154 +1,181 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { BasicProfileFields } from "./fields/BasicProfileFields";
-import { DescriptionFields } from "./fields/DescriptionFields";
-import { roleSkills } from '../data/roleSkills';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { RoleSkillData } from "../types/roleSkillTypes";
+import { useToast } from "@/hooks/use-toast";
+import { generateId } from "@/lib/utils";
 
-interface FormData {
-  roleId: string;
-  roleTitle: string;
-  function: string;
-  mappedTitle: string;
-  occupation: string;
-  jobDescription: string;
-  roleTrack: "Professional" | "Managerial";
-  soc: string;
-}
+const formSchema = z.object({
+  title: z.string().min(2, {
+    message: "Title must be at least 2 characters.",
+  }),
+  soc: z.string().optional(),
+  function: z.string().optional(),
+  mappedTitle: z.string().optional(),
+  occupation: z.string().optional(),
+  description: z.string().optional(),
+  roleTrack: z.enum(["Professional", "Managerial"]).optional(),
+});
 
 export const AddSkillProfileForm = () => {
   const { toast } = useToast();
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    roleId: "",
-    roleTitle: "",
-    function: "Engineering",
-    mappedTitle: "",
-    occupation: "",
-    jobDescription: "",
-    roleTrack: "Professional",
-    soc: ""
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      soc: "",
+      function: "",
+      mappedTitle: "",
+      occupation: "",
+      description: "",
+      roleTrack: "Professional",
+    },
   });
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    console.log(`Updating ${field} with value:`, value);
-    
-    if (field === 'roleId') {
-      const currentRole = roleSkills[value as keyof typeof roleSkills];
-      const mappedTitle = currentRole ? `${currentRole.title} Specialist` : '';
-      const soc = currentRole?.title === "Software Developer" ? "15-1252" : 
-                 currentRole?.title === "Project Manager" ? "11-9041" : 
-                 currentRole?.title === "DevOps Engineer" ? "15-1244" : "";
-      
-      console.log('Updating role mapping:', { roleId: value, mappedTitle, soc });
-      setFormData(prev => ({
-        ...prev,
-        [field]: value,
-        mappedTitle,
-        soc,
-        occupation: currentRole?.title || ''
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [field]: value
-      }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submission started - Form data:', formData);
-
-    // Validate required fields
-    const requiredFields: (keyof FormData)[] = ['roleId', 'function', 'mappedTitle', 'occupation', 'soc'];
-    const missingFields = requiredFields.filter(field => !formData[field]);
-    
-    if (missingFields.length > 0) {
-      console.log('Validation failed - Missing fields:', missingFields);
-      toast({
-        title: "Validation Error",
-        description: `Please fill in all required fields: ${missingFields.join(', ')}`,
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // If it's a new role, validate role title
-    if (!roleSkills[formData.roleId as keyof typeof roleSkills] && !formData.roleTitle) {
-      console.log('Validation failed - Missing role title for new role');
-      toast({
-        title: "Validation Error",
-        description: "Role Title is required for new roles",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Create new role profile
-    const newProfile = {
-      id: formData.roleId,
-      name: formData.roleTitle || roleSkills[formData.roleId as keyof typeof roleSkills]?.title,
-      function: formData.function,
-      mappedTitle: formData.mappedTitle,
-      soc: formData.soc,
-      roleTrack: formData.roleTrack,
-      description: formData.jobDescription,
-      lastUpdated: new Date().toLocaleDateString()
-    };
-
-    console.log('Creating new skill profile:', newProfile);
-
-    // Add to roleSkills
-    roleSkills[formData.roleId as keyof typeof roleSkills] = {
-      title: formData.roleTitle || newProfile.name,
-      soc: formData.soc,
+  const handleSubmit = (data: z.infer<typeof formSchema>) => {
+    const newProfile: RoleSkillData = {
+      roleId: generateId(),
+      title: data.title,
+      soc: data.soc,
+      function: data.function,
+      mappedTitle: data.mappedTitle,
+      occupation: data.occupation,
+      description: data.description,
+      roleTrack: data.roleTrack,
+      track: data.roleTrack || "Professional",
       specialized: [],
       common: [],
       certifications: [],
-      skills: [] // Initialize empty skills array
+      skills: []
     };
 
-    console.log('Profile created successfully');
     toast({
-      title: "Success",
-      description: "Skill profile created successfully",
+      title: "Profile Created",
+      description: `Successfully created profile: ${data.title}`,
     });
-    setOpen(false);
+
+    console.log("New profile created:", newProfile);
+    form.reset();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Add Profile</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Create Skill Profile</DialogTitle>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2 grid grid-cols-2 gap-4">
-              <BasicProfileFields 
-                formData={formData}
-                handleInputChange={handleInputChange}
-                roleSkills={roleSkills}
-              />
-            </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Profile Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter profile title" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the name of the skill profile.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <DescriptionFields 
-              formData={formData}
-              handleInputChange={handleInputChange}
-            />
-          </div>
+        <FormField
+          control={form.control}
+          name="soc"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>SOC Code</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter SOC code" {...field} />
+              </FormControl>
+              <FormDescription>
+                Standard Occupational Classification code
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="flex justify-end">
-            <Button type="submit">Create Profile</Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+        <FormField
+          control={form.control}
+          name="function"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Function</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter function" {...field} />
+              </FormControl>
+              <FormDescription>
+                The business function this role belongs to
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="mappedTitle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mapped Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter mapped title" {...field} />
+              </FormControl>
+              <FormDescription>
+                Alternative or mapped title for this role
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="occupation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Occupation</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter occupation" {...field} />
+              </FormControl>
+              <FormDescription>
+                The general occupation category
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter description" {...field} />
+              </FormControl>
+              <FormDescription>
+                Brief description of the role
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit">Create Profile</Button>
+      </form>
+    </Form>
   );
 };

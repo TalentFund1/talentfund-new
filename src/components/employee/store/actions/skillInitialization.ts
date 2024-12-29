@@ -42,6 +42,7 @@ export const createInitializationActions = (set: any, get: any) => ({
           weight: skillData.weight || 'technical',
           growth: skillData.growth || '0%',
           salary: skillData.salary || 'market',
+          skillScore: 0,
           benchmarks: {
             B: false,
             R: false,
