@@ -1,96 +1,83 @@
-import { Card } from "@/components/ui/card";
-import { BenchmarkSkillsMatrixContent } from "./skills-matrix/BenchmarkSkillsMatrixContent";
-import { BenchmarkSearchProvider } from "@/components/skills/context/BenchmarkSearchContext";
-import { useState, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
-import { roleSkills } from "../skills/data/roleSkills";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useTrack } from "../skills/context/TrackContext";
+import { useSkillsFiltering } from "./skills-matrix/useSkillsFiltering";
+import { useBenchmarkSkillsMatrixState } from "./skills-matrix/BenchmarkSkillsMatrixState";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
+import { BenchmarkSkillsMatrixView } from "./skills-matrix/BenchmarkSkillsMatrixView";
 
-export const BenchmarkSkillsMatrix = () => {
-  console.log('Rendering BenchmarkSkillsMatrix with proper padding alignment');
-
-  const { id: employeeId } = useParams();
-  const { selectedRole } = useRoleStore();
+const BenchmarkSkillsMatrixContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
-  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedWeight, setSelectedWeight] = useState("all");
-  const observerTarget = useRef<HTMLDivElement>(null);
+  const { id } = useParams<{ id: string }>();
+  const { selectedRole, selectedLevel: roleLevel } = useRoleStore();
+  const { toggledSkills } = useToggledSkills();
+  const { getTrackForRole } = useTrack();
 
-  const filteredSkills = useMemo(() => {
-    if (!selectedRole) return [];
+  const track = getTrackForRole(selectedRole);
+  const comparisonLevel = track === "Managerial" ? "m3" : roleLevel.toLowerCase();
 
-    const currentRoleSkills = roleSkills[selectedRole as keyof typeof roleSkills];
-    if (!currentRoleSkills) return [];
-
-    const allSkills = [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
-    ];
-
-    console.log('Retrieved role skills:', {
-      roleId: selectedRole,
-      skillCount: allSkills.length,
-      skills: allSkills.map(s => s.title)
-    });
-
-    return allSkills.filter(skill => {
-      const unifiedData = getUnifiedSkillData(skill.title);
-      
-      // Filter by category
-      if (selectedCategory !== "all" && unifiedData.category !== selectedCategory) {
-        return false;
-      }
-
-      // Filter by weight
-      if (selectedWeight !== "all" && unifiedData.weight !== selectedWeight) {
-        return false;
-      }
-
-      // Filter by search term or selected skills
-      if (selectedSearchSkills.length > 0) {
-        return selectedSearchSkills.includes(skill.title);
-      }
-
-      if (searchTerm) {
-        return skill.title.toLowerCase().includes(searchTerm.toLowerCase());
-      }
-
-      return true;
-    });
-  }, [selectedRole, selectedCategory, selectedWeight, selectedSearchSkills, searchTerm]);
+  const { filteredSkills } = useSkillsFiltering(
+    id || "",
+    selectedRole,
+    comparisonLevel,
+    selectedLevel,
+    selectedInterest,
+    selectedSkillLevel,
+    searchTerm,
+    toggledSkills,
+    selectedCategory,
+    selectedWeight,
+    true
+  );
+  
+  console.log('BenchmarkSkillsMatrix - Current state:', {
+    roleId: selectedRole,
+    employeeId: id,
+    selectedCategory,
+    selectedWeight,
+    filteredSkillsCount: filteredSkills.length,
+    toggledSkillsCount: toggledSkills.size
+  });
 
   return (
-    <BenchmarkSearchProvider>
-      <Card className="max-w-7xl mx-auto p-6 bg-white">
-        <BenchmarkSkillsMatrixContent 
-          roleId={selectedRole || ""}
-          employeeId={employeeId || ""}
-          roleLevel="intermediate"
-          filteredSkills={filteredSkills}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedLevel={selectedLevel}
-          setSelectedLevel={setSelectedLevel}
-          selectedInterest={selectedInterest}
-          setSelectedInterest={setSelectedInterest}
-          selectedSkillLevel={selectedSkillLevel}
-          setSelectedSkillLevel={setSelectedSkillLevel}
-          selectedSearchSkills={selectedSearchSkills}
-          setSelectedSearchSkills={setSelectedSearchSkills}
-          visibleItems={10}
-          observerTarget={observerTarget}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedWeight={selectedWeight}
-          setSelectedWeight={setSelectedWeight}
-        />
-      </Card>
-    </BenchmarkSearchProvider>
+    <div className="space-y-6">
+      <BenchmarkSkillsMatrixView
+        roleId={selectedRole}
+        employeeId={id || ""}
+        roleLevel={comparisonLevel}
+        filteredSkills={filteredSkills}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
+        selectedInterest={selectedInterest}
+        setSelectedInterest={setSelectedInterest}
+        selectedSkillLevel={selectedSkillLevel}
+        setSelectedSkillLevel={setSelectedSkillLevel}
+        selectedSearchSkills={selectedSearchSkills}
+        setSelectedSearchSkills={setSelectedSearchSkills}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedWeight={selectedWeight}
+        setSelectedWeight={setSelectedWeight}
+      />
+    </div>
+  );
+};
+
+export const BenchmarkSkillsMatrix = () => {
+  return (
+    <ToggledSkillsProvider>
+      <BenchmarkSkillsMatrixContent />
+    </ToggledSkillsProvider>
   );
 };
