@@ -19,6 +19,19 @@ interface SkillsMatrixRowProps {
   isRoleBenchmark: boolean;
 }
 
+const getSkillScore = (level: string): number => {
+  switch (level.toLowerCase()) {
+    case 'advanced':
+      return Math.floor(Math.random() * 26) + 75; // 75-100
+    case 'intermediate':
+      return Math.floor(Math.random() * 26) + 50; // 50-75
+    case 'beginner':
+      return Math.floor(Math.random() * 26) + 25; // 25-50
+    default:
+      return Math.floor(Math.random() * 26); // 0-25
+  }
+};
+
 export const SkillsMatrixRow = ({ 
   skill, 
   isRoleBenchmark
@@ -37,6 +50,8 @@ export const SkillsMatrixRow = ({
     unifiedGrowth: unifiedSkillData.growth,
     salary: unifiedSkillData.salary
   });
+
+  const skillScore = getSkillScore(skill.level);
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -71,11 +86,12 @@ export const SkillsMatrixRow = ({
       )}
       <TableCell className="text-center border-r border-blue-200 py-2">
         <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
-          skill.confidence === 'high' ? 'bg-green-100 text-green-800' :
-          skill.confidence === 'medium' ? 'bg-orange-100 text-orange-800' :
+          skillScore >= 75 ? 'bg-green-100 text-green-800' :
+          skillScore >= 50 ? 'bg-blue-100 text-blue-800' :
+          skillScore >= 25 ? 'bg-orange-100 text-orange-800' :
           'bg-red-100 text-red-800'
         }`}>
-          {skill.confidence.charAt(0).toUpperCase() + skill.confidence.slice(1)}
+          {skillScore}
         </span>
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">

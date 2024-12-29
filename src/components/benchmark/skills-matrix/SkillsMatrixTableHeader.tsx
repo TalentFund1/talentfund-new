@@ -7,17 +7,32 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export const BenchmarkSkillsMatrixTableHeader = () => {
+interface SkillsMatrixTableHeaderProps {
+  showCompanySkill?: boolean;
+  isRoleBenchmark?: boolean;
+}
+
+export const SkillsMatrixTableHeader = ({ 
+  showCompanySkill = true,
+  isRoleBenchmark = false
+}: SkillsMatrixTableHeaderProps) => {
+  console.log('SkillsMatrixTableHeader rendering with:', {
+    showCompanySkill,
+    isRoleBenchmark
+  });
+
   return (
     <TableHeader>
       <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
-        <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
-        <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
-        <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Skills</TableHead>
-        <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Target</TableHead>
+        <TableHead className="w-[250px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+        <TableHead className="w-[200px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+        {showCompanySkill && (
+          <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
+        )}
+        <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Employee Skills</TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
-            Confidence Score
+            Skill Score
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -25,9 +40,9 @@ export const BenchmarkSkillsMatrixTableHeader = () => {
                 </TooltipTrigger>
                 <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                   <div className="space-y-2">
-                    <h4 className="font-medium text-left">Confidence Score:</h4>
+                    <h4 className="font-medium text-left">Skill Score:</h4>
                     <p className="text-sm text-left font-normal">
-                      Indicates the level of confidence in the skill assessment based on available data and validation
+                      Score ranges: Advanced (75-100), Intermediate (50-75), Beginner (25-50), Unspecified (0-25)
                     </p>
                   </div>
                 </TooltipContent>
@@ -48,6 +63,26 @@ export const BenchmarkSkillsMatrixTableHeader = () => {
                     <h4 className="font-medium text-left">Projected Growth:</h4>
                     <p className="text-sm text-left font-normal">
                       Projected growth in demand for this skill over the next year
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </TableHead>
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
+          <div className="flex items-center justify-center gap-1">
+            Skill Pricer
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-left">Skill Pricer:</h4>
+                    <p className="text-sm text-left font-normal">
+                      Reflects the market value impact of this skill based on current industry data
                     </p>
                   </div>
                 </TooltipContent>
