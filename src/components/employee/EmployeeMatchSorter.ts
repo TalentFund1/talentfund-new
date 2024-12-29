@@ -1,7 +1,8 @@
 import { Employee } from "../types/employeeTypes";
-import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { roleSkills } from "../skills/data/roleSkills";
+import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
 
 export const sortEmployeesByRoleMatch = (
   employees: Employee[],
@@ -44,21 +45,22 @@ export const sortEmployeesByRoleMatch = (
   });
 
   employees.forEach(employee => {
-    // Get the role ID from the employee's assigned role
     const employeeRoleId = getSkillProfileId(employee.role);
     const employeeLevel = getLevel(employee.role);
+    const employeeSkills = getEmployeeSkills(employee.id);
     
     // Compare role IDs directly for exact matches
     const isExactMatch = employeeRoleId === selectedRoleId;
 
-    // Calculate comprehensive benchmark using the same method as benchmark analysis
-    const benchmark = calculateBenchmarkPercentage(
-      employee.id,
-      selectedRoleId,
+    // Calculate comprehensive benchmark using unified calculator
+    const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
+      employeeSkills,
+      employeeSkills,
       employeeLevel,
+      selectedRoleId,
+      'Professional', // Default track
       currentStates,
-      toggledSkills,
-      getSkillCompetencyState
+      employee.id
     );
 
     console.log('Processing employee for matching:', {
