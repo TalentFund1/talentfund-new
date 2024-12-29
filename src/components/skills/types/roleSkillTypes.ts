@@ -2,6 +2,7 @@ import { SkillCategory, SkillWeight } from './SkillTypes';
 
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
+export type SkillConfidence = 'low' | 'medium' | 'high';
 
 export interface RoleSkillRequirement {
   id: string;
@@ -14,10 +15,19 @@ export interface RoleSkillRequirement {
   requirementLevel: SkillRequirementLevel;
   growth: string;
   salary: string;
+  level: SkillLevel;
+  confidence: SkillConfidence;
+  skillScore: number;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
   metrics: {
     growth: string;
     salary: string;
-    confidence: 'low' | 'medium' | 'high';
+    confidence: SkillConfidence;
     skillScore: number;
   };
 }
