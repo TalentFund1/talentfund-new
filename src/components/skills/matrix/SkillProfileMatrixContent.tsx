@@ -32,10 +32,39 @@ export const SkillProfileMatrixContent = ({
     };
   });
 
-  console.log('Rendering SkillProfileMatrixContent with enriched skills:', {
-    totalSkills: enrichedSkills.length,
-    categories: enrichedSkills.map(s => s.category),
-    weights: enrichedSkills.map(s => s.weight)
+  // Sort skills: toggled skills first, then apply other sorting
+  const sortedSkills = [...enrichedSkills].sort((a, b) => {
+    // First sort by toggled state
+    const aToggled = toggledSkills.has(a.title) ? 1 : 0;
+    const bToggled = toggledSkills.has(b.title) ? 1 : 0;
+    const toggledDiff = bToggled - aToggled;
+    
+    if (toggledDiff !== 0) return toggledDiff;
+
+    // Then apply other sorting if specified
+    if (sortField && sortDirection) {
+      if (sortField === 'growth') {
+        const aGrowth = parseFloat(a.growth);
+        const bGrowth = parseFloat(b.growth);
+        return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+      } else if (sortField === 'salary') {
+        const aSalary = parseFloat(a.salary?.replace(/[^0-9.-]+/g, "") || "0");
+        const bSalary = parseFloat(b.salary?.replace(/[^0-9.-]+/g, "") || "0");
+        return sortDirection === 'asc' ? aSalary - bSalary : bSalary - aSalary;
+      }
+    }
+    
+    // Default to alphabetical sorting by title
+    return a.title.localeCompare(b.title);
+  });
+
+  console.log('Rendering SkillProfileMatrixContent with sorted skills:', {
+    totalSkills: sortedSkills.length,
+    toggledSkillsCount: Array.from(toggledSkills).length,
+    firstFewSkills: sortedSkills.slice(0, 3).map(s => ({
+      title: s.title,
+      isToggled: toggledSkills.has(s.title)
+    }))
   });
 
   return (
@@ -47,7 +76,7 @@ export const SkillProfileMatrixContent = ({
           onSort={onSort}
         />
         <TableBody>
-          {enrichedSkills.map((skill) => (
+          {sortedSkills.map((skill) => (
             <SkillProfileMatrixRow
               key={skill.title}
               skill={skill}
