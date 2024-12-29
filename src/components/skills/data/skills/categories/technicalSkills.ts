@@ -11,13 +11,13 @@ export const technicalSkills: UnifiedSkill[] = [
     level: "advanced",
     growth: "35%",
     salary: "$160,000",
-    skillScore: 0,
+    skillScore: 85,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
       growth: "35%",
       salary: "$160,000",
-      skillScore: 0
+      skillScore: 85
     },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -31,13 +31,13 @@ export const technicalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "25%",
     salary: "$130,000",
-    skillScore: 0,
+    skillScore: 75,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
       growth: "25%",
       salary: "$130,000",
-      skillScore: 0
+      skillScore: 75
     },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -51,13 +51,13 @@ export const technicalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "22%",
     salary: "$125,000",
-    skillScore: 0,
+    skillScore: 72,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
       growth: "22%",
       salary: "$125,000",
-      skillScore: 0
+      skillScore: 72
     },
     benchmarks: { B: true, R: true, M: true, O: true }
   }

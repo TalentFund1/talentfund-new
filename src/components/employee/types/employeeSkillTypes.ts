@@ -6,6 +6,8 @@ import {
   SkillMetrics 
 } from '../../skills/types/sharedSkillTypes';
 
+export { SkillLevel, SkillGoalStatus };
+
 // Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
@@ -30,7 +32,6 @@ export interface EmployeeSkillData extends BaseSkill {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  skillScore: number;
   minimumLevel: SkillLevel;
   requirementLevel: 'required' | 'preferred' | 'optional';
   metrics: SkillMetrics;

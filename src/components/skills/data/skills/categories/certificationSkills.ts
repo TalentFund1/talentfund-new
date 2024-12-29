@@ -11,13 +11,13 @@ export const certificationSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "10%",
     salary: "$145,000",
-    skillScore: 0,
+    skillScore: 78,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
       growth: "10%",
       salary: "$145,000",
-      skillScore: 0
+      skillScore: 78
     },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
@@ -31,13 +31,13 @@ export const certificationSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "10%",
     salary: "$140,000",
-    skillScore: 0,
+    skillScore: 75,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
       growth: "10%",
       salary: "$140,000",
-      skillScore: 0
+      skillScore: 75
     },
     benchmarks: { B: true, R: true, M: true, O: true }
   }
