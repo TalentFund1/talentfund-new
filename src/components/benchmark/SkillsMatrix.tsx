@@ -68,7 +68,6 @@ export const SkillsMatrix = () => {
     }
   }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
 
-  // Define level priority for sorting
   const getLevelPriority = (level: string): number => {
     switch (level.toLowerCase()) {
       case 'advanced': return 1;
