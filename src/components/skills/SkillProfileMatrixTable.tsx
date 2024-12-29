@@ -1,6 +1,5 @@
 import { Switch } from "@/components/ui/switch";
 import { ChevronUp, HelpCircle } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Tooltip,
   TooltipContent,
@@ -11,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { UnifiedSkill } from "./types/SkillTypes";
 import { roleSkills } from "./data/roleSkills";
 import { useParams } from "react-router-dom";
-import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 interface SkillProfileMatrixTableProps {
   paginatedSkills: UnifiedSkill[];
@@ -31,7 +29,6 @@ export const SkillProfileMatrixTable = ({
   onSort
 }: SkillProfileMatrixTableProps) => {
   const { id } = useParams();
-  const { setSkillGoalStatus, getSkillState } = useEmployeeSkillsStore();
   
   const getSkillType = (skillTitle: string): string => {
     const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
@@ -59,22 +56,6 @@ export const SkillProfileMatrixTable = ({
       default:
         return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const handleDevelopmentPlanToggle = (skillTitle: string) => {
-    if (!id) return;
-    
-    const currentState = getSkillState(id, skillTitle);
-    const newGoalStatus = currentState.goalStatus === 'skill_goal' ? 'unknown' : 'skill_goal';
-    
-    console.log('Toggling development plan for skill:', {
-      skillTitle,
-      employeeId: id,
-      currentGoalStatus: currentState.goalStatus,
-      newGoalStatus
-    });
-    
-    setSkillGoalStatus(id, skillTitle, newGoalStatus);
   };
 
   const uniqueSkills = paginatedSkills.reduce((acc: UnifiedSkill[], current) => {
@@ -157,9 +138,6 @@ export const SkillProfileMatrixTable = ({
               </TooltipProvider>
             </Button>
           </th>
-          <th className="py-4 px-4 text-sm font-medium text-muted-foreground text-center">
-            Skill Development
-          </th>
           <th className="py-4 px-8 text-sm font-medium text-muted-foreground text-center whitespace-nowrap">
             Appears In <ChevronUp className="h-4 w-4 inline-block ml-1" />
           </th>
@@ -197,19 +175,12 @@ export const SkillProfileMatrixTable = ({
               </span>
             </td>
             <td className="py-3 px-2 text-sm">{skill.salary}</td>
-            <td className="py-3 px-4 text-center">
-              <Checkbox
-                checked={id ? getSkillState(id, skill.title).goalStatus === 'skill_goal' : false}
-                onCheckedChange={() => handleDevelopmentPlanToggle(skill.title)}
-                className="border-2 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-              />
-            </td>
             <td className="py-3 px-8">
               <div className="flex justify-center gap-1">
-                <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
-                <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
+                <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
+                <span className="w-6 h-6 rounded-full bg-red-100 text-red-800 flex items-center justify-center text-sm font-medium">R</span>
                 <span className="w-6 h-6 rounded-full bg-[#E5DEFF] text-[#6E59A5] flex items-center justify-center text-sm font-medium">M</span>
-                <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">D</span>
+                <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">O</span>
               </div>
             </td>
           </tr>

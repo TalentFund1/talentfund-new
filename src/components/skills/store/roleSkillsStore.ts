@@ -21,8 +21,8 @@ export const useRoleSkillsStore = create<RoleSkillsStore>((set, get) => ({
     const roleSkills = get().roleSkills[roleId];
     if (!roleSkills) return undefined;
     
-    const allSkills = [...roleSkills.specialized, ...roleSkills.common, ...roleSkills.certifications];
-    return allSkills.find(skill => skill.title === skillTitle);
+    return [...roleSkills.specialized, ...roleSkills.common, ...roleSkills.certifications]
+      .find(skill => skill.title === skillTitle);
   },
   
   initializeRoleSkills: (roleId: string) => {
@@ -32,7 +32,7 @@ export const useRoleSkillsStore = create<RoleSkillsStore>((set, get) => ({
       return;
     }
 
-    const defaultRole = Object.values(defaultRoleSkills).find(role => role.roleId === roleId);
+    const defaultRole = defaultRoleSkills.find(role => role.roleId === roleId);
     if (!defaultRole) {
       console.warn('No default role skills found for:', roleId);
       return;
