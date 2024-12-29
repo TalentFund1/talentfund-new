@@ -1,22 +1,70 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
-import { technicalSkills } from './categories/technicalSkills';
-import { commonSkills } from './categories/commonSkills';
-import { certificationSkills } from './categories/certificationSkills';
 
-// Combine all skills from different categories
+// Combine all skills into a single database
 const allSkills: UnifiedSkill[] = [
-  ...technicalSkills,
-  ...commonSkills,
-  ...certificationSkills
+  {
+    id: 'SKILL_ML_031',
+    title: "Machine Learning",
+    subcategory: "AI & ML",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "35%",
+    salary: "$160,000",
+    skillScore: 0,
+    minimumLevel: "advanced",
+    requirementLevel: "required",
+    metrics: {
+      growth: "35%",
+      salary: "$160,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_REA_873',
+    title: "React",
+    subcategory: "Frontend Frameworks",
+    category: "specialized",
+    businessCategory: "Software Development",
+    weight: "technical",
+    level: "intermediate",
+    growth: "25%",
+    salary: "$130,000",
+    skillScore: 0,
+    minimumLevel: "intermediate",
+    requirementLevel: "required",
+    metrics: {
+      growth: "25%",
+      salary: "$130,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TW_794',
+    title: "Technical Writing",
+    subcategory: "Documentation",
+    category: "common",
+    businessCategory: "Professional Skills",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "12%",
+    salary: "$95,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "12%",
+      salary: "$95,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  }
 ];
 
-// Helper functions to get skills by category
-export const getSkillsByCategory = (category: string) => {
-  return allSkills.filter(skill => skill.category === category);
-};
-
-export const getAllSkills = () => allSkills;
-
+// Helper functions to get skills
 export const getSkillByTitle = (title: string | undefined) => {
   if (!title) {
     console.warn('Attempted to get skill with undefined title');
@@ -33,6 +81,8 @@ export const getSkillByTitle = (title: string | undefined) => {
 
   return skill;
 };
+
+export const getAllSkills = () => allSkills;
 
 console.log('Universal skills database initialized with', allSkills.length, 'skills');
 
