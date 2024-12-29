@@ -16,7 +16,6 @@ interface SkillsMatrixRowProps {
     subcategory: string;
     level: string;
     growth: string;
-    confidence: string;
     requirement?: string;
     category?: string;
   };

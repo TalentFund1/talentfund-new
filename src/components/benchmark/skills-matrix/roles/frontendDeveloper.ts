@@ -5,7 +5,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Frontend Frameworks",
     level: "advanced",
     growth: "20%",
-    confidence: "high",
     requirement: "required"
   },
   {
@@ -13,7 +12,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Programming Languages",
     level: "advanced",
     growth: "25%",
-    confidence: "high",
     requirement: "required"
   },
   {
@@ -21,7 +19,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Design",
     level: "intermediate",
     growth: "30%",
-    confidence: "medium",
     requirement: "preferred"
   },
   {
@@ -29,7 +26,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Styling",
     level: "advanced",
     growth: "15%",
-    confidence: "high",
     requirement: "required"
   },
   {
@@ -37,7 +33,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Frontend Frameworks",
     level: "advanced",
     growth: "28%",
-    confidence: "high",
     requirement: "required"
   },
   // Common Skills
@@ -46,7 +41,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Frontend Development",
     level: "advanced",
     growth: "12%",
-    confidence: "high",
     requirement: "required"
   },
   {
@@ -54,7 +48,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Web Development",
     level: "advanced",
     growth: "18%",
-    confidence: "high",
     requirement: "required"
   },
   {
@@ -62,7 +55,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Soft Skills",
     level: "advanced",
     growth: "15%",
-    confidence: "high",
     requirement: "preferred"
   },
   // Certifications
@@ -71,7 +63,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Cloud Certification",
     level: "intermediate",
     growth: "25%",
-    confidence: "medium",
     requirement: "preferred"
   },
   {
@@ -79,7 +70,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Web Development Certification",
     level: "advanced",
     growth: "20%",
-    confidence: "high",
     requirement: "required"
   },
   {
@@ -87,7 +77,6 @@ export const frontendDeveloperSkills = [
     subcategory: "Development Certification",
     level: "intermediate",
     growth: "15%",
-    confidence: "medium",
     requirement: "preferred"
   }
 ];
