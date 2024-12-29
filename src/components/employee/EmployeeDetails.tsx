@@ -2,7 +2,6 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 import { useEmployeeStore } from "./store/employeeStore";
-import { Building2, Briefcase, Users, Calendar, MapPin, UserCircle2, Blocks, Building } from "lucide-react";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -54,17 +53,13 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
     team: employee.team
   });
 
-  const DetailItem = ({ icon: Icon, label, value, isLink = false }: { 
-    icon: React.ElementType; 
+  const DetailItem = ({ label, value, isLink = false }: { 
     label: string; 
     value: string | number;
     isLink?: boolean;
   }) => (
     <div className="group">
-      <div className="flex items-center gap-2 mb-1">
-        <Icon className="h-4 w-4 text-primary-accent" />
-        <span className="text-sm text-gray-500">{label}</span>
-      </div>
+      <span className="text-sm text-gray-500 block mb-1">{label}</span>
       {isLink && employee.manager ? (
         <Link 
           to={`/employee/${managerId}`}
@@ -81,15 +76,15 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   return (
     <>
       <Separator className="my-8" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <DetailItem icon={Building2} label="Department" value={employee.department} />
-        <DetailItem icon={Building} label="Office" value={employee.office} />
-        <DetailItem icon={Briefcase} label="Category" value={employee.category} />
-        <DetailItem icon={Users} label="Team" value={employee.team} />
-        <DetailItem icon={UserCircle2} label="Manager" value={employee.manager} isLink={true} />
-        <DetailItem icon={Calendar} label="Tenure (Years)" value={tenure} />
-        <DetailItem icon={MapPin} label="Type" value={employee.type} />
-        <DetailItem icon={Blocks} label="Skill Count" value={skillCount} />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-6">
+        <DetailItem label="Department" value={employee.department} />
+        <DetailItem label="Office" value={employee.office} />
+        <DetailItem label="Category" value={employee.category} />
+        <DetailItem label="Team" value={employee.team} />
+        <DetailItem label="Manager" value={employee.manager} isLink={true} />
+        <DetailItem label="Tenure (Years)" value={tenure} />
+        <DetailItem label="Type" value={employee.type} />
+        <DetailItem label="Skill Count" value={skillCount} />
       </div>
     </>
   );
