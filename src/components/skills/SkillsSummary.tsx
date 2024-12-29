@@ -67,7 +67,7 @@ export const SkillsSummary = () => {
     });
   }, [filteredEmployeeSkills]);
 
-  const handleCancelSelection = () => {
+  const handleClearAll = () => {
     setSelectedSkills([]);
   };
 
@@ -100,19 +100,7 @@ export const SkillsSummary = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
-        {selectedSkills.length > 0 && (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleCancelSelection}
-            className="flex items-center gap-2"
-          >
-            Cancel
-          </Button>
-        )}
-      </div>
+      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
       <div className="mb-4">
         <div className="space-y-2">
@@ -124,6 +112,17 @@ export const SkillsSummary = () => {
             onItemsChange={setSelectedSkills}
             singleSelect={false}
           />
+          {selectedSkills.length > 0 && (
+            <div className="flex justify-end">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleClearAll}
+              >
+                Clear All
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
