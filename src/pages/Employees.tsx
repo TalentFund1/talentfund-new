@@ -13,7 +13,7 @@ import { filterEmployeesBySkills } from "@/components/employee/EmployeeSkillsFil
 import { AddEmployeeDialog } from "@/components/employee/AddEmployeeDialog";
 import { useEmployeeStore } from "@/components/employee/store/employeeStore";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
-import { getSkillProfileId, getBaseRole } from "@/components/EmployeeTable";
+import { getSkillProfileId } from "@/components/EmployeeTable";
 
 const calculateAverageTenure = (employeeList: any[]) => {
   if (employeeList.length === 0) return 0;
@@ -33,6 +33,7 @@ const calculateAverageTenure = (employeeList: any[]) => {
 };
 
 const Employees = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<string[]>([]);
@@ -111,7 +112,7 @@ const Employees = () => {
               <h1 className="text-3xl font-bold text-foreground">Employees</h1>
               <div className="space-x-2">
                 <Button variant="outline">Export Data</Button>
-                <AddEmployeeDialog />
+                <AddEmployeeDialog open={dialogOpen} onOpenChange={setDialogOpen} />
               </div>
             </div>
 

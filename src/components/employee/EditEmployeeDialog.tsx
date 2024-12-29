@@ -6,7 +6,7 @@ import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { useEmployeeStore } from "./store/employeeStore";
 import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
 import { Employee } from "../types/employeeTypes";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsProvider";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { roleMapping } from "./form/RoleLevelFields";
 import { useNavigate } from "react-router-dom";
 import { getRoleDefaultTrack } from "../skills/data/roles/roleDefinitions";

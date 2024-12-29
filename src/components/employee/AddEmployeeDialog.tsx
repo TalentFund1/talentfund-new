@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { useEmployeeStore } from "./store/employeeStore";
 import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsProvider";
+import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
 import { roleMapping } from "./form/RoleLevelFields";
 
 interface AddEmployeeDialogProps {
