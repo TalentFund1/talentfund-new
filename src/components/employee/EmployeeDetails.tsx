@@ -104,12 +104,6 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
           <p className="font-medium text-gray-900">{employee.startDate || "—"}</p>
         </div>
         <div className="space-y-1">
-          <span className="text-sm text-gray-500">Term Date</span>
-          <p className="font-medium text-gray-900">
-            {employee.termDate || "—"}
-          </p>
-        </div>
-        <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
           <p className="font-medium text-gray-900">{tenure}</p>
         </div>
