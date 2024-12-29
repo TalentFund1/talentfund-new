@@ -34,7 +34,8 @@ export const SkillsMatrixRow = ({
     unifiedSubcategory: unifiedSkillData.subcategory,
     isRoleBenchmark,
     originalGrowth: skill.growth,
-    unifiedGrowth: unifiedSkillData.growth
+    unifiedGrowth: unifiedSkillData.growth,
+    salary: unifiedSkillData.salary
   });
 
   return (
@@ -90,7 +91,7 @@ export const SkillsMatrixRow = ({
       </TableCell>
       {!isRoleBenchmark && (
         <TableCell className="text-center border-r border-blue-200 py-2">
-          <span className="text-sm text-gray-900">${Math.floor(Math.random() * 50000 + 100000).toLocaleString()}</span>
+          <span className="text-sm text-gray-900">{unifiedSkillData.salary}</span>
         </TableCell>
       )}
       <TableCell className="text-center py-2">
