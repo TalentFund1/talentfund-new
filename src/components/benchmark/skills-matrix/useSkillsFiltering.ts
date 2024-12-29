@@ -3,6 +3,7 @@ import { useCompetencyStateReader } from "../../skills/competency/CompetencyStat
 import { roleSkills } from "../../skills/data/roleSkills";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
+import { useRoleStore } from "../RoleBenchmark";
 
 const getLevelPriority = (level: string): number => {
   switch (level?.toLowerCase()) {
@@ -38,11 +39,14 @@ export const useSkillsFiltering = (
   const { getSkillState } = useSkillsMatrixStore();
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkillsStore = useEmployeeSkillsStore();
+  const { selectedRole: storeSelectedRole } = useRoleStore();
   
   const employeeSkills = employeeSkillsStore.getEmployeeSkills(employeeId);
+  const currentRoleId = storeSelectedRole || selectedRole;
 
   console.log('Starting skills filtering with:', {
     employeeId,
+    selectedRole: currentRoleId,
     totalEmployeeSkills: employeeSkills.length,
     selectedCategory,
     selectedWeight,
@@ -56,28 +60,29 @@ export const useSkillsFiltering = (
   const filterSkills = () => {
     let skills = [...employeeSkills];
 
-    const roleData = roleSkills[selectedRole as keyof typeof roleSkills];
+    const roleData = roleSkills[currentRoleId as keyof typeof roleSkills];
     if (!roleData) {
-      console.warn('No role data found for:', selectedRole);
+      console.warn('No role data found for:', currentRoleId);
       return [];
     }
 
     const allRoleSkills = [
-      ...roleData.specialized,
-      ...roleData.common,
-      ...roleData.certifications
+      ...(roleData.specialized || []),
+      ...(roleData.common || []),
+      ...(roleData.certifications || [])
     ];
+
+    console.log('Filtering skills for role:', {
+      roleId: currentRoleId,
+      roleTitle: roleData.title,
+      totalSkills: allRoleSkills.length,
+      skillTitles: allRoleSkills.map(s => s.title)
+    });
 
     skills = skills.filter(empSkill => {
       const isRoleSkill = allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title);
       const isToggled = toggledSkills.has(empSkill.title);
       return isRoleSkill && isToggled;
-    });
-
-    console.log('After matching with role skills:', {
-      employeeId,
-      matchingSkillsCount: skills.length,
-      matchingSkills: skills.map(s => s.title)
     });
 
     const uniqueSkills = new Map();
@@ -171,26 +176,6 @@ export const useSkillsFiltering = (
   };
 
   const filteredSkills = filterSkills();
-
-  console.log('Skills filtering result:', {
-    employeeId,
-    totalEmployeeSkills: employeeSkills.length,
-    filteredSkills: filteredSkills.length,
-    filteredSkillTitles: filteredSkills.map(s => ({
-      title: s.title,
-      roleLevel: s.roleLevel,
-      required: s.required
-    })),
-    filters: {
-      selectedCategory,
-      selectedWeight,
-      selectedLevel,
-      selectedInterest,
-      selectedSkillLevel,
-      searchTerm,
-      isRoleBenchmark
-    }
-  });
 
   return { filteredSkills };
 };

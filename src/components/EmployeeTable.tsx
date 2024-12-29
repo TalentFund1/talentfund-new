@@ -28,11 +28,11 @@ interface EmployeeTableProps {
   readonly selectedRole?: ReadonlyArray<string>;
 }
 
-export const getSkillProfileId = (role?: string) => {
+export const getSkillProfileId = (role?: string): string => {
   const validProfileIds = Object.keys(roleSkills);
   if (validProfileIds.includes(role || '')) {
     console.log('Using direct role ID:', role);
-    return role;
+    return role || '';
   }
 
   const roleMap = Object.entries(roleSkills).reduce((acc, [id, data]) => {
@@ -57,12 +57,12 @@ export const getSkillProfileId = (role?: string) => {
   return mappedId || '';
 };
 
-export const getBaseRole = (role?: string) => {
+export const getBaseRole = (role?: string): string => {
   if (!role) return "";
   return role.split(":")[0].trim();
 };
 
-export const getLevel = (role?: string) => {
+export const getLevel = (role?: string): string => {
   if (!role) return "";
   const parts = role.split(":");
   return parts.length > 1 ? parts[1].trim() : "";
@@ -107,24 +107,24 @@ const EmployeeTableContent = ({
 
   const preFilteredEmployees = filterEmployees(
     employees,
-    [...selectedEmployees],
-    [...selectedDepartment],
-    [...selectedLevel],
-    [...selectedOffice],
-    [...selectedEmploymentType],
-    [...selectedSkills],
-    [...selectedManager]
+    selectedEmployees,
+    selectedDepartment,
+    selectedLevel,
+    selectedOffice,
+    selectedEmploymentType,
+    selectedSkills,
+    selectedManager
   );
 
   console.log('Pre-filtered employees:', preFilteredEmployees);
 
-  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, [...selectedSkills]);
+  const skillFilteredEmployees = filterEmployeesBySkills(preFilteredEmployees, selectedSkills);
 
   console.log('Skill filtered employees:', skillFilteredEmployees);
 
   const filteredEmployees = sortEmployeesByRoleMatch(
     skillFilteredEmployees,
-    [...selectedRole],
+    selectedRole,
     getSkillState,
     new Set(),
     getSkillCompetencyState
@@ -164,8 +164,8 @@ const EmployeeTableContent = ({
                   isSelected={selectedRows.includes(employee.name)}
                   onSelect={handleSelectEmployee}
                   imageUrl={`https://images.unsplash.com/${EMPLOYEE_IMAGES[index % EMPLOYEE_IMAGES.length]}?auto=format&fit=crop&w=24&h=24`}
-                  selectedSkills={[...selectedSkills]}
-                  selectedJobTitle={[...selectedRole]}
+                  selectedSkills={selectedSkills}
+                  selectedJobTitle={selectedRole}
                 />
               ))
             )}
