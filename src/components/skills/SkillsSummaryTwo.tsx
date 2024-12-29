@@ -5,10 +5,13 @@ import { useParams } from "react-router-dom";
 import { UnifiedSkill } from "./types/SkillTypes";
 import { useEffect } from "react";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
+import { SearchFilter } from "@/components/market/SearchFilter";
+import { useState } from "react";
 
 export const SkillsSummaryTwo = () => {
   const { id } = useParams<{ id: string }>();
   const { getEmployeeSkills, initializeEmployeeSkills } = useEmployeeSkillsStore();
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Initialize employee skills
   useEffect(() => {
@@ -54,8 +57,8 @@ export const SkillsSummaryTwo = () => {
     certifications: certificationSkills.length
   });
 
-  const SkillSection = ({ title, count, skills }: { title: string; count: number; skills: UnifiedSkill[] }) => (
-    <div className="space-y-4">
+  const SkillSection = ({ title, skills, count }: { title: string; skills: UnifiedSkill[]; count: number }) => (
+    <div className="rounded-2xl border border-border bg-white p-6 space-y-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">{title}</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
@@ -63,40 +66,59 @@ export const SkillsSummaryTwo = () => {
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <SkillBadge
-            key={skill.title}
-            skill={{ name: skill.title }}
-            showLevel={true}
-            level={skill.level}
-            employeeId={id || ''}
-          />
-        ))}
+        {skills
+          .filter(skill => 
+            skill.title.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((skill) => (
+            <SkillBadge
+              key={skill.title}
+              skill={{ name: skill.title }}
+              showLevel={true}
+              level={skill.level}
+              isSkillGoal={skill.goalStatus === 'skill_goal' || skill.goalStatus === 'required'}
+              employeeId={id || ''}
+            />
+          ))}
       </div>
     </div>
   );
 
   return (
-    <Card className="p-6 space-y-6 bg-white">
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
+      
+      <div className="mb-4">
+        <SearchFilter
+          label=""
+          placeholder="Search skills..."
+          items={[]}
+          selectedItems={[]}
+          onItemsChange={() => {}}
+          singleSelect={false}
+          onSearchChange={setSearchQuery}
+        />
+      </div>
+
       <div className="space-y-6">
         <SkillSection 
           title="Specialized Skills" 
-          count={specializedSkills.length} 
           skills={specializedSkills} 
+          count={specializedSkills.length} 
         />
         
         <SkillSection 
           title="Common Skills" 
-          count={commonSkills.length} 
           skills={commonSkills} 
+          count={commonSkills.length} 
         />
         
         <SkillSection 
           title="Certifications" 
-          count={certificationSkills.length} 
           skills={certificationSkills} 
+          count={certificationSkills.length} 
         />
       </div>
-    </Card>
+    </div>
   );
 };

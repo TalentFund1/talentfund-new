@@ -36,19 +36,6 @@ export const SkillBadge = ({
     }
   };
 
-  const shouldShowGoal = () => {
-    if (isRoleBenchmark) return false;
-    if (isSkillGoal) return true;
-    
-    if (skillState) {
-      return skillState.goalStatus === 'required' || 
-             skillState.goalStatus === 'skill_goal';
-    }
-    
-    const currentLevel = (skillState?.level || level || '').toLowerCase();
-    return ['advanced', 'intermediate', 'beginner'].includes(currentLevel);
-  };
-
   return (
     <Badge 
       key={skill.name} 
@@ -61,7 +48,7 @@ export const SkillBadge = ({
           <div className={`h-2 w-2 rounded-full ${
             getLevelColor(skillState?.level || level || "unspecified")
           }`} />
-          {shouldShowGoal() && (
+          {isSkillGoal && !isRoleBenchmark && (
             <Heart className="w-3 h-3 text-[#1f2144]" />
           )}
         </div>
