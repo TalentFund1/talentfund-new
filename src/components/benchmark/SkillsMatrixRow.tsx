@@ -10,6 +10,7 @@ import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { Badge } from "../ui/badge";
+import { useToast } from "../ui/use-toast";
 
 interface SkillsMatrixRowProps {
   skill: UnifiedSkill & { hasSkill?: boolean };
@@ -21,7 +22,8 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
-  const { getSkillState, updateSkillState } = useEmployeeSkillsStore();
+  const { toast } = useToast();
+  const { getSkillState, updateSkillState, removeEmployeeSkill } = useEmployeeSkillsStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -39,9 +41,30 @@ export const SkillsMatrixRow = ({
   const skillScore = Math.floor(Math.random() * 26) + (skill.hasSkill ? 50 : 25);
   const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
 
-  const handleDevelopmentPlanChange = (checked: boolean) => {
+  const handleDevelopmentPlanChange = async (checked: boolean) => {
     if (!employeeId) return;
     
+    const currentSkillState = getSkillState(employeeId, skill.title);
+    
+    // If skill level is unspecified and checkbox is unchecked
+    if (currentSkillState?.level === 'unspecified' && !checked) {
+      console.log('Removing unspecified skill:', {
+        employeeId,
+        skillTitle: skill.title
+      });
+      
+      // Remove the skill from employee skills
+      await removeEmployeeSkill(employeeId, skill.title);
+      
+      toast({
+        title: "Skill Removed",
+        description: `${skill.title} has been removed from your skills.`,
+      });
+      
+      return;
+    }
+
+    // Normal toggle behavior for other skill levels
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,

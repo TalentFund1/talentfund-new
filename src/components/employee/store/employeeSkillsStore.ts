@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
-import { createInitializationActions } from './actions/skillInitialization';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { createStoreActions } from './actions/storeActions';
 import { EmployeeSkillsStore, EmployeeSkillsStoreState } from './types/storeTypes';
@@ -49,7 +48,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   level: skill.level || 'unspecified',
                   goalStatus: 'unknown',
                   lastUpdated: new Date().toISOString(),
-                  skillScore: 0,
                   subcategory: unifiedData.subcategory || 'General',
                   category: unifiedData.category || 'specialized',
                   businessCategory: unifiedData.businessCategory || 'Technical Skills',
@@ -101,7 +99,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         if (!state.skillStates[employeeId]) {
           state.initializeEmployeeSkills(employeeId);
         }
-        return state.skillStates[employeeId]?.skills || [];
+        return Object.values(state.skillStates[employeeId]?.skills || {});
       },
 
       getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillState => {
@@ -139,8 +137,28 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         store.updateSkillState(employeeId, skillTitle, { goalStatus });
       },
 
+      removeEmployeeSkill: async (employeeId: string, skillTitle: string) => {
+        console.log('Removing employee skill:', { employeeId, skillTitle });
+        
+        set(state => {
+          const employeeState = state.skillStates[employeeId];
+          if (!employeeState?.skills) return state;
+
+          const { [skillTitle]: removedSkill, ...remainingSkills } = employeeState.skills;
+
+          return {
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                skills: remainingSkills,
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          };
+        });
+      },
+
       ...createSkillStateActions(set, get),
-      ...createInitializationActions(set, get),
       ...createSkillSelectors(get),
       ...createStoreActions(set, get)
     }),

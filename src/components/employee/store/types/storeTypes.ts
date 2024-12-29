@@ -15,6 +15,7 @@ export interface EmployeeSkillsStoreMethods {
   initializeEmployeeSkills: (employeeId: string) => void;
   updateSkillState: (employeeId: string, skillTitle: string, updates: EmployeeSkillUpdate) => void;
   batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
+  removeEmployeeSkill: (employeeId: string, skillTitle: string) => Promise<void>;
 }
 
 export type EmployeeSkillsStore = EmployeeSkillsStoreState & EmployeeSkillsStoreMethods;
