@@ -23,6 +23,12 @@ export interface RoleSkillData {
   common: RoleSkillRequirement[];
   certifications: RoleSkillRequirement[];
   skills: RoleSkillRequirement[]; // Combined array of all skills
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: "Professional" | "Managerial";
 }
 
 // Role skills store interface
