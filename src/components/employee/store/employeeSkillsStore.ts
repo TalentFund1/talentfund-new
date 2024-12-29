@@ -71,6 +71,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               }
             }
           }));
+
+          // Immediately persist to localStorage after initialization
+          localStorage.setItem('employee-skills-storage', JSON.stringify(get().skillStates));
         }
 
         const store = get();
@@ -91,7 +94,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           return [];
         }
 
-        // Get all skills from the universal database and merge with current state
         const allSkills = Object.entries(state.skills).map(([title, skill]) => {
           const unifiedData = getUnifiedSkillData(title);
           const skillData: EmployeeSkillData = {
@@ -153,12 +155,18 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Setting skill level:', { employeeId, skillTitle, level });
         const store = get();
         store.updateSkillState(employeeId, skillTitle, { level });
+        
+        // Immediately persist to localStorage after update
+        localStorage.setItem('employee-skills-storage', JSON.stringify(get().skillStates));
       },
 
       setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
         console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
         const store = get();
         store.updateSkillState(employeeId, skillTitle, { goalStatus });
+        
+        // Immediately persist to localStorage after update
+        localStorage.setItem('employee-skills-storage', JSON.stringify(get().skillStates));
       },
 
       ...createSkillStateActions(set, get),
