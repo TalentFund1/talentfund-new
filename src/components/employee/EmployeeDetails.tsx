@@ -60,8 +60,8 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
     value: string | number;
     isLink?: boolean;
   }) => (
-    <div className="bg-white rounded-lg p-4 border border-border hover:border-primary-accent/50 transition-all duration-300 group">
-      <div className="flex items-center gap-2 mb-2">
+    <div className="group">
+      <div className="flex items-center gap-2 mb-1">
         <Icon className="h-4 w-4 text-primary-accent" />
         <span className="text-sm text-gray-500">{label}</span>
       </div>
@@ -81,7 +81,7 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   return (
     <>
       <Separator className="my-8" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <DetailItem icon={Building2} label="Department" value={employee.department} />
         <DetailItem icon={Building} label="Office" value={employee.office} />
         <DetailItem icon={Briefcase} label="Category" value={employee.category} />
