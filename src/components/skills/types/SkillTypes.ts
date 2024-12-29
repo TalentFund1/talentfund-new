@@ -8,7 +8,7 @@ import {
   BaseSkill
 } from './sharedSkillTypes';
 
-export type { SkillWeight, SkillCategory };
+export type { SkillWeight, SkillCategory, RoleSkillData } from './roleSkillTypes';
 
 export interface DetailedSkill {
   name: string;

@@ -21,7 +21,7 @@ export interface SkillProfileRow {
   employees: string;
   matches: string;
   lastUpdated: string;
-  occupation?: string;  // Added occupation as optional property
+  occupation?: string;
 }
 
 export interface EmployeeSkill {
@@ -29,7 +29,6 @@ export interface EmployeeSkill {
   subcategory: string;
   level: string;
   growth: string;
-  confidence: string;
   requirement?: 'required' | 'preferred' | 'skill_goal';
 }
 
@@ -38,7 +37,6 @@ export interface RoleSkill {
   subcategory: string;
   level?: string;
   growth: string;
-  confidence?: string;
   requirement?: string;
   salary?: string;
   benchmarks?: { [key: string]: boolean };
