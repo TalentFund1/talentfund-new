@@ -1,6 +1,5 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
 
-// Combine all skills into a single database
 const allSkills: UnifiedSkill[] = [
   {
     id: 'SKILL_ML_031',
@@ -43,46 +42,6 @@ const allSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'SKILL_PYT_445',
-    title: "Python",
-    subcategory: "Programming Languages",
-    category: "specialized",
-    businessCategory: "Software Development",
-    weight: "technical",
-    level: "intermediate",
-    growth: "28%",
-    salary: "$135,000",
-    skillScore: 0,
-    minimumLevel: "beginner",
-    requirementLevel: "required",
-    metrics: {
-      growth: "28%",
-      salary: "$135,000",
-      skillScore: 0
-    },
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL_AWS_662',
-    title: "AWS",
-    subcategory: "Cloud Computing",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "critical",
-    level: "advanced",
-    growth: "32%",
-    salary: "$155,000",
-    skillScore: 0,
-    minimumLevel: "beginner",
-    requirementLevel: "required",
-    metrics: {
-      growth: "32%",
-      salary: "$155,000",
-      skillScore: 0
-    },
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
     id: 'SKILL_NOD_789',
     title: "Node.js",
     subcategory: "Backend Development",
@@ -103,60 +62,180 @@ const allSkills: UnifiedSkill[] = [
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'SKILL_SQL_234',
-    title: "SQL",
-    subcategory: "Databases",
+    id: 'SKILL_CER_160',
+    title: "Certified AI Professional",
+    subcategory: "General",
     category: "common",
     businessCategory: "Information Technology",
-    weight: "technical",
+    weight: "necessary",
     level: "intermediate",
-    growth: "20%",
+    growth: "10%",
+    salary: "$145,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$145,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_COM_227',
+    title: "Communication",
+    subcategory: "General",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$110,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$110,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TEA_214',
+    title: "Team Collaboration",
+    subcategory: "General",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$115,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$115,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_PRO_261',
+    title: "Problem Solving",
+    subcategory: "General",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
     salary: "$120,000",
     skillScore: 0,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
-      growth: "20%",
+      growth: "10%",
       salary: "$120,000",
       skillScore: 0
     },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'SKILL_JAV_567',
-    title: "Java",
-    subcategory: "Programming Languages",
-    category: "specialized",
-    businessCategory: "Software Development",
-    weight: "technical",
+    id: 'SKILL_GIT_119',
+    title: "Git Version Control",
+    subcategory: "General",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
     level: "intermediate",
-    growth: "18%",
+    growth: "10%",
+    salary: "$115,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$115,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_KUB_785',
+    title: "Kubernetes Administrator (CKA)",
+    subcategory: "General",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
     salary: "$140,000",
     skillScore: 0,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
-      growth: "18%",
+      growth: "10%",
       salary: "$140,000",
       skillScore: 0
     },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
-    id: 'SKILL_DOC_890',
-    title: "Docker",
-    subcategory: "DevOps",
-    category: "specialized",
+    id: 'SKILL_NAT_105',
+    title: "Natural Language Processing",
+    subcategory: "General",
+    category: "common",
     businessCategory: "Information Technology",
-    weight: "technical",
+    weight: "necessary",
     level: "intermediate",
-    growth: "30%",
+    growth: "10%",
+    salary: "$150,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$150,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_COM_544',
+    title: "Computer Vision",
+    subcategory: "General",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$155,000",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$155,000",
+      skillScore: 0
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TEN_887',
+    title: "TensorFlow",
+    subcategory: "General",
+    category: "common",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
     salary: "$145,000",
     skillScore: 0,
     minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
-      growth: "30%",
+      growth: "10%",
       salary: "$145,000",
       skillScore: 0
     },
