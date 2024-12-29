@@ -13,6 +13,7 @@ export const devopsSkills: UnifiedSkill[] = [
     salary: "$140,000",
     skillScore: 0,
     minimumLevel: "advanced",
+    requirementLevel: "required",
     metrics: {
       growth: "28%",
       salary: "$140,000",

@@ -40,14 +40,14 @@ export interface EmployeeSkillData {
     salary: string;
     skillScore: number;
   };
+  growth: string;
+  salary: string;
   benchmarks: {
     B: boolean;
     R: boolean;
     M: boolean;
     O: boolean;
   };
-  growth: string;
-  salary: string;
 }
 
 // Achievement tracking

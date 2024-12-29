@@ -13,6 +13,7 @@ export const webSkills: UnifiedSkill[] = [
     salary: "$130,000",
     skillScore: 0,
     minimumLevel: "intermediate",
+    requirementLevel: "required",
     metrics: {
       growth: "25%",
       salary: "$130,000",
@@ -32,6 +33,7 @@ export const webSkills: UnifiedSkill[] = [
     salary: "$135,000",
     skillScore: 0,
     minimumLevel: "intermediate",
+    requirementLevel: "required",
     metrics: {
       growth: "22%",
       salary: "$135,000",

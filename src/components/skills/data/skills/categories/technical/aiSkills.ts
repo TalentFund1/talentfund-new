@@ -13,6 +13,7 @@ export const aiSkills: UnifiedSkill[] = [
     salary: "$160,000",
     skillScore: 0,
     minimumLevel: "advanced",
+    requirementLevel: "required",
     metrics: {
       growth: "35%",
       salary: "$160,000",
@@ -32,6 +33,7 @@ export const aiSkills: UnifiedSkill[] = [
     salary: "$155,000",
     skillScore: 0,
     minimumLevel: "advanced",
+    requirementLevel: "required",
     metrics: {
       growth: "32%",
       salary: "$155,000",
