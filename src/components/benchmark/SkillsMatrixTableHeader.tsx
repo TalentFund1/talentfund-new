@@ -92,7 +92,7 @@ export const SkillsMatrixTableHeader = ({
         </TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
-            Skill Development
+            Skill Growth
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -100,7 +100,7 @@ export const SkillsMatrixTableHeader = ({
                 </TooltipTrigger>
                 <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
                   <div className="space-y-2">
-                    <h4 className="font-medium text-left">Skill Development:</h4>
+                    <h4 className="font-medium text-left">Skill Growth:</h4>
                     <p className="text-sm text-left font-normal">
                       Check to add this skill to your development plan
                     </p>

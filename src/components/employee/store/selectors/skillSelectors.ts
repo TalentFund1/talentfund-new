@@ -1,48 +1,30 @@
-import { EmployeeSkillData, EmployeeSkillState } from '../../types/employeeSkillTypes';
+import { EmployeeSkillData } from "../../types/employeeSkillTypes";
+import { getUnifiedSkillData } from "../../../skills/data/skillDatabaseService";
 
-export const createSkillSelectors = (get: any) => ({
-  getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
-    console.log('Getting skill state:', { employeeId, skillTitle });
-    const state = get().skillStates[employeeId]?.skills[skillTitle];
-    
-    if (!state) {
-      const defaultState: EmployeeSkillData = {
-        id: `${employeeId}-${skillTitle}`,
-        employeeId,
-        skillId: `${employeeId}-${skillTitle}`,
-        title: skillTitle,
-        level: 'unspecified',
-        goalStatus: 'unknown',
-        lastUpdated: new Date().toISOString(),
-        confidence: 'medium',
-        subcategory: 'General',
-        category: 'specialized',
-        businessCategory: 'Technical Skills',
-        weight: 'technical',
-        growth: '0%',
-        salary: 'market',
-        skillScore: 0,
-        benchmarks: {
-          B: false,
-          R: false,
-          M: false,
-          O: false
-        }
-      };
-      return defaultState;
+export const getDefaultSkillState = (employeeId: string, skillTitle: string): EmployeeSkillData => {
+  const unifiedData = getUnifiedSkillData(skillTitle);
+  return {
+    id: `${employeeId}-${skillTitle}`,
+    employeeId,
+    skillId: `${employeeId}-${skillTitle}`,
+    title: skillTitle,
+    level: 'unspecified',
+    goalStatus: 'unknown',
+    lastUpdated: new Date().toISOString(),
+    confidence: 'medium',
+    subcategory: unifiedData.subcategory || 'General',
+    category: unifiedData.category || 'specialized',
+    businessCategory: unifiedData.businessCategory || 'Technical Skills',
+    weight: unifiedData.weight || 'technical',
+    growth: unifiedData.growth || '0%',
+    salary: unifiedData.salary || 'market',
+    skillScore: 0,
+    inDevelopmentPlan: false,
+    benchmarks: {
+      B: false,
+      R: false,
+      M: false,
+      O: false
     }
-    
-    return state;
-  },
-
-  getEmployeeSkills: (employeeId: string): EmployeeSkillData[] => {
-    console.log('Getting skills for employee:', employeeId);
-    const employeeState = get().skillStates[employeeId];
-    
-    if (!employeeState?.skills) {
-      return [];
-    }
-
-    return Object.values(employeeState.skills);
-  }
-});
+  };
+};
