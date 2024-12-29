@@ -3,15 +3,15 @@ import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { SkillBadge } from "./SkillBadge";
 import { useParams } from "react-router-dom";
 import { UnifiedSkill } from "./types/SkillTypes";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
 import { SearchFilter } from "@/components/market/SearchFilter";
-import { useState } from "react";
 
 export const SkillsSummaryTwo = () => {
   const { id } = useParams<{ id: string }>();
   const { getEmployeeSkills, initializeEmployeeSkills } = useEmployeeSkillsStore();
   const [searchQuery, setSearchQuery] = useState("");
+  const [allSkillTitles, setAllSkillTitles] = useState<string[]>([]);
 
   // Initialize employee skills
   useEffect(() => {
@@ -23,11 +23,16 @@ export const SkillsSummaryTwo = () => {
 
   const employeeSkills = id ? getEmployeeSkills(id) : [];
 
-  console.log('SkillsSummaryTwo - Loading employee skills:', {
-    employeeId: id,
-    skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => s.title)
-  });
+  useEffect(() => {
+    // Set all skill titles for the search filter
+    const titles = employeeSkills.map(skill => skill.title);
+    setAllSkillTitles(titles);
+    
+    console.log('SkillsSummaryTwo - Setting skill titles:', {
+      count: titles.length,
+      titles
+    });
+  }, [employeeSkills]);
 
   // Categorize employee skills using their actual categories from unified data
   const categorizedSkills = employeeSkills.reduce((acc, skill) => {
@@ -38,11 +43,14 @@ export const SkillsSummaryTwo = () => {
       acc[category] = [];
     }
     
-    acc[category].push({
-      ...skill,
-      category: unifiedData.category,
-      subcategory: unifiedData.subcategory
-    });
+    // Only add skills that match the search query
+    if (skill.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+      acc[category].push({
+        ...skill,
+        category: unifiedData.category,
+        subcategory: unifiedData.subcategory
+      });
+    }
     
     return acc;
   }, {} as Record<string, UnifiedSkill[]>);
@@ -66,20 +74,16 @@ export const SkillsSummaryTwo = () => {
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills
-          .filter(skill => 
-            skill.title.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-          .map((skill) => (
-            <SkillBadge
-              key={skill.title}
-              skill={{ name: skill.title }}
-              showLevel={true}
-              level={skill.level}
-              isSkillGoal={skill.goalStatus === 'skill_goal' || skill.goalStatus === 'required'}
-              employeeId={id || ''}
-            />
-          ))}
+        {skills.map((skill) => (
+          <SkillBadge
+            key={skill.title}
+            skill={{ name: skill.title }}
+            showLevel={true}
+            level={skill.level}
+            isSkillGoal={skill.goalStatus === 'skill_goal' || skill.goalStatus === 'required'}
+            employeeId={id || ''}
+          />
+        ))}
       </div>
     </div>
   );
@@ -92,7 +96,7 @@ export const SkillsSummaryTwo = () => {
         <SearchFilter
           label=""
           placeholder="Search skills..."
-          items={[]}
+          items={allSkillTitles}
           selectedItems={[]}
           onItemsChange={() => {}}
           singleSelect={false}
