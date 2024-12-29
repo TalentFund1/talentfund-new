@@ -1,5 +1,5 @@
 // Core skill types for employees
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified' | 'expert';
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
 // Employee skill state
@@ -9,7 +9,6 @@ export interface EmployeeSkillState {
   lastUpdated: string;
   confidence: 'low' | 'medium' | 'high';
   skillScore: number;
-  inDevelopmentPlan: boolean;
 }
 
 // Single skill update
@@ -18,7 +17,6 @@ export interface EmployeeSkillUpdate {
   goalStatus?: SkillGoalStatus;
   confidence?: 'low' | 'medium' | 'high';
   skillScore?: number;
-  inDevelopmentPlan?: boolean;
 }
 
 // Complete employee skill data
@@ -38,7 +36,6 @@ export interface EmployeeSkillData {
   salary: string;
   confidence: 'low' | 'medium' | 'high';
   skillScore: number;
-  inDevelopmentPlan: boolean;
   benchmarks: {
     B: boolean;
     R: boolean;

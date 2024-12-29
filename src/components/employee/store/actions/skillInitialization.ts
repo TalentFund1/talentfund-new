@@ -43,7 +43,6 @@ export const createInitializationActions = (set: any, get: any) => ({
           growth: skillData.growth || '0%',
           salary: skillData.salary || 'market',
           skillScore: 0,
-          inDevelopmentPlan: false,
           benchmarks: {
             B: false,
             R: false,
@@ -67,6 +66,12 @@ export const createInitializationActions = (set: any, get: any) => ({
         employeeId,
         skillCount: Object.keys(updates).length,
         skills: Object.keys(updates)
+      });
+    } else {
+      console.log('Found existing skill state:', {
+        employeeId,
+        skillCount: Object.keys(currentState.skills).length,
+        skills: Object.keys(currentState.skills)
       });
     }
   }

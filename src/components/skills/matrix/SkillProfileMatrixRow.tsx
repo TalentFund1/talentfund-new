@@ -1,9 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import { UnifiedSkill } from "../types/SkillTypes";
-import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
-import { useParams } from "react-router-dom";
 
 interface SkillProfileMatrixRowProps {
   skill: UnifiedSkill;
@@ -16,19 +13,6 @@ export const SkillProfileMatrixRow = ({
   isToggled,
   onToggle
 }: SkillProfileMatrixRowProps) => {
-  const { id: employeeId } = useParams();
-  const { getSkillState, updateSkillState } = useEmployeeSkillsStore();
-
-  const skillState = getSkillState(employeeId || "", skill.title);
-
-  const handleDevelopmentPlanChange = (checked: boolean) => {
-    if (!employeeId) return;
-    
-    updateSkillState(employeeId, skill.title, {
-      inDevelopmentPlan: checked
-    });
-  };
-
   return (
     <TableRow className="border-t border-border hover:bg-muted/50 transition-colors">
       <TableCell className="py-3 px-4 align-middle">
@@ -52,13 +36,6 @@ export const SkillProfileMatrixRow = ({
         </span>
       </TableCell>
       <TableCell className="py-3 px-2 align-middle text-sm">{skill.salary}</TableCell>
-      <TableCell className="py-3 px-4 align-middle">
-        <Checkbox
-          checked={skillState.inDevelopmentPlan}
-          onCheckedChange={handleDevelopmentPlanChange}
-          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-        />
-      </TableCell>
       <TableCell className="py-3 px-8 align-middle">
         <div className="flex justify-center gap-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
