@@ -1,8 +1,11 @@
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
+import { 
+  SkillLevel, 
+  SkillGoalStatus,
+  SkillRequirementLevel,
+  SkillMetrics,
+  SkillWeight,
+  SkillCategory
+} from './sharedSkillTypes';
 
 export interface DetailedSkill {
   name: string;
@@ -21,6 +24,9 @@ export interface Skill {
   growth: string;
   salary: string;
   skillScore: number;
+  minimumLevel: SkillLevel;
+  requirementLevel: SkillRequirementLevel;
+  metrics: SkillMetrics;
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -30,16 +36,9 @@ export interface Skill {
 }
 
 export interface UnifiedSkill extends Skill {
-  goalStatus?: SkillRequirement;
+  goalStatus?: SkillGoalStatus;
   roleLevel?: string;
   isCompanySkill?: boolean;
-  minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
-  metrics: {
-    growth: string;
-    salary: string;
-    skillScore: number;
-  };
 }
 
 export interface RoleSkillData {

@@ -4,7 +4,8 @@ import {
   BaseSkill, 
   SkillBenchmark, 
   SkillMetrics,
-  SkillConfidence
+  SkillConfidence,
+  SkillRequirementLevel
 } from '../../skills/types/sharedSkillTypes';
 
 // Employee skill state
