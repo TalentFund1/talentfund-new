@@ -1,10 +1,9 @@
 import { TableCell } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { SkillLevel, SkillGoalStatus } from "../employee/types/employeeSkillTypes";
 import { useParams } from "react-router-dom";
 import { getLevelIcon, getRequirementIcon } from "./skill-level/SkillLevelIcons";
-import { getLevelStyles, getGoalStatusStyles } from "./skill-level/SkillLevelStyles";
+import { getLevelStyles, getRequirementStyles } from "./skill-level/SkillLevelStyles";
 
 const getLevelValue = (level: string): number => {
   const values: { [key: string]: number } = {
@@ -95,7 +94,7 @@ export const SkillLevelCell = ({
             }
           }}
         >
-          <SelectTrigger className={getGoalStatusStyles(currentGoalStatus, currentLevel)}>
+          <SelectTrigger className={getRequirementStyles(currentGoalStatus, currentLevel)}>
             <SelectValue>
               <span className="flex items-center gap-1.5">
                 {getRequirementIcon(currentGoalStatus)}
