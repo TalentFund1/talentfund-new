@@ -17,6 +17,7 @@ interface EmployeeDetailsProps {
     tenure: string;
     role: string;
     team: string;
+    type: string;
     skills: ReadonlyArray<{ title: string; level: string; }>;
   };
   id: string;
@@ -106,6 +107,10 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
           <p className="font-medium text-gray-900">{tenure}</p>
+        </div>
+        <div className="space-y-1">
+          <span className="text-sm text-gray-500">Type</span>
+          <p className="font-medium text-gray-900">{employee.type}</p>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Skill Count</span>

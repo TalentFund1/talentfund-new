@@ -40,6 +40,7 @@ export const employees = [
     office: "Toronto",
     termDate: "-",
     team: "RnD",
+    type: "On-site" as const,
     skills: getRandomSkills()
   },
   {
@@ -58,6 +59,7 @@ export const employees = [
     office: "Toronto",
     termDate: "-",
     team: "RnD",
+    type: "On-site" as const,
     skills: getRandomSkills()
   },
   {
@@ -76,6 +78,7 @@ export const employees = [
     office: "Toronto",
     termDate: "-",
     team: "RnD",
+    type: "On-site" as const,
     skills: getRandomSkills()
   },
   {
@@ -94,6 +97,7 @@ export const employees = [
     office: "Toronto",
     termDate: "-",
     team: "RnD",
+    type: "On-site" as const,
     skills: getRandomSkills()
   }
 ] as const;

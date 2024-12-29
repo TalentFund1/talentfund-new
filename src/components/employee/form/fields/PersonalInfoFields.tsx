@@ -4,6 +4,7 @@ interface PersonalInfoFieldsProps {
   formData: {
     sex: string;
     category: string;
+    type: string;
   };
   handleInputChange: (field: string, value: string) => void;
 }
@@ -11,7 +12,8 @@ interface PersonalInfoFieldsProps {
 export const PersonalInfoFields = ({ formData, handleInputChange }: PersonalInfoFieldsProps) => {
   console.log('Personal Info Fields Values:', {
     sex: formData.sex,
-    category: formData.category
+    category: formData.category,
+    type: formData.type
   });
 
   return (
@@ -40,6 +42,20 @@ export const PersonalInfoFields = ({ formData, handleInputChange }: PersonalInfo
             <SelectItem value="Part-time">Part-time</SelectItem>
             <SelectItem value="Contract">Contract</SelectItem>
             <SelectItem value="Internship">Internship</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Type</label>
+        <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select work type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="On-site">On-site</SelectItem>
+            <SelectItem value="Remote">Remote</SelectItem>
+            <SelectItem value="Hybrid">Hybrid</SelectItem>
           </SelectContent>
         </Select>
       </div>

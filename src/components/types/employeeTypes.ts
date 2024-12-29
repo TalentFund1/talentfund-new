@@ -14,6 +14,7 @@ export interface Employee {
   office: string;
   termDate: string;
   team: string;
+  type: 'On-site' | 'Remote' | 'Hybrid';
   skills: ReadonlyArray<{
     readonly title: string;
     readonly level: string;
