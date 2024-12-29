@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { EmployeeSkillData, EmployeeSkillState, EmployeeSkillsData, SkillLevel, SkillGoalStatus } from "../types/employeeSkillTypes";
+import { employees } from "../EmployeeData";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 interface EmployeeSkillsStore {
   skillStates: Record<string, {
@@ -25,6 +27,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Getting skill state:', { employeeId, skillTitle });
         const state = get().skillStates[employeeId]?.skills[skillTitle];
         if (!state) {
+          const skillData = getUnifiedSkillData(skillTitle);
           return {
             id: `${employeeId}-${skillTitle}`,
             employeeId,
@@ -34,17 +37,17 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             goalStatus: 'unknown' as SkillGoalStatus,
             lastUpdated: new Date().toISOString(),
             skillScore: 0,
-            subcategory: 'General',
-            category: 'specialized',
-            businessCategory: 'Technical Skills',
-            weight: 'technical',
-            growth: '0%',
-            salary: 'market',
+            subcategory: skillData.subcategory || 'General',
+            category: skillData.category || 'specialized',
+            businessCategory: skillData.businessCategory || 'Technical Skills',
+            weight: skillData.weight || 'technical',
+            growth: skillData.growth || '0%',
+            salary: skillData.salary || 'market',
             minimumLevel: 'beginner',
             requirementLevel: 'required',
             metrics: {
-              growth: '0%',
-              salary: 'market',
+              growth: skillData.growth || '0%',
+              salary: skillData.salary || 'market',
               skillScore: 0
             },
             inDevelopmentPlan: false,
@@ -63,6 +66,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Getting skills for employee:', employeeId);
         const employeeState = get().skillStates[employeeId];
         if (!employeeState?.skills) {
+          const employee = employees.find(emp => emp.id === employeeId);
+          if (employee) {
+            get().initializeEmployeeSkills(employeeId);
+            return employee.skills.map(skill => get().getSkillState(employeeId, skill.title));
+          }
           return [];
         }
         const skills = Object.values(employeeState.skills);
@@ -100,10 +108,50 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
 
       initializeEmployeeSkills: (employeeId) => {
         console.log('Initializing skills for employee:', employeeId);
+        const employee = employees.find(emp => emp.id === employeeId);
+        
         set(state => {
           if (!state.skillStates[employeeId]) {
-            state.skillStates[employeeId] = { 
-              skills: {},
+            const skills: Record<string, EmployeeSkillData> = {};
+            
+            if (employee) {
+              employee.skills.forEach(skill => {
+                const skillData = getUnifiedSkillData(skill.title);
+                skills[skill.title] = {
+                  id: `${employeeId}-${skill.title}`,
+                  employeeId,
+                  skillId: `${employeeId}-${skill.title}`,
+                  title: skill.title,
+                  level: skill.level as SkillLevel || 'unspecified',
+                  goalStatus: 'unknown' as SkillGoalStatus,
+                  lastUpdated: new Date().toISOString(),
+                  skillScore: 0,
+                  subcategory: skillData.subcategory || 'General',
+                  category: skillData.category || 'specialized',
+                  businessCategory: skillData.businessCategory || 'Technical Skills',
+                  weight: skillData.weight || 'technical',
+                  growth: skillData.growth || '0%',
+                  salary: skillData.salary || 'market',
+                  minimumLevel: 'beginner',
+                  requirementLevel: 'required',
+                  metrics: {
+                    growth: skillData.growth || '0%',
+                    salary: skillData.salary || 'market',
+                    skillScore: 0
+                  },
+                  inDevelopmentPlan: false,
+                  benchmarks: {
+                    B: false,
+                    R: false,
+                    M: false,
+                    O: false
+                  }
+                };
+              });
+            }
+
+            state.skillStates[employeeId] = {
+              skills,
               lastUpdated: new Date().toISOString()
             };
           }
@@ -124,13 +172,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       },
 
       batchUpdateSkills: (employeeId, updates) => {
-        console.log('Batch updating skills for employee:', employeeId);
+        console.log('Batch updating skills:', { employeeId, updateCount: Object.keys(updates).length });
         set(state => {
           const skills = state.skillStates[employeeId]?.skills;
           if (skills) {
-            Object.keys(updates).forEach(skillTitle => {
+            Object.entries(updates).forEach(([skillTitle, update]) => {
               if (skills[skillTitle]) {
-                Object.assign(skills[skillTitle], updates[skillTitle]);
+                Object.assign(skills[skillTitle], update);
                 skills[skillTitle].lastUpdated = new Date().toISOString();
               }
             });
