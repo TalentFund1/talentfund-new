@@ -48,6 +48,7 @@ export const SkillsContainer = ({
       weight: 'technical',
       growth: '0%',
       salary: 'market',
+      skillScore: 0,
       benchmarks: {
         B: false,
         R: false,

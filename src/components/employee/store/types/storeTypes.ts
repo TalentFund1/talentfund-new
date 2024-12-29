@@ -1,7 +1,10 @@
-import { EmployeeSkillData, EmployeeSkillsState, EmployeeSkillUpdate } from '../../types/employeeSkillTypes';
+import { EmployeeSkillData, EmployeeSkillUpdate, EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export interface EmployeeSkillsStoreState {
-  skillStates: Record<string, EmployeeSkillsState>;
+  skillStates: Record<string, {
+    skills: Record<string, EmployeeSkillData>;
+    lastUpdated: string;
+  }>;
 }
 
 export interface EmployeeSkillsStoreMethods {
