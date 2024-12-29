@@ -2,13 +2,12 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { useParams } from "react-router-dom";
-import { useState, useMemo } from "react";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { useState, useMemo } from "react";
 import { SkillBadge } from "./SkillBadge";
 import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
 import { getAllSkills } from './data/skills/allSkills';
-import { Button } from "@/components/ui/button";
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -45,10 +44,6 @@ export const SkillsSummary = () => {
   const commonSkills = filteredEmployeeSkills.filter(skill => skill.category === 'common');
   const certifications = filteredEmployeeSkills.filter(skill => skill.category === 'certification');
 
-  const handleCancelSelection = () => {
-    setSelectedSkills([]);
-  };
-
   const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
@@ -80,19 +75,6 @@ export const SkillsSummary = () => {
     <div className="space-y-4">
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-sm font-medium text-muted-foreground">Skills</div>
-        {selectedSkills.length > 0 && (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleCancelSelection}
-          >
-            Cancel
-          </Button>
-        )}
-      </div>
-
       <div className="mb-4">
         <div className="space-y-2">
           <SearchFilter
