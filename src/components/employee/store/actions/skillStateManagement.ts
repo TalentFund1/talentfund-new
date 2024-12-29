@@ -1,4 +1,4 @@
-import { EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
+import { EmployeeSkillState, SkillLevel, SkillGoalStatus, SkillConfidence } from '../../types/employeeSkillTypes';
 
 export const createSkillState = (
   level: SkillLevel = 'unspecified',
@@ -7,6 +7,7 @@ export const createSkillState = (
   level,
   goalStatus,
   lastUpdated: new Date().toISOString(),
+  skillScore: 0,
   confidence: 'medium'
 });
 
