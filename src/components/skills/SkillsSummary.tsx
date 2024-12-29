@@ -25,6 +25,7 @@ export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   // Get all employee skills
   const employeeSkills = useMemo(() => {
@@ -32,80 +33,77 @@ export const SkillsSummary = () => {
     return getEmployeeSkills(employeeId);
   }, [employeeId, getEmployeeSkills]);
 
-  console.log('SkillsSummary - Employee Skills:', {
-    employeeId,
-    skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => s.title)
-  });
-
   // Get all available skills from universal database for search
   const allSkills = useMemo(() => {
     return getAllSkills().map(skill => skill.title);
   }, []);
 
-  // Filter employee skills based on selected skills
+  // Filter employee skills based on selected skills and category
   const filteredEmployeeSkills = useMemo(() => {
-    if (selectedSkills.length === 0) return employeeSkills;
-    return employeeSkills.filter(skill => 
-      selectedSkills.includes(skill.title)
-    );
-  }, [employeeSkills, selectedSkills]);
+    let skills = employeeSkills;
+    
+    if (selectedSkills.length > 0) {
+      skills = skills.filter(skill => selectedSkills.includes(skill.title));
+    }
 
-  // Categorize and sort filtered skills using universal database metadata
-  const categorizedSkills = useMemo(() => {
-    const sorted = filteredEmployeeSkills.reduce((acc: {
-      specialized: EmployeeSkillData[];
-      common: EmployeeSkillData[];
-      certifications: EmployeeSkillData[];
-    }, skill) => {
-      const unifiedData = getUnifiedSkillData(skill.title);
-      const category = unifiedData.category || 'common';
-      
-      switch (category) {
-        case 'specialized':
-          acc.specialized.push(skill);
-          break;
-        case 'certification':
-          acc.certifications.push(skill);
-          break;
-        default:
-          acc.common.push(skill);
-          break;
-      }
-      
-      return acc;
-    }, {
-      specialized: [] as EmployeeSkillData[],
-      common: [] as EmployeeSkillData[],
-      certifications: [] as EmployeeSkillData[]
-    });
-
-    // Sort each category by level
-    const sortByLevel = (skills: EmployeeSkillData[]) => {
-      return skills.sort((a, b) => {
-        const levelA = getLevelPriority(a.level);
-        const levelB = getLevelPriority(b.level);
-        return levelB - levelA;
+    if (selectedCategory !== "all") {
+      skills = skills.filter(skill => {
+        const unifiedData = getUnifiedSkillData(skill.title);
+        return unifiedData.category === selectedCategory;
       });
-    };
+    }
 
+    return skills;
+  }, [employeeSkills, selectedSkills, selectedCategory]);
+
+  // Categorize skills by status (Current, Developing, Adjacent)
+  const categorizedSkills = useMemo(() => {
     return {
-      specialized: sortByLevel(sorted.specialized),
-      common: sortByLevel(sorted.common),
-      certifications: sortByLevel(sorted.certifications)
+      current: filteredEmployeeSkills.filter(skill => 
+        skill.level === 'advanced' || skill.level === 'intermediate'
+      ),
+      developing: filteredEmployeeSkills.filter(skill => 
+        skill.level === 'beginner' || skill.goalStatus === 'skill_goal'
+      ),
+      adjacent: filteredEmployeeSkills.filter(skill => 
+        skill.level === 'unspecified' && skill.goalStatus !== 'skill_goal'
+      )
     };
   }, [filteredEmployeeSkills]);
 
   const handleClearAll = () => {
     setSelectedSkills([]);
+    setSelectedCategory("all");
   };
 
-  const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
+  const CategoryCard = ({ id, name, count, selected }: { id: string; name: string; count: number; selected: boolean }) => (
+    <button
+      onClick={() => setSelectedCategory(id)}
+      className={`rounded-lg p-4 transition-colors ${
+        selected
+          ? 'bg-primary-accent/5 border border-primary-accent'
+          : 'bg-background border border-border hover:border-primary-accent/50'
+      }`}
+    >
+      <div className="flex flex-col items-start">
+        <span className={`text-sm font-semibold mb-1 ${
+          selected ? 'text-primary-accent' : 'text-foreground'
+        }`}>
+          {name}
+        </span>
+        <span className="text-xs text-muted-foreground">
+          {count} skills
+        </span>
+      </div>
+    </button>
+  );
+
+  const SkillSection = ({ title, count, skills }: { title: string; count: number; skills: EmployeeSkillData[] }) => (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">{title}</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
-          {skills.length}
+          {count}
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -128,6 +126,13 @@ export const SkillsSummary = () => {
     </Card>
   );
 
+  const categories = [
+    { id: "all", name: "All Categories", count: filteredEmployeeSkills.length },
+    { id: "specialized", name: "Specialized Skills", count: employeeSkills.filter(s => getUnifiedSkillData(s.title).category === 'specialized').length },
+    { id: "common", name: "Common Skills", count: employeeSkills.filter(s => getUnifiedSkillData(s.title).category === 'common').length },
+    { id: "certification", name: "Certification", count: employeeSkills.filter(s => getUnifiedSkillData(s.title).category === 'certification').length }
+  ];
+
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
@@ -142,7 +147,7 @@ export const SkillsSummary = () => {
             onItemsChange={setSelectedSkills}
             singleSelect={false}
           />
-          {selectedSkills.length > 0 && (
+          {(selectedSkills.length > 0 || selectedCategory !== "all") && (
             <div className="flex justify-end">
               <Button 
                 variant="outline" 
@@ -156,12 +161,24 @@ export const SkillsSummary = () => {
         </div>
       </div>
 
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        {categories.map((category) => (
+          <CategoryCard
+            key={category.id}
+            id={category.id}
+            name={category.name}
+            count={category.count}
+            selected={selectedCategory === category.id}
+          />
+        ))}
+      </div>
+
       <Separator className="my-6" />
 
       <div className="space-y-6">
-        <SkillSection title="Specialized Skills" skills={categorizedSkills.specialized} />
-        <SkillSection title="Common Skills" skills={categorizedSkills.common} />
-        <SkillSection title="Certifications" skills={categorizedSkills.certifications} />
+        <SkillSection title="Current" count={categorizedSkills.current.length} skills={categorizedSkills.current} />
+        <SkillSection title="Developing" count={categorizedSkills.developing.length} skills={categorizedSkills.developing} />
+        <SkillSection title="Adjacent" count={categorizedSkills.adjacent.length} skills={categorizedSkills.adjacent} />
       </div>
     </div>
   );
