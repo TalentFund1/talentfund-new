@@ -33,6 +33,7 @@ export const AddEmployeeDialog = () => {
     sex: "",
     category: "",
     team: "RnD",
+    type: "On-site" as const,
     skills: ""
   });
 

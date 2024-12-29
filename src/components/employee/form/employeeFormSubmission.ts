@@ -19,7 +19,7 @@ interface FormData {
   sex: string;
   category: string;
   team: string;
-  type: string;
+  type: "On-site" | "Remote" | "Hybrid";
 }
 
 export const processEmployeeData = (formData: FormData): Employee => {
@@ -49,7 +49,7 @@ export const processEmployeeData = (formData: FormData): Employee => {
     office: formData.office,
     termDate: formData.termDate || "-",
     team: formData.team || "RnD",
-    type: formData.type || "On-site",
+    type: formData.type,
     skills: []
   };
 
