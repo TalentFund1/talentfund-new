@@ -21,12 +21,6 @@ export const SkillsSummary = () => {
     return getEmployeeSkills(employeeId);
   }, [employeeId, getEmployeeSkills]);
 
-  console.log('Employee skills loaded:', {
-    employeeId,
-    skillCount: employeeSkills.length,
-    skills: employeeSkills.map(s => ({ title: s.title, level: s.level }))
-  });
-
   const allSkills = useMemo(() => {
     return getAllSkills().map(skill => skill.title);
   }, []);
@@ -34,16 +28,25 @@ export const SkillsSummary = () => {
   const filteredEmployeeSkills = useMemo(() => {
     let skills = employeeSkills;
     
+    // First apply search filter if any
     if (selectedSkills.length > 0) {
       skills = skills.filter(skill => selectedSkills.includes(skill.title));
     }
 
+    // Then apply category filter
     if (selectedCategory !== "all") {
       skills = skills.filter(skill => {
         const unifiedData = getUnifiedSkillData(skill.title);
         return unifiedData.category === selectedCategory;
       });
     }
+
+    console.log('Filtered skills:', {
+      total: skills.length,
+      searchTerms: selectedSkills,
+      category: selectedCategory,
+      skills: skills.map(s => s.title)
+    });
 
     return skills;
   }, [employeeSkills, selectedSkills, selectedCategory]);
@@ -59,6 +62,24 @@ export const SkillsSummary = () => {
       )
     };
   }, [filteredEmployeeSkills]);
+
+  // Calculate category counts based on search filter
+  const getCategoryCount = (category: string) => {
+    if (!selectedSkills.length) {
+      // If no search filter, return total count for each category
+      return employeeSkills.filter(skill => {
+        const skillData = getUnifiedSkillData(skill.title);
+        return category === 'all' || skillData.category === category;
+      }).length;
+    }
+
+    // If search filter is active, count only filtered skills
+    return employeeSkills.filter(skill => {
+      const skillData = getUnifiedSkillData(skill.title);
+      const matchesSearch = selectedSkills.includes(skill.title);
+      return matchesSearch && (category === 'all' || skillData.category === category);
+    }).length;
+  };
 
   const handleClearAll = () => {
     setSelectedSkills([]);
@@ -93,11 +114,42 @@ export const SkillsSummary = () => {
         </div>
       </div>
 
-      <SkillCategoryCards
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        employeeSkills={employeeSkills}
-      />
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        {[
+          { id: "all", name: "All Categories", count: getCategoryCount('all') },
+          { id: "specialized", name: "Specialized Skills", count: getCategoryCount('specialized') },
+          { id: "common", name: "Common Skills", count: getCategoryCount('common') },
+          { id: "certification", name: "Certification", count: getCategoryCount('certification') }
+        ].map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setSelectedCategory(category.id)}
+            className="w-full text-left"
+          >
+            <Card 
+              className={`
+                p-4 
+                transition-colors 
+                ${selectedCategory === category.id
+                  ? 'bg-primary-accent/5 border border-primary-accent'
+                  : 'bg-background border border-border hover:border-primary-accent/50'
+                }
+              `}
+            >
+              <div className="flex flex-col gap-1">
+                <span className={`text-sm font-semibold ${
+                  selectedCategory === category.id ? 'text-primary-accent' : 'text-foreground'
+                }`}>
+                  {category.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {category.count} {category.count === 1 ? 'skill' : 'skills'}
+                </span>
+              </div>
+            </Card>
+          </button>
+        ))}
+      </div>
 
       <Separator className="my-6" />
 
