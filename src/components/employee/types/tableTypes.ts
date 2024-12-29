@@ -8,8 +8,8 @@ export interface EmployeeTableRowProps {
     benchmark: number;
     lastUpdated: string;
     skills: ReadonlyArray<{
-      title: string;
-      level: string;
+      readonly title: string;
+      readonly level: string;
     }>;
   };
   isSelected: boolean;
