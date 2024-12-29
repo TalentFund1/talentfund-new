@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { UnifiedSkill } from "../types/SkillTypes";
 import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
 import { useParams } from "react-router-dom";
+import { Check } from "lucide-react";
 
 interface SkillProfileMatrixRowProps {
   skill: UnifiedSkill;
@@ -24,6 +25,12 @@ export const SkillProfileMatrixRow = ({
   const handleDevelopmentPlanChange = (checked: boolean) => {
     if (!employeeId) return;
     
+    console.log('Updating development plan:', {
+      employeeId,
+      skillTitle: skill.title,
+      inDevelopmentPlan: checked
+    });
+
     updateSkillState(employeeId, skill.title, {
       inDevelopmentPlan: checked
     });
@@ -53,11 +60,16 @@ export const SkillProfileMatrixRow = ({
       </TableCell>
       <TableCell className="py-3 px-2 align-middle text-sm">{skill.salary}</TableCell>
       <TableCell className="py-3 px-4 align-middle">
-        <Checkbox
-          checked={skillState.inDevelopmentPlan}
-          onCheckedChange={handleDevelopmentPlanChange}
-          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-        />
+        <div className="flex items-center justify-center">
+          <Checkbox
+            id={`skill-growth-${skill.title}`}
+            checked={skillState.inDevelopmentPlan}
+            onCheckedChange={handleDevelopmentPlanChange}
+            className="h-5 w-5 rounded-md border-2 border-primary/20 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+          >
+            <Check className="h-3.5 w-3.5 text-white" />
+          </Checkbox>
+        </div>
       </TableCell>
       <TableCell className="py-3 px-8 align-middle">
         <div className="flex justify-center gap-1">
