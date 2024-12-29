@@ -18,7 +18,7 @@ export interface Skill {
   level: string;
   growth: string;
   salary: string;
-  confidence: 'low' | 'medium' | 'high';
+  skillScore: number;
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -34,13 +34,9 @@ export interface UnifiedSkill extends Skill {
 }
 
 export interface RoleSkillData {
+  roleId: string;
   title: string;
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-  roleTrack?: "Professional" | "Managerial";
+  track: string;
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
@@ -54,4 +50,6 @@ export interface SimpleSkill {
   businessCategory?: string;
   level: string;
   growth: string;
+  salary: string;
+  skillScore: number;
 }

@@ -1,90 +1,75 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check } from "lucide-react";
-import { SkillLevelCell } from "./SkillLevelCell";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
-import { RoleSkillLevelCell } from "./RoleSkillLevelCell";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { useParams } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
+import { UnifiedSkill } from "../skills/types/SkillTypes";
 
 interface SkillsMatrixRowProps {
-  skill: {
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
-    requirement?: string;
-  };
-  isRoleBenchmark: boolean;
+  skill: UnifiedSkill;
+  isToggled: boolean;
+  onToggle: () => void;
 }
 
-export const SkillsMatrixRow = ({ 
-  skill, 
-  isRoleBenchmark
+export const SkillsMatrixRow = ({
+  skill,
+  isToggled,
+  onToggle
 }: SkillsMatrixRowProps) => {
-  const { id: employeeId } = useParams();
-  const { getSkillState } = useSkillsMatrixStore();
-  const unifiedSkillData = getUnifiedSkillData(skill.title);
-  
-  console.log('SkillsMatrixRow rendering:', {
-    skillTitle: skill.title,
-    skillId: unifiedSkillData.id,
-    originalSubcategory: skill.subcategory,
-    unifiedSubcategory: unifiedSkillData.subcategory,
-    isRoleBenchmark,
-    originalGrowth: skill.growth,
-    unifiedGrowth: unifiedSkillData.growth,
-    salary: unifiedSkillData.salary
-  });
+  const getSkillScore = (level: string): number => {
+    switch (level.toLowerCase()) {
+      case 'advanced':
+        return Math.floor(Math.random() * 26) + 75; // 75-100
+      case 'intermediate':
+        return Math.floor(Math.random() * 26) + 50; // 50-75
+      case 'beginner':
+        return Math.floor(Math.random() * 26) + 25; // 25-50
+      case 'unspecified':
+      default:
+        return Math.floor(Math.random() * 26); // 0-25
+    }
+  };
+
+  const getScoreColor = (score: number): string => {
+    if (score >= 75) return 'bg-[#8073ec]/10 text-[#8073ec]';
+    if (score >= 50) return 'bg-[#ff8256]/10 text-[#ff8256]';
+    if (score >= 25) return 'bg-[#008000]/10 text-[#008000]';
+    return 'bg-[#8E9196]/10 text-[#8E9196]';
+  };
+
+  const skillScore = skill.skillScore || getSkillScore(skill.level);
 
   return (
-    <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{unifiedSkillData.subcategory}</TableCell>
-      {isRoleBenchmark ? (
-        <>
-          <RoleSkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
+    <TableRow className="border-t border-border hover:bg-muted/50 transition-colors">
+      <TableCell className="py-3 px-4 align-middle">
+        <div className="flex items-center gap-2">
+          <Switch 
+            checked={isToggled}
+            onCheckedChange={onToggle}
+            className="data-[state=checked]:bg-primary"
           />
-          <StaticSkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
-            employeeId={employeeId || ''}
-          />
-        </>
-      ) : (
-        <>
-          <TableCell className="text-center border-r border-blue-200 py-2">
-            <div className="flex justify-center">
-              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
-              </div>
-            </div>
-          </TableCell>
-          <SkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
-          />
-        </>
-      )}
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
-          unifiedSkillData.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-        }`}>
-          ↗ {unifiedSkillData.growth}
+          <span className="text-sm">{skill.title}</span>
+        </div>
+      </TableCell>
+      <TableCell className="py-3 px-4 align-middle">
+        <span className="text-sm block truncate" title={skill.subcategory}>
+          {skill.subcategory}
         </span>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className="text-sm text-gray-900">{unifiedSkillData.salary}</span>
+      <TableCell className="py-3 px-4 align-middle">
+        <span className={`px-2.5 py-1 rounded-full text-sm inline-flex items-center ${getScoreColor(skillScore)}`}>
+          {skillScore}
+        </span>
       </TableCell>
-      <TableCell className="text-center py-2">
-        <div className="flex items-center justify-center space-x-1">
-          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
-          <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
-          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">D</span>
+      <TableCell className="py-3 px-4 align-middle">
+        <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm inline-flex items-center">
+          ↗ {skill.growth}
+        </span>
+      </TableCell>
+      <TableCell className="py-3 px-2 align-middle text-sm">{skill.salary}</TableCell>
+      <TableCell className="py-3 px-8 align-middle">
+        <div className="flex justify-center gap-1">
+          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
+          <span className="w-6 h-6 rounded-full bg-red-100 text-red-800 flex items-center justify-center text-sm font-medium">R</span>
+          <span className="w-6 h-6 rounded-full bg-[#E5DEFF] text-[#6E59A5] flex items-center justify-center text-sm font-medium">M</span>
+          <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">O</span>
         </div>
       </TableCell>
     </TableRow>
