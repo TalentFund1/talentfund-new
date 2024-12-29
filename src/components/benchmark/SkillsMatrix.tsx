@@ -1,168 +1,84 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams } from 'react-router-dom';
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
-import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
-import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
-import { UnifiedSkill } from "../skills/types/SkillTypes";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { benchmarkingService } from "../../services/benchmarking";
-import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
-import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
-import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
-import { AddEmployeeSkillDialog } from "./skills-matrix/dialog/AddEmployeeSkillDialog";
+import { SkillsMatrixContent } from "./skills-matrix/SkillsMatrixContent";
+import { SkillsMatrixSearchProvider } from "@/components/skills/context/SkillsMatrixSearchContext";
+import { useState, useRef, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 
 export const SkillsMatrix = () => {
+  console.log('Rendering SkillsMatrix with proper padding alignment');
+  
+  const { id: employeeId } = useParams();
+  const { getEmployeeSkills } = useEmployeeSkillsStore();
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedInterest, setSelectedInterest] = useState("all");
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState("all");
+  const [selectedSearchSkills, setSelectedSearchSkills] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedWeight, setSelectedWeight] = useState("all");
-  const [hasChanges, setHasChanges] = useState(false);
-  const [employeeSkillsData, setEmployeeSkillsData] = useState<UnifiedSkill[]>([]);
-  const [originalSkillStates, setOriginalSkillStates] = useState<Record<string, any>>({});
-  
-  const { id } = useParams<{ id: string }>();
-  const { hasChanges: storeHasChanges } = useSkillsMatrixStore();
-  const { getEmployeeSkills, getSkillState, initializeEmployeeSkills, batchUpdateSkills } = useEmployeeSkillsStore();
-  const { toast } = useToast();
+  const observerTarget = useRef<HTMLDivElement>(null);
 
-  // Initialize employee skills if needed
-  useEffect(() => {
-    if (id) {
-      console.log('SkillsMatrix - Initializing skills for employee:', id);
-      initializeEmployeeSkills(id);
+  const filteredSkills = useMemo(() => {
+    if (!employeeId) return [];
+
+    const skills = getEmployeeSkills(employeeId);
+    console.log('Retrieved employee skills:', {
+      employeeId,
+      skillCount: skills.length,
+      skills: skills.map(s => s.title)
+    });
+
+    return skills.filter(skill => {
+      const unifiedData = getUnifiedSkillData(skill.title);
       
-      // Load employee skills after initialization
-      const skills = getEmployeeSkills(id);
-      console.log('SkillsMatrix - Loaded employee skills:', skills);
-      
-      // Store original skill states
-      const originalStates: Record<string, any> = {};
-      skills.forEach(skill => {
-        originalStates[skill.title] = getSkillState(id, skill.title);
-      });
-      setOriginalSkillStates(originalStates);
-      
-      // Transform skills to UnifiedSkill format with proper type checking
-      const transformedSkills = skills
-        .filter(skill => skill && skill.title)
-        .map(skill => {
-          const skillData = getUnifiedSkillData(skill.title);
-          const skillState = getSkillState(id, skill.title);
-          
-          return {
-            ...skill,
-            id: skillData.id || `${id}-${skill.title}`,
-            title: skill.title,
-            subcategory: skillData.subcategory || 'General',
-            level: skillState.level || skill.level || 'unspecified',
-            growth: skillData.growth || '0%',
-            salary: skillData.salary || 'market',
-            goalStatus: skillState.goalStatus || 'unknown',
-            lastUpdated: skillState.lastUpdated || new Date().toISOString(),
-            confidence: skillState.confidence || 'medium',
-            category: skillData.category || 'specialized',
-            businessCategory: skillData.businessCategory || 'Technical Skills',
-            weight: skillData.weight || 'technical'
-          } as UnifiedSkill;
-        });
-
-      console.log('SkillsMatrix - Transformed skills:', transformedSkills);
-      setEmployeeSkillsData(transformedSkills);
-    }
-  }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
-
-  // Define level priority for sorting
-  const getLevelPriority = (level: string): number => {
-    switch (level.toLowerCase()) {
-      case 'advanced': return 1;
-      case 'intermediate': return 2;
-      case 'beginner': return 3;
-      case 'unspecified': return 4;
-      default: return 5;
-    }
-  };
-
-  // Apply filtering and sorting to employee skills
-  const filteredSkills = employeeSkillsData
-    .filter(skill => {
-      if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-      if (selectedInterest !== "all") {
-        const skillState = getSkillState(id || "", skill.title);
-        if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
-        if (selectedInterest === "not_interested" && skillState.goalStatus !== "not_interested") return false;
-        if (selectedInterest === "unknown" && skillState.goalStatus !== "unknown") return false;
+      // Filter by category
+      if (selectedCategory !== "all" && unifiedData.category !== selectedCategory) {
+        return false;
       }
-      if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
-      if (selectedWeight !== "all" && skill.weight !== selectedWeight) return false;
+
+      // Filter by weight
+      if (selectedWeight !== "all" && unifiedData.weight !== selectedWeight) {
+        return false;
+      }
+
+      // Filter by search term or selected skills
+      if (selectedSearchSkills.length > 0) {
+        return selectedSearchSkills.includes(skill.title);
+      }
+
+      if (searchTerm) {
+        return skill.title.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+
       return true;
-    })
-    .sort((a, b) => {
-      // Sort by level priority
-      const levelDiff = getLevelPriority(a.level) - getLevelPriority(b.level);
-      if (levelDiff !== 0) return levelDiff;
-      
-      // If levels are the same, sort by title
-      return a.title.localeCompare(b.title);
     });
-
-  const handleSave = () => {
-    console.log('Saving skill changes');
-    setHasChanges(false);
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
-  };
-
-  const handleCancel = () => {
-    console.log('Canceling skill changes');
-    if (id && originalSkillStates) {
-      // Restore original states
-      batchUpdateSkills(id, originalSkillStates);
-      setHasChanges(false);
-      toast({
-        title: "Changes cancelled",
-        description: "Your changes have been discarded.",
-      });
-    }
-  };
-
-  useEffect(() => {
-    setHasChanges(storeHasChanges);
-  }, [storeHasChanges]);
+  }, [employeeId, getEmployeeSkills, selectedCategory, selectedWeight, selectedSearchSkills, searchTerm]);
 
   return (
-    <div className="space-y-6 px-4">
-      <Card className="p-6 space-y-6 animate-fade-in bg-white">
-        <SkillsMatrixHeader 
-          hasChanges={hasChanges}
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
-        
-        <Separator className="mb-6" />
-        
-        <SkillsMatrixFilters 
+    <SkillsMatrixSearchProvider>
+      <Card className="max-w-7xl mx-auto p-6 bg-white">
+        <SkillsMatrixContent 
+          filteredSkills={filteredSkills}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
           selectedLevel={selectedLevel}
           setSelectedLevel={setSelectedLevel}
           selectedInterest={selectedInterest}
           setSelectedInterest={setSelectedInterest}
+          selectedSkillLevel={selectedSkillLevel}
+          setSelectedSkillLevel={setSelectedSkillLevel}
+          selectedSearchSkills={selectedSearchSkills}
+          setSelectedSearchSkills={setSelectedSearchSkills}
+          visibleItems={10}
+          observerTarget={observerTarget}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedWeight={selectedWeight}
           setSelectedWeight={setSelectedWeight}
-          addSkillButton={<AddEmployeeSkillDialog />}
-        />
-
-        <SkillsMatrixTable 
-          filteredSkills={filteredSkills}
-          isRoleBenchmark={false}
         />
       </Card>
-    </div>
+    </SkillsMatrixSearchProvider>
   );
 };

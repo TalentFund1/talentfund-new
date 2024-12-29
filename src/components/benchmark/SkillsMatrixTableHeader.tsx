@@ -24,13 +24,13 @@ export const SkillsMatrixTableHeader = ({
   return (
     <TableHeader>
       <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
-        <TableHead className="w-[160px] border-r border-[#CCDBFF] py-2 px-3 font-medium">Skill Title</TableHead>
-        <TableHead className="w-[200px] border-r border-[#CCDBFF] py-2 px-3 font-medium">Subcategory</TableHead>
+        <TableHead className="w-[180px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+        <TableHead className="w-[220px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
         {showCompanySkill && (
-          <TableHead className="w-[100px] text-center border-r border-[#CCDBFF] py-2 px-3 font-medium">Company Skill</TableHead>
+          <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">Company Skill</TableHead>
         )}
-        <TableHead className="w-[140px] text-center border-r border-[#CCDBFF] py-2 px-3 font-medium">Employee Skills</TableHead>
-        <TableHead className="w-[110px] text-center border-r border-[#CCDBFF] py-2 px-3 font-medium">
+        <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Employee Skills</TableHead>
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Confidence Score
             <TooltipProvider>
@@ -50,7 +50,7 @@ export const SkillsMatrixTableHeader = ({
             </TooltipProvider>
           </div>
         </TableHead>
-        <TableHead className="w-[110px] text-center border-r border-[#CCDBFF] py-2 px-3 font-medium">
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Projected Growth
             <TooltipProvider>
@@ -71,7 +71,7 @@ export const SkillsMatrixTableHeader = ({
           </div>
         </TableHead>
         {!isRoleBenchmark && (
-          <TableHead className="w-[110px] text-center border-r border-[#CCDBFF] py-2 px-3 font-medium">
+          <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
             <div className="flex items-center justify-center gap-1">
               Skill Pricer
               <TooltipProvider>
@@ -92,7 +92,7 @@ export const SkillsMatrixTableHeader = ({
             </div>
           </TableHead>
         )}
-        <TableHead className="w-[90px] text-center py-2 px-3 font-medium">
+        <TableHead className="w-[100px] text-center py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Appears In
             <TooltipProvider>
