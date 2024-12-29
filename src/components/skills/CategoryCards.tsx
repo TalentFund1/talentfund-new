@@ -6,14 +6,30 @@ interface CategoryCardsProps {
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
   roleId: string;
+  counts?: {
+    all: number;
+    critical: number;
+    technical: number;
+    necessary: number;
+  };
 }
 
-export const CategoryCards = ({ selectedCategory, onCategorySelect, roleId }: CategoryCardsProps) => {
+export const CategoryCards = ({ 
+  selectedCategory, 
+  onCategorySelect, 
+  roleId,
+  counts = {
+    all: 0,
+    critical: 0,
+    technical: 0,
+    necessary: 0
+  }
+}: CategoryCardsProps) => {
   const categories = [
-    { id: "all", name: "All Skill Type", count: 0 },
-    { id: "critical", name: "Critical Skills", count: 0 },
-    { id: "technical", name: "Technical Skills", count: 0 },
-    { id: "necessary", name: "Necessary Skills", count: 0 }
+    { id: "all", name: "All Skill Type", count: counts.all },
+    { id: "critical", name: "Critical Skills", count: counts.critical },
+    { id: "technical", name: "Technical Skills", count: counts.technical },
+    { id: "necessary", name: "Necessary Skills", count: counts.necessary }
   ];
 
   return (

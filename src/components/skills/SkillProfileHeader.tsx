@@ -7,9 +7,10 @@ import { roleSkills } from "./data/roleSkills";
 
 interface SkillProfileHeaderProps {
   skillCount: number;
+  jobTitle?: string;
 }
 
-export const SkillProfileHeader = ({ skillCount }: SkillProfileHeaderProps) => {
+export const SkillProfileHeader = ({ skillCount, jobTitle }: SkillProfileHeaderProps) => {
   const { id } = useParams();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
@@ -17,7 +18,9 @@ export const SkillProfileHeader = ({ skillCount }: SkillProfileHeaderProps) => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Skill Profile</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            {jobTitle ? `${jobTitle} Skills Profile` : 'Skill Profile'}
+          </h2>
           <p className="text-sm text-muted-foreground">
             Map and manage skills for this role
           </p>
