@@ -1,28 +1,24 @@
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillRequirement = 'required' | 'preferred' | 'not_interested';
-export type SkillConfidence = 'low' | 'medium' | 'high';
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
-export interface SimpleSkill {
-  title: string;
-  subcategory: string;
-  level: SkillLevel;
-  growth: string;
-  salary: string;
-  skillScore: number;
-  confidence: SkillConfidence;
-  category?: SkillCategory;
-  weight?: SkillWeight;
-  requirement?: SkillRequirement;
-  businessCategory?: string;
+export interface DetailedSkill {
+  name: string;
+  level: string;
+  isSkillGoal: boolean;
 }
 
-export interface UnifiedSkill extends SimpleSkill {
+export interface Skill {
   id: string;
+  title: string;
+  subcategory: string;
   category: SkillCategory;
-  weight: SkillWeight;
   businessCategory: string;
+  weight: SkillWeight;
+  level: string;
+  growth: string;
+  salary: string;
+  confidence: 'low' | 'medium' | 'high';
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -31,12 +27,31 @@ export interface UnifiedSkill extends SimpleSkill {
   };
 }
 
+export interface UnifiedSkill extends Skill {
+  goalStatus?: SkillRequirement;
+  roleLevel?: string;
+  isCompanySkill?: boolean;
+}
+
 export interface RoleSkillData {
-  roleId: string;
   title: string;
-  track: string;
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: "Professional" | "Managerial";
   specialized: UnifiedSkill[];
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
   skills: UnifiedSkill[];
+}
+
+export interface SimpleSkill {
+  title: string;
+  subcategory: string;
+  category?: SkillCategory;
+  businessCategory?: string;
+  level: string;
+  growth: string;
 }

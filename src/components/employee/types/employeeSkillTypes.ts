@@ -1,20 +1,20 @@
+// Core skill types for employees
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
-export type SkillConfidence = 'low' | 'medium' | 'high';
 
 // Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  skillScore: number;
+  confidence: 'low' | 'medium' | 'high';
 }
 
 // Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
-  skillScore?: number;
+  confidence?: 'low' | 'medium' | 'high';
 }
 
 // Complete employee skill data
@@ -32,7 +32,7 @@ export interface EmployeeSkillData {
   businessCategory: string;
   growth: string;
   salary: string;
-  skillScore: number;
+  confidence: 'low' | 'medium' | 'high';
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -50,6 +50,12 @@ export interface EmployeeSkillsData {
   skills: EmployeeSkillAchievement[];
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
+}
+
+// State management for employee skills
+export interface EmployeeSkillsState {
+  skills: Record<string, EmployeeSkillData>;
+  lastUpdated: string;
 }
 
 console.log('Employee skill types updated with complete interfaces');
