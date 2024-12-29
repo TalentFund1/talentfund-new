@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { EditSkillProfileForm } from "./form/EditSkillProfileForm";
+import { RoleSkillData } from '../types/roleSkillTypes';
 
 interface SkillProfileHeaderProps {
   jobTitle?: string;
@@ -15,7 +16,7 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
   const [isExpanded, setIsExpanded] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentRole, setCurrentRole] = useState(roleSkills[id as keyof typeof roleSkills]);
-  
+
   // Update current role when ID changes
   useEffect(() => {
     const role = roleSkills[id as keyof typeof roleSkills];
@@ -113,16 +114,19 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
       </div>
 
       <EditSkillProfileForm 
-        open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
-        initialData={{
-          id: id || "",
+        profile={{
+          roleId: id || "",
           title: currentRole?.title || jobTitle,
           function: currentRole?.function || "Engineering",
           mappedTitle: currentRole?.mappedTitle || occupation,
           occupation: currentRole?.occupation || currentRole?.title || jobTitle,
           description: currentRole?.description || fullDescription,
           soc: currentRole?.soc || "(11-9041)",
+          track: currentRole?.track || "Professional",
+          specialized: currentRole?.specialized || [],
+          common: currentRole?.common || [],
+          certifications: currentRole?.certifications || [],
+          skills: currentRole?.skills || []
         }}
       />
     </div>
