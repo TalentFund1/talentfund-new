@@ -1,164 +1,138 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useEmployeeStore } from "./store/employeeStore";
+import { Employee } from "../types/employeeTypes";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { EmployeeFormFields } from "./form/EmployeeFormFields";
-import { useEmployeeStore } from "./store/employeeStore";
-import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
-import { Employee } from "../types/employeeTypes";
-import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
-import { roleMapping } from "./form/RoleLevelFields";
-import { useNavigate } from "react-router-dom";
-import { getRoleDefaultTrack } from "../skills/data/roles/roleDefinitions";
 
 interface EditEmployeeDialogProps {
   employee: Employee;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
 }
 
-export const EditEmployeeDialog = ({ employee, open, onOpenChange }: EditEmployeeDialogProps) => {
-  const { toast } = useToast();
-  const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
-  const employees = useEmployeeStore((state) => state.employees);
-  const navigate = useNavigate();
-  
+export const EditEmployeeDialog = ({ 
+  employee,
+  onClose 
+}: EditEmployeeDialogProps) => {
   const [formData, setFormData] = useState({
     id: employee.id,
     name: employee.name,
     location: employee.location,
     office: employee.office,
     department: employee.department,
-    manager: employee.manager || "",
-    role: employee.role.split(':')[0].trim(),
-    level: employee.role.split(':')[1]?.trim().toLowerCase() || "",
-    startDate: employee.startDate || "",
-    termDate: employee.termDate === "-" ? "" : employee.termDate,
+    manager: employee.manager,
+    role: employee.role,
+    level: employee.level || '',
+    startDate: employee.startDate,
+    termDate: employee.termDate,
     sex: employee.sex,
     category: employee.category,
-    team: employee.team || "RnD",
-    type: employee.type || "On-site"
+    team: employee.team,
+    type: employee.type || 'On-site'
   });
 
-  console.log('EditEmployeeDialog - Initial form data:', {
-    employeeRole: employee.role,
-    parsedLevel: employee.role.split(':')[1]?.trim(),
-    formData,
-    roleTrack: getRoleDefaultTrack(roleMapping[formData.role])
-  });
+  const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
+  const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    console.log('Edit form submission started - Form data:', formData);
-
-    // Format the level to uppercase for managerial roles (M3-M6)
-    const roleId = roleMapping[formData.role];
-    const isManagerialRole = roleId === "126" || roleId === "128";
-    const formattedLevel = isManagerialRole ? formData.level.toUpperCase() : formData.level.toLowerCase();
-    
-    // Create a copy of formData with the formatted level
-    const submissionData = {
-      ...formData,
-      level: formattedLevel
-    };
-
-    console.log('Submitting with formatted data:', {
-      roleId,
-      isManagerialRole,
-      originalLevel: formData.level,
-      formattedLevel,
-      submissionData
-    });
-
-    // Validate form data
-    const validation = validateFormData(submissionData, employees.filter(emp => emp.id !== employee.id));
-    if (!validation.isValid) {
-      console.log('Validation failed:', validation.error);
-      toast({
-        title: "Validation Error",
-        description: validation.error,
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      // Process and update employee data
-      const updatedEmployee = processEmployeeData({
-        ...submissionData,
-        id: employee.id // Ensure we keep the original ID
-      });
-
-      // Preserve existing values that shouldn't change during edit
-      updatedEmployee.skillCount = employee.skillCount;
-      updatedEmployee.benchmark = employee.benchmark;
-      updatedEmployee.skills = employee.skills;
-
-      console.log('Updating employee with:', updatedEmployee);
-      
-      // Update employee in store
-      updateEmployee(updatedEmployee);
-
-      // Clear cached context data
-      const keysToRemove = [
-        `toggled-skills-${employee.id}`,
-        `track-${employee.id}`,
-        `matrix-search-${employee.id}`,
-        `benchmark-search-${employee.id}`
-      ];
-      
-      keysToRemove.forEach(key => {
-        console.log('Removing cached data:', key);
-        localStorage.removeItem(key);
-      });
-
-      toast({
-        title: "Success",
-        description: "Employee profile updated successfully",
-      });
-      
-      onOpenChange(false);
-      
-      // Navigate to trigger a re-render without reload
-      navigate(`/employee/${employee.id}`, { replace: true });
-      
-    } catch (error) {
-      console.error('Error updating employee:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update employee profile. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [name]: value
     }));
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Edit Employee Profile</DialogTitle>
-        </DialogHeader>
-        
-        <ToggledSkillsProvider>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <EmployeeFormFields 
-              formData={formData}
-              handleInputChange={handleInputChange}
-            />
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const updatedEmployee = {
+      ...employee,
+      ...formData
+    };
 
-            <div className="flex justify-end">
-              <Button type="submit">Save Changes</Button>
+    updateEmployee(updatedEmployee);
+    
+    toast({
+      title: "Employee Updated",
+      description: "Employee information has been successfully updated.",
+    });
+    
+    onClose();
+  };
+
+  return (
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Employee</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+              />
             </div>
-          </form>
-        </ToggledSkillsProvider>
+            <div className="grid gap-2">
+              <Label htmlFor="role">Role</Label>
+              <Input
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="department">Department</Label>
+              <Input
+                id="department"
+                name="department"
+                value={formData.department}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="manager">Manager</Label>
+              <Input
+                id="manager"
+                name="manager"
+                value={formData.manager}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="startDate">Start Date</Label>
+              <Input
+                id="startDate"
+                name="startDate"
+                type="date"
+                value={formData.startDate}
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-3">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Save Changes</Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

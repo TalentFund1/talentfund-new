@@ -10,6 +10,7 @@ import { EmployeeBenchmark } from "./table/EmployeeBenchmark";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -30,8 +31,7 @@ export const EmployeeTableRow = ({
 }: EmployeeTableRowProps) => {
   const { getSkillState } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const competencyReader = useCompetencyStateReader();
-  const { getEmployeeSkills } = useEmployeeSkillsStore();
+  const { getTrackForRole } = useTrack();
   const employeeSkills = getEmployeeSkills(employee.id);
 
   const targetRoleId = selectedJobTitle.length > 0 
@@ -39,14 +39,22 @@ export const EmployeeTableRow = ({
     : getSkillProfileId(employee.role);
 
   const employeeLevel = getLevel(employee.role);
+  const track = getTrackForRole(targetRoleId);
   
-  // Use unified calculator instead of simple benchmark calculation
+  console.log('Calculating benchmark for employee:', {
+    employeeId: employee.id,
+    targetRoleId,
+    employeeLevel,
+    track,
+    skillCount: employeeSkills.length
+  });
+
   const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
     employeeSkills,
     employeeSkills,
     employeeLevel,
     targetRoleId,
-    'Professional', // Default track
+    track || 'Professional',
     getSkillState,
     employee.id
   );
