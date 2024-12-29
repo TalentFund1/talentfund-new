@@ -12,6 +12,7 @@ export interface BaseSkill {
   subcategory: string;
   weight: SkillWeight;
   businessCategory: string;
+  skillScore?: number;
 }
 
 // Common types
@@ -31,4 +32,5 @@ export interface SkillMetrics {
   growth: string;
   salary: string;
   confidence: 'low' | 'medium' | 'high';
+  skillScore?: number;
 }
