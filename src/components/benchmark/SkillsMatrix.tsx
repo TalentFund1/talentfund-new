@@ -57,7 +57,6 @@ export const SkillsMatrix = () => {
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
             lastUpdated: skillState.lastUpdated || new Date().toISOString(),
-            confidence: skillState.confidence || 'medium',
             category: skillData.category || 'specialized',
             businessCategory: skillData.businessCategory || 'Technical Skills',
             weight: skillData.weight || 'technical'

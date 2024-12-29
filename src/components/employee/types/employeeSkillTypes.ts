@@ -8,7 +8,7 @@ import {
 } from '../../skills/types/sharedSkillTypes';
 
 // Export these types so they can be used in other files
-export { SkillLevel, SkillGoalStatus, SkillRequirementLevel };
+export type { SkillLevel, SkillGoalStatus, SkillRequirementLevel };
 
 // Employee skill state
 export interface EmployeeSkillState {
@@ -44,7 +44,9 @@ export interface EmployeeSkillData extends BaseSkill {
 }
 
 // Achievement tracking
-export interface EmployeeSkillAchievement extends EmployeeSkillData {}
+export interface EmployeeSkillAchievement extends EmployeeSkillData {
+  skillScore: number;
+}
 
 // Complete employee skills data structure
 export interface EmployeeSkillsData {

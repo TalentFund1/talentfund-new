@@ -8,7 +8,7 @@ import {
   BaseSkill
 } from './sharedSkillTypes';
 
-export { SkillWeight, SkillCategory };
+export type { SkillWeight, SkillCategory };
 
 export interface DetailedSkill {
   name: string;
@@ -43,18 +43,10 @@ export interface UnifiedSkill extends Skill {
   isCompanySkill?: boolean;
 }
 
-export interface RoleSkillData {
-  roleId: string;
+export interface SimpleSkill {
   title: string;
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-  roleTrack?: "Professional" | "Managerial";
-  track: "Professional" | "Managerial";
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
-  skills: UnifiedSkill[];
+  subcategory: string;
+  businessCategory?: string;
+  level: string;
+  growth: string;
 }
