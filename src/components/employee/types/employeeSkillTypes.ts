@@ -7,6 +7,8 @@ export interface EmployeeSkillState {
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
   confidence: 'low' | 'medium' | 'high';
+  skillScore: number;
+  inDevelopmentPlan: boolean;
 }
 
 // Single skill update
@@ -25,14 +27,12 @@ export interface EmployeeSkillData {
   skillId: string;
   title: string;
   subcategory: string;
+  category: 'specialized' | 'common' | 'certification';
+  businessCategory: string;
+  weight: 'critical' | 'technical' | 'necessary';
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  category: 'specialized' | 'common' | 'certification';
-  weight: 'critical' | 'technical' | 'necessary';
-  businessCategory: string;
-  growth: string;
-  salary: string;
   confidence: 'low' | 'medium' | 'high';
   skillScore: number;
   inDevelopmentPlan: boolean;
@@ -50,6 +50,8 @@ export interface EmployeeSkillData {
     M: boolean;
     O: boolean;
   };
+  growth: string;
+  salary: string;
 }
 
 // Achievement tracking
@@ -63,4 +65,4 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-console.log('Employee skill types updated with complete interfaces');
+console.log('Employee skill types defined with complete interfaces');
