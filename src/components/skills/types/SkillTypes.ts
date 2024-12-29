@@ -33,29 +33,12 @@ export interface UnifiedSkill extends Skill {
   roleLevel?: string;
   isCompanySkill?: boolean;
   skillScore?: number;
-}
-
-export interface RoleSkillData {
-  roleId: string;
-  title: string;
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-  roleTrack?: "Professional" | "Managerial";
-  track: "Professional" | "Managerial";
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
-  skills: UnifiedSkill[];
-}
-
-export interface SimpleSkill {
-  title: string;
-  subcategory: string;
-  category?: SkillCategory;
-  businessCategory?: string;
-  level: string;
-  growth: string;
+  minimumLevel?: string;
+  requirementLevel?: 'required' | 'preferred' | 'optional';
+  metrics?: {
+    growth: string;
+    salary: string;
+    confidence: 'low' | 'medium' | 'high';
+    skillScore: number;
+  };
 }

@@ -22,6 +22,7 @@ export const createSkillSelectors = (get: any) => ({
         growth: '0%',
         salary: 'market',
         skillScore: 0,
+        inDevelopmentPlan: false,
         benchmarks: {
           B: false,
           R: false,

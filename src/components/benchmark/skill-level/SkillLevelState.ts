@@ -7,7 +7,8 @@ export const useSkillLevelState = (skillTitle: string) => {
       goalStatus: 'unknown' as SkillGoalStatus,
       lastUpdated: new Date().toISOString(),
       confidence: 'medium',
-      skillScore: 0
+      skillScore: 0,
+      inDevelopmentPlan: false
     };
   };
 
