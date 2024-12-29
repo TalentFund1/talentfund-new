@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useEmployeeStore } from "../employee/store/employeeStore";
-import { getSkillProfileId, getLevel } from "../EmployeeTable";
+import { getSkillProfileId, getBaseRole } from "../EmployeeTable";
 import { roleSkills } from "./data/roleSkills";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
 import { getEmployeeSkills } from "../benchmark/skills-matrix/initialSkills";
-import { useTrack } from "./context/TrackContext";
 
 export const SkillProfileEmployees = () => {
   const { id: roleId } = useParams();
@@ -21,8 +20,8 @@ export const SkillProfileEmployees = () => {
   const employees = useEmployeeStore((state) => state.employees);
   const { getSkillState } = useSkillsMatrixStore();
   const { toggledSkills } = useToggledSkills();
-  const { getTrackForRole } = useTrack();
-  const track = roleId ? getTrackForRole(roleId) : 'Professional';
+  const competencyReader = useCompetencyStateReader();
+  const employeeSkillsStore = useEmployeeSkillsStore();
 
   // Get exact role matches (same role ID, any level)
   const exactMatches = employees
@@ -40,25 +39,15 @@ export const SkillProfileEmployees = () => {
     })
     .map(emp => {
       const employeeSkills = getEmployeeSkills(emp.id);
-      const employeeLevel = getLevel(emp.role);
-      
       const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
         employeeSkills,
         employeeSkills,
-        employeeLevel,
+        getBaseRole(emp.role),
         roleId || "",
-        track,
+        'Professional', // Default track
         getSkillState,
         emp.id
       );
-
-      console.log('Calculated benchmark for exact match:', {
-        employee: emp.name,
-        benchmark,
-        roleId,
-        level: employeeLevel
-      });
-
       return { ...emp, benchmark };
     })
     .sort((a, b) => b.benchmark - a.benchmark);
@@ -70,14 +59,12 @@ export const SkillProfileEmployees = () => {
       if (empRoleId === roleId) return false;
 
       const employeeSkills = getEmployeeSkills(emp.id);
-      const employeeLevel = getLevel(emp.role);
-      
       const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
         employeeSkills,
         employeeSkills,
-        employeeLevel,
+        getBaseRole(emp.role),
         roleId || "",
-        track,
+        'Professional', // Default track
         getSkillState,
         emp.id
       );
@@ -86,25 +73,15 @@ export const SkillProfileEmployees = () => {
     })
     .map(emp => {
       const employeeSkills = getEmployeeSkills(emp.id);
-      const employeeLevel = getLevel(emp.role);
-      
       const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
         employeeSkills,
         employeeSkills,
-        employeeLevel,
+        getBaseRole(emp.role),
         roleId || "",
-        track,
+        'Professional', // Default track
         getSkillState,
         emp.id
       );
-
-      console.log('Calculated benchmark for partial match:', {
-        employee: emp.name,
-        benchmark,
-        roleId,
-        level: employeeLevel
-      });
-
       return { ...emp, benchmark };
     })
     .sort((a, b) => b.benchmark - a.benchmark)

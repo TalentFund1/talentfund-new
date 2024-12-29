@@ -1,101 +1,147 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import { Employee } from "../types/employeeTypes";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { EmployeeFormFields } from "./form/EmployeeFormFields";
 import { useEmployeeStore } from "./store/employeeStore";
+import { validateFormData, processEmployeeData } from "./form/employeeFormSubmission";
+import { calculateEmployeeBenchmarks } from "./EmployeeBenchmarkCalculator";
+import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
+import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
+import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
+import { useNavigate } from "react-router-dom";
+import { ToggledSkillsProvider } from "../skills/context/ToggledSkillsContext";
 
 export const AddEmployeeDialog = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const addEmployee = useEmployeeStore((state) => state.addEmployee);
+  const employees = useEmployeeStore((state) => state.employees);
+  
   const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    location: '',
-    office: '',
-    department: '',
-    manager: '',
-    role: '',
-    startDate: '',
-    termDate: '',
-    sex: '',
-    category: '',
-    team: '',
-    type: 'On-site' as const,
-    skills: ''
+    id: "",
+    name: "",
+    location: "",
+    office: "",
+    department: "",
+    manager: "",
+    role: "",
+    level: "",
+    startDate: "",
+    termDate: "",
+    sex: "",
+    category: "",
+    team: "RnD",
+    skills: ""
   });
 
-  const { addEmployee } = useEmployeeStore();
-  const { toast } = useToast();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    console.log('Form submission started - Form data:', formData);
+    
+    // Validate form data
+    const validation = validateFormData(formData, employees);
+    if (!validation.isValid) {
+      console.log('Validation failed:', validation.error);
+      toast({
+        title: "Validation Error",
+        description: validation.error,
+        variant: "destructive"
+      });
+      return;
+    }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    try {
+      // Process employee data
+      const newEmployee = processEmployeeData(formData);
+      console.log('Processed employee data:', newEmployee);
+      
+      // Add employee to store
+      addEmployee(newEmployee);
+      console.log('Employee added to store:', newEmployee);
+
+      toast({
+        title: "Success",
+        description: "Employee profile created successfully",
+      });
+      
+      setOpen(false);
+      // Navigate to the new employee's profile
+      navigate(`/employee/${newEmployee.id}`);
+      
+      // Reset form
+      setFormData({
+        id: "",
+        name: "",
+        location: "",
+        office: "",
+        department: "",
+        manager: "",
+        role: "",
+        level: "",
+        startDate: "",
+        termDate: "",
+        sex: "",
+        category: "",
+        team: "RnD",
+        skills: ""
+      });
+    } catch (error) {
+      console.error('Error creating employee:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create employee profile. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleSubmit = () => {
-    const newEmployee: Employee = {
-      ...formData,
-      skillCount: 0,
-      benchmark: 0,
-      lastUpdated: new Date().toLocaleDateString(),
-      sex: formData.sex as 'male' | 'female',
-      type: formData.type,
-      skills: []
-    };
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [field]: value
+      };
 
-    addEmployee(newEmployee);
-    toast({
-      title: "Employee Added",
-      description: `${formData.name} has been added successfully.`,
-    });
-    
-    setFormData({
-      id: '',
-      name: '',
-      location: '',
-      office: '',
-      department: '',
-      manager: '',
-      role: '',
-      startDate: '',
-      termDate: '',
-      sex: '',
-      category: '',
-      team: '',
-      type: 'On-site',
-      skills: ''
+      // Reset level when role changes
+      if (field === 'role') {
+        newData.level = '';
+        console.log('Role changed, reset level');
+      }
+
+      console.log(`Field ${field} updated to:`, value);
+      return newData;
     });
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Employee</Button>
+        <Button>Add Employee</Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogTitle>Add New Employee</DialogTitle>
-        <DialogDescription>
-          Fill in the details of the new employee.
-        </DialogDescription>
-        <div className="space-y-4">
-          <Input name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
-          <Input name="role" placeholder="Role" value={formData.role} onChange={handleChange} />
-          <Input name="department" placeholder="Department" value={formData.department} onChange={handleChange} />
-          <Input name="location" placeholder="Location" value={formData.location} onChange={handleChange} />
-          <Input name="office" placeholder="Office" value={formData.office} onChange={handleChange} />
-          <Input name="manager" placeholder="Manager" value={formData.manager} onChange={handleChange} />
-          <Input name="startDate" placeholder="Start Date" value={formData.startDate} onChange={handleChange} />
-          <Input name="termDate" placeholder="Term Date" value={formData.termDate} onChange={handleChange} />
-          <Input name="sex" placeholder="Sex" value={formData.sex} onChange={handleChange} />
-          <Input name="category" placeholder="Category" value={formData.category} onChange={handleChange} />
-          <Input name="team" placeholder="Team" value={formData.team} onChange={handleChange} />
-          <Input name="skills" placeholder="Skills" value={formData.skills} onChange={handleChange} />
-        </div>
-        <div className="flex justify-end mt-4 gap-2">
-          <Button variant="outline">Cancel</Button>
-          <Button onClick={handleSubmit}>Add Employee</Button>
-        </div>
-      </DialogContent>
+      <ToggledSkillsProvider>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Create Employee Profile</DialogTitle>
+            <DialogDescription>
+              Fill in the employee details below to create a new profile.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <EmployeeFormFields 
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
+
+            <div className="flex justify-end">
+              <Button type="submit">Create Profile</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </ToggledSkillsProvider>
     </Dialog>
   );
 };

@@ -19,7 +19,6 @@ interface FormData {
   sex: string;
   category: string;
   team: string;
-  type: string;
 }
 
 export const processEmployeeData = (formData: FormData): Employee => {
@@ -49,7 +48,6 @@ export const processEmployeeData = (formData: FormData): Employee => {
     office: formData.office,
     termDate: formData.termDate || "-",
     team: formData.team || "RnD",
-    type: formData.type as 'On-site' | 'Remote' | 'Hybrid',
     skills: []
   };
 

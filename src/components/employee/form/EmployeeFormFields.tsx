@@ -21,7 +21,6 @@ interface EmployeeFormFieldsProps {
     sex: string;
     category: string;
     team: string;
-    type: string;
   };
   handleInputChange: (field: string, value: string) => void;
 }
