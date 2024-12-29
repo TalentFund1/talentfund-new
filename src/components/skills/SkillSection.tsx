@@ -1,10 +1,14 @@
+import { SkillBubble } from "./SkillBubble";
+import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
+
 interface SkillSectionProps {
   title: string;
   count: number;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  skills: EmployeeSkillData[];
 }
 
-export const SkillSection = ({ title, count, children }: SkillSectionProps) => {
+export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
   return (
     <div className="rounded-2xl border border-border bg-white p-6 w-full">
       <div className="flex items-center justify-between mb-4">
@@ -15,7 +19,15 @@ export const SkillSection = ({ title, count, children }: SkillSectionProps) => {
           </span>
         </div>
       </div>
-      {children}
+      <div className="flex flex-wrap gap-2">
+        {skills.map((skill) => (
+          <SkillBubble
+            key={skill.title}
+            skillName={skill.title}
+            level={skill.level}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -10,16 +10,6 @@ import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { SkillCategoryCards } from "./sections/SkillCategoryCards";
 import { SkillSectionList } from "./sections/SkillSectionList";
 
-const getLevelPriority = (level: string): number => {
-  switch (level?.toLowerCase()) {
-    case 'advanced': return 4;
-    case 'intermediate': return 3;
-    case 'beginner': return 2;
-    case 'unspecified': return 1;
-    default: return 0;
-  }
-};
-
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
