@@ -128,6 +128,8 @@ export const SkillProfileHeader = ({ jobTitle = "AI Engineer" }: SkillProfileHea
           certifications: currentRole?.certifications || [],
           skills: currentRole?.skills || []
         }}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
       />
     </div>
   );

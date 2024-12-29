@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { getSkillsByCategory } from "../data/skills/categories/skillCategories";
 import { useToggledSkills } from "../context/ToggledSkillsContext";
 import { getSkillCategory } from '../data/skills/categories/skillCategories';
 import { getUnifiedSkillData } from '../data/skillDatabaseService';

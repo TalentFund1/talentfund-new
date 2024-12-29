@@ -45,8 +45,7 @@ export const calculateMatchingSkills = (
     console.log('Comparing competency levels:', {
       skill: skill.title,
       employeeLevel: employeeSkillLevel,
-      roleLevel: roleSkillLevel,
-      track
+      roleLevel: roleSkillLevel
     });
 
     const comparison = benchmarkingService.compareSkillLevels(
