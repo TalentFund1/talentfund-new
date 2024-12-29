@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { roleSkills } from './data/roleSkills';
 import { EditSkillProfileForm } from "./form/EditSkillProfileForm";
-import { RoleSkillData, RoleSkillRequirement } from '../types/roleSkillTypes';
+import { RoleSkillData } from '../types/roleSkillTypes';
 
 interface SkillProfileHeaderProps {
   jobTitle?: string;
