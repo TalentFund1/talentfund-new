@@ -14,18 +14,20 @@ interface SearchFilterProps {
   required?: boolean;
   className?: string;
   disabled?: boolean;
+  onSearchChange?: (value: string) => void;
 }
 
 export const SearchFilter = ({ 
   label, 
   placeholder, 
-  items = [], // Provide default empty array
-  selectedItems = [], // Provide default empty array
+  items = [], 
+  selectedItems = [], 
   onItemsChange,
   singleSelect = false,
   required = false,
   className,
-  disabled = false
+  disabled = false,
+  onSearchChange
 }: SearchFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,6 +71,13 @@ export const SearchFilter = ({
     }
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    if (onSearchChange) {
+      onSearchChange(value);
+    }
+  };
+
   const filteredItems = (items || []).filter(item => 
     item.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -101,7 +110,7 @@ export const SearchFilter = ({
             onChange={(e) => {
               if (!disabled) {
                 e.stopPropagation();
-                setSearchQuery(e.target.value);
+                handleSearchChange(e.target.value);
               }
             }}
             onClick={(e) => {
