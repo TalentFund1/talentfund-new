@@ -10,6 +10,7 @@ import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { Badge } from "../ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 interface SkillsMatrixRowProps {
   skill: UnifiedSkill & { hasSkill?: boolean };
@@ -22,6 +23,7 @@ export const SkillsMatrixRow = ({
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
   const { getSkillState, updateSkillState } = useEmployeeSkillsStore();
+  const { toast } = useToast();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -42,6 +44,29 @@ export const SkillsMatrixRow = ({
   const handleDevelopmentPlanChange = (checked: boolean) => {
     if (!employeeId) return;
     
+    const currentSkillState = getSkillState(employeeId, skill.title);
+    
+    // Handle unspecified level skills differently
+    if (currentSkillState.level === 'unspecified' && !checked) {
+      console.log('Removing unspecified skill:', {
+        employeeId,
+        skillTitle: skill.title,
+        level: currentSkillState.level
+      });
+      
+      updateSkillState(employeeId, skill.title, {
+        inDevelopmentPlan: false,
+        removed: true
+      });
+      
+      toast({
+        title: "Skill Removed",
+        description: `${skill.title} has been removed from your skills as it was unspecified.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,
@@ -59,6 +84,11 @@ export const SkillsMatrixRow = ({
     if (score >= 25) return 'bg-[#00800020] text-[#008000] shadow-sm font-semibold';
     return 'bg-[#8E919620] text-[#8E9196] shadow-sm font-semibold';
   };
+
+  // Don't render removed skills
+  if (skillState?.removed) {
+    return null;
+  }
 
   return (
     <TableRow className="group border-b border-gray-200">
