@@ -6,7 +6,7 @@ import {
   SkillMetrics 
 } from '../../skills/types/sharedSkillTypes';
 
-export { SkillLevel, SkillGoalStatus };
+export type { SkillLevel, SkillGoalStatus };
 
 // Employee skill state
 export interface EmployeeSkillState {
