@@ -26,16 +26,46 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         const state = get().skillStates[employeeId]?.skills[skillTitle];
         if (!state) {
           return {
+            id: `${employeeId}-${skillTitle}`,
+            employeeId,
+            skillId: `${employeeId}-${skillTitle}`,
+            title: skillTitle,
             level: 'unspecified' as SkillLevel,
             goalStatus: 'unknown' as SkillGoalStatus,
-            lastUpdated: new Date().toISOString()
+            lastUpdated: new Date().toISOString(),
+            skillScore: 0,
+            subcategory: 'General',
+            category: 'specialized',
+            businessCategory: 'Technical Skills',
+            weight: 'technical',
+            growth: '0%',
+            salary: 'market',
+            minimumLevel: 'beginner',
+            requirementLevel: 'required',
+            metrics: {
+              growth: '0%',
+              salary: 'market',
+              skillScore: 0
+            },
+            inDevelopmentPlan: false,
+            benchmarks: {
+              B: false,
+              R: false,
+              M: false,
+              O: false
+            }
           };
         }
         return state;
       },
 
       getEmployeeSkills: (employeeId) => {
-        return get().skillStates[employeeId]?.skills || {};
+        console.log('Getting skills for employee:', employeeId);
+        const employeeState = get().skillStates[employeeId];
+        if (!employeeState?.skills) {
+          return [];
+        }
+        return Object.values(employeeState.skills);
       },
 
       setSkillLevel: (employeeId, skillTitle, level) => {

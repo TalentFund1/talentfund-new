@@ -6,11 +6,11 @@ import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
 
 interface SkillProfileHeaderProps {
-  skillCount: number;
+  skillCount?: number;
   jobTitle?: string;
 }
 
-export const SkillProfileHeader = ({ skillCount, jobTitle }: SkillProfileHeaderProps) => {
+export const SkillProfileHeader = ({ skillCount = 0, jobTitle }: SkillProfileHeaderProps) => {
   const { id } = useParams();
   const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
 
