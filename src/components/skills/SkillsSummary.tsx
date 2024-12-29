@@ -76,26 +76,26 @@ export const SkillsSummary = () => {
     <div className="space-y-4">
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
+      <div>
+        <div className="relative">
           {selectedSkills.length > 0 && (
             <Button 
               variant="ghost" 
               onClick={() => setSelectedSkills([])}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="absolute right-0 -top-2 text-sm text-muted-foreground hover:text-foreground"
             >
               Cancel
             </Button>
           )}
+          <SearchFilter
+            label=""
+            placeholder="Search skills..."
+            items={allSkills}
+            selectedItems={selectedSkills}
+            onItemsChange={setSelectedSkills}
+            singleSelect={false}
+          />
         </div>
-        <SearchFilter
-          label=""
-          placeholder="Search skills..."
-          items={allSkills}
-          selectedItems={selectedSkills}
-          onItemsChange={setSelectedSkills}
-          singleSelect={false}
-        />
       </div>
 
       <Separator className="my-6" />
