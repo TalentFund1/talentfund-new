@@ -3,12 +3,13 @@ import { getSkillProfileId, getLevel } from "../EmployeeTable";
 import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
 import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
 import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { calculateBenchmarkPercentage } from "./BenchmarkCalculator";
 import { roleSkills } from "../skills/data/roleSkills";
 import { EmployeeBasicInfo } from "./table/EmployeeBasicInfo";
 import { EmployeeSkillMatch } from "./table/EmployeeSkillMatch";
 import { EmployeeBenchmark } from "./table/EmployeeBenchmark";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
+import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
+import { useTrack } from "../skills/context/TrackContext";
 
 interface EmployeeTableRowProps {
   employee: Employee;
@@ -31,6 +32,7 @@ export const EmployeeTableRow = ({
   const { toggledSkills } = useToggledSkills();
   const competencyReader = useCompetencyStateReader();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
+  const { getTrackForRole } = useTrack();
   const employeeSkills = getEmployeeSkills(employee.id);
 
   const targetRoleId = selectedJobTitle.length > 0 
@@ -38,15 +40,27 @@ export const EmployeeTableRow = ({
     : getSkillProfileId(employee.role);
 
   const employeeLevel = getLevel(employee.role);
+  const track = getTrackForRole(targetRoleId);
   
-  const benchmark = calculateBenchmarkPercentage(
-    employee.id,
+  const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
+    employeeSkills,
+    employeeSkills,
+    employeeLevel,
+    targetRoleId,
+    track,
+    getSkillState,
+    employee.id
+  );
+
+  console.log('Employee table row benchmark calculation:', {
+    employeeId: employee.id,
+    employeeName: employee.name,
     targetRoleId,
     employeeLevel,
-    employeeSkills,
-    toggledSkills,
-    competencyReader
-  );
+    track,
+    benchmark,
+    skillCount: employeeSkills.length
+  });
 
   const getSkillMatch = () => {
     const employeeSkills = getEmployeeSkills(employee.id);
