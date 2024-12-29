@@ -7,9 +7,10 @@ interface SkillSectionListProps {
     developing: EmployeeSkillData[];
     adjacent: EmployeeSkillData[];
   };
+  showAdjacent?: boolean;
 }
 
-export const SkillSectionList = ({ categorizedSkills }: SkillSectionListProps) => {
+export const SkillSectionList = ({ categorizedSkills, showAdjacent = true }: SkillSectionListProps) => {
   return (
     <div className="space-y-6">
       <SkillSection 
@@ -22,11 +23,13 @@ export const SkillSectionList = ({ categorizedSkills }: SkillSectionListProps) =
         count={categorizedSkills.developing.length}
         skills={categorizedSkills.developing}
       />
-      <SkillSection 
-        title="Adjacent" 
-        count={categorizedSkills.adjacent.length}
-        skills={categorizedSkills.adjacent}
-      />
+      {showAdjacent && (
+        <SkillSection 
+          title="Adjacent" 
+          count={categorizedSkills.adjacent.length}
+          skills={categorizedSkills.adjacent}
+        />
+      )}
     </div>
   );
 };

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { getAllSkills } from './data/skills/allSkills';
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
-import { SkillCategoryCards } from "./sections/SkillCategoryCards";
 import { SkillSectionList } from "./sections/SkillSectionList";
 
 export const SkillsSummary = () => {
@@ -51,17 +50,27 @@ export const SkillsSummary = () => {
     return skills;
   }, [employeeSkills, selectedSkills, selectedCategory]);
 
+  // Get adjacent skills only when filtering
+  const adjacentSkills = useMemo(() => {
+    if (selectedSkills.length === 0) return [];
+    
+    return employeeSkills.filter(skill => {
+      const isNotSelected = !selectedSkills.includes(skill.title);
+      const skillData = getUnifiedSkillData(skill.title);
+      const matchesCategory = selectedCategory === 'all' || skillData.category === selectedCategory;
+      return isNotSelected && matchesCategory;
+    });
+  }, [employeeSkills, selectedSkills, selectedCategory]);
+
   const categorizedSkills = useMemo(() => {
     return {
       current: filteredEmployeeSkills,
       developing: filteredEmployeeSkills.filter(skill => 
         skill.level === 'beginner' || skill.goalStatus === 'skill_goal'
       ),
-      adjacent: filteredEmployeeSkills.filter(skill => 
-        skill.level === 'unspecified' && skill.goalStatus !== 'skill_goal'
-      )
+      adjacent: adjacentSkills
     };
-  }, [filteredEmployeeSkills]);
+  }, [filteredEmployeeSkills, adjacentSkills]);
 
   // Calculate category counts based on search filter
   const getCategoryCount = (category: string) => {
@@ -153,7 +162,10 @@ export const SkillsSummary = () => {
 
       <Separator className="my-6" />
 
-      <SkillSectionList categorizedSkills={categorizedSkills} />
+      <SkillSectionList 
+        categorizedSkills={categorizedSkills} 
+        showAdjacent={selectedSkills.length > 0}
+      />
     </div>
   );
 };
