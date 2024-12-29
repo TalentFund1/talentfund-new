@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { EditSkillProfileForm } from "./EditSkillProfileForm";
-import { RoleSkillData } from "../types";
+import { EditSkillProfileForm } from "@/components/skills/form/EditSkillProfileForm";
+import { RoleSkillData } from "@/components/skills/types/roleSkillTypes";
 
 export const SkillProfileHeader = ({ profile }: { profile: RoleSkillData }) => {
   const [isEditing, setIsEditing] = useState(false);

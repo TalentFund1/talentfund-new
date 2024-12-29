@@ -18,16 +18,16 @@ export const createStoreActions = (
 
       const employee = employees.find(emp => emp.id === employeeId);
       
-      // Create or update the skill
-      const currentSkill = currentState.skills[skillTitle] || {
+      // Create or update the skill with required properties
+      const currentSkill: EmployeeSkillData = {
         id: `${employeeId}-${skillTitle}`,
         employeeId,
         skillId: `${employeeId}-${skillTitle}`,
         title: skillTitle,
-        level: 'unspecified',
-        goalStatus: 'unknown',
+        level: updates.level || 'unspecified',
+        goalStatus: updates.goalStatus || 'unknown',
         lastUpdated: new Date().toISOString(),
-        confidence: 'medium',
+        confidence: updates.confidence || 'medium',
         skillScore: 0,
         inDevelopmentPlan: false,
         subcategory: 'General',
@@ -42,7 +42,7 @@ export const createStoreActions = (
           M: false,
           O: false
         }
-      } as EmployeeSkillData;
+      };
 
       const updatedSkillStates = {
         ...state.skillStates,
