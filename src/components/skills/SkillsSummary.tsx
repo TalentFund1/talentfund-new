@@ -4,11 +4,12 @@ import { SearchFilter } from "@/components/market/SearchFilter";
 import { useParams } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { SkillBadge } from "./SkillBadge";
-import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
 import { getAllSkills } from './data/skills/allSkills';
 import { Button } from "@/components/ui/button";
 import { getUnifiedSkillData } from './data/skillDatabaseService';
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 
 const getLevelPriority = (level: string): number => {
   switch (level?.toLowerCase()) {
@@ -22,7 +23,20 @@ const getLevelPriority = (level: string): number => {
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
+  const { getEmployeeSkills } = useEmployeeSkillsStore();
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
+  // Get all employee skills
+  const employeeSkills = useMemo(() => {
+    if (!employeeId) return [];
+    return getEmployeeSkills(employeeId);
+  }, [employeeId, getEmployeeSkills]);
+
+  console.log('SkillsSummary - Employee Skills:', {
+    employeeId,
+    skillCount: employeeSkills.length,
+    skills: employeeSkills.map(s => s.title)
+  });
 
   // Get all available skills from universal database for search
   const allSkills = useMemo(() => {
@@ -39,7 +53,11 @@ export const SkillsSummary = () => {
 
   // Categorize and sort filtered skills using universal database metadata
   const categorizedSkills = useMemo(() => {
-    const sorted = filteredEmployeeSkills.reduce((acc, skill) => {
+    const sorted = filteredEmployeeSkills.reduce((acc: {
+      specialized: EmployeeSkillData[];
+      common: EmployeeSkillData[];
+      certifications: EmployeeSkillData[];
+    }, skill) => {
       const unifiedData = getUnifiedSkillData(skill.title);
       const category = unifiedData.category || 'common';
       
