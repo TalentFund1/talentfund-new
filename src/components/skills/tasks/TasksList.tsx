@@ -22,8 +22,8 @@ export const TasksList = () => {
   console.log('Rendering TasksList component');
 
   return (
-    <Card className="p-4 space-y-3 bg-white">
-      <div className="flex justify-between items-center mb-2">
+    <Card className="p-6 space-y-4 bg-white">
+      <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <h2 className="text-lg font-semibold text-primary">Tasks</h2>
           <TooltipProvider>
@@ -42,21 +42,21 @@ export const TasksList = () => {
         </Button>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-3">
         {tasks.map((task) => (
           <div 
             key={task.id} 
-            className="flex items-center justify-between py-2 px-3 border border-border rounded-lg hover:bg-background/80 transition-colors"
+            className="flex items-center justify-between py-3 px-4 border border-border rounded-lg hover:bg-background/80 transition-colors"
           >
             <div className="flex-1">
               <p className="text-sm text-primary leading-tight">{task.title}</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {task.aiPotential && (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <div className="bg-primary-icon/10 p-1 rounded">
+                      <div className="bg-primary-icon/10 p-1.5 rounded">
                         <Zap className="h-3 w-3 text-primary-icon" />
                       </div>
                     </TooltipTrigger>
@@ -66,11 +66,11 @@ export const TasksList = () => {
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <div className="flex items-center gap-1 bg-primary-accent/10 px-2 py-1 rounded">
+              <div className="flex items-center gap-1.5 bg-primary-accent/10 px-3 py-1.5 rounded">
                 <PieChart className="h-3 w-3 text-primary-accent" />
                 <span className="text-xs font-medium text-primary-accent">{task.percentage}%</span>
               </div>
-              <Button variant="ghost" size="icon" className="h-6 w-6 hover:bg-background">
+              <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-background">
                 <Pencil className="h-3 w-3 text-gray-600" />
               </Button>
             </div>
