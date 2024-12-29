@@ -11,7 +11,14 @@ export const communicationSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "15%",
     salary: "$100,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "15%",
+      salary: "$100,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

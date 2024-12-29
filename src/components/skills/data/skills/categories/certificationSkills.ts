@@ -11,7 +11,14 @@ export const certificationSkills: UnifiedSkill[] = [
     level: "advanced",
     growth: "28%",
     salary: "$140,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "advanced",
+    requirementLevel: "required",
+    metrics: {
+      growth: "28%",
+      salary: "$140,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];

@@ -33,11 +33,7 @@ export interface EmployeeSkillData extends BaseSkill {
   skillScore: number;
   minimumLevel: SkillLevel;
   requirementLevel: 'required' | 'preferred' | 'optional';
-  metrics: {
-    growth: string;
-    salary: string;
-    skillScore: number;
-  };
+  metrics: SkillMetrics;
   growth: string;
   salary: string;
   inDevelopmentPlan: boolean;

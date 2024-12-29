@@ -11,7 +11,14 @@ export const professionalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "12%",
     salary: "$95,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "12%",
+      salary: "$95,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
@@ -24,7 +31,14 @@ export const professionalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "15%",
     salary: "$110,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "15%",
+      salary: "$110,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
@@ -37,7 +51,14 @@ export const professionalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "15%",
     salary: "$120,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "15%",
+      salary: "$120,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
@@ -50,7 +71,14 @@ export const professionalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "15%",
     salary: "$115,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "15%",
+      salary: "$115,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
@@ -63,7 +91,14 @@ export const professionalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "18%",
     salary: "$130,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "18%",
+      salary: "$130,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
@@ -76,7 +111,14 @@ export const professionalSkills: UnifiedSkill[] = [
     level: "intermediate",
     growth: "14%",
     salary: "$105,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "14%",
+      salary: "$105,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   },
   {
@@ -89,7 +131,14 @@ export const professionalSkills: UnifiedSkill[] = [
     level: "advanced",
     growth: "20%",
     salary: "$140,000",
-    confidence: "high",
+    skillScore: 0,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "20%",
+      salary: "$140,000",
+      skillScore: 0
+    },
     benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
