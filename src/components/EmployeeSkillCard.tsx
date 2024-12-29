@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
-import { useMemo, useEffect, useCallback } from "react";
+import { useMemo, useEffect, useCallback, useRef } from "react";
 import { EmployeeSkillCardProps } from "./employee/types/employeeSkillProps";
 import { benchmarkingService } from "../services/benchmarking";
 
@@ -16,19 +16,16 @@ export const EmployeeSkillCard = ({
 }: Readonly<EmployeeSkillCardProps>) => {
   const { toast } = useToast();
   const { getSkillState, batchUpdateSkills, getEmployeeSkills, initializeEmployeeSkills } = useEmployeeSkillsStore();
+  const initialized = useRef(false);
   
-  // Memoize initialization to prevent infinite loops
-  const initializeSkills = useCallback(() => {
-    if (employeeId) {
+  // Initialize skills only once when component mounts
+  useEffect(() => {
+    if (!initialized.current && employeeId) {
       console.log('EmployeeSkillCard - Initializing skills for:', employeeId);
       initializeEmployeeSkills(employeeId);
+      initialized.current = true;
     }
   }, [employeeId, initializeEmployeeSkills]);
-
-  // Initialize skills when component mounts
-  useEffect(() => {
-    initializeSkills();
-  }, [initializeSkills]);
 
   // Get all employee skills including newly added ones
   const employeeSkills = useMemo(() => {
