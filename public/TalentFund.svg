@@ -1,0 +1,9 @@
+<svg width="800" height="132" viewBox="0 0 800 132" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <!-- Triangle shapes for the logo mark -->
+    <path d="M60 0L120 104H0L60 0Z" fill="#8073EC"/>
+    <path d="M30 52L60 104H0L30 52Z" fill="#FF8256"/>
+  </g>
+  <!-- Text part -->
+  <text x="140" y="80" font-family="Inter" font-size="64" font-weight="bold" fill="#1F2144">TalentFund</text>
+</svg>
