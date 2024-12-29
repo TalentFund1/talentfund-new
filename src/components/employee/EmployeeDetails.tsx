@@ -1,8 +1,5 @@
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
-import { getSkillProfileId } from "../EmployeeTable";
-import { useTrack } from "../skills/context/TrackContext";
-import { getEmployeeTrack, formatLevel } from "./utils/employeeTrackUtils";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 import { useEmployeeStore } from "./store/employeeStore";
 
@@ -87,10 +84,6 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
           ) : (
             <p className="font-medium text-gray-900">—</p>
           )}
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Start Date</span>
-          <p className="font-medium text-gray-900">{employee.startDate || "—"}</p>
         </div>
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Tenure (Years)</span>
