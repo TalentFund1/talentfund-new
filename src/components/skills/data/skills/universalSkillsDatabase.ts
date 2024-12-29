@@ -1,47 +1,13 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
+import { aiSkills } from './categories/aiSkills';
+import { developmentSkills } from './categories/developmentSkills';
+import { managementSkills } from './categories/managementSkills';
 
-// Combined universal skills database
+// Combine all skill categories
 const universalSkillsDatabase: UnifiedSkill[] = [
-  {
-    id: 'SKILL_ML_031',
-    title: "Machine Learning",
-    subcategory: "AI & ML",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "critical",
-    level: "advanced",
-    growth: "35%",
-    salary: "$160,000",
-    skillScore: 85,
-    minimumLevel: "beginner",
-    requirementLevel: "required",
-    metrics: {
-      growth: "35%",
-      salary: "$160,000",
-      skillScore: 85
-    },
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL_TEN_079',
-    title: "TensorFlow",
-    subcategory: "AI & ML",
-    category: "specialized",
-    businessCategory: "Information Technology",
-    weight: "technical",
-    level: "intermediate",
-    growth: "28%",
-    salary: "$145,000",
-    skillScore: 82,
-    minimumLevel: "beginner",
-    requirementLevel: "required",
-    metrics: {
-      growth: "28%",
-      salary: "$145,000",
-      skillScore: 82
-    },
-    benchmarks: { B: true, R: true, M: true, O: true }
-  },
+  ...aiSkills,
+  ...developmentSkills,
+  ...managementSkills,
   {
     id: 'SKILL_NLP_024',
     title: "Natural Language Processing",
