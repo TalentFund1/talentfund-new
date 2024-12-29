@@ -5,28 +5,16 @@ import { useParams } from 'react-router-dom';
 interface CategoryCardsProps {
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
-  skillCount: {
-    critical: number;
-    technical: number;
-    necessary: number;
-    all: number;
-  };
+  roleId: string;
 }
 
-export const CategoryCards = ({ selectedCategory, onCategorySelect, skillCount }: CategoryCardsProps) => {
+export const CategoryCards = ({ selectedCategory, onCategorySelect, roleId }: CategoryCardsProps) => {
   const categories = [
-    { id: "all", name: "All Skill Type", count: skillCount.all },
-    { id: "critical", name: "Critical Skills", count: skillCount.critical },
-    { id: "technical", name: "Technical Skills", count: skillCount.technical },
-    { id: "necessary", name: "Necessary Skills", count: skillCount.necessary }
+    { id: "all", name: "All Skill Type", count: 0 },
+    { id: "critical", name: "Critical Skills", count: 0 },
+    { id: "technical", name: "Technical Skills", count: 0 },
+    { id: "necessary", name: "Necessary Skills", count: 0 }
   ];
-
-  console.log('CategoryCards - Displaying counts for toggled skills:', {
-    total: skillCount.all,
-    critical: skillCount.critical,
-    technical: skillCount.technical,
-    necessary: skillCount.necessary
-  });
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">

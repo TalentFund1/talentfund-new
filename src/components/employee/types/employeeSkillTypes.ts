@@ -1,14 +1,10 @@
 import { 
+  SkillLevel, 
+  SkillGoalStatus, 
   BaseSkill, 
   SkillBenchmark, 
-  SkillMetrics,
-  SkillRequirementLevel,
-  SkillLevel,
-  SkillGoalStatus
+  SkillMetrics 
 } from '../../skills/types/sharedSkillTypes';
-
-// Export these types so they can be used in other files
-export type { SkillLevel, SkillGoalStatus, SkillRequirementLevel };
 
 // Employee skill state
 export interface EmployeeSkillState {
@@ -35,7 +31,7 @@ export interface EmployeeSkillData extends BaseSkill {
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
   minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
+  requirementLevel: 'required' | 'preferred' | 'optional';
   metrics: SkillMetrics;
   growth: string;
   salary: string;
@@ -44,9 +40,7 @@ export interface EmployeeSkillData extends BaseSkill {
 }
 
 // Achievement tracking
-export interface EmployeeSkillAchievement extends EmployeeSkillData {
-  skillScore: number;
-}
+export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
 // Complete employee skills data structure
 export interface EmployeeSkillsData {
