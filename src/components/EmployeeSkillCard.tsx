@@ -23,7 +23,7 @@ export const EmployeeSkillCard = ({
       console.log('EmployeeSkillCard - Initializing skills for:', employeeId);
       initializeEmployeeSkills(employeeId);
     }
-  }, [employeeId]);
+  }, [employeeId, initializeEmployeeSkills]);
 
   // Get all employee skills including newly added ones
   const employeeSkills = useMemo(() => {

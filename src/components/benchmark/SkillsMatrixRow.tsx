@@ -12,15 +12,7 @@ import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { MissingSkillIndicator } from "./skills-matrix/MissingSkillIndicator";
 
 interface SkillsMatrixRowProps {
-  skill: {
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
-    requirement?: string;
-    category?: string;
-  };
+  skill: UnifiedSkill;
   isRoleBenchmark?: boolean;
 }
 
