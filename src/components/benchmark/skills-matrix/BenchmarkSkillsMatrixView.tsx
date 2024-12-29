@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { BenchmarkSkillsMatrixContent } from "./BenchmarkSkillsMatrixContent";
 import { useRef } from "react";
 import { useBenchmarkSkillsMatrixState } from "./BenchmarkSkillsMatrixState";
+import { TablePagination } from "@/components/TablePagination";
 
 interface BenchmarkSkillsMatrixViewProps {
   roleId: string;
@@ -45,16 +46,28 @@ export const BenchmarkSkillsMatrixView = ({
   setSelectedWeight,
 }: BenchmarkSkillsMatrixViewProps) => {
   const observerTarget = useRef<HTMLDivElement>(null);
-  const { visibleItems } = useBenchmarkSkillsMatrixState();
+  const { visibleItems, currentPage, setVisibleItems, setCurrentPage } = useBenchmarkSkillsMatrixState();
 
-  console.log('BenchmarkSkillsMatrixView - Rendering with:', {
-    roleId,
-    employeeId,
-    selectedCategory,
-    selectedWeight,
-    filteredSkillsCount: filteredSkills.length,
-    visibleItems
+  const totalPages = Math.ceil(filteredSkills.length / visibleItems);
+  const startIndex = (currentPage - 1) * visibleItems;
+  const endIndex = startIndex + visibleItems;
+  const paginatedSkills = filteredSkills.slice(startIndex, endIndex);
+
+  console.log('BenchmarkSkillsMatrixView - Pagination:', {
+    totalSkills: filteredSkills.length,
+    visibleItems,
+    currentPage,
+    totalPages,
+    paginatedSkillsCount: paginatedSkills.length
   });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleRowsPerPageChange = (value: string) => {
+    setVisibleItems(Number(value));
+  };
 
   return (
     <Card className="p-6 space-y-6 animate-fade-in bg-white">
@@ -62,7 +75,7 @@ export const BenchmarkSkillsMatrixView = ({
         roleId={roleId}
         employeeId={employeeId}
         roleLevel={roleLevel}
-        filteredSkills={filteredSkills}
+        filteredSkills={paginatedSkills}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedLevel={selectedLevel}
@@ -79,6 +92,14 @@ export const BenchmarkSkillsMatrixView = ({
         setSelectedWeight={setSelectedWeight}
         visibleItems={visibleItems}
         observerTarget={observerTarget}
+      />
+      <TablePagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredSkills.length}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+        rowsPerPage={visibleItems}
       />
     </Card>
   );

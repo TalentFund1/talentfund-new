@@ -66,16 +66,16 @@ export const useSkillsFiltering = (
         
         return {
           ...skill,
-          id: unifiedData.id,
-          category: unifiedData.category,
-          weight: unifiedData.weight,
-          subcategory: unifiedData.subcategory,
+          id: unifiedData.id || `${skill.title}-id`,
+          category: unifiedData.category || 'specialized',
+          weight: unifiedData.weight || 'technical',
+          subcategory: unifiedData.subcategory || 'General',
           hasSkill,
           minimumLevel: 'beginner',
           requirementLevel: 'required',
           metrics: {
-            growth: unifiedData.growth,
-            salary: unifiedData.salary,
+            growth: unifiedData.growth || '0%',
+            salary: unifiedData.salary || 'market',
             skillScore: 0
           }
         } as UnifiedSkill & { hasSkill: boolean };
