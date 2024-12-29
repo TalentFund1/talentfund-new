@@ -4,6 +4,24 @@ import { roleSkills } from "../../skills/data/roleSkills";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
 
+const getLevelPriority = (level: string): number => {
+  switch (level?.toLowerCase()) {
+    case 'advanced': return 4;
+    case 'intermediate': return 3;
+    case 'beginner': return 2;
+    case 'unspecified': return 1;
+    default: return 0;
+  }
+};
+
+const getRequirementPriority = (required: string): number => {
+  switch (required?.toLowerCase()) {
+    case 'required': return 2;
+    case 'preferred': return 1;
+    default: return 0;
+  }
+};
+
 export const useSkillsFiltering = (
   employeeId: string,
   selectedRole: string,
@@ -21,7 +39,6 @@ export const useSkillsFiltering = (
   const { getSkillCompetencyState } = useCompetencyStateReader();
   const employeeSkillsStore = useEmployeeSkillsStore();
   
-  // Get employee's actual skills
   const employeeSkills = employeeSkillsStore.getEmployeeSkills(employeeId);
 
   console.log('Starting skills filtering with:', {
@@ -37,10 +54,8 @@ export const useSkillsFiltering = (
   });
 
   const filterSkills = () => {
-    // Start with employee skills only
     let skills = [...employeeSkills];
 
-    // Get role skills for comparison
     const roleData = roleSkills[selectedRole as keyof typeof roleSkills];
     if (!roleData) {
       console.warn('No role data found for:', selectedRole);
@@ -53,7 +68,6 @@ export const useSkillsFiltering = (
       ...roleData.certifications
     ];
 
-    // Filter to only include skills that are both employee skills AND role skills
     skills = skills.filter(empSkill => {
       const isRoleSkill = allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title);
       const isToggled = toggledSkills.has(empSkill.title);
@@ -66,7 +80,6 @@ export const useSkillsFiltering = (
       matchingSkills: skills.map(s => s.title)
     });
 
-    // Remove duplicates using a Map with skill titles as keys
     const uniqueSkills = new Map();
     skills.forEach(skill => {
       if (!uniqueSkills.has(skill.title)) {
@@ -75,7 +88,6 @@ export const useSkillsFiltering = (
     });
     skills = Array.from(uniqueSkills.values());
 
-    // Apply category filter
     if (selectedCategory !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
@@ -83,7 +95,6 @@ export const useSkillsFiltering = (
       });
     }
 
-    // Apply weight filter
     if (selectedWeight !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
@@ -91,7 +102,6 @@ export const useSkillsFiltering = (
       });
     }
 
-    // Apply level and interest filters
     return skills.filter(skill => {
       let matchesLevel = true;
       let matchesInterest = true;
@@ -142,10 +152,22 @@ export const useSkillsFiltering = (
         subcategory: unifiedData.subcategory,
         employeeLevel: skillState?.level || skill.level || 'unspecified',
         roleLevel: competencyState?.level || 'unspecified',
-        goalStatus: skillState?.goalStatus || skill.goalStatus || 'unknown'
+        goalStatus: skillState?.goalStatus || skill.goalStatus || 'unknown',
+        required: competencyState?.required || 'preferred'
       };
     })
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => {
+      // First sort by role skill level (advanced to unspecified)
+      const levelDiff = getLevelPriority(b.roleLevel) - getLevelPriority(a.roleLevel);
+      if (levelDiff !== 0) return levelDiff;
+
+      // Then sort by requirement (required before preferred)
+      const requirementDiff = getRequirementPriority(b.required) - getRequirementPriority(a.required);
+      if (requirementDiff !== 0) return requirementDiff;
+
+      // Finally sort alphabetically by title
+      return a.title.localeCompare(b.title);
+    });
   };
 
   const filteredSkills = filterSkills();
@@ -154,7 +176,11 @@ export const useSkillsFiltering = (
     employeeId,
     totalEmployeeSkills: employeeSkills.length,
     filteredSkills: filteredSkills.length,
-    filteredSkillTitles: filteredSkills.map(s => s.title),
+    filteredSkillTitles: filteredSkills.map(s => ({
+      title: s.title,
+      roleLevel: s.roleLevel,
+      required: s.required
+    })),
     filters: {
       selectedCategory,
       selectedWeight,
