@@ -1,4 +1,4 @@
-import { SkillLevel } from '../types/sharedSkillTypes';
+import { SkillLevel, SkillGoalStatus } from '../types/sharedSkillTypes';
 
 export const getSkillLevelColor = (level: SkillLevel) => {
   switch (level) {
@@ -15,7 +15,7 @@ export const getSkillLevelColor = (level: SkillLevel) => {
   }
 };
 
-export const getRequirementColor = (requirement: SkillLevel['requirement']) => {
+export const getRequirementColor = (requirement: SkillGoalStatus) => {
   return requirement === 'required' 
     ? 'bg-gray-100/90 text-[#1f2144]'
     : 'bg-gray-50/90 text-[#1f2144]';
