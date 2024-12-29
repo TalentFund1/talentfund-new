@@ -1,13 +1,9 @@
-import { 
-  SkillLevel, 
-  SkillGoalStatus, 
-  BaseSkill, 
-  SkillBenchmark, 
-  SkillMetrics,
-  SkillConfidence
-} from '../../skills/types/sharedSkillTypes';
+import { SkillCategory, SkillWeight } from '../../skills/types/SkillTypes';
 
-// Employee skill state
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
+export type SkillGoalStatus = 'skill_goal' | 'not_interested' | 'unknown';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
+
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
@@ -16,7 +12,6 @@ export interface EmployeeSkillState {
   inDevelopmentPlan: boolean;
 }
 
-// Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
@@ -24,27 +19,39 @@ export interface EmployeeSkillUpdate {
   inDevelopmentPlan?: boolean;
 }
 
-// Complete employee skill data
-export interface EmployeeSkillData extends BaseSkill {
+export interface EmployeeSkillData {
+  id: string;
   employeeId: string;
   skillId: string;
+  title: string;
+  subcategory: string;
+  category: SkillCategory;
+  businessCategory: string;
+  weight: SkillWeight;
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
+  skillScore: number;
   minimumLevel: SkillLevel;
   requirementLevel: SkillRequirementLevel;
-  metrics: SkillMetrics;
+  metrics: {
+    growth: string;
+    salary: string;
+    skillScore: number;
+  };
   growth: string;
   salary: string;
-  confidence: SkillConfidence;
   inDevelopmentPlan: boolean;
-  benchmarks: SkillBenchmark;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
 }
 
-// Achievement tracking
 export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
-// Complete employee skills data structure
 export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkillAchievement[];
