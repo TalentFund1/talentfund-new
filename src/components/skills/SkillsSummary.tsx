@@ -9,6 +9,21 @@ import { getUnifiedSkillData } from './data/skillDatabaseService';
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { SkillSectionList } from "./sections/SkillSectionList";
 
+const sortSkillsByLevel = (skills: any[]) => {
+  const levelOrder = {
+    'advanced': 0,
+    'intermediate': 1,
+    'beginner': 2,
+    'unspecified': 3
+  };
+
+  return [...skills].sort((a, b) => {
+    const levelA = a.level?.toLowerCase() || 'unspecified';
+    const levelB = b.level?.toLowerCase() || 'unspecified';
+    return levelOrder[levelA] - levelOrder[levelB];
+  });
+};
+
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
@@ -47,27 +62,31 @@ export const SkillsSummary = () => {
       skills: skills.map(s => s.title)
     });
 
-    return skills;
+    return sortSkillsByLevel(skills);
   }, [employeeSkills, selectedSkills, selectedCategory]);
 
   // Get adjacent skills only when filtering
   const adjacentSkills = useMemo(() => {
     if (selectedSkills.length === 0) return [];
     
-    return employeeSkills.filter(skill => {
+    const skills = employeeSkills.filter(skill => {
       const isNotSelected = !selectedSkills.includes(skill.title);
       const skillData = getUnifiedSkillData(skill.title);
       const matchesCategory = selectedCategory === 'all' || skillData.category === selectedCategory;
       return isNotSelected && matchesCategory;
     });
+
+    return sortSkillsByLevel(skills);
   }, [employeeSkills, selectedSkills, selectedCategory]);
 
   const categorizedSkills = useMemo(() => {
+    const developing = filteredEmployeeSkills.filter(skill => 
+      skill.level === 'beginner' || skill.goalStatus === 'skill_goal'
+    );
+
     return {
       current: filteredEmployeeSkills,
-      developing: filteredEmployeeSkills.filter(skill => 
-        skill.level === 'beginner' || skill.goalStatus === 'skill_goal'
-      ),
+      developing: sortSkillsByLevel(developing),
       adjacent: adjacentSkills
     };
   }, [filteredEmployeeSkills, adjacentSkills]);
