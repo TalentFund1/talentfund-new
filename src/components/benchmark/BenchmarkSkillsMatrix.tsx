@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { useRoleStore } from "./RoleBenchmark";
@@ -49,7 +49,7 @@ const BenchmarkSkillsMatrixContent = () => {
   });
 
   return (
-    <div className="space-y-4 px-4 max-w-[95%] mx-auto">
+    <div className="space-y-6">
       <BenchmarkSkillsMatrixView
         roleId={selectedRole}
         employeeId={id || ""}
