@@ -55,4 +55,4 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-export { SkillLevel, SkillGoalStatus };
+export type { SkillLevel, SkillGoalStatus };
