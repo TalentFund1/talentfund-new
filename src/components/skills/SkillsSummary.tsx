@@ -9,6 +9,7 @@ import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
 import { getAllSkills } from './data/skills/allSkills';
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -45,6 +46,10 @@ export const SkillsSummary = () => {
   const commonSkills = filteredEmployeeSkills.filter(skill => skill.category === 'common');
   const certifications = filteredEmployeeSkills.filter(skill => skill.category === 'certification');
 
+  const handleCancelSelection = () => {
+    setSelectedSkills([]);
+  };
+
   const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
@@ -74,28 +79,23 @@ export const SkillsSummary = () => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
+        {selectedSkills.length > 0 && (
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleCancelSelection}
+            className="flex items-center gap-2"
+          >
+            <X className="h-4 w-4" />
+            Cancel
+          </Button>
+        )}
+      </div>
       
-      <div>
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2 items-center">
-              {selectedSkills.map((skill) => (
-                <div key={skill} className="bg-[#F7F9FF] text-primary border border-[#E5E7EB] px-3 py-1.5 rounded-md text-sm">
-                  {skill}
-                </div>
-              ))}
-            </div>
-            {selectedSkills.length > 0 && (
-              <Button 
-                variant="ghost"
-                onClick={() => setSelectedSkills([])}
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                Cancel
-              </Button>
-            )}
-          </div>
+      <div className="mb-4">
+        <div className="space-y-2">
           <SearchFilter
             label=""
             placeholder="Search skills..."
