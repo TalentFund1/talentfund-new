@@ -7,6 +7,7 @@ import { useState, useMemo } from "react";
 import { SkillBadge } from "./SkillBadge";
 import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
+import { getAllSkills } from './data/skills/allSkills';
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -25,15 +26,15 @@ export const SkillsSummary = () => {
     skills: employeeSkills.map(s => s.title)
   });
 
+  // Get all available skills from universal database for search
+  const allSkills = useMemo(() => {
+    return getAllSkills().map(skill => skill.title);
+  }, []);
+
   // Categorize skills
   const specializedSkills = employeeSkills.filter(skill => skill.category === 'specialized');
   const commonSkills = employeeSkills.filter(skill => skill.category === 'common');
   const certifications = employeeSkills.filter(skill => skill.category === 'certification');
-
-  // Filter skills based on search query
-  const filteredSkills = employeeSkills.filter(skill => 
-    skill.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
     <Card className="p-6 space-y-4">
@@ -71,7 +72,7 @@ export const SkillsSummary = () => {
           <SearchFilter
             label=""
             placeholder="Search skills..."
-            items={employeeSkills.map(skill => skill.title)}
+            items={allSkills}
             selectedItems={[]}
             onItemsChange={() => {}}
             singleSelect={false}
