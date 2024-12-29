@@ -35,20 +35,14 @@ export const createInitializationActions = (set: any, get: any) => ({
           level: skill.level || 'unspecified',
           goalStatus: 'unknown',
           lastUpdated: new Date().toISOString(),
-          skillScore: 0,
+          confidence: 'medium',
           subcategory: skillData.subcategory || 'General',
           category: skillData.category || 'specialized',
           businessCategory: skillData.businessCategory || 'Technical Skills',
           weight: skillData.weight || 'technical',
           growth: skillData.growth || '0%',
           salary: skillData.salary || 'market',
-          minimumLevel: 'beginner',
-          requirementLevel: 'required',
-          metrics: {
-            growth: skillData.growth || '0%',
-            salary: skillData.salary || 'market',
-            skillScore: 0
-          },
+          skillScore: 0,
           inDevelopmentPlan: false,
           benchmarks: {
             B: false,

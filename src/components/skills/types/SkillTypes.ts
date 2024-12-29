@@ -1,8 +1,6 @@
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
 export interface DetailedSkill {
   name: string;
@@ -17,10 +15,11 @@ export interface Skill {
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
-  level: SkillLevel;
+  level: string;
   growth: string;
   salary: string;
-  skillScore: number;
+  confidence: 'low' | 'medium' | 'high';
+  skillScore?: number;
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -33,11 +32,13 @@ export interface UnifiedSkill extends Skill {
   goalStatus?: SkillRequirement;
   roleLevel?: string;
   isCompanySkill?: boolean;
-  minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
-  metrics: {
+  skillScore?: number;
+  minimumLevel?: string;
+  requirementLevel?: 'required' | 'preferred' | 'optional';
+  metrics?: {
     growth: string;
     salary: string;
+    confidence: 'low' | 'medium' | 'high';
     skillScore: number;
   };
 }
@@ -61,6 +62,7 @@ export interface RoleSkillData {
 export interface SimpleSkill {
   title: string;
   subcategory: string;
+  category?: SkillCategory;
   businessCategory?: string;
   level: string;
   growth: string;

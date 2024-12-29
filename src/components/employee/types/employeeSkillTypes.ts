@@ -1,17 +1,13 @@
-import { 
-  SkillLevel, 
-  SkillGoalStatus, 
-  BaseSkill, 
-  SkillBenchmark, 
-  SkillMetrics,
-  SkillConfidence
-} from '../../skills/types/sharedSkillTypes';
+// Core skill types for employees
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified' | 'expert';
+export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 
 // Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
+  confidence: 'low' | 'medium' | 'high';
   skillScore: number;
   inDevelopmentPlan: boolean;
 }
@@ -20,25 +16,35 @@ export interface EmployeeSkillState {
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
+  confidence?: 'low' | 'medium' | 'high';
   skillScore?: number;
   inDevelopmentPlan?: boolean;
 }
 
 // Complete employee skill data
-export interface EmployeeSkillData extends BaseSkill {
+export interface EmployeeSkillData {
+  id: string;
   employeeId: string;
   skillId: string;
+  title: string;
+  subcategory: string;
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
-  metrics: SkillMetrics;
+  category: 'specialized' | 'common' | 'certification';
+  weight: 'critical' | 'technical' | 'necessary';
+  businessCategory: string;
   growth: string;
   salary: string;
-  confidence: SkillConfidence;
+  confidence: 'low' | 'medium' | 'high';
+  skillScore: number;
   inDevelopmentPlan: boolean;
-  benchmarks: SkillBenchmark;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
 }
 
 // Achievement tracking
@@ -51,3 +57,5 @@ export interface EmployeeSkillsData {
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
 }
+
+console.log('Employee skill types updated with complete interfaces');

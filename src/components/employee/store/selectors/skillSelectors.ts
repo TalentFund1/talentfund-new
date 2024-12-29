@@ -14,20 +14,14 @@ export const createSkillSelectors = (get: any) => ({
         level: 'unspecified',
         goalStatus: 'unknown',
         lastUpdated: new Date().toISOString(),
-        skillScore: 0,
+        confidence: 'medium',
         subcategory: 'General',
         category: 'specialized',
         businessCategory: 'Technical Skills',
         weight: 'technical',
         growth: '0%',
         salary: 'market',
-        minimumLevel: 'beginner',
-        requirementLevel: 'required',
-        metrics: {
-          growth: '0%',
-          salary: 'market',
-          skillScore: 0
-        },
+        skillScore: 0,
         inDevelopmentPlan: false,
         benchmarks: {
           B: false,

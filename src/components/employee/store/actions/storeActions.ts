@@ -27,6 +27,7 @@ export const createStoreActions = (
         level: 'unspecified',
         goalStatus: 'unknown',
         lastUpdated: new Date().toISOString(),
+        confidence: 'medium',
         skillScore: 0,
         subcategory: 'General',
         category: 'specialized',
@@ -34,13 +35,6 @@ export const createStoreActions = (
         weight: 'technical',
         growth: '0%',
         salary: 'market',
-        minimumLevel: 'beginner',
-        requirementLevel: 'required',
-        metrics: {
-          growth: '0%',
-          salary: 'market',
-          skillScore: 0
-        },
         inDevelopmentPlan: false,
         benchmarks: {
           B: false,
@@ -104,6 +98,7 @@ export const createStoreActions = (
             level: 'unspecified',
             goalStatus: 'unknown',
             lastUpdated: new Date().toISOString(),
+            confidence: 'medium',
             skillScore: 0,
             subcategory: 'General',
             category: 'specialized',
@@ -111,13 +106,6 @@ export const createStoreActions = (
             weight: 'technical',
             growth: '0%',
             salary: 'market',
-            minimumLevel: 'beginner',
-            requirementLevel: 'required',
-            metrics: {
-              growth: '0%',
-              salary: 'market',
-              skillScore: 0
-            },
             inDevelopmentPlan: false,
             benchmarks: {
               B: false,

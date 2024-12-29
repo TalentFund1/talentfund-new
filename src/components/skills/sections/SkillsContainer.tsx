@@ -41,6 +41,7 @@ export const SkillsContainer = ({
       level: skill.level as 'beginner' | 'intermediate' | 'advanced' | 'unspecified',
       goalStatus: skill.isSkillGoal ? 'skill_goal' : 'unknown',
       lastUpdated: new Date().toISOString(),
+      confidence: 'medium',
       subcategory: 'General',
       category: 'specialized',
       businessCategory: 'Technical Skills',
@@ -48,13 +49,6 @@ export const SkillsContainer = ({
       growth: '0%',
       salary: 'market',
       skillScore: 0,
-      minimumLevel: 'beginner',
-      requirementLevel: 'required',
-      metrics: {
-        growth: '0%',
-        salary: 'market',
-        skillScore: 0
-      },
       inDevelopmentPlan: false,
       benchmarks: {
         B: false,
