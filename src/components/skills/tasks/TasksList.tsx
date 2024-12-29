@@ -49,7 +49,7 @@ export const TasksList = () => {
             className="flex items-center justify-between py-3 px-4 border border-border rounded-lg hover:bg-background/80 transition-colors"
           >
             <div className="flex-1">
-              <p className="text-sm text-primary leading-tight">{task.title}</p>
+              <p className="text-sm font-medium text-foreground leading-tight">{task.title}</p>
             </div>
             <div className="flex items-center gap-3">
               {task.aiPotential && (
