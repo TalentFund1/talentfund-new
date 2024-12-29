@@ -109,7 +109,7 @@ export const SkillsMatrixRow = ({
         <div className="flex items-center justify-center">
           <Checkbox
             checked={skillState?.inDevelopmentPlan || false}
-            onCheckedChange={handleDevelopmentPlan}
+            onCheckedChange={handleDevelopmentPlanChange}
             className="data-[state=checked]:bg-primary"
           />
         </div>

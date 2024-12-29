@@ -105,7 +105,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             id: `${employeeId}-${title}`,
             employeeId,
             skillId: `${employeeId}-${title}`,
-            title
+            title,
+            inDevelopmentPlan: skill.inDevelopmentPlan || false
           } as EmployeeSkillData;
           return skillData;
         });
