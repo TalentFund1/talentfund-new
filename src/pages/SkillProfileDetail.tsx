@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Sidebar } from "@/components/Sidebar";
 import { SkillProfileHeader } from "@/components/skills/SkillProfileHeader";
 import { SkillProfileMatrix } from "@/components/skills/SkillProfileMatrix";
 import { EmployeeOverview } from "@/components/skills/EmployeeOverview";
@@ -12,10 +14,11 @@ import { CompetencyGraph } from "@/components/skills/CompetencyGraph";
 import { PayBandsTab } from "@/components/skills/PayBandsTab";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/ui/toast";
-import { Sidebar } from "@/components/Sidebar";
 import { TrackProvider } from "@/components/skills/context/TrackContext";
 import { ToggledSkillsProvider } from "@/components/skills/context/ToggledSkillsContext";
-import { roleSkills } from "../components/skills/data/roleSkills";
+import { roleSkills } from '@/components/skills/data/roleSkills';
+import { WorkforceIntelligence } from "@/components/skills/workforce/WorkforceIntelligence";
+import { TasksList } from "@/components/skills/tasks/TasksList";
 
 const SkillProfileDetail = () => {
   const navigate = useNavigate();
@@ -45,13 +48,6 @@ const SkillProfileDetail = () => {
 
   const currentIndex = Object.keys(roleSkills).indexOf(id || "123") + 1;
   const totalProfiles = Object.keys(roleSkills).length;
-
-  console.log('SkillProfileDetail - Rendering with:', {
-    roleId: id,
-    currentRole,
-    jobTitle,
-    track
-  });
 
   return (
     <ToastProvider>
@@ -111,8 +107,10 @@ const SkillProfileDetail = () => {
                       </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="skills">
+                    <TabsContent value="skills" className="space-y-6">
                       <SelectBenchmark />
+                      <WorkforceIntelligence />
+                      <TasksList />
                       <SkillProfileMatrix />
                     </TabsContent>
 
