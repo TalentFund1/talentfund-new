@@ -1,4 +1,4 @@
-import { RoleSkillData } from '../types/SkillTypes';
+import { RoleSkillData, RoleSkillRequirement } from '../../types/roleSkillTypes';
 import { loadRoleSkills, saveRoleSkills, initializeRoleSkills } from './roles/roleStorage';
 import { getUnifiedSkillData } from './skillDatabaseService';
 
@@ -18,13 +18,52 @@ roleIds.forEach(id => {
   
   roleSkills[id] = {
     ...baseSkills,
-    roleTrack: isManagerial ? "Managerial" : "Professional"
+    roleTrack: isManagerial ? "Managerial" : "Professional",
+    specialized: (baseSkills.specialized || []).map(skill => ({
+      ...skill,
+      minimumLevel: 'beginner',
+      requirementLevel: 'required',
+      confidence: 'medium',
+      skillScore: 0,
+      metrics: {
+        growth: skill.growth || '0%',
+        salary: skill.salary || 'market',
+        confidence: 'medium',
+        skillScore: 0
+      }
+    })) as RoleSkillRequirement[],
+    common: (baseSkills.common || []).map(skill => ({
+      ...skill,
+      minimumLevel: 'beginner',
+      requirementLevel: 'required',
+      confidence: 'medium',
+      skillScore: 0,
+      metrics: {
+        growth: skill.growth || '0%',
+        salary: skill.salary || 'market',
+        confidence: 'medium',
+        skillScore: 0
+      }
+    })) as RoleSkillRequirement[],
+    certifications: (baseSkills.certifications || []).map(skill => ({
+      ...skill,
+      minimumLevel: 'beginner',
+      requirementLevel: 'required',
+      confidence: 'medium',
+      skillScore: 0,
+      metrics: {
+        growth: skill.growth || '0%',
+        salary: skill.salary || 'market',
+        confidence: 'medium',
+        skillScore: 0
+      }
+    })) as RoleSkillRequirement[]
   };
   
   console.log(`Initialized role ${id}:`, {
     title: roleSkills[id].title,
     track: roleSkills[id].roleTrack,
-    skillsCount: roleSkills[id].skills.length
+    skillsCount: roleSkills[id].skills?.length || 0
   });
 });
 

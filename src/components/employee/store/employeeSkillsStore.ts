@@ -6,9 +6,8 @@ import { createSkillSelectors } from './selectors/skillSelectors';
 import { createStoreActions } from './actions/storeActions';
 import { EmployeeSkillsStore, EmployeeSkillsStoreState } from './types/storeTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
-import { benchmarkingService } from '../../../services/benchmarking';
-import { EmployeeSkillData, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 import { employees } from '../EmployeeData';
+import { EmployeeSkillData } from '../types/employeeSkillTypes';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -140,7 +139,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               R: false,
               M: false,
               O: false
-            }
+            },
+            skillScore: 0,
+            inDevelopmentPlan: false
           };
           return defaultState;
         }
@@ -148,13 +149,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return state;
       },
 
-      setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
+      setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
         console.log('Setting skill level:', { employeeId, skillTitle, level });
         const store = get();
         store.updateSkillState(employeeId, skillTitle, { level });
       },
 
-      setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: SkillGoalStatus) => {
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
         console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
         const store = get();
         store.updateSkillState(employeeId, skillTitle, { goalStatus });
