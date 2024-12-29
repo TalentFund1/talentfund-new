@@ -31,7 +31,7 @@ export const SkillsMatrixTable = ({
           showCompanySkill={!isRoleBenchmark}
           isRoleBenchmark={isRoleBenchmark}
         />
-        <TableBody>
+        <TableBody className="[&_td]:py-2 [&_td]:px-3">
           {filteredSkills.map((skill) => (
             <SkillsMatrixRow 
               key={skill.title} 

@@ -8,6 +8,12 @@ import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { benchmarkingService } from "../../services/benchmarking";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { SkillsMatrixHeader } from "./skills-matrix/SkillsMatrixHeader";
+import { SkillsMatrixFilters } from "./skills-matrix/SkillsMatrixFilters";
+import { SkillsMatrixTable } from "./skills-matrix/SkillsMatrixTable";
+import { AddEmployeeSkillDialog } from "./skills-matrix/dialog/AddEmployeeSkillDialog";
 
 export const SkillsMatrix = () => {
   const [selectedLevel, setSelectedLevel] = useState("all");
@@ -130,22 +136,33 @@ export const SkillsMatrix = () => {
   }, [storeHasChanges]);
 
   return (
-    <div className="space-y-6">
-      <SkillsMatrixView
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedWeight={selectedWeight}
-        setSelectedWeight={setSelectedWeight}
-        filteredSkills={filteredSkills}
-        hasChanges={hasChanges}
-        onSave={handleSave}
-        onCancel={handleCancel}
-        isRoleBenchmark={false}
-      />
+    <div className="space-y-6 px-4">
+      <Card className="p-6 space-y-6 animate-fade-in bg-white">
+        <SkillsMatrixHeader 
+          hasChanges={hasChanges}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+        
+        <Separator className="mb-6" />
+        
+        <SkillsMatrixFilters 
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedWeight={selectedWeight}
+          setSelectedWeight={setSelectedWeight}
+          addSkillButton={<AddEmployeeSkillDialog />}
+        />
+
+        <SkillsMatrixTable 
+          filteredSkills={filteredSkills}
+          isRoleBenchmark={false}
+        />
+      </Card>
     </div>
   );
 };
