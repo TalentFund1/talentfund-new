@@ -16,7 +16,10 @@ interface EmployeeDetailsProps {
     role: string;
     team: string;
     type: string;
-    skills: ReadonlyArray<{ title: string; level: string; }>;
+    skills: ReadonlyArray<{
+      readonly title: string;
+      readonly level: string;
+    }>;
   };
   id: string;
 }
@@ -57,28 +60,32 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
     value: string | number;
     isLink?: boolean;
   }) => (
-    <div className="space-y-1">
-      <span className="text-sm text-gray-500 flex items-center gap-2">
-        <Icon className="h-4 w-4 text-primary-accent" />
-        {label}
-      </span>
-      {isLink && employee.manager ? (
-        <Link 
-          to={`/employee/${managerId}`}
-          className="font-medium text-primary hover:text-primary-accent transition-colors block"
-        >
-          {value}
-        </Link>
-      ) : (
-        <p className="font-medium text-gray-900">{value}</p>
-      )}
+    <div className="bg-white rounded-lg p-4 border border-border hover:border-primary-accent/50 transition-all duration-300 group">
+      <div className="space-y-2">
+        <span className="text-sm text-gray-500 flex items-center gap-2">
+          <div className="p-2 rounded-md bg-primary-accent/5 group-hover:bg-primary-accent/10 transition-colors">
+            <Icon className="h-4 w-4 text-primary-accent" />
+          </div>
+          {label}
+        </span>
+        {isLink && employee.manager ? (
+          <Link 
+            to={`/employee/${managerId}`}
+            className="font-medium text-primary hover:text-primary-accent transition-colors block"
+          >
+            {value}
+          </Link>
+        ) : (
+          <p className="font-medium text-gray-900">{value || "—"}</p>
+        )}
+      </div>
     </div>
   );
 
   return (
     <>
       <Separator className="my-8" />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <DetailItem icon={Building2} label="Department" value={employee.department} />
         <DetailItem icon={Building} label="Office" value={employee.office} />
         <DetailItem icon={Briefcase} label="Category" value={employee.category} />
