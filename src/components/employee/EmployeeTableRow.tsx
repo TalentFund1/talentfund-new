@@ -1,135 +1,66 @@
-import { Employee } from "../types/employeeTypes";
-import { getSkillProfileId, getLevel } from "../EmployeeTable";
-import { useSkillsMatrixStore } from "../benchmark/skills-matrix/SkillsMatrixState";
-import { useToggledSkills } from "../skills/context/ToggledSkillsContext";
-import { useCompetencyStateReader } from "../skills/competency/CompetencyStateReader";
-import { roleSkills } from "../skills/data/roleSkills";
-import { EmployeeBasicInfo } from "./table/EmployeeBasicInfo";
-import { EmployeeSkillMatch } from "./table/EmployeeSkillMatch";
-import { EmployeeBenchmark } from "./table/EmployeeBenchmark";
-import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
-import { unifiedBenchmarkCalculator } from "../benchmark/analysis/UnifiedBenchmarkCalculator";
-import { useTrack } from "../skills/context/TrackContext";
+import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle2 } from "lucide-react";
+import { getSkillProfileId } from "../../EmployeeTable";
 
-interface EmployeeTableRowProps {
-  employee: Employee;
-  isSelected: boolean;
-  onSelect: (name: string) => void;
+interface EmployeeBasicInfoProps {
+  id: string;
+  name: string;
+  role: string;
   imageUrl: string;
-  selectedSkills?: ReadonlyArray<string>;
-  selectedJobTitle?: ReadonlyArray<string>;
+  isExactMatch: boolean;
+  selectedJobTitle: ReadonlyArray<string>;
 }
 
-export const EmployeeTableRow = ({ 
-  employee, 
-  isSelected, 
-  onSelect, 
-  imageUrl,
-  selectedSkills = [],
-  selectedJobTitle = []
-}: EmployeeTableRowProps) => {
-  const { getSkillState } = useSkillsMatrixStore();
-  const { toggledSkills } = useToggledSkills();
-  const competencyReader = useCompetencyStateReader();
-  const { getEmployeeSkills } = useEmployeeSkillsStore();
-  const { getTrackForRole } = useTrack();
-  const employeeSkills = getEmployeeSkills(employee.id);
-
-  const targetRoleId = selectedJobTitle.length > 0 
-    ? getSkillProfileId(selectedJobTitle[0])
-    : getSkillProfileId(employee.role);
-
-  const employeeLevel = getLevel(employee.role);
-  const track = getTrackForRole(targetRoleId);
-  
-  const { averagePercentage: benchmark } = unifiedBenchmarkCalculator.calculateBenchmark(
-    employeeSkills,
-    employeeSkills,
-    employeeLevel,
-    targetRoleId,
-    track,
-    getSkillState,
-    employee.id
-  );
-
-  console.log('Employee table row benchmark calculation:', {
-    employeeId: employee.id,
-    employeeName: employee.name,
-    targetRoleId,
-    employeeLevel,
-    track,
-    benchmark,
-    skillCount: employeeSkills.length
-  });
-
-  const getSkillMatch = () => {
-    const employeeSkills = getEmployeeSkills(employee.id);
-    
-    if (selectedSkills.length > 0) {
-      const matchingSkills = selectedSkills.filter(skillName => 
-        employeeSkills.some(empSkill => empSkill.title === skillName)
-      );
-      return `${matchingSkills.length}/${selectedSkills.length}`;
-    }
-
-    const roleData = roleSkills[targetRoleId as keyof typeof roleSkills];
-    if (!roleData) return "0/0";
-
-    const allRoleSkills = [
-      ...roleData.specialized,
-      ...roleData.common,
-      ...roleData.certifications
-    ].filter(skill => toggledSkills.has(skill.title));
-
-    const matchingSkills = allRoleSkills.filter(roleSkill => 
-      employeeSkills.some(empSkill => empSkill.title === roleSkill.title)
-    );
-
-    return `${matchingSkills.length}/${allRoleSkills.length}`;
-  };
-
-  const isExactMatch = selectedJobTitle.length > 0 && 
-    getSkillProfileId(employee.role) === getSkillProfileId(selectedJobTitle[0]);
-
+export const EmployeeBasicInfo = ({ 
+  id, 
+  name, 
+  role, 
+  imageUrl, 
+  isExactMatch, 
+  selectedJobTitle 
+}: EmployeeBasicInfoProps) => {
   return (
-    <tr className={`group border-t border-border hover:bg-muted/50 transition-colors w-full ${
-      isExactMatch && selectedJobTitle.length > 0 ? 'bg-blue-50/50' : ''
-    }`}>
-      <EmployeeBasicInfo 
-        id={employee.id}
-        name={employee.name}
-        role={employee.role}
-        imageUrl={imageUrl}
-        isExactMatch={isExactMatch}
-        selectedJobTitle={selectedJobTitle}
-      />
-      
-      {selectedSkills.length === 0 && (
-        <td className="px-6 py-4 w-[150px] text-sm">{employee.department}</td>
-      )}
-      
-      <td className="px-12 py-4 text-center w-[120px]">
-        <span className="text-sm text-muted-foreground font-medium">
-          {getSkillMatch()}
-        </span>
-      </td>
-
-      {selectedSkills.length === 0 && (
-        <EmployeeBenchmark benchmark={benchmark} />
-      )}
-
-      {selectedSkills.length > 0 && (
-        <EmployeeSkillMatch 
-          employeeId={employee.id}
-          selectedSkills={selectedSkills}
+    <>
+      <td className="px-4 py-4 w-[48px]">
+        <input 
+          type="checkbox" 
+          className="rounded border-gray-300"
+          checked={isExactMatch}
+          onChange={() => {}} // Handled by parent
         />
-      )}
-
-      {selectedSkills.length === 0 && (
-        <td className="px-6 py-4 w-[140px] text-right text-sm text-muted-foreground">
-          {employee.lastUpdated}
-        </td>
-      )}
-    </tr>
+      </td>
+      <td className={`px-10 py-4 ${selectedJobTitle.length > 0 ? 'w-[600px]' : 'w-[400px]'}`}>
+        <div className="flex items-center gap-2">
+          <img 
+            src={imageUrl}
+            alt={name}
+            className="w-6 h-6 rounded-full object-cover"
+          />
+          <div className="flex items-center gap-2">
+            <Link to={`/employee/${id}`} className="text-primary hover:text-primary-accent transition-colors text-sm whitespace-nowrap">
+              {name}
+            </Link>
+            {isExactMatch && selectedJobTitle.length > 0 && (
+              <Badge 
+                variant="secondary" 
+                className="text-xs bg-primary-accent/10 text-primary-accent border border-primary-accent/20 hover:bg-primary-accent/15 flex items-center gap-1.5 px-2 py-0.5 font-medium animate-fade-in"
+              >
+                <CheckCircle2 className="w-3 h-3" />
+                Role Match
+              </Badge>
+            )}
+          </div>
+        </div>
+      </td>
+      <td className={`px-6 py-4 ${selectedJobTitle.length > 0 ? 'w-[600px]' : 'w-[350px]'}`}>
+        <Link 
+          to={`/skills/${getSkillProfileId(role)}`} 
+          className="text-sm text-primary hover:text-primary-accent transition-colors whitespace-nowrap"
+        >
+          {role}
+        </Link>
+      </td>
+    </>
   );
 };
