@@ -79,7 +79,7 @@ export const SkillsSummary = () => {
             onItemsChange={setSelectedSkills}
             singleSelect={false}
           />
-          {(selectedSkills.length > 0 || selectedCategory !== "all") && (
+          {selectedSkills.length > 0 && selectedCategory === "all" && (
             <div className="flex justify-end">
               <Button 
                 variant="outline" 

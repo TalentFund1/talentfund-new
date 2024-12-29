@@ -3,6 +3,7 @@ import { SkillBadge } from "../SkillBadge";
 import { Button } from "@/components/ui/button";
 import { DetailedSkill, Certification } from "../types";
 import { useParams } from "react-router-dom";
+import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
 
 interface SkillsContainerProps {
   specializedSkills: DetailedSkill[];
@@ -31,13 +32,13 @@ export const SkillsContainer = ({
     return isExpanded ? skills : skills.slice(0, INITIAL_VISIBLE_COUNT);
   };
 
-  const mapToEmployeeSkillData = (skills: (DetailedSkill | Certification)[]) => {
+  const mapToEmployeeSkillData = (skills: (DetailedSkill | Certification)[]): EmployeeSkillData[] => {
     return skills.map(skill => ({
       id: `${employeeId}-${skill.name}`,
       employeeId: employeeId || '',
       skillId: `${employeeId}-${skill.name}`,
       title: skill.name,
-      level: skill.level,
+      level: skill.level as 'beginner' | 'intermediate' | 'advanced' | 'unspecified',
       goalStatus: skill.isSkillGoal ? 'skill_goal' : 'unknown',
       lastUpdated: new Date().toISOString(),
       confidence: 'medium',
