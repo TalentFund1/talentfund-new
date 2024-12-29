@@ -1,13 +1,247 @@
 import { UnifiedSkill } from '../../types/SkillTypes';
-import { technicalSkills } from './categories/technicalSkills';
-import { commonSkills } from './categories/commonSkills';
-import { certificationSkills } from './categories/certificationSkills';
 
-// Combine all skills into one database
-const allSkills: UnifiedSkill[] = [
-  ...technicalSkills,
-  ...commonSkills,
-  ...certificationSkills
+// Combined universal skills database
+const universalSkillsDatabase: UnifiedSkill[] = [
+  {
+    id: 'SKILL_ML_031',
+    title: "Machine Learning",
+    subcategory: "AI & ML",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "critical",
+    level: "advanced",
+    growth: "35%",
+    salary: "$160,000",
+    skillScore: 85,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "35%",
+      salary: "$160,000",
+      skillScore: 85
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TEN_079',
+    title: "TensorFlow",
+    subcategory: "AI & ML",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "intermediate",
+    growth: "28%",
+    salary: "$145,000",
+    skillScore: 82,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "28%",
+      salary: "$145,000",
+      skillScore: 82
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_NLP_024',
+    title: "Natural Language Processing",
+    subcategory: "AI Applications",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "intermediate",
+    growth: "30%",
+    salary: "$150,000",
+    skillScore: 80,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "30%",
+      salary: "$150,000",
+      skillScore: 80
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_CV_053',
+    title: "Computer Vision",
+    subcategory: "AI Applications",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "intermediate",
+    growth: "25%",
+    salary: "$140,000",
+    skillScore: 78,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "25%",
+      salary: "$140,000",
+      skillScore: 78
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_AGI_037',
+    title: "Agile Methodologies",
+    subcategory: "Project Management",
+    category: "specialized",
+    businessCategory: "Information Technology",
+    weight: "technical",
+    level: "intermediate",
+    growth: "15%",
+    salary: "$125,000",
+    skillScore: 75,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "15%",
+      salary: "$125,000",
+      skillScore: 75
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_NOD_789',
+    title: "Node.js",
+    subcategory: "Backend Development",
+    category: "specialized",
+    businessCategory: "Software Development",
+    weight: "technical",
+    level: "intermediate",
+    growth: "22%",
+    salary: "$125,000",
+    skillScore: 72,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "22%",
+      salary: "$125,000",
+      skillScore: 72
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_GIT_409',
+    title: "Git Version Control",
+    subcategory: "Development Tools",
+    category: "common",
+    businessCategory: "Software Development",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$110,000",
+    skillScore: 70,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$110,000",
+      skillScore: 70
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_COM_227',
+    title: "Communication",
+    subcategory: "Soft Skills",
+    category: "common",
+    businessCategory: "Media and Communications",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$110,000",
+    skillScore: 65,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$110,000",
+      skillScore: 65
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_TEA_214',
+    title: "Team Collaboration",
+    subcategory: "Soft Skills",
+    category: "common",
+    businessCategory: "Media and Communications",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$115,000",
+    skillScore: 68,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$115,000",
+      skillScore: 68
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_PRO_261',
+    title: "Problem Solving",
+    subcategory: "Soft Skills",
+    category: "common",
+    businessCategory: "Physical and Inherent Abilities",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$120,000",
+    skillScore: 70,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$120,000",
+      skillScore: 70
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_CER_160',
+    title: "Certified AI Professional",
+    subcategory: "AI Certification",
+    category: "certification",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$145,000",
+    skillScore: 78,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$145,000",
+      skillScore: 78
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  },
+  {
+    id: 'SKILL_KUB_785',
+    title: "Kubernetes Administrator (CKA)",
+    subcategory: "Container Certification",
+    category: "certification",
+    businessCategory: "Information Technology",
+    weight: "necessary",
+    level: "intermediate",
+    growth: "10%",
+    salary: "$140,000",
+    skillScore: 75,
+    minimumLevel: "beginner",
+    requirementLevel: "required",
+    metrics: {
+      growth: "10%",
+      salary: "$140,000",
+      skillScore: 75
+    },
+    benchmarks: { B: true, R: true, M: true, O: true }
+  }
 ];
 
 export const getSkillByTitle = (title: string | undefined) => {
@@ -16,7 +250,7 @@ export const getSkillByTitle = (title: string | undefined) => {
     return undefined;
   }
 
-  const skill = allSkills.find(skill => 
+  const skill = universalSkillsDatabase.find(skill => 
     skill.title.toLowerCase() === title.toLowerCase()
   );
 
@@ -27,8 +261,8 @@ export const getSkillByTitle = (title: string | undefined) => {
   return skill;
 };
 
-export const getAllSkills = () => allSkills;
+export const getAllSkills = () => universalSkillsDatabase;
 
-console.log('Universal skills database initialized with', allSkills.length, 'skills');
+console.log('Universal skills database initialized with', universalSkillsDatabase.length, 'skills');
 
-export const universalSkillsDatabase = allSkills;
+export { universalSkillsDatabase };
