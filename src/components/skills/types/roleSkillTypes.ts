@@ -1,4 +1,12 @@
-import { SkillLevel, SkillGoalStatus, SkillRequirementLevel, SkillCategory, SkillWeight, SkillMetrics, SkillBenchmark } from './sharedSkillTypes';
+import { 
+  SkillLevel, 
+  SkillGoalStatus, 
+  SkillRequirementLevel, 
+  SkillCategory, 
+  SkillWeight, 
+  SkillMetrics, 
+  SkillBenchmark 
+} from './sharedSkillTypes';
 
 export type { SkillCategory, SkillWeight };
 

@@ -5,7 +5,6 @@ import { Plus } from "lucide-react";
 import { AddSkillToProfileDialog } from "./dialog/AddSkillToProfileDialog";
 import { useParams } from "react-router-dom";
 import { roleSkills } from "./data/roleSkills";
-import { RoleSkillData } from "./types/sharedSkillTypes";
 
 interface SkillProfileHeaderProps {
   skillCount: number;
