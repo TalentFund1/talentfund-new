@@ -25,7 +25,6 @@ export const getUnifiedSkillData = (skillTitle: string | undefined): UnifiedSkil
       metrics: {
         growth: skill.growth,
         salary: skill.salary,
-        confidence: skill.confidence,
         skillScore: 0
       }
     };
@@ -45,14 +44,12 @@ const createDefaultSkill = (title: string): UnifiedSkill => ({
   level: 'intermediate',
   growth: '10%',
   salary: '$0',
-  confidence: 'medium',
   skillScore: 0,
   minimumLevel: 'beginner',
   requirementLevel: 'required',
   metrics: {
     growth: '10%',
     salary: '$0',
-    confidence: 'medium',
     skillScore: 0
   },
   benchmarks: { B: true, R: true, M: true, O: true }

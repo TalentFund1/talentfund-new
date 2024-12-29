@@ -6,7 +6,6 @@ export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  confidence: 'low' | 'medium' | 'high';
   skillScore: number;
   inDevelopmentPlan: boolean;
 }
@@ -15,7 +14,6 @@ export interface EmployeeSkillState {
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
-  confidence?: 'low' | 'medium' | 'high';
   skillScore?: number;
   inDevelopmentPlan?: boolean;
 }
@@ -33,7 +31,6 @@ export interface EmployeeSkillData {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  confidence: 'low' | 'medium' | 'high';
   skillScore: number;
   inDevelopmentPlan: boolean;
   minimumLevel: SkillLevel;
@@ -41,7 +38,6 @@ export interface EmployeeSkillData {
   metrics: {
     growth: string;
     salary: string;
-    confidence: 'low' | 'medium' | 'high';
     skillScore: number;
   };
   benchmarks: {
