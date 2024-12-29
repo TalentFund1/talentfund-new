@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card } from "@/components/ui/card";
 import { useToggledSkills } from "./context/ToggledSkillsContext";
 import { getUnifiedSkillData } from "./data/skillDatabaseService";
+import { roleSkills } from "./data/roleSkills";
 
 export const CompanySkillsTable = () => {
   const { toggledSkills } = useToggledSkills();
@@ -11,11 +12,34 @@ export const CompanySkillsTable = () => {
     toggledSkills: Array.from(toggledSkills)
   });
 
+  // Get all role skills first
+  const allRoleSkills = Object.values(roleSkills).reduce((acc, role) => {
+    const roleSkillsList = [
+      ...role.specialized,
+      ...role.common,
+      ...role.certifications
+    ];
+    roleSkillsList.forEach(skill => {
+      if (!acc.some(s => s.title === skill.title)) {
+        acc.push(skill);
+      }
+    });
+    return acc;
+  }, []);
+
   // Get all toggled skills and enrich them with universal database data
   const uniqueSkills = Array.from(toggledSkills)
     .map(skillTitle => {
       console.log('Getting data for toggled skill:', skillTitle);
-      return getUnifiedSkillData(skillTitle);
+      const roleSkill = allRoleSkills.find(rs => rs.title === skillTitle);
+      const unifiedData = getUnifiedSkillData(skillTitle);
+      
+      // Merge role skill data with unified data if available
+      return roleSkill ? {
+        ...unifiedData,
+        ...roleSkill,
+        id: unifiedData.id || roleSkill.id
+      } : unifiedData;
     })
     .filter(skill => skill !== undefined);
 
