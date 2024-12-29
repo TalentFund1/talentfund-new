@@ -8,6 +8,7 @@ import { SkillBadge } from "./SkillBadge";
 import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
 import { getAllSkills } from './data/skills/allSkills';
+import { Button } from "@/components/ui/button";
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -75,17 +76,26 @@ export const SkillsSummary = () => {
     <div className="space-y-4">
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
-      <div className="mb-4">
-        <div className="space-y-2">
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={selectedSkills}
-            onItemsChange={setSelectedSkills}
-            singleSelect={false}
-          />
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          {selectedSkills.length > 0 && (
+            <Button 
+              variant="ghost" 
+              onClick={() => setSelectedSkills([])}
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Cancel
+            </Button>
+          )}
         </div>
+        <SearchFilter
+          label=""
+          placeholder="Search skills..."
+          items={allSkills}
+          selectedItems={selectedSkills}
+          onItemsChange={setSelectedSkills}
+          singleSelect={false}
+        />
       </div>
 
       <Separator className="my-6" />
