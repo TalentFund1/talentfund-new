@@ -3,6 +3,7 @@ export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillConfidence = 'low' | 'medium' | 'high';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
 export interface DetailedSkill {
   name: string;
@@ -35,7 +36,7 @@ export interface UnifiedSkill extends Skill {
   roleLevel?: string;
   isCompanySkill?: boolean;
   minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
+  requirementLevel: SkillRequirementLevel;
   metrics: {
     growth: string;
     salary: string;
