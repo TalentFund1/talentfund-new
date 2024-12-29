@@ -65,7 +65,13 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         if (!employeeState?.skills) {
           return [];
         }
-        return Object.values(employeeState.skills);
+        const skills = Object.values(employeeState.skills);
+        console.log('Retrieved skills:', {
+          employeeId,
+          skillCount: skills.length,
+          skills: skills.map(s => s.title)
+        });
+        return skills;
       },
 
       setSkillLevel: (employeeId, skillTitle, level) => {
@@ -96,7 +102,10 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Initializing skills for employee:', employeeId);
         set(state => {
           if (!state.skillStates[employeeId]) {
-            state.skillStates[employeeId] = { skills: {}, lastUpdated: new Date().toISOString() };
+            state.skillStates[employeeId] = { 
+              skills: {},
+              lastUpdated: new Date().toISOString()
+            };
           }
           return { skillStates: { ...state.skillStates } };
         });
