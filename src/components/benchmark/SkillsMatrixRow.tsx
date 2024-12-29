@@ -101,7 +101,7 @@ export const SkillsMatrixRow = ({
             />
           ) : (
             <TableCell className="text-center border-r border-blue-200 py-2">
-              <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+              <Badge variant="outline" className="bg-[#F5F5F5] text-[#6B7280] border-[#E5E7EB] px-2 py-0.5 rounded-md text-xs font-normal">
                 Missing Skill
               </Badge>
             </TableCell>
