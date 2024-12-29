@@ -88,11 +88,6 @@ export const SkillsMatrixRow = ({
           ↗ {unifiedSkillData.growth}
         </span>
       </TableCell>
-      {!isRoleBenchmark && (
-        <TableCell className="text-center border-r border-blue-200 py-2">
-          <span className="text-sm text-gray-900">${Math.floor(Math.random() * 50000 + 100000).toLocaleString()}</span>
-        </TableCell>
-      )}
       <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
