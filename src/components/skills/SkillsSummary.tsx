@@ -11,6 +11,16 @@ import { getAllSkills } from './data/skills/allSkills';
 import { Button } from "@/components/ui/button";
 import { getUnifiedSkillData } from './data/skillDatabaseService';
 
+const getLevelPriority = (level: string): number => {
+  switch (level?.toLowerCase()) {
+    case 'advanced': return 4;
+    case 'intermediate': return 3;
+    case 'beginner': return 2;
+    case 'unspecified': return 1;
+    default: return 0;
+  }
+};
+
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
@@ -41,9 +51,9 @@ export const SkillsSummary = () => {
     );
   }, [employeeSkills, selectedSkills]);
 
-  // Categorize filtered skills using universal database metadata
+  // Categorize and sort filtered skills using universal database metadata
   const categorizedSkills = useMemo(() => {
-    return filteredEmployeeSkills.reduce((acc, skill) => {
+    const sorted = filteredEmployeeSkills.reduce((acc, skill) => {
       const unifiedData = getUnifiedSkillData(skill.title);
       const category = unifiedData.category || 'common';
       
@@ -65,6 +75,21 @@ export const SkillsSummary = () => {
       common: [] as EmployeeSkillData[],
       certifications: [] as EmployeeSkillData[]
     });
+
+    // Sort each category by level
+    const sortByLevel = (skills: EmployeeSkillData[]) => {
+      return skills.sort((a, b) => {
+        const levelA = getLevelPriority(a.level);
+        const levelB = getLevelPriority(b.level);
+        return levelB - levelA;
+      });
+    };
+
+    return {
+      specialized: sortByLevel(sorted.specialized),
+      common: sortByLevel(sorted.common),
+      certifications: sortByLevel(sorted.certifications)
+    };
   }, [filteredEmployeeSkills]);
 
   const handleClearAll = () => {
