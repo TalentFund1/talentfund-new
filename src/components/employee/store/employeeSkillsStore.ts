@@ -54,6 +54,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   growth: unifiedData.growth || '0%',
                   salary: unifiedData.salary || 'market',
                   skillScore: 0,
+                  inDevelopmentPlan: false,
                   benchmarks: {
                     B: false,
                     R: false,
@@ -138,6 +139,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             weight: 'technical',
             growth: '0%',
             salary: 'market',
+            skillScore: 0,
+            inDevelopmentPlan: false,
             benchmarks: {
               B: false,
               R: false,
@@ -161,6 +164,12 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
         const store = get();
         store.updateSkillState(employeeId, skillTitle, { goalStatus });
+      },
+
+      setSkillDevelopmentPlan: (employeeId: string, skillTitle: string, inDevelopmentPlan: boolean) => {
+        console.log('Setting skill development plan:', { employeeId, skillTitle, inDevelopmentPlan });
+        const store = get();
+        store.updateSkillState(employeeId, skillTitle, { inDevelopmentPlan });
       },
 
       ...createSkillStateActions(set, get),
