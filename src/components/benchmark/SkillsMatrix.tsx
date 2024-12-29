@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { SkillsMatrixView } from "./skills-matrix/SkillsMatrixView";
-import { useSkillsMatrixState } from "./skills-matrix/SkillsMatrixState";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
@@ -57,7 +56,6 @@ export const SkillsMatrix = () => {
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
             lastUpdated: skillState.lastUpdated || new Date().toISOString(),
-            confidence: skillState.confidence || 'medium',
             category: skillData.category || 'specialized',
             businessCategory: skillData.businessCategory || 'Technical Skills',
             weight: skillData.weight || 'technical'
@@ -81,26 +79,24 @@ export const SkillsMatrix = () => {
   };
 
   // Apply filtering and sorting to employee skills
-
-// Update the type check to remove confidence since it's not in EmployeeSkillData
-const filteredSkills = employeeSkillsData
-  .filter(skill => {
-    if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
-    if (selectedInterest !== "all") {
-      const skillState = getSkillState(id || "", skill.title);
-      if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
-      if (selectedInterest === "not_interested" && skillState.goalStatus !== "not_interested") return false;
-      if (selectedInterest === "unknown" && skillState.goalStatus !== "unknown") return false;
-    }
-    if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
-    if (selectedWeight !== "all" && skill.weight !== selectedWeight) return false;
-    return true;
-  })
-  .sort((a, b) => {
-    const levelDiff = getLevelPriority(a.level) - getLevelPriority(b.level);
-    if (levelDiff !== 0) return levelDiff;
-    return a.title.localeCompare(b.title);
-  });
+  const filteredSkills = employeeSkillsData
+    .filter(skill => {
+      if (selectedLevel !== "all" && skill.level !== selectedLevel) return false;
+      if (selectedInterest !== "all") {
+        const skillState = getSkillState(id || "", skill.title);
+        if (selectedInterest === "skill_goal" && skillState.goalStatus !== "skill_goal") return false;
+        if (selectedInterest === "not_interested" && skillState.goalStatus !== "not_interested") return false;
+        if (selectedInterest === "unknown" && skillState.goalStatus !== "unknown") return false;
+      }
+      if (selectedCategory !== "all" && skill.category !== selectedCategory) return false;
+      if (selectedWeight !== "all" && skill.weight !== selectedWeight) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const levelDiff = getLevelPriority(a.level) - getLevelPriority(b.level);
+      if (levelDiff !== 0) return levelDiff;
+      return a.title.localeCompare(b.title);
+    });
 
   const handleSave = () => {
     console.log('Saving skill changes');

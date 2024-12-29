@@ -84,7 +84,7 @@ export const BenchmarkAnalysis = ({ selectedRole, roleLevel, employeeId }: Bench
 
   const skillGoalMatchingSkills = matchingSkills.filter(skill => {
     const skillState = getSkillState(skill.title, employeeId);
-    return skillState.goalStatus === 'required' || skillState.goalStatus === 'skill_goal';
+    return skillState.goalStatus === 'skill_goal';
   });
 
   console.log('Selected role match calculations:', {
