@@ -56,8 +56,8 @@ export const TasksList = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <div className="bg-[#E5DEFF] p-1.5 rounded">
-                        <Zap className="h-3 w-3 text-[#6E59A5]" />
+                      <div className="bg-[#E5DEFF]/50 p-1.5 rounded">
+                        <Zap className="h-3 w-3 text-[#6E59A5]/80" />
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -66,12 +66,12 @@ export const TasksList = () => {
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <div className="flex items-center gap-1.5 bg-orange-100 px-3 py-1.5 rounded">
-                <PieChart className="h-3 w-3 text-orange-800" />
-                <span className="text-xs font-medium text-orange-800">{task.percentage}%</span>
+              <div className="flex items-center gap-1.5 bg-orange-100/50 px-3 py-1.5 rounded">
+                <PieChart className="h-3 w-3 text-orange-800/80" />
+                <span className="text-xs font-medium text-orange-800/80">{task.percentage}%</span>
               </div>
               <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-background">
-                <Pencil className="h-3 w-3 text-gray-600" />
+                <Pencil className="h-3 w-3 text-gray-600/80" />
               </Button>
             </div>
           </div>
