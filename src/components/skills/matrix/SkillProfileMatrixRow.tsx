@@ -13,32 +13,6 @@ export const SkillProfileMatrixRow = ({
   isToggled,
   onToggle
 }: SkillProfileMatrixRowProps) => {
-  const getTypeColor = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'specialized':
-        return 'bg-blue-100 text-blue-800';
-      case 'certification':
-        return 'bg-purple-100 text-purple-800';
-      case 'common':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getWeightColor = (weight: string = 'necessary') => {
-    switch (weight.toLowerCase()) {
-      case 'critical':
-        return 'bg-red-100 text-red-800';
-      case 'technical':
-        return 'bg-blue-100 text-blue-800';
-      case 'necessary':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   return (
     <TableRow className="border-t border-border hover:bg-muted/50 transition-colors">
       <TableCell className="py-3 px-4 align-middle">
@@ -54,16 +28,6 @@ export const SkillProfileMatrixRow = ({
       <TableCell className="py-3 px-4 align-middle">
         <span className="text-sm block truncate" title={skill.subcategory}>
           {skill.subcategory}
-        </span>
-      </TableCell>
-      <TableCell className="py-3 px-4 align-middle">
-        <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getTypeColor(skill.category)}`}>
-          {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
-        </span>
-      </TableCell>
-      <TableCell className="py-3 px-4 align-middle">
-        <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-sm ${getWeightColor(skill.weight)}`}>
-          {skill.weight.charAt(0).toUpperCase() + skill.weight.slice(1)}
         </span>
       </TableCell>
       <TableCell className="py-3 px-4 align-middle">
