@@ -130,22 +130,35 @@ export const SkillsMatrix = () => {
   }, [storeHasChanges]);
 
   return (
-    <div className="space-y-6">
-      <SkillsMatrixView
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedWeight={selectedWeight}
-        setSelectedWeight={setSelectedWeight}
-        filteredSkills={filteredSkills}
-        hasChanges={hasChanges}
-        onSave={handleSave}
-        onCancel={handleCancel}
-        isRoleBenchmark={false}
-      />
+    <div className="space-y-4 px-4 max-w-[95%] mx-auto">
+      <Card className="p-4 sm:p-6 md:p-8 bg-white">
+        <SkillsMatrixHeader 
+          hasChanges={hasChanges}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+        
+        <Separator className="mb-6" />
+        
+        <SkillsMatrixFilters 
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedInterest={selectedInterest}
+          setSelectedInterest={setSelectedInterest}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedWeight={selectedWeight}
+          setSelectedWeight={setSelectedWeight}
+          addSkillButton={<AddEmployeeSkillDialog />}
+        />
+
+        <div className="overflow-x-auto">
+          <SkillsMatrixTable 
+            filteredSkills={filteredSkills}
+            isRoleBenchmark={false}
+          />
+        </div>
+      </Card>
     </div>
   );
 };
