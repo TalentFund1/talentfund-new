@@ -46,14 +46,12 @@ export const SkillsMatrixRow = ({
     
     const currentSkillState = getSkillState(employeeId, skill.title);
     
-    // If skill level is unspecified and checkbox is unchecked
     if (currentSkillState?.level === 'unspecified' && !checked) {
       console.log('Removing unspecified skill:', {
         employeeId,
         skillTitle: skill.title
       });
       
-      // Remove the skill from employee skills
       await removeEmployeeSkill(employeeId, skill.title);
       
       toast({
@@ -64,7 +62,6 @@ export const SkillsMatrixRow = ({
       return;
     }
 
-    // Normal toggle behavior for other skill levels
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,
@@ -101,9 +98,16 @@ export const SkillsMatrixRow = ({
             />
           ) : (
             <TableCell className="text-center border-r border-blue-200 py-2">
-              <Badge variant="outline" className="bg-[#F5F5F5] text-[#6B7280] border-[#E5E7EB] px-2 py-0.5 rounded-md text-xs font-normal">
-                Missing Skill
-              </Badge>
+              <div className="flex flex-col items-center">
+                <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-gray-100/50">
+                  Unspecified
+                </div>
+                <div className="text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md border-gray-300 bg-[#F9FAFB]">
+                  <Badge variant="outline" className="absolute bg-[#F5F5F5] text-[#6B7280] border-[#E5E7EB] px-2 py-0.5 rounded-md text-xs font-normal">
+                    Missing Skill
+                  </Badge>
+                </div>
+              </div>
             </TableCell>
           )}
         </>
