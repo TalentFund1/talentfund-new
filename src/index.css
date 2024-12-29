@@ -26,6 +26,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+    --primary-accent: #8073ec;
   }
 
   body {
@@ -44,4 +45,17 @@
 
 .skill-progress-bar {
   @apply h-full bg-primary-accent transition-all duration-500;
+}
+
+/* Advanced skill level styles */
+.advanced-skill {
+  @apply bg-primary-accent/10 text-primary-accent border-primary-accent;
+}
+
+.advanced-skill-bg {
+  @apply bg-primary-accent;
+}
+
+.advanced-skill-text {
+  @apply text-primary-accent;
 }
