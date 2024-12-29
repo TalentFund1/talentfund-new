@@ -12,7 +12,7 @@ import { getAllSkills } from './data/skills/allSkills';
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
   const { getEmployeeSkills } = useEmployeeSkillsStore();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 
   // Get all employee skills
   const employeeSkills = useMemo(() => {
@@ -31,10 +31,18 @@ export const SkillsSummary = () => {
     return getAllSkills().map(skill => skill.title);
   }, []);
 
-  // Categorize skills
-  const specializedSkills = employeeSkills.filter(skill => skill.category === 'specialized');
-  const commonSkills = employeeSkills.filter(skill => skill.category === 'common');
-  const certifications = employeeSkills.filter(skill => skill.category === 'certification');
+  // Filter employee skills based on selected skills
+  const filteredEmployeeSkills = useMemo(() => {
+    if (selectedSkills.length === 0) return employeeSkills;
+    return employeeSkills.filter(skill => 
+      selectedSkills.includes(skill.title)
+    );
+  }, [employeeSkills, selectedSkills]);
+
+  // Categorize filtered skills
+  const specializedSkills = filteredEmployeeSkills.filter(skill => skill.category === 'specialized');
+  const commonSkills = filteredEmployeeSkills.filter(skill => skill.category === 'common');
+  const certifications = filteredEmployeeSkills.filter(skill => skill.category === 'certification');
 
   const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
     <Card className="p-6 space-y-4">
@@ -73,8 +81,8 @@ export const SkillsSummary = () => {
             label=""
             placeholder="Search skills..."
             items={allSkills}
-            selectedItems={[]}
-            onItemsChange={() => {}}
+            selectedItems={selectedSkills}
+            onItemsChange={setSelectedSkills}
             singleSelect={false}
           />
         </div>

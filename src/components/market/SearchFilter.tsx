@@ -61,31 +61,32 @@ export const SearchFilter = ({
 
   const removeItem = (item: string) => {
     if (disabled) return;
-    
-    if (singleSelect) {
-      onItemsChange([]);
-    } else {
-      onItemsChange(selectedItems.filter(i => i !== item));
-    }
+    onItemsChange(selectedItems.filter(i => i !== item));
   };
 
   const filteredItems = items.filter(item => 
-    item && typeof item === 'string' && item.toLowerCase().includes(searchQuery.toLowerCase())
+    typeof item === 'string' && item.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className={cn("space-y-2", className)} ref={dropdownRef}>
-      <label className="text-sm text-muted-foreground">
-        {label}
-        {required && <span className="text-destructive ml-1">*</span>}
-      </label>
+      {label && (
+        <label className="text-sm text-muted-foreground">
+          {label}
+          {required && <span className="text-destructive ml-1">*</span>}
+        </label>
+      )}
       <div className="relative">
         <div className="flex flex-wrap gap-2 mb-2">
           {selectedItems.map((item) => (
-            <Badge key={item} variant="secondary" className="flex items-center gap-1">
+            <Badge 
+              key={item} 
+              variant="secondary" 
+              className="flex items-center gap-1 bg-[#F7F9FF] text-primary border-[#E5E7EB] hover:bg-[#F7F9FF]/80"
+            >
               {item}
               <X 
-                className={cn("h-3 w-3", disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
+                className={cn("h-3 w-3", disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:text-primary-accent")}
                 onClick={() => !disabled && removeItem(item)}
               />
             </Badge>
@@ -102,6 +103,7 @@ export const SearchFilter = ({
               if (!disabled) {
                 e.stopPropagation();
                 setSearchQuery(e.target.value);
+                setIsOpen(true);
               }
             }}
             onClick={(e) => {
