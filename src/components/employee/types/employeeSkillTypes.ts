@@ -55,4 +55,4 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-console.log('Employee skill types defined with clear separation from role requirements');
+export { SkillLevel, SkillGoalStatus };
