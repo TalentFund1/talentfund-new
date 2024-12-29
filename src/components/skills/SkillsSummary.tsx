@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { SearchFilter } from "@/components/market/SearchFilter";
+import { SearchFilter } from '@/components/market/SearchFilter';
 import { useParams } from "react-router-dom";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { useState, useMemo } from "react";
@@ -46,14 +46,14 @@ export const SkillsSummary = () => {
   const certifications = filteredEmployeeSkills.filter(skill => skill.category === 'certification');
 
   const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
-    <Card className="p-6 space-y-4">
+    <Card className="p-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">{title}</span>
         <span className="bg-[#8073ec]/10 text-[#1F2144] rounded-full px-2 py-0.5 text-xs font-medium">
           {skills.length}
         </span>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mt-2">
         {skills.map((skill) => {
           const baseSkill: BaseSkill = {
             name: skill.title
@@ -74,36 +74,33 @@ export const SkillsSummary = () => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
-      
       <div className="mb-4">
-        <div className="space-y-2">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
           {selectedSkills.length > 0 && (
-            <div className="flex justify-end mb-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedSkills([])}
-                className="text-sm"
-              >
-                Cancel
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedSkills([])}
+              className="text-sm"
+            >
+              Cancel
+            </Button>
           )}
-          <SearchFilter
-            label=""
-            placeholder="Search skills..."
-            items={allSkills}
-            selectedItems={selectedSkills}
-            onItemsChange={setSelectedSkills}
-            singleSelect={false}
-          />
         </div>
+        <SearchFilter
+          label=""
+          placeholder="Search skills..."
+          items={allSkills}
+          selectedItems={selectedSkills}
+          onItemsChange={setSelectedSkills}
+          singleSelect={false}
+        />
       </div>
 
-      <Separator className="my-6" />
+      <Separator className="my-4" />
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <SkillSection title="Specialized Skills" skills={specializedSkills} />
         <SkillSection title="Common Skills" skills={commonSkills} />
         <SkillSection title="Certifications" skills={certifications} />
