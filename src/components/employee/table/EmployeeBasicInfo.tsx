@@ -9,7 +9,7 @@ interface EmployeeBasicInfoProps {
   role: string;
   imageUrl: string;
   isExactMatch: boolean;
-  selectedJobTitle: string[];
+  selectedJobTitle: ReadonlyArray<string>;
 }
 
 export const EmployeeBasicInfo = ({ 

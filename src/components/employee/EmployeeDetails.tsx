@@ -2,6 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { useEmployeeSkillsStore } from "./store/employeeSkillsStore";
 import { useEmployeeStore } from "./store/employeeStore";
+import { Building2, Briefcase, Users, Calendar, MapPin, UserCircle2, Blocks, Building } from "lucide-react";
 
 interface EmployeeDetailsProps {
   employee: {
@@ -50,51 +51,42 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
     team: employee.team
   });
 
+  const DetailItem = ({ icon: Icon, label, value, isLink = false }: { 
+    icon: React.ElementType; 
+    label: string; 
+    value: string | number;
+    isLink?: boolean;
+  }) => (
+    <div className="space-y-1">
+      <span className="text-sm text-gray-500 flex items-center gap-2">
+        <Icon className="h-4 w-4 text-primary-accent" />
+        {label}
+      </span>
+      {isLink && employee.manager ? (
+        <Link 
+          to={`/employee/${managerId}`}
+          className="font-medium text-primary hover:text-primary-accent transition-colors block"
+        >
+          {value}
+        </Link>
+      ) : (
+        <p className="font-medium text-gray-900">{value}</p>
+      )}
+    </div>
+  );
+
   return (
     <>
       <Separator className="my-8" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Department</span>
-          <p className="font-medium text-gray-900">{employee.department}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Office</span>
-          <p className="font-medium text-gray-900">{employee.office}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Category</span>
-          <p className="font-medium text-gray-900">{employee.category}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Team</span>
-          <p className="font-medium text-gray-900">{employee.team}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Manager</span>
-          {employee.manager ? (
-            <Link 
-              to={`/employee/${managerId}`}
-              className="font-medium text-primary hover:text-primary-accent transition-colors block"
-            >
-              {employee.manager}
-            </Link>
-          ) : (
-            <p className="font-medium text-gray-900">—</p>
-          )}
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Tenure (Years)</span>
-          <p className="font-medium text-gray-900">{tenure}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Type</span>
-          <p className="font-medium text-gray-900">{employee.type}</p>
-        </div>
-        <div className="space-y-1">
-          <span className="text-sm text-gray-500">Skill Count</span>
-          <p className="font-medium text-gray-900">{skillCount}</p>
-        </div>
+        <DetailItem icon={Building2} label="Department" value={employee.department} />
+        <DetailItem icon={Building} label="Office" value={employee.office} />
+        <DetailItem icon={Briefcase} label="Category" value={employee.category} />
+        <DetailItem icon={Users} label="Team" value={employee.team} />
+        <DetailItem icon={UserCircle2} label="Manager" value={employee.manager} isLink={true} />
+        <DetailItem icon={Calendar} label="Tenure (Years)" value={tenure} />
+        <DetailItem icon={MapPin} label="Type" value={employee.type} />
+        <DetailItem icon={Blocks} label="Skill Count" value={skillCount} />
       </div>
     </>
   );
