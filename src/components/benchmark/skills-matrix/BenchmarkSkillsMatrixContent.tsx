@@ -50,6 +50,7 @@ export const BenchmarkSkillsMatrixContent = ({
   console.log('BenchmarkSkillsMatrixContent - Using role:', {
     selectedRole: currentRoleId,
     roleTitle: currentRoleSkills.title,
+    roleLevel: roleLevel,
     skillCount: {
       specialized: currentRoleSkills.specialized?.length || 0,
       common: currentRoleSkills.common?.length || 0,
@@ -99,7 +100,7 @@ export const BenchmarkSkillsMatrixContent = ({
 
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {currentRoleSkills.title}: {props.selectedLevel.toUpperCase()}
+          {currentRoleSkills.title}: {roleLevel.toUpperCase()}
         </h2>
       </div>
 
