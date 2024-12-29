@@ -60,11 +60,11 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
     value: string | number;
     isLink?: boolean;
   }) => (
-    <div className="bg-white rounded-lg p-4 border border-border hover:border-primary-accent/50 transition-all duration-300 group">
+    <div className="bg-white rounded-lg p-4 border border-border hover:shadow-md transition-all duration-300">
       <div className="space-y-2">
         <span className="text-sm text-gray-500 flex items-center gap-2">
-          <div className="p-2 rounded-md bg-primary-accent/5 group-hover:bg-primary-accent/10 transition-colors">
-            <Icon className="h-4 w-4 text-primary-accent" />
+          <div className="p-2 rounded-md bg-white shadow-sm">
+            <Icon className="h-4 w-4 text-primary-accent stroke-[1.5]" />
           </div>
           {label}
         </span>
