@@ -11,10 +11,30 @@ export const BenchmarkSkillsMatrixTableHeader = () => {
   return (
     <TableHeader>
       <TableRow className="bg-[#F7F9FF] border-b border-[#CCDBFF]">
-        <TableHead className="w-[250px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
-        <TableHead className="w-[200px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
+        <TableHead className="w-[280px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
+        <TableHead className="w-[160px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
         <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Skills</TableHead>
         <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Target</TableHead>
+        <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
+          <div className="flex items-center justify-center gap-1">
+            Confidence Score
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-left">Confidence Score:</h4>
+                    <p className="text-sm text-left font-normal">
+                      Indicates the level of confidence in the skill assessment based on available data and validation
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Projected Growth
