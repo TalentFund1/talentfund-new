@@ -7,7 +7,7 @@ import { createStoreActions } from './actions/storeActions';
 import { EmployeeSkillsStore, EmployeeSkillsStoreState } from './types/storeTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { employees } from '../EmployeeData';
-import { EmployeeSkillData } from '../types/employeeSkillTypes';
+import { EmployeeSkillData, SkillLevel, SkillGoalStatus } from '../types/employeeSkillTypes';
 
 export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
   persist(
@@ -39,8 +39,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   employeeId,
                   skillId: `${employeeId}-${skill.title}`,
                   title: skill.title,
-                  level: skill.level || 'unspecified',
-                  goalStatus: 'unknown',
+                  level: skill.level as SkillLevel || 'unspecified',
+                  goalStatus: 'unknown' as SkillGoalStatus,
                   lastUpdated: new Date().toISOString(),
                   confidence: 'medium',
                   skillScore: 0,
@@ -62,18 +62,21 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             });
           }
 
-          set(state => ({
-            skillStates: {
-              ...state.skillStates,
-              [employeeId]: {
-                skills: initialSkills,
-                lastUpdated: new Date().toISOString()
+          set(state => {
+            const newState = {
+              skillStates: {
+                ...state.skillStates,
+                [employeeId]: {
+                  skills: initialSkills,
+                  lastUpdated: new Date().toISOString()
+                }
               }
-            }
-          }));
-
-          // Immediately persist to localStorage after initialization
-          localStorage.setItem('employee-skills-storage', JSON.stringify(get().skillStates));
+            };
+            
+            // Immediately persist to localStorage
+            localStorage.setItem('employee-skills-storage', JSON.stringify(newState.skillStates));
+            return newState;
+          });
         }
 
         const store = get();
@@ -126,8 +129,8 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             employeeId,
             skillId: `${employeeId}-${skillTitle}`,
             title: skillTitle,
-            level: 'unspecified',
-            goalStatus: 'unknown',
+            level: 'unspecified' as SkillLevel,
+            goalStatus: 'unknown' as SkillGoalStatus,
             lastUpdated: new Date().toISOString(),
             confidence: 'medium',
             subcategory: 'General',
@@ -151,22 +154,58 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return state;
       },
 
-      setSkillLevel: (employeeId: string, skillTitle: string, level: string) => {
+      setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => {
         console.log('Setting skill level:', { employeeId, skillTitle, level });
-        const store = get();
-        store.updateSkillState(employeeId, skillTitle, { level });
-        
-        // Immediately persist to localStorage after update
-        localStorage.setItem('employee-skills-storage', JSON.stringify(get().skillStates));
+        set(state => {
+          const newState = {
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                ...state.skillStates[employeeId],
+                skills: {
+                  ...state.skillStates[employeeId]?.skills,
+                  [skillTitle]: {
+                    ...state.skillStates[employeeId]?.skills[skillTitle],
+                    level,
+                    lastUpdated: new Date().toISOString()
+                  }
+                },
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          };
+          
+          // Immediately persist to localStorage
+          localStorage.setItem('employee-skills-storage', JSON.stringify(newState.skillStates));
+          return newState;
+        });
       },
 
-      setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: string) => {
+      setSkillGoalStatus: (employeeId: string, skillTitle: string, goalStatus: SkillGoalStatus) => {
         console.log('Setting skill goal status:', { employeeId, skillTitle, goalStatus });
-        const store = get();
-        store.updateSkillState(employeeId, skillTitle, { goalStatus });
-        
-        // Immediately persist to localStorage after update
-        localStorage.setItem('employee-skills-storage', JSON.stringify(get().skillStates));
+        set(state => {
+          const newState = {
+            skillStates: {
+              ...state.skillStates,
+              [employeeId]: {
+                ...state.skillStates[employeeId],
+                skills: {
+                  ...state.skillStates[employeeId]?.skills,
+                  [skillTitle]: {
+                    ...state.skillStates[employeeId]?.skills[skillTitle],
+                    goalStatus,
+                    lastUpdated: new Date().toISOString()
+                  }
+                },
+                lastUpdated: new Date().toISOString()
+              }
+            }
+          };
+          
+          // Immediately persist to localStorage
+          localStorage.setItem('employee-skills-storage', JSON.stringify(newState.skillStates));
+          return newState;
+        });
       },
 
       ...createSkillStateActions(set, get),
