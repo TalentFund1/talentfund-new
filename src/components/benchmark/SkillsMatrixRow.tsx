@@ -56,10 +56,10 @@ export const SkillsMatrixRow = ({
   const skillScore = getSkillScore(skill.level);
 
   const getScoreColor = (score: number): string => {
-    if (score >= 75) return 'bg-[#8073ec10] text-[#8073ec]';
-    if (score >= 50) return 'bg-[#ff825610] text-[#ff8256]';
-    if (score >= 25) return 'bg-[#00800010] text-[#008000]';
-    return 'bg-[#8E919610] text-[#8E9196]';
+    if (score >= 75) return 'bg-[#8073ec20] text-[#8073ec] shadow-sm font-semibold';
+    if (score >= 50) return 'bg-[#ff825620] text-[#ff8256] shadow-sm font-semibold';
+    if (score >= 25) return 'bg-[#00800020] text-[#008000] shadow-sm font-semibold';
+    return 'bg-[#8E919620] text-[#8E9196] shadow-sm font-semibold';
   };
 
   return (
@@ -94,7 +94,7 @@ export const SkillsMatrixRow = ({
         </>
       )}
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${getScoreColor(skillScore)}`}>
+        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm ${getScoreColor(skillScore)}`}>
           {skillScore}
         </span>
       </TableCell>
@@ -113,7 +113,7 @@ export const SkillsMatrixRow = ({
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
           <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
           <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-medium">M</span>
-          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">S</span>
+          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">D</span>
         </div>
       </TableCell>
     </TableRow>
