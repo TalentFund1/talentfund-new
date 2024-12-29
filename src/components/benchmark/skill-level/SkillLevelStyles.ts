@@ -1,9 +1,7 @@
 export const getLevelStyles = (level: string) => {
-  const baseStyles = 'rounded-t-md px-3 py-1.5 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[26px] text-[#1f2144]';
-
+  const baseStyles = 'rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144]';
+  
   switch (level?.toLowerCase()) {
-    case 'expert':
-      return `${baseStyles} border-2 border-[#4A90E2] bg-[#4A90E2]/10`;
     case 'advanced':
       return `${baseStyles} border-2 border-primary-accent bg-primary-accent/10`;
     case 'intermediate':
@@ -15,25 +13,23 @@ export const getLevelStyles = (level: string) => {
   }
 };
 
-export const getRequirementStyles = (requirement: string, level: string) => {
-  const baseStyles = 'text-xs px-2 py-1.5 font-medium text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 rounded-b-md';
+export const getGoalStatusStyles = (status: string, level: string) => {
+  const baseStyles = 'text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md bg-[#F9FAFB]';
   
-  switch (requirement?.toLowerCase()) {
-    case 'required':
+  switch (status?.toLowerCase()) {
+    case 'skill_goal':
       return `${baseStyles} ${
-        level.toLowerCase() === 'expert'
-          ? 'bg-[#4A90E2]/20 border-[#4A90E2]'
-          : level.toLowerCase() === 'advanced'
-            ? 'bg-primary-accent/20 border-primary-accent'
-            : level.toLowerCase() === 'intermediate'
-              ? 'bg-primary-icon/20 border-primary-icon'
-              : level.toLowerCase() === 'beginner'
-                ? 'bg-[#008000]/20 border-[#008000]'
-                : 'bg-gray-100 border-gray-300'
+        level.toLowerCase() === 'advanced' 
+          ? 'border-primary-accent' 
+          : level.toLowerCase() === 'intermediate'
+            ? 'border-primary-icon'
+            : level.toLowerCase() === 'beginner'
+              ? 'border-[#008000]'
+              : 'border-gray-300'
       }`;
-    case 'not-interested':
+    case 'not_interested':
     case 'unknown':
     default:
-      return `${baseStyles} bg-gray-100 border-gray-300`;
+      return `${baseStyles} border-gray-300`;
   }
 };

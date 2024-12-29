@@ -1,5 +1,5 @@
 // Basic skill levels and statuses
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert' | 'unspecified';
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 export type Track = "Professional" | "Managerial";

@@ -1,9 +1,7 @@
-import { SkillLevel, SkillGoalStatus } from '../types/sharedSkillTypes';
+import { SkillLevel } from '../data/skillLevels';
 
-export const getSkillLevelColor = (level: SkillLevel) => {
+export const getSkillLevelColor = (level: SkillLevel['level']) => {
   switch (level) {
-    case 'expert':
-      return 'text-[#4A90E2] bg-[#4A90E2]/10 border-[#4A90E2]';
     case 'advanced':
       return 'text-primary-accent bg-primary-accent/10 border-primary-accent';
     case 'intermediate':
@@ -15,7 +13,7 @@ export const getSkillLevelColor = (level: SkillLevel) => {
   }
 };
 
-export const getRequirementColor = (requirement: SkillGoalStatus) => {
+export const getRequirementColor = (requirement: SkillLevel['requirement']) => {
   return requirement === 'required' 
     ? 'bg-gray-100/90 text-[#1f2144]'
     : 'bg-gray-50/90 text-[#1f2144]';

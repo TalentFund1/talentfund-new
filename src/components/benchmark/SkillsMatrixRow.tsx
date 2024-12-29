@@ -23,7 +23,7 @@ export const SkillsMatrixRow = ({
   skill, 
   isRoleBenchmark
 }: SkillsMatrixRowProps) => {
-  const { id } = useParams();
+  const { id: employeeId } = useParams();
   const { getSkillState } = useSkillsMatrixStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
@@ -45,13 +45,13 @@ export const SkillsMatrixRow = ({
       {isRoleBenchmark ? (
         <>
           <RoleSkillLevelCell 
-            skillTitle={skill.title}
             initialLevel={skill.level || 'unspecified'}
+            skillTitle={skill.title}
           />
           <StaticSkillLevelCell 
             initialLevel={skill.level || 'unspecified'}
             skillTitle={skill.title}
-            employeeId={id || ''}
+            employeeId={employeeId || ''}
           />
         </>
       ) : (
@@ -64,13 +64,8 @@ export const SkillsMatrixRow = ({
             </div>
           </TableCell>
           <SkillLevelCell 
-            skillName={skill.title}
-            details={{
-              level: skill.level || 'unspecified',
-              required: skill.requirement || 'unknown'
-            }}
-            isLastColumn={false}
-            levelKey="default"
+            initialLevel={skill.level || 'unspecified'}
+            skillTitle={skill.title}
           />
         </>
       )}
