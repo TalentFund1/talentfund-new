@@ -41,28 +41,15 @@ export const BenchmarkSkillsMatrixContent = ({
   ...props
 }: BenchmarkSkillsMatrixContentProps) => {
   const { toggledSkills } = useToggledSkills();
-  const { selectedRole } = useRoleStore();
-  
-  // Use selectedRole from RoleStore instead of passed roleId to ensure consistency
-  const currentRoleId = selectedRole || roleId;
-  const currentRoleSkills = roleSkills[currentRoleId as keyof typeof roleSkills] || roleSkills["123"];
-
-  console.log('BenchmarkSkillsMatrixContent - Using role:', {
-    selectedRole: currentRoleId,
-    roleTitle: currentRoleSkills.title,
-    skillCount: {
-      specialized: currentRoleSkills.specialized?.length || 0,
-      common: currentRoleSkills.common?.length || 0,
-      certifications: currentRoleSkills.certifications?.length || 0
-    }
-  });
+  const { selectedLevel } = useRoleStore();
+  const currentRoleSkills = roleSkills[roleId as keyof typeof roleSkills] || roleSkills["123"];
 
   // Get all toggled skills as an array and filter by category
   const getToggledSkillsCount = (category: string) => {
     const allSkills = [
-      ...(currentRoleSkills.specialized || []),
-      ...(currentRoleSkills.common || []),
-      ...(currentRoleSkills.certifications || [])
+      ...currentRoleSkills.specialized,
+      ...currentRoleSkills.common,
+      ...currentRoleSkills.certifications
     ];
 
     return allSkills.filter(skill => {
@@ -70,11 +57,11 @@ export const BenchmarkSkillsMatrixContent = ({
 
       switch (category) {
         case 'specialized':
-          return currentRoleSkills.specialized?.some(s => s.title === skill.title);
+          return currentRoleSkills.specialized.some(s => s.title === skill.title);
         case 'common':
-          return currentRoleSkills.common?.some(s => s.title === skill.title);
+          return currentRoleSkills.common.some(s => s.title === skill.title);
         case 'certification':
-          return currentRoleSkills.certifications?.some(s => s.title === skill.title);
+          return currentRoleSkills.certifications.some(s => s.title === skill.title);
         default:
           return true;
       }
@@ -88,10 +75,12 @@ export const BenchmarkSkillsMatrixContent = ({
     certification: getToggledSkillsCount('certification')
   };
 
+  console.log('BenchmarkSkillsMatrixContent - Skill counts:', skillCounts);
+
   return (
     <>
       <CategorizedSkills 
-        roleId={currentRoleId}
+        roleId={roleId}
         employeeId={employeeId}
       />
 
@@ -99,7 +88,7 @@ export const BenchmarkSkillsMatrixContent = ({
 
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {currentRoleSkills.title}: {props.selectedLevel.toUpperCase()}
+          {getRoleTitle(roleId)}: {selectedLevel.toUpperCase()}
         </h2>
       </div>
 
@@ -114,4 +103,14 @@ export const BenchmarkSkillsMatrixContent = ({
       />
     </>
   );
+};
+
+const getRoleTitle = (id: string) => {
+  const roleTitles: { [key: string]: string } = {
+    "123": "AI Engineer",
+    "124": "Backend Engineer",
+    "125": "Frontend Engineer",
+    "126": "Engineering Manager"
+  };
+  return roleTitles[id] || "AI Engineer";
 };
