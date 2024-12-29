@@ -30,6 +30,8 @@ export const SkillsMatrixRow = ({
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
     skillId: unifiedSkillData.id,
+    originalSubcategory: skill.subcategory,
+    unifiedSubcategory: unifiedSkillData.subcategory,
     isRoleBenchmark,
     originalGrowth: skill.growth,
     unifiedGrowth: unifiedSkillData.growth
@@ -38,7 +40,7 @@ export const SkillsMatrixRow = ({
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
+      <TableCell className="border-r border-blue-200 py-2">{unifiedSkillData.subcategory}</TableCell>
       {isRoleBenchmark ? (
         <>
           <RoleSkillLevelCell 
