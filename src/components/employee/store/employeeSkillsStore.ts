@@ -43,7 +43,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   employeeId,
                   skillId: `${employeeId}-${skill.title}`,
                   title: skill.title,
-                  level: skill.level || 'unspecified',
+                  level: skill.level as SkillLevel || 'unspecified',
                   goalStatus: 'unknown',
                   lastUpdated: new Date().toISOString(),
                   confidence: 'medium',
@@ -106,7 +106,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
             employeeId,
             skillId: `${employeeId}-${title}`,
             title,
-            inDevelopmentPlan: skill.inDevelopmentPlan || false
+            inDevelopmentPlan: (skill as EmployeeSkillData).inDevelopmentPlan || false
           } as EmployeeSkillData;
           return skillData;
         });
@@ -120,7 +120,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
         return allSkills;
       },
 
-      getSkillState: (employeeId: string, skillTitle: string) => {
+      getSkillState: (employeeId: string, skillTitle: string): EmployeeSkillData => {
         console.log('Getting skill state:', { employeeId, skillTitle });
         const state = get().skillStates[employeeId]?.skills[skillTitle];
         

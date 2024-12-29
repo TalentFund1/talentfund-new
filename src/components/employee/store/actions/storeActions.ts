@@ -29,6 +29,7 @@ export const createStoreActions = (
         lastUpdated: new Date().toISOString(),
         confidence: 'medium',
         skillScore: 0,
+        inDevelopmentPlan: false,
         subcategory: 'General',
         category: 'specialized',
         businessCategory: 'Technical Skills',
@@ -41,7 +42,7 @@ export const createStoreActions = (
           M: false,
           O: false
         }
-      };
+      } as EmployeeSkillData;
 
       const updatedSkillStates = {
         ...state.skillStates,
