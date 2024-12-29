@@ -1,6 +1,6 @@
-import { SkillLevel } from '../data/skillLevels';
+import { SkillLevel } from '../types/sharedSkillTypes';
 
-export const getSkillLevelColor = (level: SkillLevel['level']) => {
+export const getSkillLevelColor = (level: SkillLevel) => {
   switch (level) {
     case 'expert':
       return 'text-purple-600 bg-purple-100/80 border-purple-600';
