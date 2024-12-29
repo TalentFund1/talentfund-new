@@ -6,6 +6,7 @@ import { RoleSkillLevelCell } from "./RoleSkillLevelCell";
 import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { useParams } from "react-router-dom";
+import { UnifiedSkill } from "../skills/types/SkillTypes";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -15,8 +16,9 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
     requirement?: string;
+    category?: string;
   };
-  isRoleBenchmark: boolean;
+  isRoleBenchmark?: boolean;
 }
 
 const getSkillScore = (level: string): number => {
@@ -34,7 +36,7 @@ const getSkillScore = (level: string): number => {
 
 export const SkillsMatrixRow = ({ 
   skill, 
-  isRoleBenchmark
+  isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
   const { getSkillState } = useSkillsMatrixStore();
@@ -52,6 +54,13 @@ export const SkillsMatrixRow = ({
   });
 
   const skillScore = getSkillScore(skill.level);
+
+  const getScoreColor = (score: number): string => {
+    if (score >= 75) return 'bg-[#8073ec10] text-[#8073ec]';
+    if (score >= 50) return 'bg-[#ff825610] text-[#ff8256]';
+    if (score >= 25) return 'bg-[#00800010] text-[#008000]';
+    return 'bg-[#8E919610] text-[#8E9196]';
+  };
 
   return (
     <TableRow className="group border-b border-gray-200">
@@ -85,12 +94,7 @@ export const SkillsMatrixRow = ({
         </>
       )}
       <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${
-          skillScore >= 75 ? 'bg-green-100 text-green-800' :
-          skillScore >= 50 ? 'bg-blue-100 text-blue-800' :
-          skillScore >= 25 ? 'bg-orange-100 text-orange-800' :
-          'bg-red-100 text-red-800'
-        }`}>
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm ${getScoreColor(skillScore)}`}>
           {skillScore}
         </span>
       </TableCell>

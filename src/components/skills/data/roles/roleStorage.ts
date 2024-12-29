@@ -1,4 +1,4 @@
-import { RoleSkillData } from '../../types/SkillTypes';
+import { RoleSkillData } from '../../types/roleSkillTypes';
 import { getUnifiedSkillData } from '../skillDatabaseService';
 import { getRoleTitle, getRoleSoc, getRoleDefaultTrack } from './roleDefinitions';
 
@@ -68,7 +68,9 @@ export const initializeRoleSkills = (roleId: string): RoleSkillData => {
   console.log('Initializing new role skills:', roleId);
   
   return {
+    roleId,
     title: getRoleTitle(roleId),
+    track: getRoleDefaultTrack(roleId) as "Professional" | "Managerial",
     soc: getRoleSoc(roleId),
     function: "Engineering",
     mappedTitle: "",
@@ -76,8 +78,8 @@ export const initializeRoleSkills = (roleId: string): RoleSkillData => {
     description: "",
     roleTrack: getRoleDefaultTrack(roleId),
     skills: [],
-    specialized: [],  // Added missing property
-    common: [],      // Added missing property
-    certifications: [] // Added missing property
+    specialized: [],
+    common: [],
+    certifications: []
   };
 };
