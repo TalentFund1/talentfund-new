@@ -9,6 +9,7 @@ import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
 import { getAllSkills } from './data/skills/allSkills';
 import { Button } from "@/components/ui/button";
+import { getUnifiedSkillData } from './data/skillDatabaseService';
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -40,10 +41,31 @@ export const SkillsSummary = () => {
     );
   }, [employeeSkills, selectedSkills]);
 
-  // Categorize filtered skills
-  const specializedSkills = filteredEmployeeSkills.filter(skill => skill.category === 'specialized');
-  const commonSkills = filteredEmployeeSkills.filter(skill => skill.category === 'common');
-  const certifications = filteredEmployeeSkills.filter(skill => skill.category === 'certification');
+  // Categorize filtered skills using universal database metadata
+  const categorizedSkills = useMemo(() => {
+    return filteredEmployeeSkills.reduce((acc, skill) => {
+      const unifiedData = getUnifiedSkillData(skill.title);
+      const category = unifiedData.category || 'common';
+      
+      switch (category) {
+        case 'specialized':
+          acc.specialized.push(skill);
+          break;
+        case 'certification':
+          acc.certifications.push(skill);
+          break;
+        default:
+          acc.common.push(skill);
+          break;
+      }
+      
+      return acc;
+    }, {
+      specialized: [] as EmployeeSkillData[],
+      common: [] as EmployeeSkillData[],
+      certifications: [] as EmployeeSkillData[]
+    });
+  }, [filteredEmployeeSkills]);
 
   const handleCancelSelection = () => {
     setSelectedSkills([]);
@@ -108,9 +130,9 @@ export const SkillsSummary = () => {
       <Separator className="my-6" />
 
       <div className="space-y-6">
-        <SkillSection title="Specialized Skills" skills={specializedSkills} />
-        <SkillSection title="Common Skills" skills={commonSkills} />
-        <SkillSection title="Certifications" skills={certifications} />
+        <SkillSection title="Specialized Skills" skills={categorizedSkills.specialized} />
+        <SkillSection title="Common Skills" skills={categorizedSkills.common} />
+        <SkillSection title="Certifications" skills={categorizedSkills.certifications} />
       </div>
     </div>
   );
