@@ -1,60 +1,56 @@
-import { SkillCategory, SkillWeight } from '../../skills/types/SkillTypes';
+import { 
+  SkillLevel, 
+  SkillGoalStatus, 
+  BaseSkill, 
+  SkillBenchmark, 
+  SkillMetrics 
+} from './sharedSkillTypes';
 
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillGoalStatus = 'skill_goal' | 'not_interested' | 'unknown';
-export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
-
+// Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
   skillScore: number;
   inDevelopmentPlan: boolean;
+  removed?: boolean;
 }
 
+// Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
   skillScore?: number;
   inDevelopmentPlan?: boolean;
+  removed?: boolean;
 }
 
-export interface EmployeeSkillData {
-  id: string;
+// Complete employee skill data
+export interface EmployeeSkillData extends BaseSkill {
   employeeId: string;
   skillId: string;
-  title: string;
-  subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  skillScore: number;
   minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
-  metrics: {
-    growth: string;
-    salary: string;
-    skillScore: number;
-  };
+  requirementLevel: 'required' | 'preferred' | 'optional';
+  metrics: SkillMetrics;
   growth: string;
   salary: string;
   inDevelopmentPlan: boolean;
-  benchmarks: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
+  benchmarks: SkillBenchmark;
+  removed?: boolean;
 }
 
+// Achievement tracking
 export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
+// Complete employee skills data structure
 export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkillAchievement[];
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
 }
+
+console.log('Employee skill types defined with clear separation from role requirements');

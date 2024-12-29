@@ -11,6 +11,7 @@ import { SkillMappingHeader } from './header/SkillMappingHeader';
 import { SkillProfileMatrixFilters } from './matrix/SkillProfileMatrixFilters';
 import { SkillProfileMatrixContent } from './matrix/SkillProfileMatrixContent';
 import { normalizeSkillTitle } from './utils/normalization';
+import { useEmployeeSkillsStore } from '../employee/store/employeeSkillsStore';
 
 type SortField = 'growth' | 'salary' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -22,10 +23,11 @@ export const SkillProfileMatrix = () => {
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const { toast } = useToast();
-  const { id } = useParams();
+  const { id: employeeId } = useParams();
   const { toggledSkills, setToggledSkills } = useToggledSkills();
+  const { getSkillState, updateSkillState } = useEmployeeSkillsStore();
 
-  const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
+  const currentRoleSkills = roleSkills[employeeId as keyof typeof roleSkills] || roleSkills["123"];
 
   const calculateToggledSkillCounts = () => {
     const allSkills = [
@@ -136,18 +138,43 @@ export const SkillProfileMatrix = () => {
   })();
 
   const handleToggleSkill = (skillTitle: string) => {
+    if (!employeeId) return;
+
+    const skillState = getSkillState(employeeId, skillTitle);
     const newToggledSkills = new Set(toggledSkills);
-    if (newToggledSkills.has(skillTitle)) {
+    const isCurrentlyToggled = newToggledSkills.has(skillTitle);
+
+    // Handle unspecified level skills differently
+    if (skillState.level === 'unspecified' && isCurrentlyToggled) {
+      // Remove unspecified skill when unchecked
       newToggledSkills.delete(skillTitle);
+      updateSkillState(employeeId, skillTitle, {
+        removed: true
+      });
+      
+      toast({
+        title: "Skill Removed",
+        description: `${skillTitle} has been removed from your skills as it was unspecified.`,
+        variant: "destructive"
+      });
     } else {
-      newToggledSkills.add(skillTitle);
+      // Normal toggle behavior for other skill levels
+      if (isCurrentlyToggled) {
+        newToggledSkills.delete(skillTitle);
+        toast({
+          title: "Skill Updated",
+          description: `${skillTitle} has been removed from your selected skills.`
+        });
+      } else {
+        newToggledSkills.add(skillTitle);
+        toast({
+          title: "Skill Updated",
+          description: `${skillTitle} has been added to your selected skills.`
+        });
+      }
     }
+
     setToggledSkills(newToggledSkills);
-    
-    toast({
-      title: "Skill Updated",
-      description: `${skillTitle} has been ${newToggledSkills.has(skillTitle) ? 'added to' : 'removed from'} your skills.`,
-    });
   };
 
   return (
