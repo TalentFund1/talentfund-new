@@ -65,7 +65,7 @@ export const SkillProfileMatrixRow = ({
             id={`skill-growth-${skill.title}`}
             checked={skillState.inDevelopmentPlan}
             onCheckedChange={handleDevelopmentPlanChange}
-            className="h-5 w-5 rounded-md border-2 border-[#E5DEFF] data-[state=checked]:border-[#8073ec] data-[state=checked]:bg-[#8073ec] hover:border-[#8073ec]/50 transition-colors"
+            className="h-5 w-5 rounded-md border-2 border-gray-200 data-[state=checked]:border-gray-400 data-[state=checked]:bg-gray-400 hover:border-gray-300 transition-colors"
           >
             <Check className="h-3.5 w-3.5 text-white" />
           </Checkbox>
