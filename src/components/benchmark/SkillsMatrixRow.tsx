@@ -10,29 +10,8 @@ interface SkillsTableRowProps {
   isEven: boolean;
 }
 
-const getSkillScore = (level: string): number => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return Math.floor(Math.random() * 26) + 75; // 75-100
-    case 'intermediate':
-      return Math.floor(Math.random() * 26) + 50; // 50-75
-    case 'beginner':
-      return Math.floor(Math.random() * 26) + 25; // 25-50
-    default:
-      return Math.floor(Math.random() * 26); // 0-25
-  }
-};
-
-const getScoreColor = (score: number): string => {
-  if (score >= 75) return 'bg-blue-50 text-blue-700';
-  if (score >= 50) return 'bg-green-50 text-green-700';
-  if (score >= 25) return 'bg-orange-50 text-orange-700';
-  return 'bg-gray-50 text-gray-700';
-};
-
 export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
   const { id } = useParams();
-  const skillScore = getSkillScore(skill.level);
   
   const getSkillType = (skillTitle: string): string => {
     const currentRoleSkills = roleSkills[id as keyof typeof roleSkills] || roleSkills["123"];
@@ -47,6 +26,13 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
       return 'Certification';
     }
     return 'Uncategorized';
+  };
+
+  const getScoreColor = (score: number): string => {
+    if (score >= 75) return 'bg-[#8073ec]/10 text-[#8073ec]';
+    if (score >= 50) return 'bg-[#ff8256]/10 text-[#ff8256]';
+    if (score >= 25) return 'bg-[#008000]/10 text-[#008000]';
+    return 'bg-[#8E9196]/10 text-[#8E9196]';
   };
 
   const getLevelBackgroundColor = (level: string) => {
@@ -76,6 +62,7 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
   };
 
   const skillType = getSkillType(skill.title);
+  const skillScore = skill.skillScore || 0;
 
   return (
     <TableRow className={`group transition-all duration-200 hover:bg-muted/50 ${isEven ? 'bg-muted/5' : ''}`}>
@@ -105,13 +92,6 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
       <TableCell className="text-center border-r border-blue-200/60 group-hover:bg-transparent py-4">
         <span className={`inline-flex items-center justify-center px-3 py-1.5 rounded-full text-sm ${getScoreColor(skillScore)}`}>
           {skillScore}
-        </span>
-      </TableCell>
-      <TableCell className="text-center border-r border-blue-200/60 group-hover:bg-transparent py-4">
-        <span className={`inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-          skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-        }`}>
-          ↗ {skill.growth}
         </span>
       </TableCell>
     </TableRow>
