@@ -22,13 +22,12 @@ export interface BaseSkill {
   minimumLevel: SkillLevel;
   requirementLevel: SkillRequirementLevel;
   metrics: SkillMetrics;
-  skillScore?: number;
+  skillScore: number;
 }
 
 // Common types
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillConfidence = 'low' | 'medium' | 'high';
 
 // Skill benchmarking data
 export interface SkillBenchmark {

@@ -1,41 +1,13 @@
-import { SkillLevel, SkillCategory, SkillWeight, SkillMetrics } from './sharedSkillTypes';
+import { SkillLevel, SkillGoalStatus } from './sharedSkillTypes';
+import { UnifiedSkill } from './SkillTypes';
 
-export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
-
-export interface RoleSkillRequirement {
-  id: string;
-  title: string;
-  subcategory: string;
-  category: SkillCategory;
-  businessCategory: string;
-  weight: SkillWeight;
-  minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
+export interface RoleSkill extends UnifiedSkill {
   level: SkillLevel;
-  growth: string;
-  salary: string;
-  skillScore: number;
-  benchmarks: {
-    B: boolean;
-    R: boolean;
-    M: boolean;
-    O: boolean;
-  };
-  metrics: SkillMetrics;
+  goalStatus?: SkillGoalStatus;
 }
 
-export interface RoleSkillData {
-  roleId: string;
+export interface RoleSkillRequirement {
   title: string;
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-  roleTrack?: "Professional" | "Managerial";
-  track: "Professional" | "Managerial";
-  specialized: RoleSkillRequirement[];
-  common: RoleSkillRequirement[];
-  certifications: RoleSkillRequirement[];
-  skills: RoleSkillRequirement[];
+  level: SkillLevel;
+  required: boolean;
 }

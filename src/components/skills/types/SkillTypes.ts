@@ -4,8 +4,11 @@ import {
   SkillRequirementLevel,
   SkillMetrics,
   SkillWeight,
-  SkillCategory
+  SkillCategory,
+  BaseSkill
 } from './sharedSkillTypes';
+
+export { SkillWeight, SkillCategory };
 
 export interface DetailedSkill {
   name: string;
@@ -13,8 +16,7 @@ export interface DetailedSkill {
   isSkillGoal: boolean;
 }
 
-export interface Skill {
-  id: string;
+export interface Skill extends BaseSkill {
   title: string;
   subcategory: string;
   category: SkillCategory;
@@ -55,12 +57,4 @@ export interface RoleSkillData {
   common: UnifiedSkill[];
   certifications: UnifiedSkill[];
   skills: UnifiedSkill[];
-}
-
-export interface SimpleSkill {
-  title: string;
-  subcategory: string;
-  businessCategory?: string;
-  level: string;
-  growth: string;
 }
