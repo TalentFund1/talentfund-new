@@ -9,32 +9,12 @@ import { useParams } from "react-router-dom";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
+import { Badge } from "../ui/badge";
 
 interface SkillsMatrixRowProps {
-  skill: {
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
-    requirement?: string;
-    category?: string;
-  };
+  skill: UnifiedSkill & { hasSkill?: boolean };
   isRoleBenchmark?: boolean;
 }
-
-const getSkillScore = (level: string): number => {
-  switch (level.toLowerCase()) {
-    case 'advanced':
-      return Math.floor(Math.random() * 26) + 75; // 75-100
-    case 'intermediate':
-      return Math.floor(Math.random() * 26) + 50; // 50-75
-    case 'beginner':
-      return Math.floor(Math.random() * 26) + 25; // 25-50
-    default:
-      return Math.floor(Math.random() * 26); // 0-25
-  }
-};
 
 export const SkillsMatrixRow = ({ 
   skill, 
@@ -52,10 +32,11 @@ export const SkillsMatrixRow = ({
     isRoleBenchmark,
     originalGrowth: skill.growth,
     unifiedGrowth: unifiedSkillData.growth,
-    salary: unifiedSkillData.salary
+    salary: unifiedSkillData.salary,
+    hasSkill: skill.hasSkill
   });
 
-  const skillScore = getSkillScore(skill.level);
+  const skillScore = Math.floor(Math.random() * 26) + (skill.hasSkill ? 50 : 25);
   const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
 
   const handleDevelopmentPlanChange = (checked: boolean) => {
@@ -89,11 +70,19 @@ export const SkillsMatrixRow = ({
             initialLevel={skill.level || 'unspecified'}
             skillTitle={skill.title}
           />
-          <StaticSkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
-            employeeId={employeeId || ''}
-          />
+          {skill.hasSkill ? (
+            <StaticSkillLevelCell 
+              initialLevel={skill.level || 'unspecified'}
+              skillTitle={skill.title}
+              employeeId={employeeId || ''}
+            />
+          ) : (
+            <TableCell className="text-center border-r border-blue-200 py-2">
+              <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                Missing Skill
+              </Badge>
+            </TableCell>
+          )}
         </>
       ) : (
         <>

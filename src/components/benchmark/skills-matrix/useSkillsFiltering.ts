@@ -5,6 +5,7 @@ import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { useEmployeeSkillsStore } from "../../employee/store/employeeSkillsStore";
 import { useRoleStore } from "../RoleBenchmark";
 import { useMemo } from "react";
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
 export const useSkillsFiltering = (
   employeeId: string,
@@ -44,8 +45,6 @@ export const useSkillsFiltering = (
       toggledSkills: Array.from(toggledSkills)
     });
 
-    let skills = [...employeeSkills];
-
     const roleData = roleSkills[currentRoleId as keyof typeof roleSkills];
     if (!roleData) {
       console.warn('No role data found for:', currentRoleId);
@@ -58,34 +57,45 @@ export const useSkillsFiltering = (
       ...(roleData.certifications || [])
     ];
 
-    console.log('Filtering skills for role:', {
-      roleId: currentRoleId,
-      roleTitle: roleData.title,
-      totalSkills: allRoleSkills.length,
-      skillTitles: allRoleSkills.map(s => s.title)
-    });
+    // Get all toggled skills from role skills
+    const toggledRoleSkills = allRoleSkills
+      .filter(skill => toggledSkills.has(skill.title))
+      .map(skill => {
+        const unifiedData = getUnifiedSkillData(skill.title);
+        const hasSkill = employeeSkills.some(empSkill => empSkill.title === skill.title);
+        
+        return {
+          ...skill,
+          id: unifiedData.id,
+          category: unifiedData.category,
+          weight: unifiedData.weight,
+          subcategory: unifiedData.subcategory,
+          hasSkill,
+          minimumLevel: 'beginner',
+          requirementLevel: 'required',
+          metrics: {
+            growth: unifiedData.growth,
+            salary: unifiedData.salary,
+            skillScore: 0
+          }
+        } as UnifiedSkill & { hasSkill: boolean };
+      });
 
-    skills = skills.filter(empSkill => {
-      const isRoleSkill = allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title);
-      const isToggled = toggledSkills.has(empSkill.title);
-      return isRoleSkill && isToggled;
+    console.log('Filtered toggled skills:', {
+      totalSkills: toggledRoleSkills.length,
+      missingSkills: toggledRoleSkills.filter(s => !s.hasSkill).length,
+      presentSkills: toggledRoleSkills.filter(s => s.hasSkill).length
     });
 
     if (selectedCategory !== 'all') {
-      skills = skills.filter(skill => {
-        const skillData = getUnifiedSkillData(skill.title);
-        return skillData?.category === selectedCategory;
-      });
+      return toggledRoleSkills.filter(skill => skill.category === selectedCategory);
     }
 
     if (selectedWeight !== 'all') {
-      skills = skills.filter(skill => {
-        const skillData = getUnifiedSkillData(skill.title);
-        return skillData?.weight === selectedWeight.toLowerCase();
-      });
+      return toggledRoleSkills.filter(skill => skill.weight === selectedWeight.toLowerCase());
     }
 
-    return skills;
+    return toggledRoleSkills;
   }, [
     employeeId,
     currentRoleId,
