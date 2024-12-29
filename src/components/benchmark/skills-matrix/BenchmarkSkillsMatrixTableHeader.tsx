@@ -14,7 +14,7 @@ export const BenchmarkSkillsMatrixTableHeader = () => {
         <TableHead className="w-[250px] border-r border-[#CCDBFF] py-3 font-medium">Skill Title</TableHead>
         <TableHead className="w-[200px] border-r border-[#CCDBFF] py-3 font-medium">Subcategory</TableHead>
         <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Skills</TableHead>
-        <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Role Target</TableHead>
+        <TableHead className="w-[150px] text-center border-r border-[#CCDBFF] py-3 font-medium">Employee Skills</TableHead>
         <TableHead className="w-[120px] text-center border-r border-[#CCDBFF] py-3 font-medium">
           <div className="flex items-center justify-center gap-1">
             Projected Growth
