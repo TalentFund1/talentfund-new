@@ -1,7 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { SkillLevelCell } from "../SkillLevelCell";
-import { StaticSkillLevelCell } from "../StaticSkillLevelCell";
 import { RoleSkillLevelCell } from "../RoleSkillLevelCell";
+import { StaticSkillLevelCell } from "../StaticSkillLevelCell";
 import { useSkillsMatrixStore } from "./SkillsMatrixState";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 import { useParams } from "react-router-dom";
