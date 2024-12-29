@@ -32,7 +32,6 @@ export const initializeEmployeeSkills = (
       weight: unifiedData.weight,
       growth: unifiedData.growth,
       salary: unifiedData.salary,
-      confidence: 'medium',
       skillScore: 0,
       minimumLevel: 'beginner',
       requirementLevel: 'required',
