@@ -21,7 +21,6 @@ export const SkillProfileHeader = ({ profile }: { profile: RoleSkillData }) => {
       {isEditing && (
         <EditSkillProfileForm 
           profile={profile}
-          onClose={() => setIsEditing(false)}
         />
       )}
     </div>
