@@ -33,6 +33,12 @@ export const SkillsSummary = () => {
     return getEmployeeSkills(employeeId);
   }, [employeeId, getEmployeeSkills]);
 
+  console.log('Employee skills loaded:', {
+    employeeId,
+    skillCount: employeeSkills.length,
+    skills: employeeSkills.map(s => ({ title: s.title, level: s.level }))
+  });
+
   // Get all available skills from universal database for search
   const allSkills = useMemo(() => {
     return getAllSkills().map(skill => skill.title);
@@ -56,11 +62,11 @@ export const SkillsSummary = () => {
     return skills;
   }, [employeeSkills, selectedSkills, selectedCategory]);
 
-  // Categorize skills by status (Current, Developing, Adjacent)
+  // Categorize skills by level and status
   const categorizedSkills = useMemo(() => {
     return {
       current: filteredEmployeeSkills.filter(skill => 
-        skill.level === 'advanced' || skill.level === 'intermediate'
+        getLevelPriority(skill.level) >= getLevelPriority('intermediate')
       ),
       developing: filteredEmployeeSkills.filter(skill => 
         skill.level === 'beginner' || skill.goalStatus === 'skill_goal'
@@ -176,9 +182,21 @@ export const SkillsSummary = () => {
       <Separator className="my-6" />
 
       <div className="space-y-6">
-        <SkillSection title="Current" count={categorizedSkills.current.length} skills={categorizedSkills.current} />
-        <SkillSection title="Developing" count={categorizedSkills.developing.length} skills={categorizedSkills.developing} />
-        <SkillSection title="Adjacent" count={categorizedSkills.adjacent.length} skills={categorizedSkills.adjacent} />
+        <SkillSection 
+          title="Current" 
+          count={categorizedSkills.current.length} 
+          skills={categorizedSkills.current} 
+        />
+        <SkillSection 
+          title="Developing" 
+          count={categorizedSkills.developing.length} 
+          skills={categorizedSkills.developing} 
+        />
+        <SkillSection 
+          title="Adjacent" 
+          count={categorizedSkills.adjacent.length} 
+          skills={categorizedSkills.adjacent} 
+        />
       </div>
     </div>
   );
