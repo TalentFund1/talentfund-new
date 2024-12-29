@@ -12,8 +12,17 @@ export interface RoleSkillRequirement {
   weight: SkillWeight;
   minimumLevel: SkillLevel;
   requirementLevel: SkillRequirementLevel;
+  level: string;
   growth: string;
   salary: string;
+  confidence: 'low' | 'medium' | 'high';
+  skillScore: number;
+  benchmarks: {
+    B: boolean;
+    R: boolean;
+    M: boolean;
+    O: boolean;
+  };
   metrics: {
     growth: string;
     salary: string;

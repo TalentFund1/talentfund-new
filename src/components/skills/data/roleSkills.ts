@@ -25,6 +25,13 @@ roleIds.forEach(id => {
       requirementLevel: 'required',
       confidence: 'medium',
       skillScore: 0,
+      level: skill.minimumLevel || 'unspecified',
+      benchmarks: {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      },
       metrics: {
         growth: skill.growth || '0%',
         salary: skill.salary || 'market',
@@ -38,6 +45,13 @@ roleIds.forEach(id => {
       requirementLevel: 'required',
       confidence: 'medium',
       skillScore: 0,
+      level: skill.minimumLevel || 'unspecified',
+      benchmarks: {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      },
       metrics: {
         growth: skill.growth || '0%',
         salary: skill.salary || 'market',
@@ -51,6 +65,13 @@ roleIds.forEach(id => {
       requirementLevel: 'required',
       confidence: 'medium',
       skillScore: 0,
+      level: skill.minimumLevel || 'unspecified',
+      benchmarks: {
+        B: false,
+        R: false,
+        M: false,
+        O: false
+      },
       metrics: {
         growth: skill.growth || '0%',
         salary: skill.salary || 'market',
