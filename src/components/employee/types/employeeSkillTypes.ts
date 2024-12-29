@@ -7,14 +7,14 @@ export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  skillScore: number;
+  confidence: 'low' | 'medium' | 'high';
 }
 
 // Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
-  skillScore?: number;
+  confidence?: 'low' | 'medium' | 'high';
 }
 
 // Complete employee skill data
@@ -32,7 +32,7 @@ export interface EmployeeSkillData {
   businessCategory: string;
   growth: string;
   salary: string;
-  skillScore: number;
+  confidence: 'low' | 'medium' | 'high';
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -52,4 +52,10 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-console.log('Employee skill types updated with skillScore');
+// State management for employee skills
+export interface EmployeeSkillsState {
+  skills: Record<string, EmployeeSkillData>;
+  lastUpdated: string;
+}
+
+console.log('Employee skill types updated with complete interfaces');
