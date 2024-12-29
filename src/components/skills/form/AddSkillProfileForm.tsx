@@ -12,9 +12,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { RoleSkillData } from "../types/roleSkillTypes";
 import { useToast } from "@/hooks/use-toast";
 import { generateId } from "@/lib/utils";
+import { useState } from "react";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -30,6 +32,8 @@ const formSchema = z.object({
 
 export const AddSkillProfileForm = () => {
   const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,115 +71,131 @@ export const AddSkillProfileForm = () => {
 
     console.log("New profile created:", newProfile);
     form.reset();
+    setOpen(false);
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Profile Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter profile title" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is the name of the skill profile.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>Add Profile</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Add New Skill Profile</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Profile Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter profile title" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the name of the skill profile.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="soc"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>SOC Code</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter SOC code" {...field} />
-              </FormControl>
-              <FormDescription>
-                Standard Occupational Classification code
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="soc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>SOC Code</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter SOC code" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Standard Occupational Classification code
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="function"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Function</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter function" {...field} />
-              </FormControl>
-              <FormDescription>
-                The business function this role belongs to
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="function"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Function</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter function" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    The business function this role belongs to
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="mappedTitle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mapped Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter mapped title" {...field} />
-              </FormControl>
-              <FormDescription>
-                Alternative or mapped title for this role
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="mappedTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mapped Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter mapped title" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Alternative or mapped title for this role
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="occupation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Occupation</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter occupation" {...field} />
-              </FormControl>
-              <FormDescription>
-                The general occupation category
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="occupation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Occupation</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter occupation" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    The general occupation category
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter description" {...field} />
-              </FormControl>
-              <FormDescription>
-                Brief description of the role
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter description" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Brief description of the role
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Button type="submit">Create Profile</Button>
-      </form>
-    </Form>
+            <div className="flex justify-end gap-4">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Create Profile</Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };

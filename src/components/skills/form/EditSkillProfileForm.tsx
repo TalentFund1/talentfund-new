@@ -12,6 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RoleSkillData } from "../types/roleSkillTypes";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +31,13 @@ const formSchema = z.object({
   roleTrack: z.enum(["Professional", "Managerial"]).optional(),
 });
 
-export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) => {
+interface EditSkillProfileFormProps {
+  profile: RoleSkillData;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const EditSkillProfileForm = ({ profile, open, onOpenChange }: EditSkillProfileFormProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -58,46 +65,6 @@ export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) =>
       description: data.description,
       roleTrack: data.roleTrack,
       track: data.roleTrack || "Professional",
-      specialized: profile.specialized.map(skill => ({
-        ...skill,
-        minimumLevel: 'beginner',
-        requirementLevel: 'required',
-        metrics: {
-          growth: skill.growth,
-          salary: skill.salary,
-          skillScore: skill.skillScore || 0
-        }
-      })),
-      common: profile.common.map(skill => ({
-        ...skill,
-        minimumLevel: 'beginner',
-        requirementLevel: 'required',
-        metrics: {
-          growth: skill.growth,
-          salary: skill.salary,
-          skillScore: skill.skillScore || 0
-        }
-      })),
-      certifications: profile.certifications.map(skill => ({
-        ...skill,
-        minimumLevel: 'beginner',
-        requirementLevel: 'required',
-        metrics: {
-          growth: skill.growth,
-          salary: skill.salary,
-          skillScore: skill.skillScore || 0
-        }
-      })),
-      skills: profile.skills.map(skill => ({
-        ...skill,
-        minimumLevel: 'beginner',
-        requirementLevel: 'required',
-        metrics: {
-          growth: skill.growth,
-          salary: skill.salary,
-          skillScore: skill.skillScore || 0
-        }
-      }))
     };
 
     toast({
@@ -105,145 +72,158 @@ export const EditSkillProfileForm = ({ profile }: { profile: RoleSkillData }) =>
       description: "Your skill profile has been updated successfully.",
     });
 
+    onOpenChange(false);
     navigate("/skills/profiles");
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Role title" {...field} />
-              </FormControl>
-              <FormDescription>
-                The title of the role or skill profile.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Edit Skill Profile</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Role title" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    The title of the role or skill profile.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="soc"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>SOC Code</FormLabel>
-              <FormControl>
-                <Input placeholder="SOC code" {...field} />
-              </FormControl>
-              <FormDescription>
-                Standard Occupational Classification code.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="soc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>SOC Code</FormLabel>
+                  <FormControl>
+                    <Input placeholder="SOC code" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Standard Occupational Classification code.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="function"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Function</FormLabel>
-              <FormControl>
-                <Input placeholder="Function" {...field} />
-              </FormControl>
-              <FormDescription>
-                The business function this role belongs to.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="function"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Function</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Function" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    The business function this role belongs to.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="mappedTitle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mapped Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Mapped title" {...field} />
-              </FormControl>
-              <FormDescription>
-                Alternative or mapped title for this role.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="mappedTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mapped Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Mapped title" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Alternative or mapped title for this role.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="occupation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Occupation</FormLabel>
-              <FormControl>
-                <Input placeholder="Occupation" {...field} />
-              </FormControl>
-              <FormDescription>
-                The general occupation category.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="occupation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Occupation</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Occupation" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    The general occupation category.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Role description"
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                A brief description of the role and its responsibilities.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Role description"
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    A brief description of the role and its responsibilities.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="roleTrack"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Role Track</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a track" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Professional">Professional</SelectItem>
-                  <SelectItem value="Managerial">Managerial</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                The career track for this role.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="roleTrack"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role Track</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a track" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Professional">Professional</SelectItem>
+                      <SelectItem value="Managerial">Managerial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    The career track for this role.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Button type="submit">Update profile</Button>
-      </form>
-    </Form>
+            <div className="flex justify-end gap-4">
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Update Profile</Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
