@@ -6,6 +6,7 @@ import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { useState, useMemo } from "react";
 import { SkillBadge } from "./SkillBadge";
 import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
+import { BaseSkill } from "./types";
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -43,17 +44,20 @@ export const SkillsSummary = () => {
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <SkillBadge
-            key={skill.title}
-            skill={{
-              name: skill.title,
-              ...skill
-            }}
-            showLevel={true}
-            employeeId={employeeId || ''}
-          />
-        ))}
+        {skills.map((skill) => {
+          const baseSkill: BaseSkill = {
+            name: skill.title
+          };
+          return (
+            <SkillBadge
+              key={skill.title}
+              skill={baseSkill}
+              showLevel={true}
+              level={skill.level}
+              employeeId={employeeId || ''}
+            />
+          );
+        })}
       </div>
     </Card>
   );
