@@ -8,7 +8,7 @@ export interface RoleSkillRequirement extends UnifiedSkill {
     growth: string;
     salary: string;
     confidence: 'low' | 'medium' | 'high';
-    skillScore?: number;
+    skillScore: number;
   };
 }
 
