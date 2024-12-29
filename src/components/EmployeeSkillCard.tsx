@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useEmployeeSkillsStore } from "./employee/store/employeeSkillsStore";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useCallback } from "react";
 import { EmployeeSkillCardProps } from "./employee/types/employeeSkillProps";
 import { benchmarkingService } from "../services/benchmarking";
 
@@ -21,27 +21,27 @@ export const EmployeeSkillCard = ({
   useEffect(() => {
     if (employeeId) {
       console.log('EmployeeSkillCard - Initializing skills for:', employeeId);
-      initializeEmployeeSkills(employeeId);
+      const initialize = async () => {
+        try {
+          await initializeEmployeeSkills(employeeId);
+        } catch (error) {
+          console.error('Error initializing skills:', error);
+        }
+      };
+      initialize();
     }
-  }, [employeeId, initializeEmployeeSkills]);
+  }, [employeeId]); // Remove initializeEmployeeSkills from deps to prevent loop
 
   // Get all employee skills including newly added ones
   const employeeSkills = useMemo(() => {
+    if (!employeeId) return [];
+    console.log('Getting employee skills for:', employeeId);
     return getEmployeeSkills(employeeId);
   }, [employeeId, getEmployeeSkills]);
 
-  console.log('Rendering EmployeeSkillCard:', { 
-    name, 
-    role, 
-    employeeId,
-    totalSkills: employeeSkills.length,
-    skills: employeeSkills.map(s => ({ 
-      title: s.title, 
-      level: getSkillState(employeeId, s.title).level 
-    }))
-  });
-
-  const getLevelPercentage = (skillName: string): number => {
+  // Memoize getLevelPercentage to prevent recreating on every render
+  const getLevelPercentage = useCallback((skillName: string): number => {
+    if (!employeeId) return 0;
     const skillState = getSkillState(employeeId, skillName);
     console.log('Getting level percentage for skill:', {
       employeeId,
@@ -53,9 +53,11 @@ export const EmployeeSkillCard = ({
       { title: skillName, level: skillState.level },
       { title: skillName, minimumLevel: 'beginner' }
     ).matchPercentage;
-  };
+  }, [employeeId, getSkillState]);
 
-  const handleSkillClick = (skillName: string) => {
+  const handleSkillClick = useCallback((skillName: string) => {
+    if (!employeeId) return;
+    
     const percentage = getLevelPercentage(skillName);
     const skillState = getSkillState(employeeId, skillName);
     
@@ -78,14 +80,22 @@ export const EmployeeSkillCard = ({
       title: skillName,
       description: `Current level: ${percentage}% (${skillState.level})`,
     });
-  };
+  }, [employeeId, getLevelPercentage, getSkillState, batchUpdateSkills, toast]);
 
   // Memoize the processed skills data using all employee skills
-  const processedSkills = useMemo(() => employeeSkills.map(skill => ({
-    ...skill,
-    name: skill.title,
-    percentage: getLevelPercentage(skill.title)
-  })), [employeeSkills, employeeId]);
+  const processedSkills = useMemo(() => {
+    if (!employeeSkills.length) return [];
+    return employeeSkills.map(skill => ({
+      ...skill,
+      name: skill.title,
+      percentage: getLevelPercentage(skill.title)
+    }));
+  }, [employeeSkills, getLevelPercentage]);
+
+  if (!employeeId) {
+    console.log('No employeeId provided to EmployeeSkillCard');
+    return null;
+  }
 
   return (
     <Card className="p-6 animate-fade-in">
