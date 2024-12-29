@@ -5,6 +5,8 @@ import { useToggledSkills } from "../../skills/context/ToggledSkillsContext";
 import { roleSkills } from "../../skills/data/roleSkills";
 import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { useRoleStore } from "@/components/benchmark/RoleBenchmark";
+import { WorkforceIntelligence } from "@/components/skills/intelligence/WorkforceIntelligence";
+import { TasksList } from "@/components/skills/intelligence/TasksList";
 
 interface BenchmarkSkillsMatrixContentProps {
   roleId: string;
@@ -91,6 +93,13 @@ export const BenchmarkSkillsMatrixContent = ({
 
   return (
     <>
+      <div className="space-y-6">
+        <WorkforceIntelligence />
+        <TasksList />
+      </div>
+
+      <Separator className="my-8" />
+
       <CategorizedSkills 
         roleId={currentRoleId}
         employeeId={employeeId}
