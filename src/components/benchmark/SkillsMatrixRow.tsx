@@ -15,8 +15,6 @@ interface SkillsMatrixRowProps {
     growth: string;
     confidence: string;
     requirement?: string;
-    category?: string;
-    weight?: string;
   };
   isRoleBenchmark: boolean;
 }
@@ -32,52 +30,15 @@ export const SkillsMatrixRow = ({
   console.log('SkillsMatrixRow rendering:', {
     skillTitle: skill.title,
     skillId: unifiedSkillData.id,
-    category: skill.category,
     isRoleBenchmark,
     originalGrowth: skill.growth,
     unifiedGrowth: unifiedSkillData.growth
   });
 
-  const getWeightColor = (weight: string = 'necessary') => {
-    switch (weight.toLowerCase()) {
-      case 'critical':
-        return 'bg-red-100 text-red-800';
-      case 'technical':
-        return 'bg-blue-100 text-blue-800';
-      case 'necessary':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getTypeColor = (category: string = 'common') => {
-    switch (category.toLowerCase()) {
-      case 'specialized':
-        return 'bg-blue-100 text-blue-800';
-      case 'certification':
-        return 'bg-purple-100 text-purple-800';
-      case 'common':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   return (
     <TableRow className="group border-b border-gray-200">
       <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
       <TableCell className="border-r border-blue-200 py-2">{skill.subcategory}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2 text-center">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getWeightColor(unifiedSkillData.weight)}`}>
-          {(unifiedSkillData.weight || 'necessary').charAt(0).toUpperCase() + (unifiedSkillData.weight || 'necessary').slice(1)}
-        </span>
-      </TableCell>
-      <TableCell className="border-r border-blue-200 py-2 text-center">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeColor(skill.category)}`}>
-          {(skill.category || 'common').charAt(0).toUpperCase() + (skill.category || 'common').slice(1)}
-        </span>
-      </TableCell>
       {isRoleBenchmark ? (
         <>
           <RoleSkillLevelCell 
