@@ -8,7 +8,7 @@ export const createSkillState = (
   goalStatus,
   lastUpdated: new Date().toISOString(),
   skillScore: 0,
-  confidence: 'medium'
+  confidence: 50
 });
 
 export const updateSkillState = (

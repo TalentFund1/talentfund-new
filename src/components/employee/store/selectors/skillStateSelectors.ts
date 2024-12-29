@@ -18,7 +18,8 @@ export const createSkillStateSelectors = (get: () => any) => ({
       level: 'unspecified',
       goalStatus: 'unknown',
       lastUpdated: new Date().toISOString(),
-      confidence: 'medium'
+      confidence: 50,
+      skillScore: 0
     };
 
     if (!skillState) {

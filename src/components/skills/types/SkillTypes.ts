@@ -1,7 +1,7 @@
 export type SkillWeight = 'critical' | 'technical' | 'necessary';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
 export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
-export type SkillConfidence = 'low' | 'medium' | 'high';
+export type SkillConfidence = 0 | 25 | 50 | 75 | 100;
 
 export interface DetailedSkill {
   name: string;

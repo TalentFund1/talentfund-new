@@ -2,7 +2,8 @@ import { getUnifiedSkillData } from '../../../skills/data/skillDatabaseService';
 import { 
   EmployeeSkillAchievement, 
   SkillLevel, 
-  SkillGoalStatus 
+  SkillGoalStatus,
+  SkillConfidence
 } from '../../types/employeeSkillTypes';
 
 export const initializeEmployeeSkills = (
@@ -32,7 +33,8 @@ export const initializeEmployeeSkills = (
       weight: unifiedData.weight,
       growth: unifiedData.growth,
       salary: unifiedData.salary,
-      confidence: 'medium',
+      confidence: 50,
+      skillScore: 0,
       benchmarks: unifiedData.benchmarks || {
         B: false,
         R: false,
