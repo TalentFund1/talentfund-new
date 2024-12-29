@@ -77,16 +77,25 @@ export const SkillsSummary = () => {
       <h3 className="text-xl font-semibold text-foreground">Skills Summary</h3>
       
       <div>
-        <div className="relative">
-          {selectedSkills.length > 0 && (
-            <Button 
-              variant="ghost" 
-              onClick={() => setSelectedSkills([])}
-              className="absolute right-0 -top-2 text-sm text-muted-foreground hover:text-foreground"
-            >
-              Cancel
-            </Button>
-          )}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-2 items-center">
+              {selectedSkills.map((skill) => (
+                <div key={skill} className="bg-[#F7F9FF] text-primary border border-[#E5E7EB] px-3 py-1.5 rounded-md text-sm">
+                  {skill}
+                </div>
+              ))}
+            </div>
+            {selectedSkills.length > 0 && (
+              <Button 
+                variant="ghost"
+                onClick={() => setSelectedSkills([])}
+                className="text-sm text-muted-foreground hover:text-foreground"
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
           <SearchFilter
             label=""
             placeholder="Search skills..."
