@@ -13,7 +13,7 @@ const allSkills: UnifiedSkill[] = [
     growth: "35%",
     salary: "$160,000",
     skillScore: 0,
-    minimumLevel: "advanced",
+    minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
       growth: "35%",
@@ -33,7 +33,7 @@ const allSkills: UnifiedSkill[] = [
     growth: "25%",
     salary: "$130,000",
     skillScore: 0,
-    minimumLevel: "intermediate",
+    minimumLevel: "beginner",
     requirementLevel: "required",
     metrics: {
       growth: "25%",
@@ -41,30 +41,9 @@ const allSkills: UnifiedSkill[] = [
       skillScore: 0
     },
     benchmarks: { B: true, R: true, M: true, O: true }
-  },
-  {
-    id: 'SKILL_TW_794',
-    title: "Technical Writing",
-    subcategory: "Documentation",
-    category: "common",
-    businessCategory: "Professional Skills",
-    weight: "necessary",
-    level: "intermediate",
-    growth: "12%",
-    salary: "$95,000",
-    skillScore: 0,
-    minimumLevel: "beginner",
-    requirementLevel: "required",
-    metrics: {
-      growth: "12%",
-      salary: "$95,000",
-      skillScore: 0
-    },
-    benchmarks: { B: true, R: true, M: true, O: true }
   }
 ];
 
-// Helper functions to get skills
 export const getSkillByTitle = (title: string | undefined) => {
   if (!title) {
     console.warn('Attempted to get skill with undefined title');

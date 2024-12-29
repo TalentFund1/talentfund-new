@@ -1,18 +1,19 @@
-import { Skills } from '../data/skills/allSkills';
+import { UnifiedSkill } from '../types/SkillTypes';
+import { getUnifiedSkillData } from '../data/skillDatabaseService';
 
 export const isSpecializedSkill = (skill: string, profileId: string): boolean => {
-  const skillData = Skills.specialized.find(s => s.title.toLowerCase() === skill.toLowerCase());
-  return !!skillData;
+  const skillData = getUnifiedSkillData(skill);
+  return skillData.category === 'specialized';
 };
 
 export const isCommonSkill = (skill: string, profileId: string): boolean => {
-  const skillData = Skills.common.find(s => s.title.toLowerCase() === skill.toLowerCase());
-  return !!skillData;
+  const skillData = getUnifiedSkillData(skill);
+  return skillData.category === 'common';
 };
 
 export const isCertificationSkill = (skill: string, profileId: string): boolean => {
-  const skillData = Skills.certification.find(s => s.title.toLowerCase() === skill.toLowerCase());
-  return !!skillData;
+  const skillData = getUnifiedSkillData(skill);
+  return skillData.category === 'certification';
 };
 
 export const categorizeSkills = (skills: string[], profileId: string) => {
@@ -30,7 +31,6 @@ export const categorizeSkills = (skills: string[], profileId: string) => {
   };
 };
 
-// Add new export for single skill categorization
 export const categorizeSkill = (skill: string, profileId: string): 'specialized' | 'common' | 'certification' => {
   console.log('Categorizing skill:', skill, 'for profile:', profileId);
   
