@@ -16,8 +16,8 @@ interface EmployeeTableRowProps {
   isSelected: boolean;
   onSelect: (name: string) => void;
   imageUrl: string;
-  selectedSkills?: string[];
-  selectedJobTitle?: string[];
+  selectedSkills?: ReadonlyArray<string>;
+  selectedJobTitle?: ReadonlyArray<string>;
 }
 
 export const EmployeeTableRow = ({ 
