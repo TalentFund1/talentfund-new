@@ -27,9 +27,6 @@ const SkillProfileDetail = () => {
 
   const currentRole = roleSkills[id as keyof typeof roleSkills];
   const jobTitle = currentRole ? currentRole.title : "AI Engineer";
-  const skillCount = currentRole ? 
-    [...currentRole.specialized, ...currentRole.common, ...currentRole.certifications].length : 
-    0;
 
   const handleTrackChange = (newTrack: "Professional" | "Managerial") => {
     setTrack(newTrack);
@@ -83,7 +80,7 @@ const SkillProfileDetail = () => {
                   </div>
 
                   <Card className="p-8 bg-white">
-                    <SkillProfileHeader jobTitle={jobTitle} skillCount={skillCount} />
+                    <SkillProfileHeader jobTitle={jobTitle} />
                   </Card>
 
                   <EmployeeOverview />

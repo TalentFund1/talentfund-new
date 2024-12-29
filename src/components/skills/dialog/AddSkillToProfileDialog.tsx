@@ -24,7 +24,6 @@ export const AddSkillToProfileDialog = () => {
         ...skill,
         minimumLevel: 'beginner',
         requirementLevel: 'required',
-        required: true,
         metrics: {
           growth: skill.growth,
           salary: skill.salary,

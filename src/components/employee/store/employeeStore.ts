@@ -122,13 +122,7 @@ export const useEmployeeStore = create<EmployeeStore>()(
             usingDefault: true
           });
           
-          return {
-            level: 'unspecified',
-            goalStatus: 'unknown',
-            lastUpdated: new Date().toISOString(),
-            skillScore: 0,
-            inDevelopmentPlan: false
-          };
+          return benchmarkingService.getDefaultSkillState() as EmployeeSkillState;
         }
 
         console.log('Retrieved employee skill state:', {

@@ -1,4 +1,4 @@
-import { SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
+import { SkillLevel, SkillGoalStatus } from '../types/skillStoreTypes';
 import { EmployeeSkillState } from '../../types/employeeSkillTypes';
 
 export const createSkillActions = (set: any, get: any) => ({

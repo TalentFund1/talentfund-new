@@ -1,14 +1,8 @@
-import { 
-  SkillLevel, 
-  SkillGoalStatus,
-  SkillRequirementLevel,
-  SkillMetrics,
-  SkillWeight,
-  SkillCategory,
-  BaseSkill
-} from './sharedSkillTypes';
-
-export type { SkillWeight, SkillCategory, RoleSkillData } from './roleSkillTypes';
+export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
 export interface DetailedSkill {
   name: string;
@@ -16,7 +10,8 @@ export interface DetailedSkill {
   isSkillGoal: boolean;
 }
 
-export interface Skill extends BaseSkill {
+export interface Skill {
+  id: string;
   title: string;
   subcategory: string;
   category: SkillCategory;
@@ -26,9 +21,6 @@ export interface Skill extends BaseSkill {
   growth: string;
   salary: string;
   skillScore: number;
-  minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
-  metrics: SkillMetrics;
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -38,9 +30,32 @@ export interface Skill extends BaseSkill {
 }
 
 export interface UnifiedSkill extends Skill {
-  goalStatus?: SkillGoalStatus;
+  goalStatus?: SkillRequirement;
   roleLevel?: string;
   isCompanySkill?: boolean;
+  minimumLevel: SkillLevel;
+  requirementLevel: SkillRequirementLevel;
+  metrics: {
+    growth: string;
+    salary: string;
+    skillScore: number;
+  };
+}
+
+export interface RoleSkillData {
+  roleId: string;
+  title: string;
+  soc?: string;
+  function?: string;
+  mappedTitle?: string;
+  occupation?: string;
+  description?: string;
+  roleTrack?: "Professional" | "Managerial";
+  track: "Professional" | "Managerial";
+  specialized: UnifiedSkill[];
+  common: UnifiedSkill[];
+  certifications: UnifiedSkill[];
+  skills: UnifiedSkill[];
 }
 
 export interface SimpleSkill {

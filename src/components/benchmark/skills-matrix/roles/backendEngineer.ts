@@ -5,6 +5,7 @@ export const backendEngineerSkills = [
     subcategory: "Backend Development",
     level: "advanced",
     growth: "20%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -12,6 +13,7 @@ export const backendEngineerSkills = [
     subcategory: "Data Management",
     level: "advanced",
     growth: "15%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -19,6 +21,7 @@ export const backendEngineerSkills = [
     subcategory: "Backend Development",
     level: "advanced",
     growth: "25%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -26,6 +29,7 @@ export const backendEngineerSkills = [
     subcategory: "Software Architecture",
     level: "intermediate",
     growth: "30%",
+    confidence: "medium",
     requirement: "preferred"
   },
   {
@@ -33,6 +37,7 @@ export const backendEngineerSkills = [
     subcategory: "Container Orchestration",
     level: "advanced",
     growth: "28%",
+    confidence: "high",
     requirement: "required"
   },
   // Common Skills
@@ -41,6 +46,7 @@ export const backendEngineerSkills = [
     subcategory: "Soft Skills",
     level: "advanced",
     growth: "15%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -48,6 +54,7 @@ export const backendEngineerSkills = [
     subcategory: "Development Practices",
     level: "advanced",
     growth: "12%",
+    confidence: "high",
     requirement: "preferred"
   },
   {
@@ -55,6 +62,7 @@ export const backendEngineerSkills = [
     subcategory: "Project Management",
     level: "advanced",
     growth: "15%",
+    confidence: "high",
     requirement: "preferred"
   },
   // Certifications
@@ -63,6 +71,7 @@ export const backendEngineerSkills = [
     subcategory: "Cloud Certification",
     level: "advanced",
     growth: "30%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -70,6 +79,7 @@ export const backendEngineerSkills = [
     subcategory: "Container Certification",
     level: "advanced",
     growth: "25%",
+    confidence: "high",
     requirement: "preferred"
   },
   {
@@ -77,6 +87,7 @@ export const backendEngineerSkills = [
     subcategory: "Database Certification",
     level: "advanced",
     growth: "20%",
+    confidence: "high",
     requirement: "preferred"
   }
 ];

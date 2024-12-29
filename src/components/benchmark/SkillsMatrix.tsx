@@ -57,6 +57,7 @@ export const SkillsMatrix = () => {
             salary: skillData.salary || 'market',
             goalStatus: skillState.goalStatus || 'unknown',
             lastUpdated: skillState.lastUpdated || new Date().toISOString(),
+            confidence: skillState.confidence || 'medium',
             category: skillData.category || 'specialized',
             businessCategory: skillData.businessCategory || 'Technical Skills',
             weight: skillData.weight || 'technical'
@@ -68,6 +69,7 @@ export const SkillsMatrix = () => {
     }
   }, [id, initializeEmployeeSkills, getEmployeeSkills, getSkillState]);
 
+  // Define level priority for sorting
   const getLevelPriority = (level: string): number => {
     switch (level.toLowerCase()) {
       case 'advanced': return 1;

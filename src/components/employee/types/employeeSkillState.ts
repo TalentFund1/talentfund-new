@@ -4,6 +4,7 @@ export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
+  confidence?: 'low' | 'medium' | 'high';
 }
 
 export interface EmployeeSkillData {
@@ -21,6 +22,7 @@ export interface EmployeeSkillsState {
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
+  confidence?: 'low' | 'medium' | 'high';
 }
 
 console.log('Employee skill state types loaded');

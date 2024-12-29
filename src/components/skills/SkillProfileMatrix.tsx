@@ -160,8 +160,7 @@ export const SkillProfileMatrix = () => {
         <CategoryCards
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
-          roleId={id || "123"}
-          counts={skillCounts}
+          skillCount={skillCounts}
         />
 
         <SkillProfileMatrixFilters

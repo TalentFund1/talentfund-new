@@ -5,6 +5,7 @@ export const engineeringManagerSkills = [
     subcategory: "Architecture",
     level: "advanced",
     growth: "25%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -12,6 +13,7 @@ export const engineeringManagerSkills = [
     subcategory: "Architecture",
     level: "advanced",
     growth: "30%",
+    confidence: "high",
     requirement: "required"
   },
   // Common Skills
@@ -20,6 +22,7 @@ export const engineeringManagerSkills = [
     subcategory: "Leadership",
     level: "advanced",
     growth: "22%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -27,6 +30,7 @@ export const engineeringManagerSkills = [
     subcategory: "Management",
     level: "advanced",
     growth: "25%",
+    confidence: "high",
     requirement: "required"
   },
   {
@@ -34,6 +38,7 @@ export const engineeringManagerSkills = [
     subcategory: "Management",
     level: "advanced",
     growth: "20%",
+    confidence: "high",
     requirement: "required"
   }
 ];
