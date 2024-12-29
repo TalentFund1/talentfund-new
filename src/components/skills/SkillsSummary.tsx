@@ -8,7 +8,6 @@ import { SkillBadge } from "./SkillBadge";
 import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 import { BaseSkill } from "./types";
 import { getAllSkills } from './data/skills/allSkills';
-import { Button } from "@/components/ui/button";
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -45,10 +44,6 @@ export const SkillsSummary = () => {
   const commonSkills = filteredEmployeeSkills.filter(skill => skill.category === 'common');
   const certifications = filteredEmployeeSkills.filter(skill => skill.category === 'certification');
 
-  const handleClearSkills = () => {
-    setSelectedSkills([]);
-  };
-
   const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
@@ -82,18 +77,6 @@ export const SkillsSummary = () => {
       
       <div className="mb-4">
         <div className="space-y-2">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium">Skills</span>
-            {selectedSkills.length > 0 && (
-              <Button 
-                variant="ghost" 
-                onClick={handleClearSkills}
-                className="text-sm h-8"
-              >
-                Cancel
-              </Button>
-            )}
-          </div>
           <SearchFilter
             label=""
             placeholder="Search skills..."
