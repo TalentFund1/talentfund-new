@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { SearchFilter } from "@/components/market/SearchFilter";
 import { useParams } from "react-router-dom";
 import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { useState, useMemo } from "react";
 import { SkillBadge } from "./SkillBadge";
+import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 
 export const SkillsSummary = () => {
   const { id: employeeId } = useParams();
@@ -34,7 +34,7 @@ export const SkillsSummary = () => {
     skill.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const SkillSection = ({ title, skills }: { title: string; skills: typeof employeeSkills }) => (
+  const SkillSection = ({ title, skills }: { title: string; skills: EmployeeSkillData[] }) => (
     <Card className="p-6 space-y-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">{title}</span>
@@ -46,7 +46,10 @@ export const SkillsSummary = () => {
         {skills.map((skill) => (
           <SkillBadge
             key={skill.title}
-            skill={skill}
+            skill={{
+              name: skill.title,
+              ...skill
+            }}
             showLevel={true}
             employeeId={employeeId || ''}
           />
@@ -64,7 +67,7 @@ export const SkillsSummary = () => {
           <SearchFilter
             label=""
             placeholder="Search skills..."
-            items={employeeSkills.map(skill => ({ id: skill.title, name: skill.title }))}
+            items={employeeSkills.map(skill => skill.title)}
             selectedItems={[]}
             onItemsChange={() => {}}
             singleSelect={false}
