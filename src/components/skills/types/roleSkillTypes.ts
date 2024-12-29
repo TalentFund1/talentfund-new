@@ -1,5 +1,7 @@
 import { SkillLevel, SkillGoalStatus, SkillRequirementLevel, SkillCategory, SkillWeight, SkillMetrics, SkillBenchmark } from './sharedSkillTypes';
 
+export type { SkillCategory, SkillWeight };
+
 export interface RoleSkillRequirement {
   id: string;
   title: string;
