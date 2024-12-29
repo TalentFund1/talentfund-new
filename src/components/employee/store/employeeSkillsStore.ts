@@ -59,8 +59,9 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   metrics: {
                     growth: unifiedData.growth || '0%',
                     salary: unifiedData.salary || 'market',
-                    skillScore: 0
+                    skillScore: unifiedData.skillScore || 0
                   },
+                  skillScore: unifiedData.skillScore || 0,
                   inDevelopmentPlan: false,
                   benchmarks: {
                     B: false,
