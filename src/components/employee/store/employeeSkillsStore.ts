@@ -18,13 +18,11 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
       initializeEmployeeSkills: (employeeId: string) => {
         console.log('Initializing skills for employee:', employeeId);
         
-        // Get current state
         const currentState = get().skillStates[employeeId];
         
         if (!currentState) {
           console.log('No existing state found, creating new state:', employeeId);
           
-          // Find employee data
           const employee = employees.find(emp => emp.id === employeeId);
           const initialSkills: Record<string, EmployeeSkillData> = {};
           
@@ -34,7 +32,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
               skillCount: employee.skills.length
             });
             
-            // Initialize each skill
             employee.skills.forEach(skill => {
               if (typeof skill === 'object' && skill !== null && 'title' in skill) {
                 const unifiedData = getUnifiedSkillData(skill.title);
@@ -48,6 +45,7 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
                   lastUpdated: new Date().toISOString(),
                   confidence: 'medium',
                   skillScore: 0,
+                  inDevelopmentPlan: false,
                   subcategory: unifiedData.subcategory || 'General',
                   category: unifiedData.category || 'specialized',
                   businessCategory: unifiedData.businessCategory || 'Technical Skills',
@@ -76,7 +74,6 @@ export const useEmployeeSkillsStore = create<EmployeeSkillsStore>()(
           }));
         }
 
-        // Force refresh of skill states
         const store = get();
         const skills = store.getEmployeeSkills(employeeId);
         console.log('Refreshed employee skills:', {
