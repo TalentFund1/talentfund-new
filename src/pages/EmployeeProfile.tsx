@@ -64,8 +64,9 @@ const EmployeeProfile = () => {
     termDate: employee.termDate,
     tenure: "1.9",
     team: employee.team || "RnD",
+    type: employee.type || "On-site",
     image: employeeImages[id as keyof typeof employeeImages],
-    skills: employee.skills // Add this line to pass skills data
+    skills: employee.skills
   };
 
   const handleNavigation = (direction: 'prev' | 'next') => {
