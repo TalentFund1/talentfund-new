@@ -1,9 +1,19 @@
-import { SkillLevel, SkillGoalStatus } from '../../employee/types/employeeSkillTypes';
-import { UnifiedSkill } from './SkillTypes';
+import { SkillCategory, SkillWeight } from './SkillTypes';
 
-export interface RoleSkillRequirement extends UnifiedSkill {
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
+
+export interface RoleSkillRequirement {
+  id: string;
+  title: string;
+  subcategory: string;
+  category: SkillCategory;
+  businessCategory: string;
+  weight: SkillWeight;
   minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
+  requirementLevel: SkillRequirementLevel;
+  growth: string;
+  salary: string;
   metrics: {
     growth: string;
     salary: string;

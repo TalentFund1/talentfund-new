@@ -7,6 +7,8 @@ import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
 import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
 import { useParams } from "react-router-dom";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
+import { Checkbox } from "../ui/checkbox";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 interface SkillsMatrixRowProps {
   skill: {
@@ -39,7 +41,7 @@ export const SkillsMatrixRow = ({
   isRoleBenchmark = false
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
-  const { getSkillState } = useSkillsMatrixStore();
+  const { getSkillState, updateSkillState } = useEmployeeSkillsStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -54,6 +56,21 @@ export const SkillsMatrixRow = ({
   });
 
   const skillScore = getSkillScore(skill.level);
+  const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
+
+  const handleDevelopmentPlanChange = (checked: boolean) => {
+    if (!employeeId) return;
+    
+    console.log('Updating development plan:', {
+      employeeId,
+      skillTitle: skill.title,
+      inDevelopmentPlan: checked
+    });
+
+    updateSkillState(employeeId, skill.title, {
+      inDevelopmentPlan: checked
+    });
+  };
 
   const getScoreColor = (score: number): string => {
     if (score >= 75) return 'bg-[#8073ec20] text-[#8073ec] shadow-sm font-semibold';
@@ -107,6 +124,13 @@ export const SkillsMatrixRow = ({
       </TableCell>
       <TableCell className="text-center border-r border-blue-200 py-2">
         <span className="text-sm text-gray-900">{unifiedSkillData.salary}</span>
+      </TableCell>
+      <TableCell className="text-center border-r border-blue-200 py-2">
+        <Checkbox
+          checked={skillState?.inDevelopmentPlan || false}
+          onCheckedChange={handleDevelopmentPlanChange}
+          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+        />
       </TableCell>
       <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
