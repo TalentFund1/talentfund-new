@@ -7,14 +7,14 @@ export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  confidence: 'low' | 'medium' | 'high';
+  skillScore: number;
 }
 
 // Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
-  confidence?: 'low' | 'medium' | 'high';
+  skillScore?: number;
 }
 
 // Complete employee skill data
@@ -32,7 +32,7 @@ export interface EmployeeSkillData {
   businessCategory: string;
   growth: string;
   salary: string;
-  confidence: 'low' | 'medium' | 'high';
+  skillScore: number;
   benchmarks: {
     B: boolean;
     R: boolean;
