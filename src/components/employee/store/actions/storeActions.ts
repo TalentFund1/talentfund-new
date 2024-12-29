@@ -35,6 +35,7 @@ export const createStoreActions = (
         weight: 'technical',
         growth: '0%',
         salary: 'market',
+        inDevelopmentPlan: false,
         benchmarks: {
           B: false,
           R: false,
@@ -105,6 +106,7 @@ export const createStoreActions = (
             weight: 'technical',
             growth: '0%',
             salary: 'market',
+            inDevelopmentPlan: false,
             benchmarks: {
               B: false,
               R: false,
