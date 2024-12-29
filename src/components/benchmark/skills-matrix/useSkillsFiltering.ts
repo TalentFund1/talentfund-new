@@ -44,13 +44,14 @@ export const useSkillsFiltering = (
       toggledSkills: Array.from(toggledSkills)
     });
 
+    let skills = [...employeeSkills];
+
     const roleData = roleSkills[currentRoleId as keyof typeof roleSkills];
     if (!roleData) {
       console.warn('No role data found for:', currentRoleId);
       return [];
     }
 
-    // Get all role skills
     const allRoleSkills = [
       ...(roleData.specialized || []),
       ...(roleData.common || []),
@@ -64,12 +65,12 @@ export const useSkillsFiltering = (
       skillTitles: allRoleSkills.map(s => s.title)
     });
 
-    // Filter skills based on toggledSkills first
-    let skills = allRoleSkills.filter(roleSkill => 
-      toggledSkills.has(roleSkill.title)
-    );
+    skills = skills.filter(empSkill => {
+      const isRoleSkill = allRoleSkills.some(roleSkill => roleSkill.title === empSkill.title);
+      const isToggled = toggledSkills.has(empSkill.title);
+      return isRoleSkill && isToggled;
+    });
 
-    // Apply category filter if selected
     if (selectedCategory !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
@@ -77,7 +78,6 @@ export const useSkillsFiltering = (
       });
     }
 
-    // Apply weight filter if selected
     if (selectedWeight !== 'all') {
       skills = skills.filter(skill => {
         const skillData = getUnifiedSkillData(skill.title);
@@ -85,18 +85,7 @@ export const useSkillsFiltering = (
       });
     }
 
-    // Enrich skills with employee data
-    return skills.map(skill => {
-      const skillData = getUnifiedSkillData(skill.title);
-      const employeeSkill = employeeSkills.find(es => es.title === skill.title);
-      
-      return {
-        ...skill,
-        ...skillData,
-        employeeLevel: employeeSkill?.level || 'unspecified',
-        hasSkill: !!employeeSkill
-      };
-    });
+    return skills;
   }, [
     employeeId,
     currentRoleId,

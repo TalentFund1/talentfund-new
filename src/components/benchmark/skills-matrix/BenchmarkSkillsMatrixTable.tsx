@@ -2,10 +2,9 @@ import { Table, TableBody } from "@/components/ui/table";
 import { BenchmarkSkillsMatrixTableHeader } from "./BenchmarkSkillsMatrixTableHeader";
 import { SkillsMatrixRow } from "../SkillsMatrixRow";
 import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
-import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
 interface BenchmarkSkillsMatrixTableProps {
-  filteredSkills: UnifiedSkill[];
+  filteredSkills: any[];
 }
 
 export const BenchmarkSkillsMatrixTable = ({
@@ -16,7 +15,7 @@ export const BenchmarkSkillsMatrixTable = ({
     skills: filteredSkills.map(s => ({
       title: s.title,
       weight: getUnifiedSkillData(s.title).weight,
-      hasSkill: s.hasSkill
+      originalWeight: s.weight
     }))
   });
 
@@ -30,15 +29,14 @@ export const BenchmarkSkillsMatrixTable = ({
             console.log('Processing skill:', {
               title: skill.title,
               unifiedWeight: unifiedData.weight,
-              hasSkill: skill.hasSkill
+              originalWeight: skill.weight
             });
-            
             return (
               <SkillsMatrixRow
                 key={skill.title}
                 skill={{
                   ...skill,
-                  weight: unifiedData.weight
+                  weight: unifiedData.weight // Ensure weight comes from universal database
                 }}
                 isRoleBenchmark={true}
               />
