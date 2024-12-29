@@ -22,11 +22,11 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
   if (!fullEmployee) return null;
 
   return (
-    <div className="flex items-start justify-between mb-8">
+    <div className="flex items-start justify-between">
       <div className="flex gap-6">
-        <Avatar className="h-24 w-24 rounded-full">
+        <Avatar className="h-20 w-20 rounded-full">
           <img 
-            src={`https://images.unsplash.com/${employee.image}?auto=format&fit=crop&w=96&h=96`}
+            src={`https://images.unsplash.com/${employee.image}?auto=format&fit=crop&w=80&h=80`}
             alt={employee.name}
             className="object-cover"
           />
@@ -34,12 +34,12 @@ export const EmployeeHeader = ({ id, employee }: EmployeeHeaderProps) => {
         <div className="space-y-2">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-semibold">{employee.name}</h1>
+              <h1 className="text-2xl font-semibold text-gray-900">{employee.name}</h1>
               <span className="text-sm text-muted-foreground bg-gray-50 px-2 py-1 rounded">ID: {id}</span>
             </div>
-            <h2 className="text-lg text-gray-700">{employee.role}</h2>
+            <h2 className="text-lg text-gray-600">{employee.role}</h2>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-gray-500">
             <MapPin className="h-4 w-4" />
             <span>{employee.location}</span>
           </div>

@@ -39,9 +39,7 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
   const employeeSkills = getEmployeeSkills(id);
   const skillCount = employeeSkills.length;
   const employees = useEmployeeStore(state => state.employees);
-
-  // Get the manager's ID by finding the employee with matching name
-  const managerId = employees.find(emp => emp.name === employee.manager)?.id || "126";
+  const managerId = employees.find(emp => emp.name === employee.manager)?.id || "";
 
   console.log(`Employee ${id} details:`, {
     role: employee.role,
@@ -54,8 +52,8 @@ export const EmployeeDetails = ({ employee, id }: EmployeeDetailsProps) => {
 
   return (
     <>
-      <Separator className="my-4 sm:my-6" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+      <Separator className="my-8" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div className="space-y-1">
           <span className="text-sm text-gray-500">Department</span>
           <p className="font-medium text-gray-900">{employee.department}</p>
