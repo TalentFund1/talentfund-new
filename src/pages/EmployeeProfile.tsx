@@ -134,7 +134,7 @@ const EmployeeProfile = () => {
                     value="experience" 
                     className="border-b-2 border-transparent px-2 sm:px-3 pb-4 pt-2 data-[state=active]:border-primary-accent data-[state=active]:text-primary font-medium whitespace-nowrap"
                   >
-                    Skills Summary
+                    Experience
                   </TabsTrigger>
                   <TabsTrigger 
                     value="benchmark"
