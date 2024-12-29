@@ -9,7 +9,13 @@ export const EmployeeTableRow = ({
   imageUrl,
   selectedSkills,
   selectedJobTitle
-}: EmployeeTableRowProps) => {
+}: Readonly<EmployeeTableRowProps>) => {
+  console.log('Rendering EmployeeTableRow:', {
+    employeeId: employee.id,
+    selectedSkills,
+    selectedJobTitle
+  });
+
   return (
     <TableRow>
       <EmployeeBasicInfo
