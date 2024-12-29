@@ -4,6 +4,7 @@ import { SkillComparison } from '../types/skillComparison';
 
 export const getLevelPriority = (level: string = 'unspecified'): number => {
   const priorities: Record<string, number> = {
+    'expert': 5,
     'advanced': 4,
     'intermediate': 3,
     'beginner': 2,

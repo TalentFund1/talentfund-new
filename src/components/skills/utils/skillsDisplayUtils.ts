@@ -2,6 +2,8 @@ import { SkillLevel } from '../data/skillLevels';
 
 export const getSkillLevelColor = (level: SkillLevel['level']) => {
   switch (level) {
+    case 'expert':
+      return 'text-purple-600 bg-purple-100/80 border-purple-600';
     case 'advanced':
       return 'text-primary-accent bg-primary-accent/10 border-primary-accent';
     case 'intermediate':
