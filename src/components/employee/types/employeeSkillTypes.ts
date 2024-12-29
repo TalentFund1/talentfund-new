@@ -4,7 +4,7 @@ import {
   BaseSkill, 
   SkillBenchmark, 
   SkillMetrics 
-} from './sharedSkillTypes';
+} from '../../skills/types/sharedSkillTypes';
 
 // Employee skill state
 export interface EmployeeSkillState {
