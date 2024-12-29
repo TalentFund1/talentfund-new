@@ -1,8 +1,6 @@
-import { SkillCategory, SkillWeight } from './SkillTypes';
+import { SkillLevel, SkillCategory, SkillConfidence } from './SkillTypes';
 
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
-export type SkillConfidence = 'low' | 'medium' | 'high';
 
 export interface RoleSkillRequirement {
   id: string;
@@ -10,7 +8,7 @@ export interface RoleSkillRequirement {
   subcategory: string;
   category: SkillCategory;
   businessCategory: string;
-  weight: SkillWeight;
+  weight: string;
   minimumLevel: SkillLevel;
   requirementLevel: SkillRequirementLevel;
   growth: string;

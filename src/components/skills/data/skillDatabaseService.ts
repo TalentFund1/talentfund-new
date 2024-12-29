@@ -1,7 +1,6 @@
 import { UnifiedSkill } from '../types/SkillTypes';
 import { universalSkillsDatabase, getAllSkills, getSkillByTitle } from './skills/universalSkillsDatabase';
 
-// Helper function to generate a skill ID if none exists
 const generateSkillId = (title: string, category: string): string => {
   const prefix = category.toUpperCase().slice(0, 3);
   const cleanTitle = title.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 3);
@@ -19,7 +18,15 @@ export const getUnifiedSkillData = (skillTitle: string | undefined): UnifiedSkil
   if (skill) {
     return {
       ...skill,
-      id: skill.id || generateSkillId(skill.title, skill.category)
+      id: skill.id || generateSkillId(skill.title, skill.category),
+      minimumLevel: 'beginner',
+      skillScore: 0,
+      metrics: {
+        growth: skill.growth,
+        salary: skill.salary,
+        confidence: skill.confidence,
+        skillScore: 0
+      }
     };
   }
 
@@ -38,6 +45,14 @@ const createDefaultSkill = (title: string): UnifiedSkill => ({
   growth: '10%',
   salary: '$0',
   confidence: 'medium',
+  skillScore: 0,
+  minimumLevel: 'beginner',
+  metrics: {
+    growth: '10%',
+    salary: '$0',
+    confidence: 'medium',
+    skillScore: 0
+  },
   benchmarks: { B: true, R: true, M: true, O: true }
 });
 

@@ -17,11 +17,11 @@ export interface Skill {
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
-  level: string;
+  level: SkillLevel;
   growth: string;
   salary: string;
   confidence: SkillConfidence;
-  skillScore?: number;
+  skillScore: number;
   benchmarks: {
     B: boolean;
     R: boolean;
@@ -34,10 +34,9 @@ export interface UnifiedSkill extends Skill {
   goalStatus?: SkillRequirement;
   roleLevel?: string;
   isCompanySkill?: boolean;
-  skillScore: number;
-  minimumLevel?: SkillLevel;
-  requirementLevel?: 'required' | 'preferred' | 'optional';
-  metrics?: {
+  minimumLevel: SkillLevel;
+  requirementLevel: 'required' | 'preferred' | 'optional';
+  metrics: {
     growth: string;
     salary: string;
     confidence: SkillConfidence;
