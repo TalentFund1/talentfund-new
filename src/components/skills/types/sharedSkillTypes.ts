@@ -1,7 +1,9 @@
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
 export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
 export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillWeight = 'technical' | 'critical' | 'important' | 'nice_to_have';
+export type SkillWeight = 'technical' | 'critical' | 'important' | 'nice_to_have' | 'necessary';
+export type Track = 'Professional' | 'Managerial';
+export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
 export interface BaseSkill {
   id?: string;
@@ -10,6 +12,11 @@ export interface BaseSkill {
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
+  level?: SkillLevel;
+  salary?: string;
+  skillScore?: number;
+  minimumLevel?: SkillLevel;
+  requirementLevel?: SkillRequirementLevel;
 }
 
 export interface SkillBenchmark {
@@ -26,12 +33,13 @@ export interface SkillMetrics {
 }
 
 export interface UnifiedSkill extends BaseSkill {
-  level: SkillLevel;
   growth: string;
-  salary: string;
-  minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
-  metrics: SkillMetrics;
-  benchmarks?: SkillBenchmark;
+  salary?: string;
   skillScore?: number;
+  level?: SkillLevel;
+  minimumLevel?: SkillLevel;
+  requirementLevel?: SkillRequirementLevel;
+  metrics?: SkillMetrics;
+  benchmarks?: SkillBenchmark;
+  hasSkill?: boolean;
 }

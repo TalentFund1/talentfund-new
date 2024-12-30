@@ -1,6 +1,11 @@
-import { SkillLevel, SkillCategory, SkillWeight, SkillMetrics, Track } from './sharedSkillTypes';
-
-export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
+import { 
+  SkillLevel, 
+  SkillCategory, 
+  SkillWeight, 
+  SkillMetrics, 
+  Track,
+  SkillRequirementLevel 
+} from './sharedSkillTypes';
 
 export interface RoleSkillRequirement {
   id: string;

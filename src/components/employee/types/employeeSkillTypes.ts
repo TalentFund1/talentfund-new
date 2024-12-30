@@ -5,17 +5,19 @@ import {
   SkillBenchmark,
   SkillMetrics,
   SkillWeight,
-  SkillCategory
+  SkillCategory,
+  SkillRequirementLevel
 } from '../../skills/types/sharedSkillTypes';
 
 // Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
-  goalStatus: SkillGoalStatus;
+  requirement: string;
+  goalStatus?: SkillGoalStatus;
   lastUpdated: string;
   skillScore: number;
   inDevelopmentPlan: boolean;
-  requirement: string;
+  source?: string;
 }
 
 // Single skill update
@@ -24,6 +26,7 @@ export interface EmployeeSkillUpdate {
   goalStatus?: SkillGoalStatus;
   skillScore?: number;
   inDevelopmentPlan?: boolean;
+  source?: string;
 }
 
 // Complete employee skill data
@@ -31,17 +34,19 @@ export interface EmployeeSkillData extends BaseSkill {
   employeeId: string;
   skillId: string;
   level: SkillLevel;
-  goalStatus: SkillGoalStatus;
+  goalStatus?: SkillGoalStatus;
   lastUpdated: string;
-  minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
-  metrics: SkillMetrics;
-  growth: string;
-  salary: string;
+  minimumLevel?: SkillLevel;
+  requirementLevel?: SkillRequirementLevel;
+  metrics?: SkillMetrics;
+  growth?: string;
+  salary?: string;
   inDevelopmentPlan: boolean;
-  benchmarks: SkillBenchmark;
+  benchmarks?: SkillBenchmark;
   weight: SkillWeight;
   category: SkillCategory;
+  source?: string;
+  skillScore?: number;
 }
 
 // Achievement tracking
@@ -55,11 +60,12 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-export { 
+export type {
   SkillLevel,
   SkillGoalStatus,
   SkillCategory,
   SkillWeight,
   SkillMetrics,
-  SkillBenchmark
+  SkillBenchmark,
+  SkillRequirementLevel
 };
