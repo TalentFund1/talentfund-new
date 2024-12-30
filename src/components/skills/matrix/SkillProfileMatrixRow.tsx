@@ -6,12 +6,14 @@ interface SkillProfileMatrixRowProps {
   skill: UnifiedSkill;
   isToggled: boolean;
   onToggle: () => void;
+  isRoleBenchmark?: boolean;
 }
 
 export const SkillProfileMatrixRow = ({
   skill,
   isToggled,
-  onToggle
+  onToggle,
+  isRoleBenchmark = false
 }: SkillProfileMatrixRowProps) => {
   return (
     <TableRow className="border-t border-border hover:bg-muted/50 transition-colors">
@@ -36,6 +38,15 @@ export const SkillProfileMatrixRow = ({
         </span>
       </TableCell>
       <TableCell className="py-3 px-2 align-middle text-sm">{skill.salary}</TableCell>
+      {isRoleBenchmark && (
+        <TableCell className="py-3 px-4 align-middle text-center">
+          <Switch 
+            checked={isToggled}
+            onCheckedChange={onToggle}
+            className="data-[state=checked]:bg-primary"
+          />
+        </TableCell>
+      )}
       <TableCell className="py-3 px-8 align-middle">
         <div className="flex justify-center gap-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">B</span>
