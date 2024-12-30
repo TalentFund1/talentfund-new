@@ -61,8 +61,8 @@ export const SkillsMatrixRow = ({
         await removeEmployeeSkill(employeeId, skill.title);
         
         toast({
-          title: "Skill Removed",
-          description: `${skill.title} has been removed from your skills.`,
+          title: "Removed from Development Plan",
+          description: `${skill.title} has been removed from your development plan.`,
         });
         
         return;
