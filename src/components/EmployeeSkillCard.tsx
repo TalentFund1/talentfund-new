@@ -37,7 +37,8 @@ export const EmployeeSkillCard = ({
     totalSkills: employeeSkills.length,
     skills: employeeSkills.map(s => ({ 
       title: s.title, 
-      level: getSkillState(employeeId, s.title).level 
+      level: getSkillState(employeeId, s.title).level,
+      inDevelopmentPlan: getSkillState(employeeId, s.title).inDevelopmentPlan // Added this line
     }))
   });
 
@@ -46,7 +47,8 @@ export const EmployeeSkillCard = ({
     console.log('Getting level percentage for skill:', {
       employeeId,
       skillName,
-      level: skillState.level
+      level: skillState.level,
+      inDevelopmentPlan: skillState.inDevelopmentPlan // Added this line
     });
     
     return benchmarkingService.compareSkillLevels(
