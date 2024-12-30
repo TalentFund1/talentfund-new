@@ -1,15 +1,14 @@
 import { TableCell } from "@/components/ui/table";
 import { useCompetencyStore } from "./CompetencyState";
-import { useEffect, useRef } from "react";
 import { LevelSelector } from "./LevelSelector";
 import { RequirementSelector } from "./RequirementSelector";
-import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 import { useParams } from "react-router-dom";
+import { SkillLevel, SkillGoalStatus } from "../employee/types/employeeSkillTypes";
 
 interface SkillCellProps {
   skillName: string;
   details: {
-    level: string;
+    level: SkillLevel;
     required: string;
   };
   isLastColumn: boolean;
@@ -22,49 +21,57 @@ export const SkillCell = ({
   isLastColumn, 
   levelKey 
 }: SkillCellProps) => {
-  const { id: employeeId } = useParams();
-  const { setSkillLevel, setSkillGoalStatus } = useEmployeeSkillsStore();
-  const initRef = useRef(false);
+  const { roleStates, setSkillState } = useCompetencyStore();
+  const { id: roleId } = useParams<{ id: string }>();
+  const currentRoleId = roleId || "123";
 
-  // Initialize state only once when component mounts
-  useEffect(() => {
-    if (!initRef.current && employeeId) {
-      console.log('Initializing skill state:', {
-        skillName,
-        levelKey,
-        initialLevel: details.level || "unspecified",
-        initialRequired: details.required || "unknown"
-      });
-      
-      initRef.current = true;
-    }
-  }, [skillName, levelKey, details.level, details.required, employeeId]);
+  const currentState = roleStates[currentRoleId]?.[skillName]?.[levelKey] || {
+    level: details.level || "unspecified" as SkillLevel,
+    required: details.required || "preferred",
+  };
 
-  const handleLevelChange = (value: string) => {
-    if (!employeeId) return;
-
+  const handleLevelChange = (value: SkillLevel) => {
     console.log('Changing level:', {
-      employeeId,
       skillName,
-      newLevel: value
+      levelKey,
+      newLevel: value,
+      currentRequired: currentState.required,
+      roleId: currentRoleId
     });
-
-    setSkillLevel(employeeId, skillName, value);
+    
+    setSkillState(
+      skillName,
+      value,
+      levelKey,
+      currentState.required || 'preferred',
+      currentRoleId
+    );
   };
 
   const handleRequirementChange = (value: string) => {
-    if (!employeeId) return;
-
     console.log('Changing requirement:', {
-      employeeId,
       skillName,
-      newRequired: value
+      levelKey,
+      currentLevel: currentState.level,
+      newRequired: value,
+      roleId: currentRoleId
     });
-
-    // Map 'required' to 'skill_goal' for compatibility
-    const goalStatus = value === 'required' ? 'skill_goal' : value;
-    setSkillGoalStatus(employeeId, skillName, goalStatus);
+    
+    setSkillState(
+      skillName,
+      currentState.level || 'unspecified' as SkillLevel,
+      levelKey,
+      value,
+      currentRoleId
+    );
   };
+
+  console.log('Rendering SkillCell:', {
+    skillName,
+    levelKey,
+    currentState,
+    roleId: currentRoleId
+  });
 
   return (
     <TableCell 
@@ -72,12 +79,12 @@ export const SkillCell = ({
     >
       <div className="flex flex-col items-center gap-0">
         <LevelSelector
-          currentLevel={details.level || "unspecified"}
+          currentLevel={currentState.level || 'unspecified'}
           onLevelChange={handleLevelChange}
         />
         <RequirementSelector
-          currentRequired={details.required || "unknown"}
-          currentLevel={details.level || "unspecified"}
+          currentRequired={currentState.required || 'preferred'}
+          currentLevel={currentState.level || 'unspecified'}
           onRequirementChange={handleRequirementChange}
         />
       </div>

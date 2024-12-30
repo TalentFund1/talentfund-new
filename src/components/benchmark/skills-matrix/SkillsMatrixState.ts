@@ -23,7 +23,32 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         });
         
         const employeeStore = useEmployeeSkillsStore.getState();
-        return employeeStore.getSkillState(employeeId, skillTitle);
+        const skillState = employeeStore.getSkillState(employeeId, skillTitle);
+        
+        // Convert EmployeeSkillState to EmployeeSkillData
+        return {
+          ...skillState,
+          employeeId,
+          skillId: `${employeeId}-${skillTitle}`,
+          title: skillTitle,
+          subcategory: 'General',
+          category: 'specialized',
+          businessCategory: 'Technical Skills',
+          weight: 'technical',
+          minimumLevel: 'beginner',
+          requirementLevel: 'required',
+          metrics: {
+            growth: '0%',
+            salary: 'market',
+            skillScore: 0
+          },
+          benchmarks: {
+            B: false,
+            R: false,
+            M: false,
+            O: false
+          }
+        };
       },
 
       initializeState: (skillTitle: string, employeeId: string) => {

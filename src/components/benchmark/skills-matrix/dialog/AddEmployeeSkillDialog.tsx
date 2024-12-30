@@ -10,7 +10,7 @@ import { getUnifiedSkillData } from '@/components/skills/data/skillDatabaseServi
 import { universalSkillsDatabase } from '@/components/skills/data/skills/universalSkillsDatabase';
 import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
 import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
-import { SkillLevel, SkillGoalStatus } from "../../types/employeeSkillTypes";
+import { SkillLevel, SkillGoalStatus } from "../../../employee/types/employeeSkillTypes";
 
 export const AddEmployeeSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -136,3 +136,4 @@ export const AddEmployeeSkillDialog = () => {
     </Dialog>
   );
 };
+
