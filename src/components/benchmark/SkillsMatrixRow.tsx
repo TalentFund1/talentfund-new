@@ -151,7 +151,7 @@ export const SkillsMatrixRow = ({
         <Checkbox
           checked={skillState?.inDevelopmentPlan || false}
           onCheckedChange={handleDevelopmentPlanChange}
-          className="border-gray-300 data-[state=checked]:bg-[#F1F0FB] data-[state=checked]:border-[#F1F0FB] data-[state=checked]:text-[#1F2144]"
+          className="border-gray-400 data-[state=checked]:bg-[#E5E7EB] data-[state=checked]:border-[#E5E7EB] data-[state=checked]:text-[#1F2144]"
         />
       </TableCell>
       <TableCell className="text-center py-4">
