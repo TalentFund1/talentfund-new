@@ -5,6 +5,7 @@ import { EmployeeSkillData } from '../../employee/types/employeeSkillTypes';
 
 export interface SkillsMatrixState {
   hasChanges: boolean;
+  setHasChanges: (value: boolean) => void;
   getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillData;
   saveChanges: () => void;
   cancelChanges: () => void;
@@ -15,6 +16,7 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   persist(
     (set, get) => ({
       hasChanges: false,
+      setHasChanges: (value: boolean) => set({ hasChanges: value }),
 
       getSkillState: (skillTitle: string, employeeId: string) => {
         console.log('Matrix getting skill state:', {
