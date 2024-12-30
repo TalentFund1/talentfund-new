@@ -1,27 +1,21 @@
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
+export type SkillId = string;
+
 export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillRequirement = 'required' | 'preferred' | 'not_interested' | 'unknown' | 'skill_goal';
-export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'unspecified';
-export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
-export interface DetailedSkill {
-  name: string;
-  level: string;
-  isSkillGoal: boolean;
-}
+export type SkillWeight = 'technical' | 'soft' | 'business' | 'leadership';
 
-export interface Skill {
-  id: string;
+export interface UnifiedSkill {
+  id: SkillId;
   title: string;
   subcategory: string;
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
-  level: SkillLevel;
+  level: string;
   growth: string;
   salary: string;
-  skillScore: number;
-  benchmarks: {
+  hasSkill?: boolean;
+  benchmarks?: {
     B: boolean;
     R: boolean;
     M: boolean;
@@ -29,39 +23,19 @@ export interface Skill {
   };
 }
 
-export interface UnifiedSkill extends Skill {
-  goalStatus?: SkillRequirement;
-  roleLevel?: string;
-  isCompanySkill?: boolean;
-  minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
+export interface RoleSkillRequirement extends UnifiedSkill {
+  minimumLevel: string;
+  requirementLevel: string;
   metrics: {
     growth: string;
     salary: string;
     skillScore: number;
   };
+  skillScore: number;
 }
 
 export interface RoleSkillData {
-  roleId: string;
-  title: string;
-  soc?: string;
-  function?: string;
-  mappedTitle?: string;
-  occupation?: string;
-  description?: string;
-  roleTrack?: "Professional" | "Managerial";
-  track: "Professional" | "Managerial";
-  specialized: UnifiedSkill[];
-  common: UnifiedSkill[];
-  certifications: UnifiedSkill[];
-  skills: UnifiedSkill[];
-}
-
-export interface SimpleSkill {
-  title: string;
-  subcategory: string;
-  businessCategory?: string;
-  level: string;
-  growth: string;
+  specialized: RoleSkillRequirement[];
+  common: RoleSkillRequirement[];
+  certifications: RoleSkillRequirement[];
 }

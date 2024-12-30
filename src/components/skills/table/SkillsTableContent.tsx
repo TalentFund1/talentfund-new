@@ -8,14 +8,15 @@ import {
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkillsTableRow } from "./SkillsTableRow";
-import { SimpleSkill } from "../types/SkillTypes";
+import { UnifiedSkill } from "../types/SkillTypes";
 
 interface SkillsTableContentProps {
-  skills: SimpleSkill[];
+  skills: UnifiedSkill[];
   isLoading: boolean;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProps) => {
+export const SkillsTableContent = ({ skills, isLoading, isRoleBenchmark = false }: SkillsTableContentProps) => {
   const renderSkeletonRow = () => (
     <TableRow>
       <TableCell className="w-[200px] border-x border-blue-200/60">
@@ -33,9 +34,11 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
       <TableCell className="text-center bg-[#F7F9FF]/30 border-r border-blue-200/60">
         <Skeleton className="h-6 w-6 mx-auto rounded-full" />
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200/60">
-        <Skeleton className="h-6 w-16 mx-auto rounded-full" />
-      </TableCell>
+      {isRoleBenchmark && (
+        <TableCell className="text-center border-r border-blue-200/60">
+          <Skeleton className="h-6 w-16 mx-auto rounded-full" />
+        </TableCell>
+      )}
     </TableRow>
   );
 
@@ -59,26 +62,28 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
             <TableHead className="text-center bg-[#F7F9FF]/50 border-r border-blue-200/60 w-[100px] py-4 text-sm font-semibold">
               Advanced
             </TableHead>
-            <TableHead className="w-[150px] text-center border-r border-blue-200/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 text-sm font-semibold">
-              <div className="flex items-center justify-center gap-1.5">
-                Projected Growth
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                    </TooltipTrigger>
-                    <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-left">Salary with Skill:</h4>
-                        <p className="text-sm text-left font-normal">
-                          Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
-                        </p>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </TableHead>
+            {isRoleBenchmark && (
+              <TableHead className="w-[150px] text-center border-r border-blue-200/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 text-sm font-semibold">
+                <div className="flex items-center justify-center gap-1.5">
+                  Projected Growth
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top" align="start" className="max-w-[300px] p-4">
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-left">Salary with Skill:</h4>
+                          <p className="text-sm text-left font-normal">
+                            Salary with Skill reflects the Nationwide Median Advertised Salary for the past year based on the selected Job Title and the Skill
+                          </p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -92,7 +97,12 @@ export const SkillsTableContent = ({ skills, isLoading }: SkillsTableContentProp
             </TableRow>
           ) : (
             skills.map((skill, index) => (
-              <SkillsTableRow key={skill.title} skill={skill} isEven={index % 2 === 0} />
+              <SkillsTableRow 
+                key={skill.title} 
+                skill={skill} 
+                isEven={index % 2 === 0} 
+                isRoleBenchmark={isRoleBenchmark}
+              />
             ))
           )}
         </TableBody>

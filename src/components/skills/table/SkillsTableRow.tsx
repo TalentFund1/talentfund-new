@@ -1,15 +1,16 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SkillLevelIcon } from "../SkillLevelIcon";
-import { SimpleSkill } from "../types/SkillTypes";
+import { UnifiedSkill } from "../types/SkillTypes";
 import { roleSkills } from "../data/roleSkills";
 import { useParams } from "react-router-dom";
 
 interface SkillsTableRowProps {
-  skill: SimpleSkill;
+  skill: UnifiedSkill;
   isEven: boolean;
+  isRoleBenchmark?: boolean;
 }
 
-export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
+export const SkillsTableRow = ({ skill, isEven, isRoleBenchmark = false }: SkillsTableRowProps) => {
   const { id } = useParams();
   
   const getSkillType = (skillTitle: string): string => {
@@ -80,13 +81,15 @@ export const SkillsTableRow = ({ skill, isEven }: SkillsTableRowProps) => {
       <TableCell className={`text-center border-r border-blue-200/60 group-hover:bg-transparent py-4 w-[100px] ${getLevelBackgroundColor("Beginner")}`}>
         {skill.level === "Beginner" && <SkillLevelIcon level="beginner" />}
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200/60 group-hover:bg-transparent py-4">
-        <span className={`inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-          skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-        }`}>
-          ↗ {skill.growth}
-        </span>
-      </TableCell>
+      {isRoleBenchmark && (
+        <TableCell className="text-center border-r border-blue-200/60 group-hover:bg-transparent py-4">
+          <span className={`inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+            skill.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
+          }`}>
+            ↗ {skill.growth}
+          </span>
+        </TableCell>
+      )}
     </TableRow>
   );
 };
