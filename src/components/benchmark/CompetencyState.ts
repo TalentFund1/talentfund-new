@@ -9,6 +9,7 @@ export interface SkillState {
 
 interface CompetencyState {
   currentStates: Record<string, Record<string, SkillState>>;
+  getSkillState: (skillName: string, levelKey: string) => SkillState | undefined;
   setSkillState: (skillName: string, level: string, levelKey: string, required: string) => void;
 }
 
@@ -19,8 +20,12 @@ const defaultSkillState: SkillState = {
 
 export const useCompetencyStore = create<CompetencyState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       currentStates: {},
+      getSkillState: (skillName, levelKey) => {
+        const states = get().currentStates;
+        return states[skillName]?.[levelKey];
+      },
       setSkillState: (skillName, level, levelKey, required) => {
         console.log('Setting skill state:', { skillName, level, levelKey, required });
         set((state) => {
