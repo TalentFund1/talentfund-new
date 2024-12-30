@@ -1,58 +1,60 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { useEmployeeSkillsStore } from '../../employee/store/employeeSkillsStore';
+import { EmployeeSkillData } from '../../employee/types/employeeSkillTypes';
 
-interface SkillState {
-  level: string;
-  required: string;
-  inDevelopmentPlan?: boolean;
+export interface SkillsMatrixState {
+  hasChanges: boolean;
+  getSkillState: (skillTitle: string, employeeId: string) => EmployeeSkillData;
+  saveChanges: () => void;
+  cancelChanges: () => void;
+  initializeState: (skillTitle: string, employeeId: string) => void;
 }
 
-interface SkillsMatrixState {
-  skillStates: Record<string, Record<string, SkillState>>;
-  getSkillState: (employeeId: string, skillName: string) => SkillState;
-  setSkillInDevelopmentPlan: (employeeId: string, skillName: string, inDevelopmentPlan: boolean) => void;
-}
+export const useSkillsMatrixStore = create<SkillsMatrixState>()(
+  persist(
+    (set, get) => ({
+      hasChanges: false,
 
-export const useSkillsMatrixStore = create<SkillsMatrixState>((set, get) => ({
-  skillStates: {},
+      getSkillState: (skillTitle: string, employeeId: string) => {
+        console.log('Matrix getting skill state:', {
+          employeeId,
+          skillTitle
+        });
+        
+        const employeeStore = useEmployeeSkillsStore.getState();
+        return employeeStore.getSkillState(employeeId, skillTitle);
+      },
 
-  getSkillState: (employeeId, skillName) => {
-    const state = get().skillStates[employeeId]?.[skillName];
-    if (!state) {
-      console.log('No existing skill state found:', {
-        employeeId,
-        skillName,
-        usingDefault: true
-      });
-      return {
-        level: 'unspecified',
-        required: 'unknown',
-        inDevelopmentPlan: false
-      };
-    }
-    return state;
-  },
+      initializeState: (skillTitle: string, employeeId: string) => {
+        console.log('Matrix initialized skill state:', {
+          employeeId,
+          skillTitle
+        });
+        
+        const employeeStore = useEmployeeSkillsStore.getState();
+        employeeStore.initializeEmployeeSkills(employeeId);
+      },
 
-  setSkillInDevelopmentPlan: (employeeId, skillName, inDevelopmentPlan) => {
-    console.log('Setting skill in development plan:', {
-      employeeId,
-      skillName,
-      inDevelopmentPlan
-    });
+      saveChanges: () => {
+        console.log('Matrix saving changes');
+        set({ hasChanges: false });
+      },
 
-    set(state => ({
-      skillStates: {
-        ...state.skillStates,
-        [employeeId]: {
-          ...state.skillStates[employeeId],
-          [skillName]: {
-            ...state.skillStates[employeeId]?.[skillName] || {
-              level: 'unspecified',
-              required: 'unknown'
-            },
-            inDevelopmentPlan
-          }
-        }
+      cancelChanges: () => {
+        console.log('Matrix canceling changes');
+        set({ hasChanges: false });
       }
-    }));
-  }
-}));
+    }),
+    {
+      name: 'skills-matrix-storage',
+      version: 2,
+      partialize: (state) => ({
+        hasChanges: state.hasChanges
+      })
+    }
+  )
+);
+
+// Export the hook for accessing the store
+export const useSkillsMatrixState = useSkillsMatrixStore;
