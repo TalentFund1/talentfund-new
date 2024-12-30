@@ -4,6 +4,11 @@ export type SkillGoalStatus = 'required' | 'preferred' | 'not_interested' | 'unk
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 export type Track = "Professional" | "Managerial";
 
+// Common types
+export type SkillCategory = 'specialized' | 'common' | 'certification';
+export type SkillWeight = 'critical' | 'technical' | 'necessary' | 'soft';
+export type SkillConfidence = 'low' | 'medium' | 'high';
+
 // Base skill interface shared between roles and employees
 export interface BaseSkill {
   id: string;
@@ -12,14 +17,12 @@ export interface BaseSkill {
   subcategory: string;
   weight: SkillWeight;
   businessCategory: string;
-  skillScore: number;
+  skillScore?: number;
   salary: string;
+  minimumLevel?: SkillLevel;
+  requirementLevel?: SkillRequirementLevel;
+  metrics?: SkillMetrics;
 }
-
-// Common types
-export type SkillCategory = 'specialized' | 'common' | 'certification';
-export type SkillWeight = 'critical' | 'technical' | 'necessary';
-export type SkillConfidence = 'low' | 'medium' | 'high';
 
 // Skill benchmarking data
 export interface SkillBenchmark {

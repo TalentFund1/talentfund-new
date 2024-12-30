@@ -1,4 +1,4 @@
-import { SkillLevel, SkillCategory, SkillWeight, SkillMetrics } from './sharedSkillTypes';
+import { SkillLevel, SkillCategory, SkillWeight, SkillMetrics, Track } from './sharedSkillTypes';
 
 export type SkillRequirementLevel = 'required' | 'preferred' | 'optional';
 
@@ -32,8 +32,8 @@ export interface RoleSkillData {
   mappedTitle?: string;
   occupation?: string;
   description?: string;
-  roleTrack?: "Professional" | "Managerial";
-  track: "Professional" | "Managerial";
+  roleTrack?: Track;
+  track: Track;
   specialized: RoleSkillRequirement[];
   common: RoleSkillRequirement[];
   certifications: RoleSkillRequirement[];

@@ -3,7 +3,9 @@ import {
   SkillGoalStatus, 
   BaseSkill, 
   SkillBenchmark, 
-  SkillMetrics 
+  SkillMetrics,
+  SkillWeight,
+  SkillCategory
 } from './sharedSkillTypes';
 
 // Employee skill state
@@ -37,6 +39,8 @@ export interface EmployeeSkillData extends BaseSkill {
   salary: string;
   inDevelopmentPlan: boolean;
   benchmarks: SkillBenchmark;
+  weight: SkillWeight;
+  category: SkillCategory;
 }
 
 // Achievement tracking
@@ -49,5 +53,3 @@ export interface EmployeeSkillsData {
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
 }
-
-console.log('Employee skill types defined with clear separation from role requirements');
