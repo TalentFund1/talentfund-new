@@ -10,6 +10,7 @@ import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
 import { Badge } from "../ui/badge";
 import { useToast } from "../ui/use-toast";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 interface SkillsMatrixRowProps {
   skill: UnifiedSkill & { hasSkill?: boolean };
@@ -22,7 +23,8 @@ export const SkillsMatrixRow = ({
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
   const { toast } = useToast();
-  const { getSkillState, updateSkillState, removeEmployeeSkill } = useSkillsMatrixStore();
+  const { getSkillState } = useSkillsMatrixStore();
+  const { updateSkillState: updateEmployeeSkill, removeEmployeeSkill } = useEmployeeSkillsStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -67,7 +69,7 @@ export const SkillsMatrixRow = ({
       inDevelopmentPlan: checked
     });
 
-    updateSkillState(employeeId, skill.title, {
+    updateEmployeeSkill(employeeId, skill.title, {
       inDevelopmentPlan: checked
     });
   };
