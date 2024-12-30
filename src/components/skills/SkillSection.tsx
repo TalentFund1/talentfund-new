@@ -10,7 +10,7 @@ interface SkillSectionProps {
 export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
   // Filter skills based on section
   const filteredSkills = title === "Current" 
-    ? skills // Show all skills in Current section
+    ? skills.filter(skill => !skill.inDevelopmentPlan) // Only show non-developing skills in Current
     : title === "Developing"
     ? skills.filter(skill => {
         console.log('Filtering developing skill:', {
@@ -18,7 +18,7 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
           level: skill.level,
           goalStatus: skill.goalStatus,
           inDevelopmentPlan: skill.inDevelopmentPlan,
-          fullSkill: skill // Log the full skill object to see all properties
+          fullSkill: skill
         });
         return skill.inDevelopmentPlan === true;
       })
@@ -27,9 +27,9 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
   // Update count to reflect filtered skills
   const displayCount = filteredSkills.length;
 
-  console.log('SkillSection rendering:', {
+  console.log(`${title} section rendering:`, {
     title,
-    originalCount: count,
+    originalCount: skills.length,
     filteredCount: displayCount,
     skillLevels: filteredSkills.map(s => ({
       title: s.title,
