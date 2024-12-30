@@ -27,16 +27,12 @@ export const SkillsMatrixRow = ({
   const { getSkillState: getEmployeeSkillState, removeEmployeeSkill, updateSkillState } = useEmployeeSkillsStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
-  console.log('SkillsMatrixRow rendering:', {
+  console.log('SkillsMatrixRow rendering with full state:', {
     skillTitle: skill.title,
     skillId: unifiedSkillData.id,
-    originalSubcategory: skill.subcategory,
-    unifiedSubcategory: unifiedSkillData.subcategory,
-    isRoleBenchmark,
-    originalGrowth: skill.growth,
-    unifiedGrowth: unifiedSkillData.growth,
-    salary: unifiedSkillData.salary,
-    hasSkill: skill.hasSkill
+    employeeId,
+    currentState: employeeId ? getEmployeeSkillState(employeeId, skill.title) : null,
+    isRoleBenchmark
   });
 
   const skillScore = Math.floor(Math.random() * 26) + (skill.hasSkill ? 50 : 25);
