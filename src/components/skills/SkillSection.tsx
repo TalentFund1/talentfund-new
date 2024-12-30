@@ -15,7 +15,10 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
     ? skills.filter(skill => {
         console.log('Filtering developing skill:', {
           title: skill.title,
-          inDevelopmentPlan: skill.inDevelopmentPlan
+          level: skill.level,
+          goalStatus: skill.goalStatus,
+          inDevelopmentPlan: skill.inDevelopmentPlan,
+          fullSkill: skill // Log the full skill object to see all properties
         });
         return skill.inDevelopmentPlan === true;
       })
