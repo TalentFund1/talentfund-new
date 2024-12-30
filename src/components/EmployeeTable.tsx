@@ -87,14 +87,13 @@ const EmployeeTableContent = ({
   // Memoize employees with their skills to prevent infinite updates
   const employees = useMemo(() => {
     console.log('Processing employees with skills');
-    const employeesWithSkills = baseEmployees.map(emp => {
-      const skills = getEmployeeSkills(emp.id);
-      console.log(`Employee ${emp.id} skills:`, skills);
-      return {
-        ...emp,
-        skills
-      };
-    });
+    const employeesWithSkills = baseEmployees.map(emp => ({
+      ...emp,
+      skills: getEmployeeSkills(emp.id).map(skill => ({
+        title: skill.title,
+        level: skill.level
+      }))
+    }));
     return employeesWithSkills;
   }, [baseEmployees, getEmployeeSkills]);
 
