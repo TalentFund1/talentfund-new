@@ -1,4 +1,4 @@
-import { EmployeeSkillData, EmployeeSkillState, SkillLevel, SkillGoalStatus } from '../../types/employeeSkillTypes';
+import { EmployeeSkillData, EmployeeSkillState, SkillLevel, SkillGoalStatus, EmployeeSkillUpdate } from '../../types/employeeSkillTypes';
 
 export interface EmployeeSkillsStore {
   skillStates: Record<string, {
@@ -11,5 +11,6 @@ export interface EmployeeSkillsStore {
   setSkillLevel: (employeeId: string, skillTitle: string, level: SkillLevel) => void;
   setSkillGoalStatus: (employeeId: string, skillTitle: string, status: SkillGoalStatus) => void;
   updateSkillState: (employeeId: string, skillTitle: string, updates: Partial<EmployeeSkillState>) => void;
+  batchUpdateSkills: (employeeId: string, updates: Record<string, EmployeeSkillUpdate>) => void;
   removeEmployeeSkill: (employeeId: string, skillTitle: string) => Promise<void>;
 }

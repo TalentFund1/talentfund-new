@@ -10,6 +10,7 @@ import { getUnifiedSkillData } from '@/components/skills/data/skillDatabaseServi
 import { universalSkillsDatabase } from '@/components/skills/data/skills/universalSkillsDatabase';
 import { normalizeSkillTitle } from '@/components/skills/utils/normalization';
 import { useEmployeeSkillsStore } from "../../../employee/store/employeeSkillsStore";
+import { SkillLevel, SkillGoalStatus } from "../../types/employeeSkillTypes";
 
 export const AddEmployeeSkillDialog = () => {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -45,10 +46,9 @@ export const AddEmployeeSkillDialog = () => {
       console.log('Processing new skill from dialog:', skillTitle);
       const skillData = getUnifiedSkillData(skillTitle);
       
-      setSkillLevel(id, skillTitle, 'beginner');
-      setSkillGoalStatus(id, skillTitle, 'unknown');
+      setSkillLevel(id, skillTitle, 'beginner' as SkillLevel);
+      setSkillGoalStatus(id, skillTitle, 'unknown' as SkillGoalStatus);
       
-      // Update the skill state with source
       const { updateSkillState } = useEmployeeSkillsStore.getState();
       updateSkillState(id, skillTitle, {
         level: 'beginner',

@@ -19,15 +19,14 @@ export interface EmployeeSkillState {
   source?: SkillSource;
 }
 
-// Single skill update
 export interface EmployeeSkillUpdate {
   level?: SkillLevel;
   goalStatus?: SkillGoalStatus;
   skillScore?: number;
   inDevelopmentPlan?: boolean;
+  source?: SkillSource;
 }
 
-// Complete employee skill data
 export interface EmployeeSkillData extends BaseSkill {
   employeeId: string;
   skillId: string;
@@ -41,12 +40,11 @@ export interface EmployeeSkillData extends BaseSkill {
   salary: string;
   inDevelopmentPlan: boolean;
   benchmarks: SkillBenchmark;
+  source?: SkillSource;
 }
 
-// Achievement tracking
 export interface EmployeeSkillAchievement extends EmployeeSkillData {}
 
-// Complete employee skills data structure
 export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkillAchievement[];
