@@ -17,6 +17,7 @@ export interface BaseSkill {
   subcategory: string;
   weight: SkillWeight;
   businessCategory: string;
+  level?: SkillLevel;
   skillScore?: number;
   salary: string;
   minimumLevel?: SkillLevel;

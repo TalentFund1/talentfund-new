@@ -1,55 +1,41 @@
 import { 
-  SkillLevel, 
-  SkillGoalStatus, 
-  BaseSkill, 
-  SkillBenchmark, 
-  SkillMetrics 
+  SkillLevel,
+  SkillGoalStatus,
+  BaseSkill,
+  SkillBenchmark,
+  SkillMetrics,
+  SkillWeight,
+  SkillCategory,
+  SkillRequirementLevel
 } from '../../skills/types/sharedSkillTypes';
 
-export type { SkillLevel, SkillGoalStatus };
-
-export type SkillSource = 'dialog' | 'checkbox' | undefined;
-
+// Employee skill state
 export interface EmployeeSkillState {
   level: SkillLevel;
-  goalStatus: SkillGoalStatus;
+  requirement: SkillRequirementLevel;
   lastUpdated: string;
   skillScore: number;
-  inDevelopmentPlan: boolean;
-  source?: SkillSource;
 }
 
-export interface EmployeeSkillUpdate {
-  level?: SkillLevel;
-  goalStatus?: SkillGoalStatus;
-  skillScore?: number;
-  inDevelopmentPlan?: boolean;
-  source?: SkillSource;
-}
-
+// Employee skill data
 export interface EmployeeSkillData extends BaseSkill {
   employeeId: string;
   skillId: string;
-  level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
-  minimumLevel: SkillLevel;
-  requirementLevel: 'required' | 'preferred' | 'optional';
-  metrics: SkillMetrics;
-  growth: string;
-  salary: string;
   inDevelopmentPlan: boolean;
   benchmarks: SkillBenchmark;
-  source?: SkillSource;
 }
 
-export interface EmployeeSkillAchievement extends EmployeeSkillData {}
+// Achievement tracking
+export interface EmployeeSkillAchievement extends EmployeeSkillData {
+  metrics: SkillMetrics;
+}
 
+// Full employee skills data
 export interface EmployeeSkillsData {
   employeeId: string;
   skills: EmployeeSkillAchievement[];
   states: Record<string, EmployeeSkillState>;
   lastUpdated?: string;
 }
-
-console.log('Employee skill types defined with clear separation from role requirements');

@@ -1,45 +1,88 @@
-import { Skill, SkillWeight, SkillCategory } from '../types/SkillTypes';
-import { Skills, getAllSkills } from './skills/allSkills';
+import { 
+  SkillId,
+  UnifiedSkill,
+  SkillWeight,
+  SkillCategory 
+} from '../types/SkillTypes';
 
-// Helper function to determine skill weight based on growth and category
-const determineWeight = (growth: string, category: string): SkillWeight => {
-  const growthValue = parseFloat(growth);
-  if (growthValue >= 25) return 'critical';
-  if (category === 'specialized' || category === 'common') return 'technical';
-  return 'necessary';
-};
-
-// Helper function to determine business category
-const getBusinessCategory = (skillTitle: string): string => {
-  const categories: { [key: string]: string } = {
-    'AWS': 'Information Technology',
-    'Docker': 'Information Technology',
-    'Kubernetes': 'Information Technology',
-    'Machine Learning': 'Information Technology',
-    'React': 'Information Technology',
-    'Node.js': 'Information Technology',
-    'Communication': 'Media and Communications',
-    'Leadership': 'Initiative and Leadership',
-    'Project Management': 'Project Management',
-    'Data Science': 'Analysis',
-    'Risk Management': 'Risk and Compliance'
+export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
+  // Mock data for demonstration purposes
+  const skillsDatabase: Record<SkillId, UnifiedSkill> = {
+    "1": {
+      id: "1",
+      title: "JavaScript",
+      subcategory: "Programming",
+      category: "specialized",
+      businessCategory: "Development",
+      weight: "critical",
+      level: "advanced",
+      growth: "10%",
+      salary: "$100,000",
+      skillScore: 85,
+      minimumLevel: "beginner",
+      requirementLevel: "required",
+      metrics: {
+        growth: "10%",
+        salary: "$100,000",
+        skillScore: 85
+      },
+      benchmarks: {
+        B: true,
+        R: false,
+        M: true,
+        O: false
+      }
+    },
+    "2": {
+      id: "2",
+      title: "React",
+      subcategory: "Framework",
+      category: "specialized",
+      businessCategory: "Development",
+      weight: "critical",
+      level: "intermediate",
+      growth: "15%",
+      salary: "$90,000",
+      skillScore: 75,
+      minimumLevel: "beginner",
+      requirementLevel: "preferred",
+      metrics: {
+        growth: "15%",
+        salary: "$90,000",
+        skillScore: 75
+      },
+      benchmarks: {
+        B: true,
+        R: true,
+        M: false,
+        O: true
+      }
+    }
   };
-  
-  return categories[skillTitle] || 'Information Technology';
-};
 
-// Use the consolidated skills directly
-export const skillsDatabase = getAllSkills();
-
-// Helper functions
-export const getSkillByTitle = (title: string): Skill | undefined => {
-  return skillsDatabase.find(skill => skill.title === title);
-};
-
-export const getSkillsByWeight = (weight: SkillWeight): Skill[] => {
-  return skillsDatabase.filter(skill => skill.weight === weight);
-};
-
-export const getSkillsByCategory = (category: SkillCategory): Skill[] => {
-  return skillsDatabase.filter(skill => skill.category === category);
+  return skillsDatabase[skillTitle] || {
+    id: skillTitle,
+    title: skillTitle,
+    subcategory: "General",
+    category: "common",
+    businessCategory: "General",
+    weight: "necessary",
+    level: "unspecified",
+    growth: "0%",
+    salary: "N/A",
+    skillScore: 0,
+    minimumLevel: "unspecified",
+    requirementLevel: "optional",
+    metrics: {
+      growth: "0%",
+      salary: "N/A",
+      skillScore: 0
+    },
+    benchmarks: {
+      B: false,
+      R: false,
+      M: false,
+      O: false
+    };
+  };
 };
