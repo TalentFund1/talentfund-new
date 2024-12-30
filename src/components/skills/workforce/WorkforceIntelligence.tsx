@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
-import { Zap } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Zap } from "lucide-react";
 
 export const WorkforceIntelligence = () => {
   console.log('Rendering WorkforceIntelligence component');
@@ -22,7 +22,7 @@ export const WorkforceIntelligence = () => {
               <p className="text-sm text-muted-foreground">65% of 100%</p>
             </div>
           </div>
-          <Progress value={65} className="h-2 bg-primary-accent/20" indicatorClassName="bg-primary-accent" />
+          <Progress value={65} className="h-2 bg-primary-accent/20" />
         </div>
       </div>
     </Card>
