@@ -13,7 +13,14 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
     console.log('Filtering Developing section based on skill growth');
     
     // Filter skills that have skill growth checked
-    const developingSkills = skills.filter(skill => skill.metrics?.skillScore > 0);
+    const developingSkills = skills.filter(skill => {
+      console.log('Checking skill metrics:', {
+        skillTitle: skill.title,
+        metrics: skill.metrics,
+        skillScore: skill.skillScore
+      });
+      return skill.skillScore > 0;
+    });
     
     console.log('Developing skills:', {
       totalSkills: skills.length,
@@ -21,7 +28,7 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
       developingSkills: developingSkills.map(s => ({
         title: s.title,
         level: s.level,
-        hasSkillGrowth: s.metrics?.skillScore > 0
+        skillScore: s.skillScore
       }))
     });
 
