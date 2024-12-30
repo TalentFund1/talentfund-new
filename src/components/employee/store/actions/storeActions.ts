@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { EmployeeSkillsStore, EmployeeSkillsStoreState } from '../types/storeTypes';
+import { EmployeeSkillsStore } from '../types/storeTypes';
 import { employees } from '../../EmployeeData';
 import { EmployeeSkillUpdate, EmployeeSkillData } from '../../types/employeeSkillTypes';
 

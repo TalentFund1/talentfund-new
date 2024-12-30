@@ -25,9 +25,9 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
         const employeeStore = useEmployeeSkillsStore.getState();
         const skillState = employeeStore.getSkillState(employeeId, skillTitle);
         
-        // Convert EmployeeSkillState to EmployeeSkillData
         return {
           ...skillState,
+          id: `${employeeId}-${skillTitle}`,
           employeeId,
           skillId: `${employeeId}-${skillTitle}`,
           title: skillTitle,
@@ -42,6 +42,8 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
             salary: 'market',
             skillScore: 0
           },
+          growth: '0%',
+          salary: 'market',
           benchmarks: {
             B: false,
             R: false,
@@ -81,5 +83,4 @@ export const useSkillsMatrixStore = create<SkillsMatrixState>()(
   )
 );
 
-// Export the hook for accessing the store
 export const useSkillsMatrixState = useSkillsMatrixStore;

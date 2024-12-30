@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { createSkillStateActions } from './actions/skillStateActions';
 import { createSkillSelectors } from './selectors/skillSelectors';
 import { createStoreActions } from './actions/storeActions';
-import { EmployeeSkillsStore, EmployeeSkillsStoreState } from './types/storeTypes';
+import { EmployeeSkillsStore } from './types/storeTypes';
 import { getUnifiedSkillData } from '../../skills/data/skillDatabaseService';
 import { benchmarkingService } from '../../../services/benchmarking';
 import { 
