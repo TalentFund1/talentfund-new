@@ -1,77 +1,66 @@
-import { Table, TableBody } from "@/components/ui/table";
-import { SkillsMatrixRow } from "../SkillsMatrixRow";
-import { SkillsMatrixTableHeader } from "../SkillsMatrixTableHeader";
-import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
+import { Table } from "@/components/ui/table";
+import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
+import { SkillsMatrixContent } from "./SkillsMatrixContent";
 import { UnifiedSkill } from "../../skills/types/SkillTypes";
+import { getUnifiedSkillData } from "../../skills/data/skillDatabaseService";
 
 interface SkillsMatrixTableProps {
-  filteredSkills: Array<{
-    title: string;
-    subcategory: string;
-    level: string;
-    growth: string;
-    confidence: string;
-    requirement?: string;
-    category?: string;
-  }>;
+  filteredSkills: UnifiedSkill[];
   isRoleBenchmark?: boolean;
+  showCompanySkill?: boolean;
 }
 
 export const SkillsMatrixTable = ({ 
   filteredSkills,
-  isRoleBenchmark = false
+  isRoleBenchmark = false,
+  showCompanySkill = true
 }: SkillsMatrixTableProps) => {
   console.log('Rendering SkillsMatrixTable:', {
     skillCount: filteredSkills.length,
-    isRoleBenchmark
+    isRoleBenchmark,
+    showCompanySkill
   });
 
-  // Transform the filtered skills into UnifiedSkill format
-  const transformedSkills = filteredSkills.map(skill => {
+  // Ensure each skill has complete data from universal database
+  const enrichedSkills = filteredSkills.map(skill => {
     const unifiedData = getUnifiedSkillData(skill.title);
     return {
-      ...unifiedData,
-      title: skill.title,
-      subcategory: skill.subcategory,
-      level: skill.level,
-      growth: skill.growth,
-      confidence: skill.confidence,
-      requirement: skill.requirement,
-      category: skill.category || unifiedData.category,
-      // Ensure all required UnifiedSkill properties are present
-      id: unifiedData.id,
-      businessCategory: unifiedData.businessCategory,
+      ...skill,
+      category: unifiedData.category,
       weight: unifiedData.weight,
-      salary: unifiedData.salary,
-      minimumLevel: unifiedData.minimumLevel,
-      requirementLevel: unifiedData.requirementLevel,
-      metrics: unifiedData.metrics,
-      benchmarks: unifiedData.benchmarks
-    } as UnifiedSkill;
+      subcategory: unifiedData.subcategory,
+      minimumLevel: skill.minimumLevel || 'beginner',
+      requirementLevel: skill.requirementLevel || 'required',
+      metrics: {
+        growth: skill.growth,
+        salary: skill.salary,
+        skillScore: skill.skillScore || 0
+      }
+    };
   });
 
-  console.log('Transformed skills:', {
-    originalCount: filteredSkills.length,
-    transformedCount: transformedSkills.length,
-    firstSkill: transformedSkills[0]
+  // Sort skills by category and then alphabetically
+  const sortedSkills = [...enrichedSkills].sort((a, b) => {
+    // First sort by category
+    if (a.category !== b.category) {
+      return a.category.localeCompare(b.category);
+    }
+    // Then by title
+    return a.title.localeCompare(b.title);
   });
 
   return (
-    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white border-l-4 border-l-[#CCDBFF]">
+    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
       <Table>
         <SkillsMatrixTableHeader 
           showCompanySkill={!isRoleBenchmark}
           isRoleBenchmark={isRoleBenchmark}
         />
-        <TableBody>
-          {transformedSkills.map((skill) => (
-            <SkillsMatrixRow 
-              key={skill.title} 
-              skill={skill}
-              isRoleBenchmark={isRoleBenchmark}
-            />
-          ))}
-        </TableBody>
+        <SkillsMatrixContent 
+          skills={sortedSkills}
+          isRoleBenchmark={isRoleBenchmark}
+          showCompanySkill={showCompanySkill}
+        />
       </Table>
     </div>
   );
