@@ -31,11 +31,6 @@ export const SkillSectionList = ({ categorizedSkills, showAdjacent = true }: Ski
         skills={categorizedSkills.current}
       />
       <SkillSection 
-        title="Developing" 
-        count={categorizedSkills.developing.length}
-        skills={categorizedSkills.developing}
-      />
-      <SkillSection 
         title="Developing 2" 
         count={developingViaCheckbox.length}
         skills={developingViaCheckbox}

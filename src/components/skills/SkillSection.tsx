@@ -20,8 +20,6 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
   // Filter skills based on section
   const filteredSkills = title === "Current" 
     ? skills // Show all skills in Current section
-    : title === "Developing"
-    ? skills.filter(skill => skill.level === 'beginner' || skill.goalStatus === 'skill_goal')
     : title === "Developing 2"
     ? skills // Already filtered by inDevelopmentPlan in SkillSectionList
     : skills;
