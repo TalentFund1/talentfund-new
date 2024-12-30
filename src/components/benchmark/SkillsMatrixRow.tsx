@@ -43,22 +43,33 @@ export const SkillsMatrixRow = ({
     
     const currentSkillState = getEmployeeSkillState(employeeId, skill.title);
     
-    if (currentSkillState?.level === 'unspecified' && !checked) {
-      console.log('Removing unspecified skill:', {
-        employeeId,
-        skillTitle: skill.title
-      });
-      
-      await removeEmployeeSkill(employeeId, skill.title);
-      
-      toast({
-        title: "Skill Removed",
-        description: `${skill.title} has been removed from your skills.`,
-      });
-      
-      return;
+    // When unchecking
+    if (!checked) {
+      // Check if we should remove the skill completely
+      const shouldRemoveCompletely = 
+        currentSkillState?.level === 'unspecified' && 
+        currentSkillState?.source === 'checkbox' && 
+        currentSkillState?.goalStatus === 'unknown';
+
+      if (shouldRemoveCompletely) {
+        console.log('Removing unspecified skill:', {
+          employeeId,
+          skillTitle: skill.title,
+          currentState: currentSkillState
+        });
+        
+        await removeEmployeeSkill(employeeId, skill.title);
+        
+        toast({
+          title: "Skill Removed",
+          description: `${skill.title} has been removed from your skills.`,
+        });
+        
+        return;
+      }
     }
 
+    // For checking or when skill should be kept
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,
@@ -69,7 +80,9 @@ export const SkillsMatrixRow = ({
     await updateSkillState(employeeId, skill.title, {
       ...currentSkillState,
       inDevelopmentPlan: checked,
-      source: checked ? 'checkbox' : undefined
+      source: checked ? 'checkbox' : currentSkillState?.source,
+      level: currentSkillState?.level || 'unspecified',
+      goalStatus: currentSkillState?.goalStatus || 'unknown'
     });
 
     toast({
