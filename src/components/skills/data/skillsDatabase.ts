@@ -83,6 +83,6 @@ export const getUnifiedSkillData = (skillTitle: string): UnifiedSkill => {
       R: false,
       M: false,
       O: false
-    };
+    }
   };
 };
