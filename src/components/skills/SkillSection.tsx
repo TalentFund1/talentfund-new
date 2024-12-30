@@ -12,7 +12,13 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
   const filteredSkills = title === "Current" 
     ? skills // Show all skills in Current section
     : title === "Developing"
-    ? skills.filter(skill => skill.inDevelopmentPlan) // Only show skills checked in skill growth column
+    ? skills.filter(skill => {
+        console.log('Filtering developing skill:', {
+          title: skill.title,
+          inDevelopmentPlan: skill.inDevelopmentPlan
+        });
+        return skill.inDevelopmentPlan === true;
+      })
     : skills;
 
   // Update count to reflect filtered skills
