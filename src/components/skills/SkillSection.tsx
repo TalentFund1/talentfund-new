@@ -1,4 +1,4 @@
-import { SkillBubble } from "../skills/SkillBubble";
+import { SkillBubble } from "./SkillBubble";
 import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 
 interface SkillSectionProps {
@@ -14,7 +14,7 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
     : title === "Developing"
     ? skills.filter(skill => 
         skill.goalStatus === 'skill_goal' || // Include skills marked as developing
-        (skill.level === 'unspecified' && skill.goalStatus !== 'not_interested') // Include unspecified skills that aren't marked as not interested
+        (skill.level === 'unspecified') // Include unspecified level skills that are checked
       )
     : skills;
 
