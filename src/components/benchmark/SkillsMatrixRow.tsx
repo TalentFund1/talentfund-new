@@ -1,142 +1,59 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Check } from "lucide-react";
-import { SkillLevelCell } from "./SkillLevelCell";
-import { StaticSkillLevelCell } from "./StaticSkillLevelCell";
-import { RoleSkillLevelCell } from "./RoleSkillLevelCell";
-import { useSkillsMatrixStore } from "./skills-matrix/SkillsMatrixState";
-import { getUnifiedSkillData } from "../skills/data/skillDatabaseService";
-import { useParams } from "react-router-dom";
-import { UnifiedSkill } from "../skills/types/SkillTypes";
+import { Switch } from "@/components/ui/switch";
+import { UnifiedSkill } from "../types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
-import { Badge } from "../ui/badge";
-import { useToast } from "../ui/use-toast";
 
-interface SkillsMatrixRowProps {
-  skill: UnifiedSkill & { hasSkill?: boolean };
-  isRoleBenchmark?: boolean;
+interface SkillProfileMatrixRowProps {
+  skill: UnifiedSkill;
+  isToggled: boolean;
+  onToggle: () => void;
 }
 
-export const SkillsMatrixRow = ({ 
-  skill, 
-  isRoleBenchmark = false
-}: SkillsMatrixRowProps) => {
-  const { id: employeeId } = useParams();
-  const { toast } = useToast();
-  const { getSkillState } = useSkillsMatrixStore();
-  const unifiedSkillData = getUnifiedSkillData(skill.title);
-  
-  console.log('SkillsMatrixRow rendering:', {
-    skillTitle: skill.title,
-    skillId: unifiedSkillData.id,
-    originalSubcategory: skill.subcategory,
-    unifiedSubcategory: unifiedSkillData.subcategory,
-    isRoleBenchmark,
-    originalGrowth: skill.growth,
-    unifiedGrowth: unifiedSkillData.growth,
-    salary: unifiedSkillData.salary,
-    hasSkill: skill.hasSkill
-  });
-
-  const skillScore = Math.floor(Math.random() * 26) + (skill.hasSkill ? 50 : 25);
-  const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
-
-  const handleDevelopmentPlanChange = async (checked: boolean) => {
-    if (!employeeId) return;
-    
-    const currentSkillState = getSkillState(employeeId, skill.title);
-    
-    if (currentSkillState?.level === 'unspecified' && !checked) {
-      console.log('Removing unspecified skill:', {
-        employeeId,
-        skillTitle: skill.title
-      });
-      
-      toast({
-        title: "Skill Removed",
-        description: `${skill.title} has been removed from your skills.`,
-      });
-      
-      return;
-    }
-
-    console.log('Updating development plan:', {
-      employeeId,
-      skillTitle: skill.title,
-      inDevelopmentPlan: checked
-    });
-  };
-
-  const getScoreColor = (score: number): string => {
-    if (score >= 75) return 'bg-[#8073ec20] text-[#8073ec] shadow-sm font-semibold';
-    if (score >= 50) return 'bg-[#ff825620] text-[#ff8256] shadow-sm font-semibold';
-    if (score >= 25) return 'bg-[#00800020] text-[#008000] shadow-sm font-semibold';
-    return 'bg-[#8E919620] text-[#8E9196] shadow-sm font-semibold';
-  };
-
+export const SkillsMatrixRow = ({
+  skill,
+  isToggled,
+  onToggle
+}: SkillProfileMatrixRowProps) => {
   return (
-    <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{unifiedSkillData.subcategory}</TableCell>
-      {isRoleBenchmark ? (
-        <>
-          <RoleSkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
+    <TableRow className="border-t border-border hover:bg-muted/50 transition-colors">
+      <TableCell className="py-3 px-4 align-middle">
+        <div className="flex items-center gap-2">
+          <Switch 
+            checked={isToggled}
+            onCheckedChange={onToggle}
+            className="data-[state=checked]:bg-primary"
           />
-          {skill.hasSkill ? (
-            <StaticSkillLevelCell 
-              initialLevel={skill.level || 'unspecified'}
-              skillTitle={skill.title}
-              employeeId={employeeId || ''}
-            />
-          ) : (
-            <TableCell className="text-center border-r border-blue-200 p-0">
-              <div className="flex flex-col items-center">
-                <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-[#F1F1F1]">
-                  Missing Skill
-                </div>
-                <div className="text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md border-gray-300 bg-[#F9FAFB] relative">
-                </div>
-              </div>
-            </TableCell>
-          )}
-        </>
-      ) : (
-        <>
-          <TableCell className="text-center border-r border-blue-200 py-2">
-            <div className="flex justify-center">
-              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
-              </div>
-            </div>
-          </TableCell>
-          <SkillLevelCell 
-            initialLevel={skill.level || 'unspecified'}
-            skillTitle={skill.title}
-          />
-        </>
-      )}
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm ${getScoreColor(skillScore)}`}>
-          {skillScore}
+          <span className="text-sm">{skill.title}</span>
+        </div>
+      </TableCell>
+      <TableCell className="py-3 px-4 align-middle">
+        <span className="text-sm block truncate" title={skill.subcategory}>
+          {skill.subcategory}
         </span>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
-          unifiedSkillData.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
-        }`}>
-          ↗ {unifiedSkillData.growth}
+      <TableCell className="py-3 px-4 align-middle">
+        <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-sm inline-flex items-center">
+          ↗ {skill.growth}
         </span>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <span className="text-sm text-gray-900">{unifiedSkillData.salary}</span>
+      <TableCell className="py-3 px-2 align-middle text-sm">{skill.salary}</TableCell>
+      <TableCell className="text-center border-r border-blue-200 p-0">
+        <div className="flex flex-col items-center">
+          <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-[#F1F1F1]">
+            Missing Skill
+          </div>
+          <div className="text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md border-gray-300 bg-[#F1F1F1] relative">
+          </div>
+        </div>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
-        <Checkbox
-          checked={skillState?.inDevelopmentPlan || false}
-          onCheckedChange={handleDevelopmentPlanChange}
-          className="data-[state=checked]:bg-gray-800 data-[state=checked]:border-gray-800"
-        />
+      <TableCell className="text-center py-2">
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={isToggled}
+            onCheckedChange={onToggle}
+            className="data-[state=checked]:bg-[#4285f4] data-[state=checked]:border-[#4285f4]"
+          />
+        </div>
       </TableCell>
       <TableCell className="text-center py-2">
         <div className="flex items-center justify-center space-x-1">
