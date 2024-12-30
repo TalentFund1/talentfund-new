@@ -4,29 +4,24 @@ import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 interface SkillSectionProps {
   title: string;
   count: number;
-  children?: React.ReactNode;
   skills: EmployeeSkillData[];
 }
 
 export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
   // Filter skills based on section
   const filteredSkills = title === "Current" 
-    ? skills.filter(skill => skill.level !== 'unspecified')
+    ? skills // Show all skills in Current section
     : title === "Developing"
-    ? skills.filter(skill => skill.goalStatus === 'skill_goal') // Only filter by goal status for developing section, include unspecified
+    ? skills.filter(skill => skill.goalStatus === 'skill_goal') // Only filter by goal status for developing section
     : skills;
 
   // Update count to reflect filtered skills
-  const displayCount = title === "Current" || title === "Developing" 
-    ? filteredSkills.length 
-    : count;
+  const displayCount = filteredSkills.length;
 
   console.log('SkillSection rendering:', {
     title,
-    originalCount: skills.length,
-    filteredCount: filteredSkills.length,
-    unspecifiedSkills: skills.filter(s => s.level === 'unspecified').length,
-    skillGoals: skills.filter(s => s.goalStatus === 'skill_goal').length,
+    originalCount: count,
+    filteredCount: displayCount,
     skillLevels: filteredSkills.map(s => ({
       title: s.title,
       level: s.level,
