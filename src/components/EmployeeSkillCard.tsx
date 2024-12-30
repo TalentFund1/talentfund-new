@@ -74,17 +74,10 @@ export const EmployeeSkillCard = ({
 
     batchUpdateSkills(employeeId, updates);
     
-    if (skillState.level === 'unspecified') {
-      toast({
-        title: skillName,
-        description: "Has been removed from your development plan.",
-      });
-    } else {
-      toast({
-        title: skillName,
-        description: `Current level: ${percentage}% (${skillState.level})`,
-      });
-    }
+    toast({
+      title: skillName,
+      description: `Current level: ${percentage}% (${skillState.level})`,
+    });
   };
 
   // Memoize the processed skills data using all employee skills
