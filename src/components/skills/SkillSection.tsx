@@ -9,19 +9,24 @@ interface SkillSectionProps {
 }
 
 export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
-  // Filter out unspecified skills only for the Current section
+  // Filter skills based on section
   const filteredSkills = title === "Current" 
     ? skills.filter(skill => skill.level !== 'unspecified')
+    : title === "Developing"
+    ? skills.filter(skill => skill.goalStatus === 'skill_goal')
     : skills;
 
   // Update count to reflect filtered skills
-  const displayCount = title === "Current" ? filteredSkills.length : count;
+  const displayCount = title === "Current" || title === "Developing" 
+    ? filteredSkills.length 
+    : count;
 
   console.log('SkillSection rendering:', {
     title,
     originalCount: skills.length,
     filteredCount: filteredSkills.length,
-    unspecifiedSkills: skills.filter(s => s.level === 'unspecified').length
+    unspecifiedSkills: skills.filter(s => s.level === 'unspecified').length,
+    skillGoals: skills.filter(s => s.goalStatus === 'skill_goal').length
   });
 
   return (
