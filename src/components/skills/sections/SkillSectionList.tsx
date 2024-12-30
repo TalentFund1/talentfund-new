@@ -11,6 +11,18 @@ interface SkillSectionListProps {
 }
 
 export const SkillSectionList = ({ categorizedSkills, showAdjacent = true }: SkillSectionListProps) => {
+  // Filter skills that are marked for development via checkbox
+  const developingViaCheckbox = categorizedSkills.current.filter(skill => 
+    skill.inDevelopmentPlan === true
+  );
+
+  console.log('SkillSectionList - Skills marked for development via checkbox:', 
+    developingViaCheckbox.map(s => ({
+      title: s.title,
+      inDevelopmentPlan: s.inDevelopmentPlan
+    }))
+  );
+
   return (
     <div className="space-y-6">
       <SkillSection 
@@ -22,6 +34,11 @@ export const SkillSectionList = ({ categorizedSkills, showAdjacent = true }: Ski
         title="Developing" 
         count={categorizedSkills.developing.length}
         skills={categorizedSkills.developing}
+      />
+      <SkillSection 
+        title="Developing 2" 
+        count={developingViaCheckbox.length}
+        skills={developingViaCheckbox}
       />
       {showAdjacent && (
         <SkillSection 
