@@ -62,12 +62,14 @@ export const SkillsMatrixRow = ({
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,
-      inDevelopmentPlan: checked
+      inDevelopmentPlan: checked,
+      source: checked ? 'checkbox' : undefined
     });
 
     await updateSkillState(employeeId, skill.title, {
       ...currentSkillState,
-      inDevelopmentPlan: checked
+      inDevelopmentPlan: checked,
+      source: checked ? 'checkbox' : undefined
     });
 
     toast({

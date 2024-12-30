@@ -8,13 +8,15 @@ import {
 
 export type { SkillLevel, SkillGoalStatus };
 
-// Employee skill state
+export type SkillSource = 'dialog' | 'checkbox' | undefined;
+
 export interface EmployeeSkillState {
   level: SkillLevel;
   goalStatus: SkillGoalStatus;
   lastUpdated: string;
   skillScore: number;
   inDevelopmentPlan: boolean;
+  source?: SkillSource;
 }
 
 // Single skill update

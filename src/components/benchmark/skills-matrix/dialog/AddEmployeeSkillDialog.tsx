@@ -19,7 +19,6 @@ export const AddEmployeeSkillDialog = () => {
   const { setEmployeeSkills, getEmployeeSkills } = useEmployeeStore();
   const { initializeEmployeeSkills, setSkillLevel, setSkillGoalStatus } = useEmployeeSkillsStore();
 
-  // Get all available skills from universal database
   const allSkills = Array.from(new Set(
     universalSkillsDatabase.map(skill => normalizeSkillTitle(skill.title))
   ));
@@ -39,22 +38,28 @@ export const AddEmployeeSkillDialog = () => {
       return;
     }
 
-    // Initialize employee skills if needed
     initializeEmployeeSkills(id);
 
     const currentSkills = getEmployeeSkills(id);
     const newSkills = selectedSkills.map(skillTitle => {
-      console.log('Processing new skill:', skillTitle);
+      console.log('Processing new skill from dialog:', skillTitle);
       const skillData = getUnifiedSkillData(skillTitle);
       
-      // Initialize skill state in employee store
       setSkillLevel(id, skillTitle, 'beginner');
       setSkillGoalStatus(id, skillTitle, 'unknown');
+      
+      // Update the skill state with source
+      const { updateSkillState } = useEmployeeSkillsStore.getState();
+      updateSkillState(id, skillTitle, {
+        level: 'beginner',
+        goalStatus: 'unknown',
+        inDevelopmentPlan: false,
+        source: 'dialog'
+      });
       
       return skillData;
     });
 
-    // Combine existing and new skills, avoiding duplicates
     const updatedSkills = [
       ...currentSkills,
       ...newSkills.filter(newSkill => 
@@ -64,7 +69,7 @@ export const AddEmployeeSkillDialog = () => {
       )
     ];
 
-    console.log('Updating employee skills:', {
+    console.log('Updating employee skills from dialog:', {
       employeeId: id,
       currentSkillCount: currentSkills.length,
       newSkillCount: newSkills.length,
