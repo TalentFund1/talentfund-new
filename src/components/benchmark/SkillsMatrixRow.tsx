@@ -92,7 +92,7 @@ export const SkillsMatrixRow = ({
           ) : (
             <TableCell className="text-center border-r border-blue-200 p-0">
               <div className="flex flex-col items-center">
-                <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-gray-100/50">
+                <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-[#F1F1F1]">
                   Missing Skill
                 </div>
                 <div className="text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md border-gray-300 bg-[#F9FAFB] relative">
