@@ -14,7 +14,7 @@ export const SkillSection = ({ title, count, skills }: SkillSectionProps) => {
     : title === "Developing"
     ? skills.filter(skill => 
         skill.goalStatus === 'skill_goal' || // Include skills marked as developing
-        (skill.level === 'unspecified') // Include unspecified level skills that are checked
+        skill.level === 'unspecified' // Include all unspecified level skills
       )
     : skills;
 
