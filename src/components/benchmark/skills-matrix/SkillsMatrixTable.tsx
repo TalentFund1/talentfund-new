@@ -57,7 +57,7 @@ export const SkillsMatrixTable = ({
   });
 
   return (
-    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white">
+    <div className="border border-[#CCDBFF] rounded-lg overflow-hidden bg-white border-l-4 border-l-[#CCDBFF]">
       <Table>
         <SkillsMatrixTableHeader 
           showCompanySkill={!isRoleBenchmark}
