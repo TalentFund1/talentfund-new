@@ -10,6 +10,7 @@ import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
 import { Badge } from "../ui/badge";
 import { useToast } from "../ui/use-toast";
+import { useEmployeeSkillsStore } from "../employee/store/employeeSkillsStore";
 
 interface SkillsMatrixRowProps {
   skill: UnifiedSkill & { hasSkill?: boolean };
@@ -23,6 +24,7 @@ export const SkillsMatrixRow = ({
   const { id: employeeId } = useParams();
   const { toast } = useToast();
   const { getSkillState } = useSkillsMatrixStore();
+  const { getSkillState: getEmployeeSkillState, removeEmployeeSkill, updateSkillState } = useEmployeeSkillsStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -38,18 +40,20 @@ export const SkillsMatrixRow = ({
   });
 
   const skillScore = Math.floor(Math.random() * 26) + (skill.hasSkill ? 50 : 25);
-  const skillState = employeeId ? getSkillState(employeeId, skill.title) : null;
+  const skillState = employeeId ? getEmployeeSkillState(employeeId, skill.title) : null;
 
   const handleDevelopmentPlanChange = async (checked: boolean) => {
     if (!employeeId) return;
     
-    const currentSkillState = getSkillState(employeeId, skill.title);
+    const currentSkillState = getEmployeeSkillState(employeeId, skill.title);
     
     if (currentSkillState?.level === 'unspecified' && !checked) {
       console.log('Removing unspecified skill:', {
         employeeId,
         skillTitle: skill.title
       });
+      
+      await removeEmployeeSkill(employeeId, skill.title);
       
       toast({
         title: "Skill Removed",
@@ -64,6 +68,16 @@ export const SkillsMatrixRow = ({
       skillTitle: skill.title,
       inDevelopmentPlan: checked
     });
+
+    await updateSkillState(employeeId, skill.title, {
+      ...currentSkillState,
+      inDevelopmentPlan: checked
+    });
+
+    toast({
+      title: checked ? "Added to Development Plan" : "Removed from Development Plan",
+      description: `${skill.title} has been ${checked ? 'added to' : 'removed from'} your development plan.`,
+    });
   };
 
   const getScoreColor = (score: number): string => {
@@ -75,8 +89,10 @@ export const SkillsMatrixRow = ({
 
   return (
     <TableRow className="group border-b border-gray-200">
-      <TableCell className="font-medium border-r border-blue-200 py-2">{skill.title}</TableCell>
-      <TableCell className="border-r border-blue-200 py-2">{unifiedSkillData.subcategory}</TableCell>
+      <TableCell className="font-medium border-x border-blue-200/60 group-hover:bg-transparent py-4">
+        {skill.title}
+      </TableCell>
+      <TableCell className="border-r border-blue-200/60 group-hover:bg-transparent py-4">{unifiedSkillData.subcategory}</TableCell>
       {isRoleBenchmark ? (
         <>
           <RoleSkillLevelCell 
@@ -90,7 +106,7 @@ export const SkillsMatrixRow = ({
               employeeId={employeeId || ''}
             />
           ) : (
-            <TableCell className="text-center border-r border-blue-200 p-0">
+            <TableCell className="text-center border-r border-blue-200/60 p-0">
               <div className="flex flex-col items-center">
                 <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-gray-100/50">
                   Missing Skill
@@ -103,7 +119,7 @@ export const SkillsMatrixRow = ({
         </>
       ) : (
         <>
-          <TableCell className="text-center border-r border-blue-200 py-2">
+          <TableCell className="text-center border-r border-blue-200/60 py-4">
             <div className="flex justify-center">
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                 <Check className="w-5 h-5 text-green-600 stroke-[2.5]" />
@@ -116,29 +132,29 @@ export const SkillsMatrixRow = ({
           />
         </>
       )}
-      <TableCell className="text-center border-r border-blue-200 py-2">
+      <TableCell className="text-center border-r border-blue-200/60 py-4">
         <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm ${getScoreColor(skillScore)}`}>
           {skillScore}
         </span>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
+      <TableCell className="text-center border-r border-blue-200/60 py-4">
         <span className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-full text-sm ${
           unifiedSkillData.growth === "0%" ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'
         }`}>
           ↗ {unifiedSkillData.growth}
         </span>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
+      <TableCell className="text-center border-r border-blue-200/60 py-4">
         <span className="text-sm text-gray-900">{unifiedSkillData.salary}</span>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200 py-2">
+      <TableCell className="text-center border-r border-blue-200/60 py-4">
         <Checkbox
           checked={skillState?.inDevelopmentPlan || false}
           onCheckedChange={handleDevelopmentPlanChange}
           className="data-[state=checked]:bg-gray-800 data-[state=checked]:border-gray-800"
         />
       </TableCell>
-      <TableCell className="text-center py-2">
+      <TableCell className="text-center py-4">
         <div className="flex items-center justify-center space-x-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
           <span className="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-sm font-medium">E</span>
