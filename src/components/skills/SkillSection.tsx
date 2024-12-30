@@ -1,5 +1,5 @@
-import { SkillBubble } from "../SkillBubble";
-import { EmployeeSkillData } from "../../employee/types/employeeSkillTypes";
+import { SkillBubble } from "../skills/SkillBubble";
+import { EmployeeSkillData } from "../employee/types/employeeSkillTypes";
 
 interface SkillSectionProps {
   title: string;
