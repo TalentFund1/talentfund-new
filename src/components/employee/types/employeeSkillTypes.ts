@@ -1,6 +1,6 @@
 import { 
-  SkillLevel,
-  SkillGoalStatus,
+  SkillLevel, 
+  SkillGoalStatus, 
   BaseSkill,
   SkillBenchmark,
   SkillMetrics,
@@ -47,10 +47,13 @@ export interface EmployeeSkillData extends BaseSkill {
   category: SkillCategory;
   source?: string;
   skillScore?: number;
+  requirement?: string;
 }
 
 // Achievement tracking
-export interface EmployeeSkillAchievement extends EmployeeSkillData {}
+export interface EmployeeSkillAchievement extends EmployeeSkillData {
+  growth: string;
+}
 
 // Complete employee skills data structure
 export interface EmployeeSkillsData {
@@ -60,7 +63,7 @@ export interface EmployeeSkillsData {
   lastUpdated?: string;
 }
 
-export type {
+export type { 
   SkillLevel,
   SkillGoalStatus,
   SkillCategory,

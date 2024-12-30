@@ -14,19 +14,19 @@ export interface RoleSkillRequirement {
   category: SkillCategory;
   businessCategory: string;
   weight: SkillWeight;
-  minimumLevel: SkillLevel;
-  requirementLevel: SkillRequirementLevel;
   level: SkillLevel;
   growth: string;
   salary: string;
   skillScore: number;
-  benchmarks: {
+  minimumLevel: SkillLevel;
+  requirementLevel: SkillRequirementLevel;
+  metrics: SkillMetrics;
+  benchmarks?: {
     B: boolean;
     R: boolean;
     M: boolean;
     O: boolean;
   };
-  metrics: SkillMetrics;
 }
 
 export interface RoleSkillData {

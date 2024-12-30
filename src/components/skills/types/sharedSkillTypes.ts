@@ -34,11 +34,6 @@ export interface SkillMetrics {
 
 export interface UnifiedSkill extends BaseSkill {
   growth: string;
-  salary?: string;
-  skillScore?: number;
-  level?: SkillLevel;
-  minimumLevel?: SkillLevel;
-  requirementLevel?: SkillRequirementLevel;
   metrics?: SkillMetrics;
   benchmarks?: SkillBenchmark;
   hasSkill?: boolean;
