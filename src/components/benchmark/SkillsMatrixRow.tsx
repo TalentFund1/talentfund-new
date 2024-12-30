@@ -43,9 +43,7 @@ export const SkillsMatrixRow = ({
     
     const currentSkillState = getEmployeeSkillState(employeeId, skill.title);
     
-    // When unchecking
     if (!checked) {
-      // Check if we should remove the skill completely
       const shouldRemoveCompletely = 
         currentSkillState?.level === 'unspecified' && 
         currentSkillState?.source === 'checkbox' && 
@@ -69,7 +67,6 @@ export const SkillsMatrixRow = ({
       }
     }
 
-    // For checking or when skill should be kept
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,
@@ -158,13 +155,15 @@ export const SkillsMatrixRow = ({
       <TableCell className="text-center border-r border-blue-200/60 py-4">
         <span className="text-sm text-gray-900">{unifiedSkillData.salary}</span>
       </TableCell>
-      <TableCell className="text-center border-r border-blue-200/60 py-4">
-        <Checkbox
-          checked={skillState?.inDevelopmentPlan || false}
-          onCheckedChange={handleDevelopmentPlanChange}
-          className="border-gray-400 data-[state=checked]:bg-[#C7C9D1] data-[state=checked]:border-[#C7C9D1] data-[state=checked]:text-[#1F2144]"
-        />
-      </TableCell>
+      {isRoleBenchmark && (
+        <TableCell className="text-center border-r border-blue-200/60 py-4">
+          <Checkbox
+            checked={skillState?.inDevelopmentPlan || false}
+            onCheckedChange={handleDevelopmentPlanChange}
+            className="border-gray-400 data-[state=checked]:bg-[#C7C9D1] data-[state=checked]:border-[#C7C9D1] data-[state=checked]:text-[#1F2144]"
+          />
+        </TableCell>
+      )}
       <TableCell className="text-center py-4">
         <div className="flex items-center justify-center space-x-1">
           <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-medium">R</span>
