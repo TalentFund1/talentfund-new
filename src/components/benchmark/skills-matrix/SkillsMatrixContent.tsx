@@ -1,98 +1,54 @@
-import { BenchmarkMatrixFilters } from "./BenchmarkMatrixFilters";
-import { BenchmarkSkillsMatrixTable } from "./BenchmarkSkillsMatrixTable";
-import { SkillsMatrixTable } from "./SkillsMatrixTable";
+import { Table, TableBody } from "@/components/ui/table";
+import { SkillsMatrixTableHeader } from "./SkillsMatrixTableHeader";
+import { SkillsMatrixRow } from "../SkillsMatrixRow";
+import { UnifiedSkill } from "../../skills/types/SkillTypes";
 
 interface SkillsMatrixContentProps {
-  filteredSkills: any[];
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  selectedLevel: string;
-  setSelectedLevel: (level: string) => void;
-  selectedInterest: string;
-  setSelectedInterest: (interest: string) => void;
-  selectedSkillLevel: string;
-  setSelectedSkillLevel: (level: string) => void;
-  selectedSearchSkills: string[];
-  setSelectedSearchSkills: (skills: string[]) => void;
-  visibleItems: number;
-  observerTarget: React.RefObject<HTMLDivElement>;
+  filteredSkills?: UnifiedSkill[];
   isRoleBenchmark?: boolean;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  selectedWeight: string;
-  setSelectedWeight: (weight: string) => void;
+  showCompanySkill?: boolean;
 }
 
 export const SkillsMatrixContent = ({
-  filteredSkills,
-  searchTerm,
-  setSearchTerm,
-  selectedLevel,
-  setSelectedLevel,
-  selectedInterest,
-  setSelectedInterest,
-  selectedSkillLevel,
-  setSelectedSkillLevel,
-  selectedSearchSkills,
-  setSelectedSearchSkills,
-  visibleItems,
-  observerTarget,
+  filteredSkills = [],
   isRoleBenchmark = false,
-  selectedCategory,
-  setSelectedCategory,
-  selectedWeight,
-  setSelectedWeight
+  showCompanySkill = true
 }: SkillsMatrixContentProps) => {
-  console.log('SkillsMatrixContent rendering:', {
-    skillsCount: filteredSkills.length,
+  console.log('SkillsMatrixContent rendering with:', {
+    skillCount: filteredSkills?.length || 0,
     isRoleBenchmark,
-    selectedCategory,
-    selectedWeight
+    showCompanySkill
   });
 
-  const removeSearchSkill = (skill: string) => {
-    setSelectedSearchSkills(selectedSearchSkills.filter(s => s !== skill));
-  };
+  const skills = filteredSkills || [];
 
   return (
-    <>
-      <BenchmarkMatrixFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        selectedInterest={selectedInterest}
-        setSelectedInterest={setSelectedInterest}
-        selectedSkillLevel={selectedSkillLevel}
-        setSelectedSkillLevel={setSelectedSkillLevel}
-        selectedSearchSkills={selectedSearchSkills}
-        removeSearchSkill={removeSearchSkill}
-        clearSearch={() => setSearchTerm("")}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedWeight={selectedWeight}
-        setSelectedWeight={setSelectedWeight}
-      />
-
-      {isRoleBenchmark ? (
-        <BenchmarkSkillsMatrixTable 
-          filteredSkills={filteredSkills.slice(0, visibleItems)}
+    <div className="relative overflow-x-auto rounded-lg border border-blue-200/60">
+      <Table>
+        <SkillsMatrixTableHeader 
+          showCompanySkill={showCompanySkill}
+          isRoleBenchmark={isRoleBenchmark}
         />
-      ) : (
-        <SkillsMatrixTable 
-          filteredSkills={filteredSkills.slice(0, visibleItems)}
-          isRoleBenchmark={false}
-        />
-      )}
-
-      {visibleItems < filteredSkills.length && (
-        <div 
-          ref={observerTarget} 
-          className="h-10 flex items-center justify-center"
-        >
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-        </div>
-      )}
-    </>
+        <TableBody>
+          {skills.map((skill) => (
+            <SkillsMatrixRow
+              key={skill.title}
+              skill={skill}
+              isRoleBenchmark={isRoleBenchmark}
+            />
+          ))}
+          {skills.length === 0 && (
+            <tr>
+              <td 
+                colSpan={8} 
+                className="px-6 py-12 text-center text-muted-foreground"
+              >
+                No skills found
+              </td>
+            </tr>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
