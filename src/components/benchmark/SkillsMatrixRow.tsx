@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { UnifiedSkill } from "../skills/types/SkillTypes";
 import { Checkbox } from "../ui/checkbox";
 import { Badge } from "../ui/badge";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface SkillsMatrixRowProps {
   skill: UnifiedSkill & { hasSkill?: boolean };
@@ -22,7 +22,7 @@ export const SkillsMatrixRow = ({
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
   const { toast } = useToast();
-  const { getSkillState } = useSkillsMatrixStore();
+  const { getSkillState, setSkillInDevelopmentPlan } = useSkillsMatrixStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -43,26 +43,17 @@ export const SkillsMatrixRow = ({
   const handleDevelopmentPlanChange = async (checked: boolean) => {
     if (!employeeId) return;
     
-    const currentSkillState = getSkillState(employeeId, skill.title);
-    
-    if (currentSkillState?.level === 'unspecified' && !checked) {
-      console.log('Removing unspecified skill:', {
-        employeeId,
-        skillTitle: skill.title
-      });
-      
-      toast({
-        title: "Skill Removed",
-        description: `${skill.title} has been removed from your skills.`,
-      });
-      
-      return;
-    }
-
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,
       inDevelopmentPlan: checked
+    });
+
+    setSkillInDevelopmentPlan(employeeId, skill.title, checked);
+    
+    toast({
+      title: checked ? "Skill Added" : "Skill Removed",
+      description: `${skill.title} has been ${checked ? 'added to' : 'removed from'} your development plan.`,
     });
   };
 
