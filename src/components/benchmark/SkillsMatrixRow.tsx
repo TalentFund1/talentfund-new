@@ -22,7 +22,7 @@ export const SkillsMatrixRow = ({
 }: SkillsMatrixRowProps) => {
   const { id: employeeId } = useParams();
   const { toast } = useToast();
-  const { getSkillState, updateSkillState, removeEmployeeSkill } = useSkillsMatrixStore();
+  const { getSkillState } = useSkillsMatrixStore();
   const unifiedSkillData = getUnifiedSkillData(skill.title);
   
   console.log('SkillsMatrixRow rendering:', {
@@ -51,8 +51,6 @@ export const SkillsMatrixRow = ({
         skillTitle: skill.title
       });
       
-      await removeEmployeeSkill(employeeId, skill.title);
-      
       toast({
         title: "Skill Removed",
         description: `${skill.title} has been removed from your skills.`,
@@ -64,10 +62,6 @@ export const SkillsMatrixRow = ({
     console.log('Updating development plan:', {
       employeeId,
       skillTitle: skill.title,
-      inDevelopmentPlan: checked
-    });
-
-    updateSkillState(employeeId, skill.title, {
       inDevelopmentPlan: checked
     });
   };
@@ -98,13 +92,10 @@ export const SkillsMatrixRow = ({
           ) : (
             <TableCell className="text-center border-r border-blue-200 p-0">
               <div className="flex flex-col items-center">
-                <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-gray-100/50">
-                  Unspecified
+                <div className="rounded-t-md px-3 py-2 text-sm font-medium w-full capitalize flex items-center justify-center min-h-[36px] text-[#1f2144] border-2 border-gray-400 bg-[#F1F1F1]">
+                  Missing Skill
                 </div>
                 <div className="text-xs px-2 py-1.5 font-normal text-[#1f2144] w-full flex items-center justify-center gap-1.5 border-x-2 border-b-2 min-h-[32px] rounded-b-md border-gray-300 bg-[#F9FAFB] relative">
-                  <Badge variant="outline" className="absolute bg-[#F5F5F5] text-[#6B7280] border-[#E5E7EB] px-2 py-0.5 rounded-md text-xs font-normal">
-                    Missing Skill
-                  </Badge>
                 </div>
               </div>
             </TableCell>
